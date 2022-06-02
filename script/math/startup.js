@@ -1,10 +1,11 @@
 ///<reference path="../MathJax.js"/>
+///<reference path="signal.js"/>
 
 class STARTUP {
 	constructor() {
 		this.script = "";
 		this.queue = MathJax.Callback.Queue();
-		this.signal = MathJax.Callback.Signal("Startup");
+		this.signal = new SIGNAL("Startup");
 		this.params = {};
 	}
 

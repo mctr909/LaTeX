@@ -55,9 +55,9 @@ class HUB {
 		this.processSectionDelay = 50;
 		this.processUpdateTime = 250;
 		this.processUpdateDelay = 10;
-		this.preProcessors = MathJax.Callback.Hooks(true);
-		this.signal = MathJax.Callback.Signal("Hub");
-		this.postInputHooks = MathJax.Callback.Hooks(true);
+		this.preProcessors = new HOOKS(true);
+		this.signal = new SIGNAL("Hub");
+		this.postInputHooks = new HOOKS(true);
 		this.Register = {
 			PreProcessor: function () {
 				return MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors, arguments);

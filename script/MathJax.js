@@ -166,262 +166,214 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			b.Object.Array = Array;
 		})("MathJax");
 
+		var CALLBACK = function (data) {
+			var cb = function () {
+				return arguments.callee.execute.apply(arguments.callee, arguments);
+			};
+			for (var id in CALLBACK.prototype) {
+				if (CALLBACK.prototype.hasOwnProperty(id)) {
+					if (typeof (data[id]) !== "undefined") {
+						cb[id] = data[id];
+					} else {
+						cb[id] = CALLBACK.prototype[id];
+					}
+				}
+			}
+			cb.toString = CALLBACK.prototype.toString;
+			return cb;
+		};
+		CALLBACK.prototype = {
+			isCallback: true,
+			hook: function () { },
+			data: [],
+			object: window,
+			execute: function () {
+				if (!this.called || this.autoReset) {
+					this.called = !this.autoReset;
+					return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
+				}
+			},
+			reset: function () {
+				delete this.called;
+			},
+			toString: function () {
+				return this.hook.toString.apply(this.hook, arguments);
+			}
+		};
+		var ISCALLBACK = function (f) {
+			return (typeof (f) === "function" && f.isCallback);
+		};
+		var EVAL = function (code) {
+			return eval.call(window, code);
+		};
+		var TESTEVAL = function () {
+			EVAL("var __TeSt_VaR__ = 1");
+			if (window.__TeSt_VaR__) {
+				try { delete window.__TeSt_VaR__ }
+				catch (error) { window.__TeSt_VaR__ = null }
+			} else {
+				if (window.execScript) {
+					EVAL = function (code) {
+						BASE.__code = code;
+						code = "try {" + BASENAME + ".__result = eval(" + BASENAME + ".__code)} catch(err) {" + BASENAME + ".__result = err}";
+						window.execScript(code);
+						var result = BASE.__result;
+						delete BASE.__result;
+						delete BASE.__code;
+						if (result instanceof Error) { throw result }
+						return result;
+					}
+				} else {
+					EVAL = function (code) {
+						BASE.__code = code;
+						code = "try {" + BASENAME + ".__result = eval(" + BASENAME + ".__code)} catch(err) {" + BASENAME + ".__result = err}";
+						var head = (document.getElementsByTagName("head"))[0];
+						if (!head) { head = document.body }
+						var script = document.createElement("script");
+						script.appendChild(document.createTextNode(code));
+						head.appendChild(script);
+						head.removeChild(script);
+						var result = BASE.__result;
+						delete BASE.__result;
+						delete BASE.__code;
+						if (result instanceof Error) { throw result }
+						return result;
+					}
+				}
+			}
+			TESTEVAL = null;
+		};
+		var CONSTRUCTOR = function (args, i) {
+			if (arguments.length > 1) {
+				if (arguments.length === 2 &&
+					!(typeof arguments[0] === "function") &&
+					arguments[0] instanceof Object &&
+					typeof arguments[1] === "number"
+				) {
+					args = [].slice.call(args, i);
+				} else {
+					args = [].slice.call(arguments, 0);
+				}
+			}
+			if (MathJax.Object.isArray(args) && args.length === 1) {
+				args = args[0];
+			}
+			if (typeof args === "function") {
+				if (args.execute === CALLBACK.prototype.execute) {
+					return args;
+				}
+				return CALLBACK({
+					hook: args
+				});
+			} else {
+				if (MathJax.Object.isArray(args)) {
+					if (typeof (args[0]) === "string" &&
+						args[1] instanceof Object &&
+						typeof args[1][args[0]] === "function"
+					) {
+						return CALLBACK({
+							hook: args[1][args[0]],
+							object: args[1],
+							data: args.slice(2)
+						});
+					} else {
+						if (typeof args[0] === "function") {
+							return CALLBACK({
+								hook: args[0],
+								data: args.slice(1)
+							});
+						} else {
+							if (typeof args[1] === "function") {
+								return CALLBACK({
+									hook: args[1],
+									object: args[0],
+									data: args.slice(2)
+								});
+							}
+						}
+					}
+				} else {
+					if (typeof (args) === "string") {
+						if (TESTEVAL) {
+							TESTEVAL();
+						}
+						return CALLBACK({
+							hook: EVAL,
+							data: [args]
+						});
+					} else {
+						if (args instanceof Object) {
+							return CALLBACK(args);
+						} else {
+							if (typeof (args) === "undefined") {
+								return CALLBACK({});
+							}
+						}
+					}
+				}
+			}
+			throw Error("Can't make callback from given data");
+		};
+		var DELAY = function (time, callback) {
+			callback = CONSTRUCTOR(callback);
+			callback.timeout = setTimeout(callback, time);
+			return callback;
+		};
+		var WAITFOR = function (callback, signal) {
+			callback = CONSTRUCTOR(callback);
+			if (!callback.called) { WAITSIGNAL(callback, signal); signal.pending++ }
+		};
+		var WAITEXECUTE = function () {
+			var signals = this.signal;
+			delete this.signal;
+			this.execute = this.oldExecute;
+			delete this.oldExecute;
+			var result = this.execute.apply(this, arguments);
+			if (ISCALLBACK(result) && !result.called) { WAITSIGNAL(result, signals) }
+			else {
+				for (var i = 0, m = signals.length; i < m; i++) {
+					signals[i].pending--;
+					if (signals[i].pending <= 0) { signals[i].call() }
+				}
+			}
+		};
+		var WAITSIGNAL = function (callback, signals) {
+			if (!MathJax.Object.isArray(signals)) { signals = [signals] }
+			if (!callback.signal) {
+				callback.oldExecute = callback.execute;
+				callback.execute = WAITEXECUTE;
+				callback.signal = signals;
+			} else {
+				if (signals.length === 1) { callback.signal.push(signals[0]) }
+				else { callback.signal = callback.signal.concat(signals) }
+			}
+		};
+		var AFTER = function (callback) {
+			callback = CONSTRUCTOR(callback);
+			callback.pending = 0;
+			for (var i = 1, m = arguments.length; i < m; i++) {
+				if (arguments[i]) { WAITFOR(arguments[i], callback) }
+			}
+			if (callback.pending === 0) {
+				var result = callback();
+				if (ISCALLBACK(result)) { callback = result }
+			}
+			return callback;
+		};
+		var EXECUTEHOOKS = function (hooks, data, reset) {
+			if (!hooks) { return null }
+			if (!MathJax.Object.isArray(hooks)) { hooks = [hooks] }
+			if (!MathJax.Object.isArray(data)) { data = (data == null ? [] : [data]) }
+			var handler = new HOOKS(reset);
+			for (var i = 0, m = hooks.length; i < m; i++) { handler.Add(hooks[i]) }
+			return handler.Execute.apply(handler, data);
+		};
+
 		(function (BASENAME) {
 			var BASE = window[BASENAME];
 			if (!BASE) {
 				BASE = window[BASENAME] = {};
 			}
-			var isArray = BASE.Object.isArray;
-			var CALLBACK = function (data) {
-				var cb = function () {
-					return arguments.callee.execute.apply(arguments.callee, arguments);
-				};
-				for (var id in CALLBACK.prototype) {
-					if (CALLBACK.prototype.hasOwnProperty(id)) {
-						if (typeof (data[id]) !== "undefined") {
-							cb[id] = data[id];
-						} else {
-							cb[id] = CALLBACK.prototype[id];
-						}
-					}
-				}
-				cb.toString = CALLBACK.prototype.toString;
-				return cb;
-			};
-			CALLBACK.prototype = {
-				isCallback: true,
-				hook: function () { },
-				data: [],
-				object: window,
-				execute: function () {
-					if (!this.called || this.autoReset) {
-						this.called = !this.autoReset;
-						return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
-					}
-				},
-				reset: function () {
-					delete this.called;
-				},
-				toString: function () {
-					return this.hook.toString.apply(this.hook, arguments);
-				}
-			};
-			var ISCALLBACK = function (f) {
-				return (typeof (f) === "function" && f.isCallback);
-			};
-			var EVAL = function (code) {
-				return eval.call(window, code);
-			};
-			var TESTEVAL = function () {
-				EVAL("var __TeSt_VaR__ = 1");
-				if (window.__TeSt_VaR__) {
-					try { delete window.__TeSt_VaR__ }
-					catch (error) { window.__TeSt_VaR__ = null }
-				} else {
-					if (window.execScript) {
-						EVAL = function (code) {
-							BASE.__code = code;
-							code = "try {" + BASENAME + ".__result = eval(" + BASENAME + ".__code)} catch(err) {" + BASENAME + ".__result = err}";
-							window.execScript(code);
-							var result = BASE.__result;
-							delete BASE.__result;
-							delete BASE.__code;
-							if (result instanceof Error) { throw result }
-							return result;
-						}
-					} else {
-						EVAL = function (code) {
-							BASE.__code = code;
-							code = "try {" + BASENAME + ".__result = eval(" + BASENAME + ".__code)} catch(err) {" + BASENAME + ".__result = err}";
-							var head = (document.getElementsByTagName("head"))[0];
-							if (!head) { head = document.body }
-							var script = document.createElement("script");
-							script.appendChild(document.createTextNode(code));
-							head.appendChild(script);
-							head.removeChild(script);
-							var result = BASE.__result;
-							delete BASE.__result;
-							delete BASE.__code;
-							if (result instanceof Error) { throw result }
-							return result;
-						}
-					}
-				}
-				TESTEVAL = null;
-			};
-			var CONSTRUCTOR = function (args, i) {
-				if (arguments.length > 1) {
-					if (arguments.length === 2 &&
-						!(typeof arguments[0] === "function") &&
-						arguments[0] instanceof Object &&
-						typeof arguments[1] === "number"
-					) {
-						args = [].slice.call(args, i);
-					} else {
-						args = [].slice.call(arguments, 0);
-					}
-				}
-				if (isArray(args) && args.length === 1) {
-					args = args[0];
-				}
-				if (typeof args === "function") {
-					if (args.execute === CALLBACK.prototype.execute) {
-						return args;
-					}
-					return CALLBACK({
-						hook: args
-					});
-				} else {
-					if (isArray(args)) {
-						if (typeof (args[0]) === "string" &&
-							args[1] instanceof Object &&
-							typeof args[1][args[0]] === "function"
-						) {
-							return CALLBACK({
-								hook: args[1][args[0]],
-								object: args[1],
-								data: args.slice(2)
-							});
-						} else {
-							if (typeof args[0] === "function") {
-								return CALLBACK({
-									hook: args[0],
-									data: args.slice(1)
-								});
-							} else {
-								if (typeof args[1] === "function") {
-									return CALLBACK({
-										hook: args[1],
-										object: args[0],
-										data: args.slice(2)
-									});
-								}
-							}
-						}
-					} else {
-						if (typeof (args) === "string") {
-							if (TESTEVAL) {
-								TESTEVAL();
-							}
-							return CALLBACK({
-								hook: EVAL,
-								data: [args]
-							});
-						} else {
-							if (args instanceof Object) {
-								return CALLBACK(args);
-							} else {
-								if (typeof (args) === "undefined") {
-									return CALLBACK({});
-								}
-							}
-						}
-					}
-				}
-				throw Error("Can't make callback from given data");
-			};
-			var DELAY = function (time, callback) {
-				callback = CONSTRUCTOR(callback);
-				callback.timeout = setTimeout(callback, time);
-				return callback;
-			};
-			var WAITFOR = function (callback, signal) {
-				callback = CONSTRUCTOR(callback);
-				if (!callback.called) { WAITSIGNAL(callback, signal); signal.pending++ }
-			};
-			var WAITEXECUTE = function () {
-				var signals = this.signal;
-				delete this.signal;
-				this.execute = this.oldExecute;
-				delete this.oldExecute;
-				var result = this.execute.apply(this, arguments);
-				if (ISCALLBACK(result) && !result.called) { WAITSIGNAL(result, signals) }
-				else {
-					for (var i = 0, m = signals.length; i < m; i++) {
-						signals[i].pending--;
-						if (signals[i].pending <= 0) { signals[i].call() }
-					}
-				}
-			};
-			var WAITSIGNAL = function (callback, signals) {
-				if (!isArray(signals)) { signals = [signals] }
-				if (!callback.signal) {
-					callback.oldExecute = callback.execute;
-					callback.execute = WAITEXECUTE;
-					callback.signal = signals;
-				} else {
-					if (signals.length === 1) { callback.signal.push(signals[0]) }
-					else { callback.signal = callback.signal.concat(signals) }
-				}
-			};
-			var AFTER = function (callback) {
-				callback = CONSTRUCTOR(callback);
-				callback.pending = 0;
-				for (var i = 1, m = arguments.length; i < m; i++) {
-					if (arguments[i]) { WAITFOR(arguments[i], callback) }
-				}
-				if (callback.pending === 0) {
-					var result = callback();
-					if (ISCALLBACK(result)) { callback = result }
-				}
-				return callback;
-			};
-			var HOOKS = MathJax.Object.Subclass({
-				Init: function (reset) {
-					this.hooks = [];
-					this.remove = [];
-					this.reset = reset;
-					this.running = false;
-				},
-				Add: function (hook, priority) {
-					if (priority == null) { priority = 10 }
-					if (!ISCALLBACK(hook)) { hook = CONSTRUCTOR(hook) }
-					hook.priority = priority;
-					var i = this.hooks.length;
-					while (i > 0 && priority < this.hooks[i - 1].priority) { i-- }
-					this.hooks.splice(i, 0, hook);
-					return hook;
-				},
-				Remove: function (hook) {
-					for (var i = 0, m = this.hooks.length; i < m; i++) {
-						if (this.hooks[i] === hook) {
-							if (this.running) {
-								this.remove.push(i);
-							} else {
-								this.hooks.splice(i, 1);
-							}
-							return;
-						}
-					}
-				},
-				Execute: function () {
-					var callbacks = [{}];
-					this.running = true;
-					for (var i = 0, m = this.hooks.length; i < m; i++) {
-						if (this.reset) { this.hooks[i].reset() }
-						var result = this.hooks[i].apply(window, arguments);
-						if (ISCALLBACK(result) && !result.called) { callbacks.push(result) }
-					}
-					this.running = false;
-					if (this.remove.length) { this.RemovePending() }
-					if (callbacks.length === 1) { return null }
-					if (callbacks.length === 2) { return callbacks[1] }
-					return AFTER.apply({}, callbacks);
-				},
-				RemovePending: function () {
-					this.remove = this.remove.sort();
-					for (var i = this.remove.length - 1; i >= 0; i--) { this.hooks.splice(i, 1) }
-					this.remove = [];
-				}
-			});
-			var EXECUTEHOOKS = function (hooks, data, reset) {
-				if (!hooks) { return null }
-				if (!isArray(hooks)) { hooks = [hooks] }
-				if (!isArray(data)) { data = (data == null ? [] : [data]) }
-				var handler = HOOKS(reset);
-				for (var i = 0, m = hooks.length; i < m; i++) { handler.Add(hooks[i]) }
-				return handler.Execute.apply(handler, data);
-			};
 			var QUEUE = BASE.Object.Subclass({
 				Init: function () {
 					this.pending = this.running = 0;
@@ -460,97 +412,10 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				call: function () { this.Process.apply(this, arguments) },
 				wait: function (callback) { return callback }
 			});
-			var SIGNAL = QUEUE.Subclass({
-				Init: function (name) {
-					QUEUE.prototype.Init.call(this);
-					this.name = name;
-					this.posted = [];
-					this.listeners = HOOKS(true);
-					this.posting = false;
-					this.callback = null;
-				},
-				Post: function (message, callback, forget) {
-					callback = CONSTRUCTOR(callback);
-					if (this.posting || this.pending) {
-						this.Push(["Post", this, message, callback, forget]);
-					} else {
-						this.callback = callback; callback.reset();
-						if (!forget) { this.posted.push(message) }
-						this.Suspend();
-						this.posting = true;
-						var result = this.listeners.Execute(message);
-						if (ISCALLBACK(result) && !result.called) { WAITFOR(result, this) }
-						this.Resume();
-						this.posting = false;
-						if (!this.pending) { this.call() }
-					}
-					return callback;
-				},
-				Clear: function (callback) {
-					callback = CONSTRUCTOR(callback);
-					if (this.posting || this.pending) {
-						callback = this.Push(["Clear", this, callback]);
-					} else {
-						this.posted = [];
-						callback();
-					}
-					return callback;
-				},
-				call: function () {
-					this.callback(this);
-					this.Process();
-				},
-				Interest: function (callback, ignorePast, priority) {
-					callback = CONSTRUCTOR(callback);
-					this.listeners.Add(callback, priority);
-					if (!ignorePast) {
-						for (var i = 0, m = this.posted.length; i < m; i++) {
-							callback.reset();
-							var result = callback(this.posted[i]);
-							if (ISCALLBACK(result) && i === this.posted.length - 1) { WAITFOR(result, this) }
-						}
-					}
-					return callback;
-				},
-				NoInterest: function (callback) {
-					this.listeners.Remove(callback);
-				},
-				MessageHook: function (msg, callback, priority) {
-					callback = CONSTRUCTOR(callback);
-					if (!this.hooks) {
-						this.hooks = {};
-						this.Interest(["ExecuteHooks", this]);
-					}
-					if (!this.hooks[msg]) { this.hooks[msg] = HOOKS(true) }
-					this.hooks[msg].Add(callback, priority);
-					for (var i = 0, m = this.posted.length; i < m; i++) {
-						if (this.posted[i] == msg) {
-							callback.reset();
-							callback(this.posted[i]);
-						}
-					}
-					callback.msg = msg;
-					return callback;
-				},
-				ExecuteHooks: function (msg) {
-					var type = (isArray(msg) ? msg[0] : msg);
-					if (!this.hooks[type]) { return null }
-					return this.hooks[type].Execute(msg);
-				},
-				RemoveHook: function (hook) { this.hooks[hook.msg].Remove(hook) }
-			}, {
-				signals: {},
-				find: function (name) {
-					if (!SIGNAL.signals[name]) { SIGNAL.signals[name] = new SIGNAL(name) }
-					return SIGNAL.signals[name];
-				}
-			});
 			BASE.Callback = CONSTRUCTOR;
 			BASE.Callback.Delay = DELAY;
 			BASE.Callback.After = AFTER;
 			BASE.Callback.Queue = QUEUE;
-			BASE.Callback.Signal = SIGNAL.find;
-			BASE.Callback.Hooks = HOOKS;
 			BASE.Callback.ExecuteHooks = EXECUTEHOOKS
 		})("MathJax");
 
@@ -697,7 +562,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				},
 				addHook: function (j, k, i) {
 					if (!this.loadHooks[j]) {
-						this.loadHooks[j] = MathJax.Callback.Hooks();
+						this.loadHooks[j] = new HOOKS();
 					}
 					this.loadHooks[j].Add(k, i);
 					k.file = j;
