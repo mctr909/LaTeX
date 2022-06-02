@@ -248,7 +248,7 @@ class HUB {
 		}
 		var b = this.elementCallback(c, d);
 		if (b.count) {
-			var a = MathJax.Callback.Queue(
+			var a = new QUEUE(
 				["PreProcess", this, b.elements],
 				["Process", this, b.elements]
 			);
@@ -258,7 +258,7 @@ class HUB {
 
 	PreProcess(e, g) {
 		var c = this.elementCallback(e, g);
-		var b = MathJax.Callback.Queue();
+		var b = new QUEUE();
 		if (c.count) {
 			var f = (c.count === 1 ? [c.elements] : c.elements);
 			b.Push(["Post", this.signal, ["Begin PreProcess", c.elements]]);
@@ -291,7 +291,7 @@ class HUB {
 	takeAction(g, d, h) {
 		var c = this.elementCallback(d, h);
 		var f = c.elements;
-		var a = MathJax.Callback.Queue(["Clear", this.signal]);
+		var a = new QUEUE(["Clear", this.signal]);
 		var e = {
 			scripts: [],
 			start: new Date().getTime(),

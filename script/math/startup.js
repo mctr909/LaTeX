@@ -1,10 +1,11 @@
 ///<reference path="../MathJax.js"/>
+///<reference path="queue.js"/>
 ///<reference path="signal.js"/>
 
 class STARTUP {
 	constructor() {
 		this.script = "";
-		this.queue = MathJax.Callback.Queue();
+		this.queue = new QUEUE();
 		this.signal = new SIGNAL("Startup");
 		this.params = {};
 	}
@@ -52,7 +53,7 @@ class STARTUP {
 
 	ConfigBlocks() {
 		var c = document.getElementsByTagName("script");
-		var b = MathJax.Callback.Queue();
+		var b = new QUEUE();
 		for (var d = 0, a = c.length; d < a; d++) {
 			var e = String(c[d].type).replace(/ /g, "");
 			if (e.match(/^text\/x-mathjax-config(;.*)?$/) && !e.match(/;executed=true/)) {
@@ -124,7 +125,7 @@ class STARTUP {
 			var e = f.jax[g].substr(7);
 			if (f.jax[g].substr(0, 7) === "output/" && c.order[e] == null) { c.order[e] = d; d++ }
 		}
-		var a = MathJax.Callback.Queue();
+		var a = new QUEUE();
 		return a.Push(
 			["Post", this.signal, "Begin Jax"],
 			["loadArray", this, f.jax, "jax", "config.js"],
@@ -133,7 +134,7 @@ class STARTUP {
 	}
 
 	Extensions() {
-		var a = MathJax.Callback.Queue();
+		var a = new QUEUE();
 		return a.Push(
 			["Post", this.signal, "Begin Extensions"],
 			["loadArray", this, MathJax.Hub.config.extensions, "extensions"],
@@ -198,7 +199,7 @@ class STARTUP {
 		if (MathJax.Hub.config.showMathMenu) {
 			if (!MathJax.Extension.MathMenu) {
 				setTimeout(function () {
-					MathJax.Callback.Queue(
+					new QUEUE(
 						["Require", MathJax.Ajax, "[MathJax]/extensions/MathMenu.js", {}],
 						["loadDomain", MathJax.Localization, "MathMenu"]
 					);
@@ -264,7 +265,7 @@ class STARTUP {
 		if (b) {
 			if (!MathJax.Object.isArray(b)) { b = [b] }
 			if (b.length) {
-				var h = MathJax.Callback.Queue(), j = {}, e;
+				var h = new QUEUE(), j = {}, e;
 				for (var g = 0, d = b.length; g < d; g++) {
 					e = this.URL(f, b[g]);
 					if (c) { e += "/" + c }

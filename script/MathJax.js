@@ -369,56 +369,11 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			return handler.Execute.apply(handler, data);
 		};
 
-		(function (BASENAME) {
-			var BASE = window[BASENAME];
-			if (!BASE) {
-				BASE = window[BASENAME] = {};
-			}
-			var QUEUE = BASE.Object.Subclass({
-				Init: function () {
-					this.pending = this.running = 0;
-					this.queue = [];
-					this.Push.apply(this, arguments);
-				},
-				Push: function () {
-					var callback;
-					for (var i = 0, m = arguments.length; i < m; i++) {
-						callback = CONSTRUCTOR(arguments[i]);
-						if (callback === arguments[i] && !callback.called) {
-							callback = CONSTRUCTOR(["wait", this, callback]);
-						} this.queue.push(callback)
-					}
-					if (!this.running && !this.pending) { this.Process() }
-					return callback;
-				},
-				Process: function (queue) {
-					while (!this.running && !this.pending && this.queue.length) {
-						var callback = this.queue[0];
-						queue = this.queue.slice(1);
-						this.queue = [];
-						this.Suspend();
-						var result = callback();
-						this.Resume();
-						if (queue.length) { this.queue = queue.concat(this.queue) }
-						if (ISCALLBACK(result) && !result.called) { WAITFOR(result, this) }
-					}
-				},
-				Suspend: function () {
-					this.running++;
-				},
-				Resume: function () {
-					if (this.running) { this.running-- }
-				},
-				call: function () { this.Process.apply(this, arguments) },
-				wait: function (callback) { return callback }
-			});
-			BASE.Callback = CONSTRUCTOR;
-			BASE.Callback.Delay = DELAY;
-			BASE.Callback.After = AFTER;
-			BASE.Callback.Queue = QUEUE;
-			BASE.Callback.ExecuteHooks = EXECUTEHOOKS
-		})("MathJax");
-
+		MathJax.Callback = CONSTRUCTOR;
+		MathJax.Callback.Delay = DELAY;
+		MathJax.Callback.After = AFTER;
+		MathJax.Callback.ExecuteHooks = EXECUTEHOOKS;
+		
 		MathJax.isPacked = true;
 		MathJax.version = "2.7.1";
 		MathJax.fileversion = "2.7.1";
@@ -825,7 +780,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 					if (i === "config.js") {
 						return a.loadComplete(this.directory + "/" + i);
 					} else {
-						var h = f.Queue();
+						var h = new QUEUE();
 						h.Push(
 							c.Register.StartupHook("End Config", {}),
 							["Post", c.Startup.signal, this.id + " Jax Config"],
@@ -1299,7 +1254,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			if (h.AuthorConfig && typeof h.AuthorConfig.AuthorInit === "function") {
 				h.AuthorConfig.AuthorInit();
 			}
-			d.queue = h.Callback.Queue();
+			d.queue = new QUEUE();
 			d.queue.Push(
 				["Post", s.signal, "Begin"],
 				["Config", s],
@@ -1307,7 +1262,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				["Styles", s],
 				["Message", s],
 				function () {
-					var i = h.Callback.Queue(s.Jax(), s.Extensions());
+					var i = new QUEUE(s.Jax(), s.Extensions());
 					return i.Push({});
 				},
 				["Menu", s],

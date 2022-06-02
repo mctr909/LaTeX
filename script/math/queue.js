@@ -1,9 +1,9 @@
 ///<reference path="../MathJax.js"/>
 
 class QUEUE {
-    constructor(q = []) {
+    constructor() {
         this.pending = this.running = 0;
-        this.queue = q;
+        this.queue = [];
         this.Push.apply(this, arguments);
     }
 
@@ -13,7 +13,8 @@ class QUEUE {
             callback = CONSTRUCTOR(arguments[i]);
             if (callback === arguments[i] && !callback.called) {
                 callback = CONSTRUCTOR(["wait", this, callback]);
-            } this.queue.push(callback)
+            }
+            this.queue.push(callback);
         }
         if (!this.running && !this.pending) { this.Process() }
         return callback;

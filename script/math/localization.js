@@ -270,7 +270,7 @@ class LOCAL {
 			if (!a.isLoaded) {
 				b = this.loadFile(this.locale, a);
 				if (b) {
-					return MathJax.Callback.Queue(b, ["loadDomain", this, c]).Push(e || {});
+					return new QUEUE(b, ["loadDomain", this, c]).Push(e || {});
 				}
 			}
 			if (a.domains && c in a.domains) {
@@ -278,7 +278,7 @@ class LOCAL {
 				if (!d.isLoaded) {
 					b = this.loadFile(c, d);
 					if (b) {
-						return MathJax.Callback.Queue(b).Push(e);
+						return new QUEUE(b).Push(e);
 					}
 				}
 			}
