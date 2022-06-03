@@ -1,27 +1,8 @@
-/*
- *  /MathJax/jax/output/CommonHTML/jax.js
- *
- *  Copyright (c) 2009-2017 The MathJax Consortium
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-(function (j, c, f, h) {
-	var i;
-	var g = MathJax.Object.isArray;
+(function (ajax, hub, htmlJax, htmlCmn) {
+	var mml;
 	var m, b, d;
 	var e = 1, q = 0.1, k = 0.025, a = 0.025;
-	var p = {
+	var styleList = {
 		".mjx-chtml": {
 			display: "inline-block",
 			"line-height": 0,
@@ -221,10 +202,142 @@
 		}
 	};
 	var n = 1000000;
-	var l = {}, o = MathJax.Hub.config;
-	h.Augment({
-		settings: c.config.menuSettings,
-		config: { styles: p },
+	var line = {}, hubConfig = MathJax.Hub.config;
+
+	htmlCmn.Augment({
+		settings: hub.config.menuSettings,
+		config: { styles: styleList },
+		defaultEmDelay: 100,
+		defaultEmTimeout: 1000,
+		HTMLElement: htmlJax.Element,
+		ucMatch: htmlJax.ucMatch,
+		setScript: htmlJax.setScript,
+		ID: 0,
+		idPostfix: "",
+		pxPerInch: 96,
+		em: 16,
+		maxStretchyParts: 1000,
+		removeStyles: ["fontSize", "fontFamily", "fontWeight", "fontStyle", "fontVariant", "font"],
+
+		MATHSPACE: {
+			veryverythinmathspace: 1 / 18,
+			verythinmathspace: 2 / 18,
+			thinmathspace: 3 / 18,
+			mediummathspace: 4 / 18,
+			thickmathspace: 5 / 18,
+			verythickmathspace: 6 / 18,
+			veryverythickmathspace: 7 / 18,
+			negativeveryverythinmathspace: -1 / 18,
+			negativeverythinmathspace: -2 / 18,
+			negativethinmathspace: -3 / 18,
+			negativemediummathspace: -4 / 18,
+			negativethickmathspace: -5 / 18,
+			negativeverythickmathspace: -6 / 18,
+			negativeveryverythickmathspace: -7 / 18,
+			thin: 0.04,
+			medium: 0.06,
+			thick: 0.1,
+			infinity: n
+		},
+		SPACECLASS: {
+			thinmathspace: "MJXc-space1",
+			mediummathspace: "MJXc-space2",
+			thickmathspace: "MJXc-space3"
+		},
+		FONTDEF: {},
+		TEXDEF: {
+			x_height: 0.442,
+			quad: 1,
+			num1: 0.676508,
+			num2: 0.393732,
+			num3: 0.44373,
+			denom1: 0.685951,
+			denom2: 0.344841,
+			sup1: 0.412892,
+			sup2: 0.362892,
+			sup3: 0.288888,
+			sub1: 0.15,
+			sub2: 0.247217,
+			sup_drop: 0.386108,
+			sub_drop: 0.05,
+			delim1: 2.39,
+			delim2: 1,
+			axis_height: 0.25,
+			rule_thickness: 0.06,
+			big_op_spacing1: 0.111111,
+			big_op_spacing2: 0.166666,
+			big_op_spacing3: 0.2,
+			big_op_spacing4: 0.45,
+			big_op_spacing5: 0.1,
+			surd_height: 0.075,
+			scriptspace: 0.05,
+			nulldelimiterspace: 0.12,
+			delimiterfactor: 901,
+			delimitershortfall: 0.3,
+			min_rule_thickness: 1.25
+		},
+		charList: {
+			"char": function (u, t, x, v, r) {
+				var s = u.font;
+				if (v.className && s.className !== v.className) {
+					this.flushText(t, v);
+				}
+				if (!v.a) {
+					v.a = s.centerline / 1000;
+				}
+				if (v.a > (x.a || 0)) { x.a = v.a }
+				var w = s[u.n];
+				v.text += w.c;
+				v.className = s.className;
+				if (x.h < w[0] + k) {
+					x.t = x.h = w[0] + k
+				}
+				if (x.d < w[1] + a) {
+					x.b = x.d = w[1] + a;
+				}
+				if (x.l > x.w + w[3]) { x.l = x.w + w[3] }
+				if (x.r < x.w + w[4]) { x.r = x.w + w[4] }
+				x.w += w[2] * (u.rscale || 1);
+				if (r == 1 && s.skew && s.skew[u.n]) { x.skew = s.skew[u.n] }
+				if (w[5].rfix) {
+					this.flushText(t, v).style.marginRight = htmlCmn.Em(w[5].rfix / 1000);
+				}
+			},
+			space: function (s, r, u, t) {
+				if (s.w) {
+					if (t.text === "") {
+						t.className = s.font.className;
+					}
+					this.flushText(r, t).style.marginRight = htmlCmn.Em(s.w);
+					u.w += s.w;
+				}
+			},
+			unknown: function (s, r, v, t) {
+				(this["char"])(s, r, v, t, 0);
+				var u = s.font[s.n];
+				if (u[5].a) {
+					t.a = u[5].a;
+					if (v.a == null || t.a > v.a) { v.a = t.a }
+				}
+				r = this.flushText(r, t, s.style);
+				r.style.width = htmlCmn.Em(u[2]);
+			},
+			flushText: function (s, t, r) {
+				s = htmlCmn.addElement(s, "mjx-charbox", {
+					className: t.className,
+					style: r
+				}, [t.text]);
+				if (t.a) {
+					s.style.paddingBottom = htmlCmn.Em(t.a)
+				}
+				t.text = "";
+				t.className = null;
+				t.a = 0;
+				t.flushed = true;
+				return s;
+			}
+		},
+
 		Config: function () {
 			if (!this.require) { this.require = [] }
 			this.SUPER(arguments).Config.call(this);
@@ -232,7 +345,7 @@
 			if (r.scale) { this.config.scale = r.scale }
 			this.require.push(this.fontDir + "/TeX/fontdata.js");
 			this.require.push(MathJax.OutputJax.extensionDir + "/MathEvents.js");
-			l = this.config.linebreaks;
+			line = this.config.linebreaks;
 		},
 		Startup: function () {
 			m = MathJax.Extension.MathEvents.Event;
@@ -243,23 +356,23 @@
 			this.Mouseover = d.Mouseover;
 			this.Mouseout = d.Mouseout;
 			this.Mousemove = d.Mousemove;
-			var r = h.addElement(document.body, "mjx-block", { style: { display: "block", width: "5in" } });
+			var r = htmlCmn.addElement(document.body, "mjx-block", { style: { display: "block", width: "5in" } });
 			this.pxPerInch = r.offsetWidth / 5; r.parentNode.removeChild(r);
-			this.TestSpan = h.Element("mjx-test", { style: { left: "1em" } }, [["mjx-ex-box-test"]]);
-			this.linebreakSpan = f.Element("span", { className: "mjx-line-box-test" }, [["span"]]);
-			return j.Styles(this.config.styles, ["InitializeCHTML", this]);
+			this.TestSpan = htmlCmn.Element("mjx-test", { style: { left: "1em" } }, [["mjx-ex-box-test"]]);
+			this.linebreakSpan = htmlJax.Element("span", { className: "mjx-line-box-test" }, [["span"]]);
+			return ajax.Styles(this.config.styles, ["InitializeCHTML", this]);
 		},
 		InitializeCHTML: function () {
 			this.getDefaultExEm();
 			if (this.defaultEm) { return }
 			var r = MathJax.Callback();
-			j.timer.start(j, function (s) {
+			ajax.timer.start(ajax, function (s) {
 				if (s.time(r)) {
-					c.signal.Post(["CommonHTML Jax - no default em size"]);
+					hub.signal.Post(["CommonHTML Jax - no default em size"]);
 					return;
 				}
-				h.getDefaultExEm();
-				if (h.defaultEm) {
+				htmlCmn.getDefaultExEm();
+				if (htmlCmn.defaultEm) {
 					r();
 				} else {
 					setTimeout(s, s.delay);
@@ -267,8 +380,6 @@
 			}, this.defaultEmDelay, this.defaultEmTimeout);
 			return r;
 		},
-		defaultEmDelay: 100,
-		defaultEmTimeout: 1000,
 		getDefaultExEm: function () {
 			document.body.appendChild(this.TestSpan);
 			document.body.appendChild(this.linebreakSpan);
@@ -299,14 +410,14 @@
 			return 0;
 		}),
 		loadFont: function (r) {
-			c.RestartAfter(j.Require(this.fontDir + "/" + r))
+			hub.RestartAfter(ajax.Require(this.fontDir + "/" + r))
 		},
 		fontLoaded: function (r) {
 			if (!r.match(/-|fontdata/)) { r += "-Regular" }
 			if (!r.match(/\.js$/)) { r += ".js" }
 			new QUEUE(
-				["Post", c.Startup.signal, ["CommonHTML - font data loaded", r]],
-				["loadComplete", j, this.fontDir + "/" + r]
+				["Post", hub.Startup.signal, ["CommonHTML - font data loaded", r]],
+				["loadComplete", ajax, this.fontDir + "/" + r]
 			);
 		},
 		Element: function (r, t, s) {
@@ -325,9 +436,6 @@
 		addElement: function (t, r, u, s) {
 			return t.appendChild(this.Element(r, u, s));
 		},
-		HTMLElement: f.Element,
-		ucMatch: f.ucMatch,
-		setScript: f.setScript,
 		getNode: function (v, u) {
 			var s = RegExp("\\b" + u + "\\b");
 			while (v) {
@@ -341,7 +449,7 @@
 		},
 		preTranslate: function (v) {
 			var u = v.jax[this.id], E, A = u.length, H, y, B, F, D, s, G, r;
-			var x = 100000, w = false, C = 0, t = l.automatic, z = l.width;
+			var x = 100000, w = false, C = 0, t = line.automatic, z = line.width;
 			if (t) {
 				w = !!z.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/);
 				if (w) {
@@ -363,7 +471,7 @@
 					display: (s.root.Get("display") === "block"),
 					preview: (s.CHTML || {}).preview
 				};
-				B = h.Element("mjx-chtml", {
+				B = htmlCmn.Element("mjx-chtml", {
 					id: s.inputID + "-Frame",
 					className: "MathJax_CHTML",
 					isMathJax: true,
@@ -376,17 +484,17 @@
 					onclick: m.Click,
 					ondblclick: m.DblClick,
 					onkeydown: m.Keydown,
-					tabIndex: c.getTabOrder(s)
+					tabIndex: hub.getTabOrder(s)
 				});
 				if (s.CHTML.display) {
-					var I = h.Element("mjx-chtml", {
+					var I = htmlCmn.Element("mjx-chtml", {
 						className: "MJXc-display",
 						isMathJax: false
 					});
 					I.appendChild(B);
 					B = I;
 				}
-				if (c.Browser.noContextMenu) {
+				if (hub.Browser.noContextMenu) {
 					B.ontouchstart = b.start;
 					B.ontouchend = b.end;
 				}
@@ -401,7 +509,7 @@
 				F = H.previousSibling;
 				s = H.MathJax.elementJax;
 				if (!s) { continue }
-				r = h.getFontSize(F);
+				r = htmlCmn.getFontSize(F);
 				G = F.firstChild.offsetHeight / 60;
 				C = Math.max(0, F.previousSibling.firstChild.offsetWidth - 2);
 				if (G === 0 || G === "NaN") {
@@ -439,7 +547,7 @@
 			if (!s.parentNode) { return }
 			if (w.CHTMLdelay) {
 				w.CHTMLdelay = false;
-				c.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+				hub.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
 			}
 			var r = s.MathJax.elementJax, v = r.root, u = document.getElementById(r.inputID + "-Frame");
 			if (!u) { return }
@@ -520,7 +628,7 @@
 			if (r.parentNode.className.match(/MJXc-display/)) { r = r.parentNode }
 			do { r = r.nextSibling }
 			while (r && r.nodeName.toLowerCase() !== "script");
-			return c.getJaxFor(r);
+			return hub.getJaxFor(r);
 		},
 		getHoverSpan: function (r, s) {
 			return r.root.CHTMLnodeElement();
@@ -533,19 +641,19 @@
 		},
 		Zoom: function (t, A, z, r, x) {
 			this.getMetrics(t);
-			var u = h.addElement(A, "mjx-chtml", {
-				style: { "font-size": Math.floor(h.scale * 100) + "%" },
+			var u = htmlCmn.addElement(A, "mjx-chtml", {
+				style: { "font-size": Math.floor(htmlCmn.scale * 100) + "%" },
 				isMathJax: false
 			});
-			h.CHTMLnode = u;
+			htmlCmn.CHTMLnode = u;
 			this.idPostfix = "-zoom";
 			t.root.toCommonHTML(u);
 			this.idPostfix = "";
 			var s = u.style, B = t.root.CHTML;
-			if (B.t > B.h) { s.marginTop = h.Em(B.t - B.h) }
-			if (B.b > B.d) { s.marginBottom = h.Em(B.b - B.d) }
-			if (B.l < 0) { s.paddingLeft = h.Em(-B.l) }
-			if (B.r > B.w) { s.marginRight = h.Em(B.r - B.w) }
+			if (B.t > B.h) { s.marginTop = htmlCmn.Em(B.t - B.h) }
+			if (B.b > B.d) { s.marginBottom = htmlCmn.Em(B.b - B.d) }
+			if (B.l < 0) { s.paddingLeft = htmlCmn.Em(-B.l) }
+			if (B.r > B.w) { s.marginRight = htmlCmn.Em(B.r - B.w) }
 			s.position = "absolute";
 			var y = u.offsetWidth,
 				w = u.offsetHeight,
@@ -566,71 +674,9 @@
 			if (s) { s.parentNode.removeChild(s) }
 			delete r.CHTML;
 		},
-		ID: 0,
-		idPostfix: "",
 		GetID: function () {
 			this.ID++;
 			return this.ID;
-		},
-		MATHSPACE: {
-			veryverythinmathspace: 1 / 18,
-			verythinmathspace: 2 / 18,
-			thinmathspace: 3 / 18,
-			mediummathspace: 4 / 18,
-			thickmathspace: 5 / 18,
-			verythickmathspace: 6 / 18,
-			veryverythickmathspace: 7 / 18,
-			negativeveryverythinmathspace: -1 / 18,
-			negativeverythinmathspace: -2 / 18,
-			negativethinmathspace: -3 / 18,
-			negativemediummathspace: -4 / 18,
-			negativethickmathspace: -5 / 18,
-			negativeverythickmathspace: -6 / 18,
-			negativeveryverythickmathspace: -7 / 18,
-			thin: 0.04,
-			medium: 0.06,
-			thick: 0.1,
-			infinity: n
-		},
-		SPACECLASS: {
-			thinmathspace: "MJXc-space1",
-			mediummathspace: "MJXc-space2",
-			thickmathspace: "MJXc-space3"
-		},
-		pxPerInch: 96,
-		em: 16,
-		maxStretchyParts: 1000,
-		FONTDEF: {},
-		TEXDEF: {
-			x_height: 0.442,
-			quad: 1,
-			num1: 0.676508,
-			num2: 0.393732,
-			num3: 0.44373,
-			denom1: 0.685951,
-			denom2: 0.344841,
-			sup1: 0.412892,
-			sup2: 0.362892,
-			sup3: 0.288888,
-			sub1: 0.15,
-			sub2: 0.247217,
-			sup_drop: 0.386108,
-			sub_drop: 0.05,
-			delim1: 2.39,
-			delim2: 1,
-			axis_height: 0.25,
-			rule_thickness: 0.06,
-			big_op_spacing1: 0.111111,
-			big_op_spacing2: 0.166666,
-			big_op_spacing3: 0.2,
-			big_op_spacing4: 0.45,
-			big_op_spacing5: 0.1,
-			surd_height: 0.075,
-			scriptspace: 0.05,
-			nulldelimiterspace: 0.12,
-			delimiterfactor: 901,
-			delimitershortfall: 0.3,
-			min_rule_thickness: 1.25
 		},
 		unicodeChar: function (r) {
 			if (r < 65535) {
@@ -685,7 +731,7 @@
 					u = this.FONTDATA.REMAP[u];
 				}
 			}
-			if (g(u)) {
+			if (MathJax.Object.isArray(u)) {
 				v = C[u[1]];
 				u = u[0];
 			}
@@ -766,7 +812,7 @@
 			}
 		},
 		unknownChar: function (r, u) {
-			c.signal.Post(["CommonHTML Jax - unknown char", u, r]);
+			hub.signal.Post(["CommonHTML Jax - unknown char", u, r]);
 			var t = "";
 			if (r.bold) { t += "B" }
 			if (r.italic) { t += "I" }
@@ -785,7 +831,7 @@
 			s[u].c = t;
 		},
 		styledText: function (s, v) {
-			c.signal.Post(["CommonHTML Jax - styled text", v, s]);
+			hub.signal.Post(["CommonHTML Jax - styled text", v, s]);
 			var t = s.style;
 			var w = "_" + (t["font-family"] || s.className || "");
 			if (t["font-weight"]) {
@@ -819,25 +865,25 @@
 			};
 		},
 		getHDW: function (A, t, E) {
-			var s = h.addElement(
-				h.CHTMLnode,
+			var s = htmlCmn.addElement(
+				htmlCmn.CHTMLnode,
 				"mjx-chartest",
 				{ className: t },
 				[["mjx-char", { style: E }, [A]]]
 			);
-			var r = h.addElement(
-				h.CHTMLnode,
+			var r = htmlCmn.addElement(
+				htmlCmn.CHTMLnode,
 				"mjx-chartest",
 				{ className: t },
 				[["mjx-char", { style: E }, [A, ["mjx-box"]]]]
 			);
 			s.firstChild.style.fontSize = r.firstChild.style.fontSize = "";
-			var u = 5 * h.em;
+			var u = 5 * htmlCmn.em;
 			var D = s.offsetHeight, B = r.offsetHeight, v = s.offsetWidth;
-			h.CHTMLnode.removeChild(s);
-			h.CHTMLnode.removeChild(r);
+			htmlCmn.CHTMLnode.removeChild(s);
+			htmlCmn.CHTMLnode.removeChild(r);
 			if (B === 0) {
-				u = 5 * h.defaultEm;
+				u = 5 * htmlCmn.defaultEm;
 				var z = document.body.appendChild(document.createElement("div"));
 				z.appendChild(s);
 				z.appendChild(r);
@@ -859,7 +905,7 @@
 				if (u.childNodes.length) {
 					this.charList.flushText(u, v)
 				} else {
-					f.addText(u, v.text);
+					htmlJax.addText(u, v.text);
 					if (u.className) {
 						u.className += " " + v.className;
 					} else {
@@ -869,77 +915,16 @@
 			}
 			x.b = (v.flushed ? 0 : x.a);
 		},
-		charList: {
-			"char": function (u, t, x, v, r) {
-				var s = u.font;
-				if (v.className && s.className !== v.className) {
-					this.flushText(t, v);
-				}
-				if (!v.a) {
-					v.a = s.centerline / 1000;
-				}
-				if (v.a > (x.a || 0)) { x.a = v.a }
-				var w = s[u.n];
-				v.text += w.c;
-				v.className = s.className;
-				if (x.h < w[0] + k) {
-					x.t = x.h = w[0] + k
-				}
-				if (x.d < w[1] + a) {
-					x.b = x.d = w[1] + a;
-				}
-				if (x.l > x.w + w[3]) { x.l = x.w + w[3] }
-				if (x.r < x.w + w[4]) { x.r = x.w + w[4] }
-				x.w += w[2] * (u.rscale || 1);
-				if (r == 1 && s.skew && s.skew[u.n]) { x.skew = s.skew[u.n] }
-				if (w[5].rfix) {
-					this.flushText(t, v).style.marginRight = h.Em(w[5].rfix / 1000);
-				}
-			},
-			space: function (s, r, u, t) {
-				if (s.w) {
-					if (t.text === "") {
-						t.className = s.font.className;
-					}
-					this.flushText(r, t).style.marginRight = h.Em(s.w);
-					u.w += s.w;
-				}
-			},
-			unknown: function (s, r, v, t) {
-				(this["char"])(s, r, v, t, 0);
-				var u = s.font[s.n];
-				if (u[5].a) {
-					t.a = u[5].a;
-					if (v.a == null || t.a > v.a) { v.a = t.a }
-				}
-				r = this.flushText(r, t, s.style);
-				r.style.width = h.Em(u[2]);
-			},
-			flushText: function (s, t, r) {
-				s = h.addElement(s, "mjx-charbox", {
-					className: t.className,
-					style: r
-				}, [t.text]);
-				if (t.a) {
-					s.style.paddingBottom = h.Em(t.a)
-				}
-				t.text = "";
-				t.className = null;
-				t.a = 0;
-				t.flushed = true;
-				return s;
-			}
-		},
 		handleText: function (t, w, s, v) {
 			if (t.childNodes.length === 0) {
-				h.addElement(t, "mjx-char");
-				v = h.BBOX.empty(v);
+				htmlCmn.addElement(t, "mjx-char");
+				v = htmlCmn.BBOX.empty(v);
 			}
 			if (typeof (s) === "string") {
 				s = this.FONTDATA.VARIANT[s];
 			}
 			if (!s) {
-				s = this.FONTDATA.VARIANT[i.VARIANT.NORMAL];
+				s = this.FONTDATA.VARIANT[mml.VARIANT.NORMAL];
 			}
 			var r = { text: w, i: 0, length: w.length }, u = [];
 			if (s.style && r.length) {
@@ -961,22 +946,301 @@
 			}
 			return v;
 		},
-		createDelimiter: function (w, r, t, z, u) { if (!r) { var A = this.BBOX.zero(); A.w = A.r = this.TEX.nulldelimiterspace; h.addElement(w, "mjx-box", { style: { width: A.w } }); return A } if (!(t instanceof Array)) { t = [t, t] } var y = t[1]; t = t[0]; var s = { alias: r }; while (s.alias) { r = s.alias; s = this.FONTDATA.DELIMITERS[r]; if (!s) { s = { HW: [0, this.FONTDATA.VARIANT[i.VARIANT.NORMAL]] } } } if (s.load) { c.RestartAfter(j.Require(this.fontDir + "/TeX/fontdata-" + s.load + ".js")) } for (var x = 0, v = s.HW.length; x < v; x++) { if (s.HW[x][0] >= t - 0.01 || (x == v - 1 && !s.stretch)) { if (s.HW[x][3]) { r = s.HW[x][3] } A = this.createChar(w, [r, s.HW[x][1]], (s.HW[x][2] || 1), u); A.offset = 0.6 * A.w; if (z) { A.scale = z.scale; z.rscale = z.rscale } return A } } if (!s.stretch) { return A } return this["extendDelimiter" + s.dir](w, y, s.stretch, z, u) },
-		extendDelimiterV: function (D, w, O, v, B) { D = h.addElement(D, "mjx-delim-v"); var M = h.Element("span"); var A, z, N, u, G, s, E, x, F = 1, L; G = this.createChar(M, (O.top || O.ext), 1, B); A = M.removeChild(M.firstChild); s = this.createChar(M, (O.bot || O.ext), 1, B); z = M.removeChild(M.firstChild); E = x = h.BBOX.zero(); var I = G.h + G.d + s.h + s.d - q; D.appendChild(A); if (O.mid) { E = this.createChar(M, O.mid, 1, B); N = M.removeChild(M.firstChild); I += E.h + E.d; F = 2 } if (O.min && w < I * O.min) { w = I * O.min } if (w > I) { x = this.createChar(M, O.ext, 1, B); u = M.removeChild(M.firstChild); var K = x.h + x.d, t = K - q; var C = Math.min(Math.ceil((w - I) / (F * t)), this.maxStretchyParts); if (O.fullExtenders) { w = C * F * t + I } else { t = (w - I) / (F * C) } L = x.d + x.a - K / 2; u.style.margin = u.style.padding = ""; u.style.lineHeight = h.Em(t); u.style.marginBottom = h.Em(L - q / 2 / F); u.style.marginTop = h.Em(-L - q / 2 / F); var J = u.textContent, y = "\n" + J; while (--C > 0) { J += y } u.textContent = J; D.appendChild(u); if (O.mid) { D.appendChild(N); D.appendChild(u.cloneNode(true)) } } else { L = (w - I - q) / F; A.style.marginBottom = h.Em(L + parseFloat(A.style.marginBottom || "0")); if (O.mid) { D.appendChild(N) } z.style.marginTop = h.Em(L + parseFloat(z.style.marginTop || "0")) } D.appendChild(z); var r = h.BBOX({ w: Math.max(G.w, x.w, s.w, E.w), l: Math.min(G.l, x.l, s.l, E.l), r: Math.max(G.r, x.r, s.r, E.r), h: w - s.d, d: s.d, t: w - s.d, b: s.d }); r.offset = 0.5 * r.w; if (v) { r.scale = v.scale; r.rscale = v.rscale } return r },
-		extendDelimiterH: function (E, r, O, u, C) { E = h.addElement(E, "mjx-delim-h"); var M = h.Element("span"); var s, L, N, t, J, B, v, F, y, G = 1; B = this.createChar(M, (O.left || O.rep), 1, C); s = M.removeChild(M.firstChild); v = this.createChar(M, (O.right || O.rep), 1, C); L = M.removeChild(M.firstChild); y = this.createChar(M, O.rep, 1, C); t = M.removeChild(M.firstChild); s.style.marginLeft = h.Em(-B.l); L.style.marginRight = h.Em(v.r - v.w); E.appendChild(s); var P = h.BBOX.zero(); P.h = Math.max(B.h, v.h, y.h); P.d = Math.max(B.D || B.d, v.D || v.d, y.D || y.d); var x = (B.r - B.l) + (v.r - v.l) - q; if (O.mid) { F = this.createChar(M, O.mid, 1, C); N = M.removeChild(M.firstChild); N.style.marginleft = h.Em(-F.l); N.style.marginRight = h.Em(F.r - F.w); x += F.r - F.l + q; G = 2; if (F.h > P.h) { P.h = F.h } if (F.d > P.d) { P.d = F.d } } if (O.min && r < x * O.min) { r = x * O.min } P.w = P.r = r; if (r > x) { var A = y.r - y.l, I = A - q; var D = Math.min(Math.ceil((r - x) / (G * I)), this.maxStretchyParts); if (O.fullExtenders) { r = D * G * I + x } else { I = (r - x) / (G * D) } var K = (A - I + q / G) / 2; t.style.marginLeft = h.Em(-y.l - K); t.style.marginRight = h.Em(y.r - y.w + K); t.style.letterSpacing = h.Em(-(y.w - I)); s.style.marginRight = h.Em(B.r - B.w); L.style.marginleft = h.Em(-v.l); var H = t.textContent, z = H; while (--D > 0) { H += z } t.textContent = H; E.appendChild(t); if (O.mid) { E.appendChild(N); J = E.appendChild(t.cloneNode(true)) } } else { K = (r - x - q / G) / 2; s.style.marginRight = h.Em(B.r - B.w + K); if (O.mid) { E.appendChild(N) } L.style.marginLeft = h.Em(-v.l + K) } E.appendChild(L); this.adjustHeights([s, t, N, J, L], [B, y, F, y, v], P); if (u) { P.scale = u.scale; P.rscale = u.rscale } return P },
-		adjustHeights: function (s, v, w) { var t = w.h, x = w.d; if (w.d < 0) { x = -w.d; w.D = w.d; w.d = 0 } for (var u = 0, r = s.length; u < r; u++) { if (s[u]) { s[u].style.paddingTop = h.Em(t - v[u].a); s[u].style.paddingBottom = h.Em(x + v[u].a); s[u].style.marginTop = s[u].style.marginBottom = 0 } } },
-		createChar: function (t, x, v, s) { var A = "", w = { fonts: [x[1]], noRemap: true, cache: {} }; if (s && s === i.VARIANT.BOLD && this.FONTDATA.FONTS[x[1] + "-Bold"]) { w.fonts = [x[1] + "-Bold", x[1]] } if (typeof (x[1]) !== "string") { w = x[1] } if (x[0] instanceof Array) { for (var y = 0, u = x[0].length; y < u; y++) { A += String.fromCharCode(x[0][y]) } } else { A = String.fromCharCode(x[0]) } if (x[4]) { v *= x[4] } var z = this.handleText(t, A, w), r = t.firstChild.style; if (v !== 1) { r.fontSize = this.Percent(v) } if (x[2]) { r.paddingLeft = this.Em(x[2]); z.w += x[2]; z.r += x[2] } if (x[3]) { r.verticalAlign = this.Em(x[3]); z.h += x[3]; if (z.h < 0) { z.h = 0 } } if (x[5]) { r.marginTop = this.Em(x[5]); z.h += x[5]; z.t += x[5] } if (x[6]) { r.marginBottom = this.Em(x[6]); z.d += x[6]; z.b += x[6] } return z },
-		length2em: function (v, t, w) { if (typeof (v) !== "string") { v = v.toString() } if (v === "") { return "" } if (v === i.SIZE.NORMAL) { return 1 } if (v === i.SIZE.BIG) { return 2 } if (v === i.SIZE.SMALL) { return 0.71 } if (this.MATHSPACE[v]) { return this.MATHSPACE[v] } var s = v.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/); var r = parseFloat(s[1] || "1"), u = s[2]; if (t == null) { t = 1 } if (!w) { w = 1 } w = 1 / this.em / w; if (u === "em") { return r } if (u === "ex") { return r * this.TEX.x_height } if (u === "%") { return r / 100 * t } if (u === "px") { return r * w } if (u === "pt") { return r / 10 } if (u === "pc") { return r * 1.2 } w *= this.pxPerInch; if (u === "in") { return r * w } if (u === "cm") { return r * w / 2.54 } if (u === "mm") { return r * w / 25.4 } if (u === "mu") { return r / 18 } return r * t },
-		thickness2em: function (r, s) { var t = h.TEX.rule_thickness / (s || 1); if (r === i.LINETHICKNESS.MEDIUM) { return t } if (r === i.LINETHICKNESS.THIN) { return 0.67 * t } if (r === i.LINETHICKNESS.THICK) { return 1.67 * t } return this.length2em(r, t, s) },
-		Em: function (r) { if (Math.abs(r) < 0.001) { return "0" } return (r.toFixed(3).replace(/\.?0+$/, "")) + "em" },
-		EmRounded: function (r) { r = (Math.round(r * h.em) + 0.05) / h.em; if (Math.abs(r) < 0.0006) { return "0em" } return r.toFixed(3).replace(/\.?0+$/, "") + "em" },
-		unEm: function (r) { return parseFloat(r) },
-		Px: function (r, s) { r *= this.em; if (s && r < s) { r = s } if (Math.abs(r) < 0.1) { return "0" } return r.toFixed(1).replace(/\.0$/, "") + "px" },
-		Percent: function (r) { return (100 * r).toFixed(1).replace(/\.?0+$/, "") + "%" },
-		Transform: function (u, s, r) { var t = u.style; t.transform = t.WebkitTransform = t.MozTransform = t["-ms-transform"] = s; if (r) { t.transformOrigin = t.WebkitTransformOrigin = t.MozTransformOrigin = t["-ms-transform-origin"] = r } },
-		arrayEntry: function (r, s) { return r[Math.max(0, Math.min(s, r.length - 1))] }, removeStyles: ["fontSize", "fontFamily", "fontWeight", "fontStyle", "fontVariant", "font"]
+		createDelimiter: function (w, r, t, z, u) {
+			if (!r) {
+				var A = this.BBOX.zero();
+				A.w = A.r = this.TEX.nulldelimiterspace;
+				htmlCmn.addElement(w, "mjx-box", { style: { width: A.w } });
+				return A;
+			}
+			if (!(t instanceof Array)) {
+				t = [t, t];
+			}
+			var y = t[1];
+			t = t[0];
+			var s = { alias: r };
+			while (s.alias) {
+				r = s.alias;
+				s = this.FONTDATA.DELIMITERS[r];
+				if (!s) {
+					s = { HW: [0, this.FONTDATA.VARIANT[mml.VARIANT.NORMAL]] };
+				}
+			}
+			if (s.load) {
+				hub.RestartAfter(ajax.Require(this.fontDir + "/TeX/fontdata-" + s.load + ".js"));
+			}
+			for (var x = 0, v = s.HW.length; x < v; x++) {
+				if (s.HW[x][0] >= t - 0.01 || (x == v - 1 && !s.stretch)) {
+					if (s.HW[x][3]) {
+						r = s.HW[x][3];
+					}
+					A = this.createChar(w, [r, s.HW[x][1]], (s.HW[x][2] || 1), u);
+					A.offset = 0.6 * A.w;
+					if (z) {
+						A.scale = z.scale;
+						z.rscale = z.rscale;
+					}
+					return A;
+				}
+			}
+			if (!s.stretch) { return A }
+			return this["extendDelimiter" + s.dir](w, y, s.stretch, z, u);
+		},
+		extendDelimiterV: function (D, w, O, v, B) {
+			D = htmlCmn.addElement(D, "mjx-delim-v");
+			var M = htmlCmn.Element("span");
+			var A, z, N, u, G, s, E, x, F = 1, L;
+			G = this.createChar(M, (O.top || O.ext), 1, B);
+			A = M.removeChild(M.firstChild);
+			s = this.createChar(M, (O.bot || O.ext), 1, B);
+			z = M.removeChild(M.firstChild);
+			E = x = htmlCmn.BBOX.zero();
+			var I = G.h + G.d + s.h + s.d - q;
+			D.appendChild(A);
+			if (O.mid) {
+				E = this.createChar(M, O.mid, 1, B);
+				N = M.removeChild(M.firstChild);
+				I += E.h + E.d;
+				F = 2;
+			}
+			if (O.min && w < I * O.min) {
+				w = I * O.min;
+			}
+			if (w > I) {
+				x = this.createChar(M, O.ext, 1, B);
+				u = M.removeChild(M.firstChild);
+				var K = x.h + x.d, t = K - q;
+				var C = Math.min(Math.ceil((w - I) / (F * t)), this.maxStretchyParts);
+				if (O.fullExtenders) {
+					w = C * F * t + I;
+				} else {
+					t = (w - I) / (F * C);
+				}
+				L = x.d + x.a - K / 2;
+				u.style.margin = u.style.padding = "";
+				u.style.lineHeight = htmlCmn.Em(t);
+				u.style.marginBottom = htmlCmn.Em(L - q / 2 / F);
+				u.style.marginTop = htmlCmn.Em(-L - q / 2 / F);
+				var J = u.textContent, y = "\n" + J;
+				while (--C > 0) { J += y }
+				u.textContent = J;
+				D.appendChild(u);
+				if (O.mid) {
+					D.appendChild(N);
+					D.appendChild(u.cloneNode(true));
+				}
+			} else {
+				L = (w - I - q) / F;
+				A.style.marginBottom = htmlCmn.Em(L + parseFloat(A.style.marginBottom || "0"));
+				if (O.mid) { D.appendChild(N) }
+				z.style.marginTop = htmlCmn.Em(L + parseFloat(z.style.marginTop || "0"));
+			}
+			D.appendChild(z);
+			var r = htmlCmn.BBOX({
+				w: Math.max(G.w, x.w, s.w, E.w),
+				l: Math.min(G.l, x.l, s.l, E.l),
+				r: Math.max(G.r, x.r, s.r, E.r),
+				h: w - s.d,
+				d: s.d,
+				t: w - s.d,
+				b: s.d
+			});
+			r.offset = 0.5 * r.w;
+			if (v) {
+				r.scale = v.scale;
+				r.rscale = v.rscale;
+			}
+			return r;
+		},
+		extendDelimiterH: function (E, r, O, u, C) {
+			E = htmlCmn.addElement(E, "mjx-delim-h");
+			var M = htmlCmn.Element("span");
+			var s, L, N, t, J, B, v, F, y, G = 1;
+			B = this.createChar(M, (O.left || O.rep), 1, C);
+			s = M.removeChild(M.firstChild);
+			v = this.createChar(M, (O.right || O.rep), 1, C);
+			L = M.removeChild(M.firstChild);
+			y = this.createChar(M, O.rep, 1, C);
+			t = M.removeChild(M.firstChild);
+			s.style.marginLeft = htmlCmn.Em(-B.l);
+			L.style.marginRight = htmlCmn.Em(v.r - v.w);
+			E.appendChild(s);
+			var P = htmlCmn.BBOX.zero();
+			P.h = Math.max(B.h, v.h, y.h);
+			P.d = Math.max(B.D || B.d, v.D || v.d, y.D || y.d);
+			var x = (B.r - B.l) + (v.r - v.l) - q;
+			if (O.mid) {
+				F = this.createChar(M, O.mid, 1, C);
+				N = M.removeChild(M.firstChild);
+				N.style.marginleft = htmlCmn.Em(-F.l);
+				N.style.marginRight = htmlCmn.Em(F.r - F.w);
+				x += F.r - F.l + q;
+				G = 2;
+				if (F.h > P.h) { P.h = F.h }
+				if (F.d > P.d) { P.d = F.d }
+			}
+			if (O.min && r < x * O.min) { r = x * O.min }
+			P.w = P.r = r;
+			if (r > x) {
+				var A = y.r - y.l, I = A - q;
+				var D = Math.min(Math.ceil((r - x) / (G * I)), this.maxStretchyParts);
+				if (O.fullExtenders) {
+					r = D * G * I + x;
+				} else {
+					I = (r - x) / (G * D);
+				}
+				var K = (A - I + q / G) / 2;
+				t.style.marginLeft = htmlCmn.Em(-y.l - K);
+				t.style.marginRight = htmlCmn.Em(y.r - y.w + K);
+				t.style.letterSpacing = htmlCmn.Em(-(y.w - I));
+				s.style.marginRight = htmlCmn.Em(B.r - B.w);
+				L.style.marginleft = htmlCmn.Em(-v.l);
+				var H = t.textContent, z = H;
+				while (--D > 0) { H += z }
+				t.textContent = H; E.appendChild(t);
+				if (O.mid) {
+					E.appendChild(N);
+					J = E.appendChild(t.cloneNode(true));
+				}
+			} else {
+				K = (r - x - q / G) / 2;
+				s.style.marginRight = htmlCmn.Em(B.r - B.w + K);
+				if (O.mid) { E.appendChild(N) }
+				L.style.marginLeft = htmlCmn.Em(-v.l + K);
+			}
+			E.appendChild(L);
+			this.adjustHeights([s, t, N, J, L], [B, y, F, y, v], P);
+			if (u) {
+				P.scale = u.scale;
+				P.rscale = u.rscale;
+			}
+			return P;
+		},
+		adjustHeights: function (s, v, w) {
+			var t = w.h, x = w.d;
+			if (w.d < 0) {
+				x = -w.d;
+				w.D = w.d;
+				w.d = 0;
+			}
+			for (var u = 0, r = s.length; u < r; u++) {
+				if (s[u]) {
+					s[u].style.paddingTop = htmlCmn.Em(t - v[u].a);
+					s[u].style.paddingBottom = htmlCmn.Em(x + v[u].a);
+					s[u].style.marginTop = s[u].style.marginBottom = 0;
+				}
+			}
+		},
+		createChar: function (t, x, v, s) {
+			var A = "", w = {
+				fonts: [x[1]],
+				noRemap: true,
+				cache: {}
+			};
+			if (s && s === mml.VARIANT.BOLD && this.FONTDATA.FONTS[x[1] + "-Bold"]) {
+				w.fonts = [x[1] + "-Bold", x[1]];
+			}
+			if (typeof (x[1]) !== "string") { w = x[1] }
+			if (x[0] instanceof Array) {
+				for (var y = 0, u = x[0].length; y < u; y++) {
+					A += String.fromCharCode(x[0][y]);
+				}
+			} else {
+				A = String.fromCharCode(x[0]);
+			}
+			if (x[4]) { v *= x[4] }
+			var z = this.handleText(t, A, w), r = t.firstChild.style;
+			if (v !== 1) { r.fontSize = this.Percent(v) }
+			if (x[2]) {
+				r.paddingLeft = this.Em(x[2]);
+				z.w += x[2];
+				z.r += x[2];
+			}
+			if (x[3]) {
+				r.verticalAlign = this.Em(x[3]);
+				z.h += x[3];
+				if (z.h < 0) { z.h = 0 }
+			}
+			if (x[5]) {
+				r.marginTop = this.Em(x[5]);
+				z.h += x[5];
+				z.t += x[5];
+			}
+			if (x[6]) {
+				r.marginBottom = this.Em(x[6]);
+				z.d += x[6];
+				z.b += x[6];
+			}
+			return z;
+		},
+		length2em: function (v, t, w) {
+			if (typeof (v) !== "string") {
+				v = v.toString();
+			}
+			if (v === "") { return "" }
+			if (v === mml.SIZE.NORMAL) { return 1 }
+			if (v === mml.SIZE.BIG) { return 2 }
+			if (v === mml.SIZE.SMALL) { return 0.71 }
+			if (this.MATHSPACE[v]) { return this.MATHSPACE[v] }
+			var s = v.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
+			var r = parseFloat(s[1] || "1"), u = s[2];
+			if (t == null) { t = 1 }
+			if (!w) { w = 1 }
+			w = 1 / this.em / w;
+			if (u === "em") { return r }
+			if (u === "ex") { return r * this.TEX.x_height }
+			if (u === "%") { return r / 100 * t }
+			if (u === "px") { return r * w }
+			if (u === "pt") { return r / 10 }
+			if (u === "pc") { return r * 1.2 }
+			w *= this.pxPerInch;
+			if (u === "in") { return r * w }
+			if (u === "cm") { return r * w / 2.54 }
+			if (u === "mm") { return r * w / 25.4 }
+			if (u === "mu") { return r / 18 }
+			return r * t;
+		},
+		thickness2em: function (r, s) {
+			var t = htmlCmn.TEX.rule_thickness / (s || 1);
+			if (r === mml.LINETHICKNESS.MEDIUM) { return t }
+			if (r === mml.LINETHICKNESS.THIN) { return 0.67 * t }
+			if (r === mml.LINETHICKNESS.THICK) { return 1.67 * t }
+			return this.length2em(r, t, s);
+		},
+		Em: function (r) {
+			if (Math.abs(r) < 0.001) { return "0" }
+			return (r.toFixed(3).replace(/\.?0+$/, "")) + "em";
+		},
+		EmRounded: function (r) {
+			r = (Math.round(r * htmlCmn.em) + 0.05) / htmlCmn.em;
+			if (Math.abs(r) < 0.0006) { return "0em" }
+			return r.toFixed(3).replace(/\.?0+$/, "") + "em";
+		},
+		unEm: function (r) {
+			return parseFloat(r);
+		},
+		Px: function (r, s) {
+			r *= this.em;
+			if (s && r < s) { r = s }
+			if (Math.abs(r) < 0.1) { return "0" }
+			return r.toFixed(1).replace(/\.0$/, "") + "px";
+		},
+		Percent: function (r) {
+			return (100 * r).toFixed(1).replace(/\.?0+$/, "") + "%";
+		},
+		Transform: function (u, s, r) {
+			var t = u.style;
+			t.transform = t.WebkitTransform = t.MozTransform = t["-ms-transform"] = s;
+			if (r) {
+				t.transformOrigin = t.WebkitTransformOrigin = t.MozTransformOrigin = t["-ms-transform-origin"] = r;
+			}
+		},
+		arrayEntry: function (r, s) {
+			return r[Math.max(0, Math.min(s, r.length - 1))]
+		}
 	});
-	h.BBOX = MathJax.Object.Subclass({
+
+	htmlCmn.BBOX = MathJax.Object.Subclass({
 		Init: function (r) {
 			for (var s in r) {
 				if (r.hasOwnProperty(s)) { this[s] = r[s] }
@@ -1059,7 +1323,7 @@
 			}
 		},
 		adjust: function (s, r, u, t) {
-			this[r] += h.length2em(s, 1, this.scale);
+			this[r] += htmlCmn.length2em(s, 1, this.scale);
 			if (t == null) {
 				if (this[r] > this[u]) { this[u] = this[r] }
 			} else {
@@ -1068,10 +1332,10 @@
 		}
 	}, {
 		zero: function () {
-			return h.BBOX({ h: 0, d: 0, w: 0, l: 0, r: 0, t: 0, b: 0, scale: 1, rscale: 1 });
+			return htmlCmn.BBOX({ h: 0, d: 0, w: 0, l: 0, r: 0, t: 0, b: 0, scale: 1, rscale: 1 });
 		},
 		empty: function (r) {
-			if (!r) { r = h.BBOX.zero() }
+			if (!r) { r = htmlCmn.BBOX.zero() }
 			r.h = r.d = r.r = r.t = r.b = -n; r.w = 0;
 			r.l = n; delete r.pwidth;
 			return r;
@@ -1087,19 +1351,20 @@
 			["paddingLeft", "w", "l", 0],
 		]
 	});
+
 	MathJax.Hub.Register.StartupHook("mml Jax Ready", function () {
-		i = MathJax.ElementJax.mml;
-		i.mbase.Augment({
+		mml = MathJax.ElementJax.mml;
+		mml.mbase.Augment({
 			toCommonHTML: function (s, r) {
 				return this.CHTMLdefaultNode(s, r);
 			},
 			CHTMLmultiline: function () {
-				i.mbase.CHTMLautoloadFile("multiline");
+				mml.mbase.CHTMLautoloadFile("multiline");
 			},
 			CHTMLdefaultNode: function (u, s) {
 				if (!s) { s = {} }
 				u = this.CHTMLcreateNode(u);
-				this.CHTML = h.BBOX.empty();
+				this.CHTML = htmlCmn.BBOX.empty();
 				this.CHTMLhandleStyle(u);
 				if (this.isToken) { this.CHTMLgetVariant() }
 				this.CHTMLhandleScale(u);
@@ -1116,7 +1381,7 @@
 				var t = r.childNodes;
 				if (t instanceof Array) { t = t[s] || "span" }
 				if (y) {
-					if (t) { w = h.addElement(w, t) }
+					if (t) { w = htmlCmn.addElement(w, t) }
 					v = y.toCommonHTML(w, r.childOptions);
 					if (t && y.CHTML.rscale !== 1) {
 						w.style.fontSize = w.firstChild.style.fontSize;
@@ -1133,7 +1398,7 @@
 						if (u.pwidth) { x.pwidth = u.pwidth }
 					}
 				} else {
-					if (r.forceChild) { v = h.addElement(w, (t || "mjx-box")) }
+					if (r.forceChild) { v = htmlCmn.addElement(w, (t || "mjx-box")) }
 				}
 				return v;
 			},
@@ -1204,20 +1469,20 @@
 			},
 			CHTMLcreateNode: function (r) {
 				if (!this.CHTML) { this.CHTML = {} }
-				this.CHTML = h.BBOX.zero();
+				this.CHTML = htmlCmn.BBOX.zero();
 				if (this.href) {
-					r = h.addElement(r, "a", { href: this.href, isMathJax: true });
+					r = htmlCmn.addElement(r, "a", { href: this.href, isMathJax: true });
 				}
-				if (!this.CHTMLnodeID) { this.CHTMLnodeID = h.GetID() }
-				var s = (this.id || "MJXc-Node-" + this.CHTMLnodeID) + h.idPostfix;
-				return this.CHTMLhandleAttributes(h.addElement(r, "mjx-" + this.type, { id: s }));
+				if (!this.CHTMLnodeID) { this.CHTMLnodeID = htmlCmn.GetID() }
+				var s = (this.id || "MJXc-Node-" + this.CHTMLnodeID) + htmlCmn.idPostfix;
+				return this.CHTMLhandleAttributes(htmlCmn.addElement(r, "mjx-" + this.type, { id: s }));
 			},
 			CHTMLnodeElement: function () {
 				if (!this.CHTMLnodeID) { return null }
-				return document.getElementById((this.id || "MJXc-Node-" + this.CHTMLnodeID) + h.idPostfix);
+				return document.getElementById((this.id || "MJXc-Node-" + this.CHTMLnodeID) + htmlCmn.idPostfix);
 			},
 			CHTMLlength2em: function (s, r) {
-				return h.length2em(s, r, this.CHTML.scale);
+				return htmlCmn.length2em(s, r, this.CHTML.scale);
 			},
 			CHTMLhandleAttributes: function (u) {
 				if (this["class"]) {
@@ -1228,8 +1493,8 @@
 					}
 				}
 				if (this.attrNames) {
-					var y = this.attrNames, t = i.nocopyAttributes, x = c.config.ignoreMMLattributes;
-					var v = (this.type === "mstyle" ? i.math.prototype.defaults : this.defaults);
+					var y = this.attrNames, t = mml.nocopyAttributes, x = hub.config.ignoreMMLattributes;
+					var v = (this.type === "mstyle" ? mml.math.prototype.defaults : this.defaults);
 					for (var s = 0, r = y.length; s < r; s++) {
 						var w = y[s];
 						if (x[w] == false || (!t[w] && !x[w] && v[w] == null && typeof (u[w]) === "undefined")) {
@@ -1246,20 +1511,20 @@
 				if (r.scriptlevel !== 0) {
 					if (r.scriptlevel > 2) { r.scriptlevel = 2 }
 					w = Math.pow(this.Get("scriptsizemultiplier"), r.scriptlevel);
-					r.scriptminsize = h.length2em(this.Get("scriptminsize"), 0.8, 1);
+					r.scriptminsize = htmlCmn.length2em(this.Get("scriptminsize"), 0.8, 1);
 					if (w < r.scriptminsize) { w = r.scriptminsize }
 				}
 				if (this.removedStyles && this.removedStyles.fontSize && !r.fontsize) {
 					r.fontsize = this.removedStyles.fontSize;
 				}
 				if (r.fontsize && !this.mathsize) { r.mathsize = r.fontsize }
-				if (r.mathsize !== 1) { w *= h.length2em(r.mathsize, 1, 1) }
+				if (r.mathsize !== 1) { w *= htmlCmn.length2em(r.mathsize, 1, 1) }
 				var s = this.CHTMLvariant;
-				if (s && s.style && s.style["font-family"]) { w *= (h.config.scale / 100) / h.scale }
+				if (s && s.style && s.style["font-family"]) { w *= (htmlCmn.config.scale / 100) / htmlCmn.scale }
 				this.CHTML.scale = w;
 				v = this.CHTML.rscale = w / v;
 				if (Math.abs(v - 1) < 0.001) { v = 1 }
-				if (u && v !== 1) { u.style.fontSize = h.Percent(v) }
+				if (u && v !== 1) { u.style.fontSize = htmlCmn.Percent(v) }
 				return w;
 			},
 			CHTMLhandleStyle: function (u) {
@@ -1267,8 +1532,8 @@
 				var t = u.style;
 				t.cssText = this.style;
 				this.removedStyles = {};
-				for (var s = 0, r = h.removeStyles.length; s < r; s++) {
-					var v = h.removeStyles[s];
+				for (var s = 0, r = htmlCmn.removeStyles.length; s < r; s++) {
+					var v = htmlCmn.removeStyles[s];
 					if (t[v]) {
 						this.removedStyles[v] = t[v];
 						t[v] = "";
@@ -1283,18 +1548,18 @@
 					u.width = "100%"
 				} else {
 					if (s.pwidth) {
-						s.mwidth = h.Em(s.w);
+						s.mwidth = htmlCmn.Em(s.w);
 						u.width = "100%"
 					} else {
 						if (s.w < 0) {
 							u.width = "0px";
-							u.marginRight = h.Em(s.w);
+							u.marginRight = htmlCmn.Em(s.w);
 						}
 					}
 				}
 				if (!this.style) { return }
-				for (var t = 0, r = h.BBOX.styleAdjust.length; t < r; t++) {
-					var w = h.BBOX.styleAdjust[t];
+				for (var t = 0, r = htmlCmn.BBOX.styleAdjust.length; t < r; t++) {
+					var w = htmlCmn.BBOX.styleAdjust[t];
 					if (w && u[w[0]]) {
 						s.adjust(u[w[0]], w[1], w[2], w[3]);
 					}
@@ -1317,13 +1582,13 @@
 					var s = this.texSpacing();
 					if (s !== "") {
 						this.CHTML.L = this.CHTMLlength2em(s);
-						r.className += " " + h.SPACECLASS[s];
+						r.className += " " + htmlCmn.SPACECLASS[s];
 					}
 				}
 			},
 			CHTMLhandleText: function (s, t, r) {
-				if (s.firstChild && !this.CHTML) { this.CHTML = h.BBOX.empty() }
-				this.CHTML = h.handleText(s, t, r, this.CHTML);
+				if (s.firstChild && !this.CHTML) { this.CHTML = htmlCmn.BBOX.empty() }
+				this.CHTML = htmlCmn.handleText(s, t, r, this.CHTML);
 			},
 			CHTMLgetVariant: function () {
 				var r = this.getValues("mathvariant", "fontfamily", "fontweight", "fontstyle"), t;
@@ -1361,67 +1626,67 @@
 				}
 				if (r.weight === "bold") {
 					s = {
-						normal: i.VARIANT.BOLD,
-						italic: i.VARIANT.BOLDITALIC,
-						fraktur: i.VARIANT.BOLDFRAKTUR,
-						script: i.VARIANT.BOLDSCRIPT,
-						"sans-serif": i.VARIANT.BOLDSANSSERIF,
-						"sans-serif-italic": i.VARIANT.SANSSERIFBOLDITALIC
+						normal: mml.VARIANT.BOLD,
+						italic: mml.VARIANT.BOLDITALIC,
+						fraktur: mml.VARIANT.BOLDFRAKTUR,
+						script: mml.VARIANT.BOLDSCRIPT,
+						"sans-serif": mml.VARIANT.BOLDSANSSERIF,
+						"sans-serif-italic": mml.VARIANT.SANSSERIFBOLDITALIC
 					}[s] || s;
 				} else {
 					if (r.weight === "normal") {
 						s = {
-							bold: i.VARIANT.normal,
-							"bold-italic": i.VARIANT.ITALIC,
-							"bold-fraktur": i.VARIANT.FRAKTUR,
-							"bold-script": i.VARIANT.SCRIPT,
-							"bold-sans-serif": i.VARIANT.SANSSERIF,
-							"sans-serif-bold-italic": i.VARIANT.SANSSERIFITALIC
+							bold: mml.VARIANT.normal,
+							"bold-italic": mml.VARIANT.ITALIC,
+							"bold-fraktur": mml.VARIANT.FRAKTUR,
+							"bold-script": mml.VARIANT.SCRIPT,
+							"bold-sans-serif": mml.VARIANT.SANSSERIF,
+							"sans-serif-bold-italic": mml.VARIANT.SANSSERIFITALIC
 						}[s] || s;
 					}
 				}
 				if (r.style === "italic") {
 					s = {
-						normal: i.VARIANT.ITALIC,
-						bold: i.VARIANT.BOLDITALIC,
-						"sans-serif": i.VARIANT.SANSSERIFITALIC,
-						"bold-sans-serif": i.VARIANT.SANSSERIFBOLDITALIC
+						normal: mml.VARIANT.ITALIC,
+						bold: mml.VARIANT.BOLDITALIC,
+						"sans-serif": mml.VARIANT.SANSSERIFITALIC,
+						"bold-sans-serif": mml.VARIANT.SANSSERIFBOLDITALIC
 					}[s] || s;
 				} else {
 					if (r.style === "normal") {
 						s = {
-							italic: i.VARIANT.NORMAL,
-							"bold-italic": i.VARIANT.BOLD,
-							"sans-serif-italic": i.VARIANT.SANSSERIF,
-							"sans-serif-bold-italic": i.VARIANT.BOLDSANSSERIF
+							italic: mml.VARIANT.NORMAL,
+							"bold-italic": mml.VARIANT.BOLD,
+							"sans-serif-italic": mml.VARIANT.SANSSERIF,
+							"sans-serif-bold-italic": mml.VARIANT.BOLDSANSSERIF
 						}[s] || s;
 					}
 				}
-				this.CHTMLvariant = h.FONTDATA.VARIANT[s] || h.FONTDATA.VARIANT[i.VARIANT.NORMAL];
+				this.CHTMLvariant = htmlCmn.FONTDATA.VARIANT[s] || htmlCmn.FONTDATA.VARIANT[mml.VARIANT.NORMAL];
 			},
 			CHTMLbboxFor: function (r) {
 				if (this.data[r] && this.data[r].CHTML) {
 					return this.data[r].CHTML;
 				}
-				return h.BBOX.zero();
+				return htmlCmn.BBOX.zero();
 			},
 			CHTMLdrawBBox: function (s, t) {
 				if (!t) { t = this.CHTML }
-				var r = h.Element(
+				var r = htmlCmn.Element(
 					"mjx-box", { style: {
 						opacity: 0.25,
-						"margin-left": h.Em(-(t.w + (t.R || 0)))
+						"margin-left": htmlCmn.Em(-(t.w + (t.R || 0)))
 					}}, [
 						["mjx-box", { style: {
-							height: h.Em(t.h),
-							width: h.Em(t.w),
+							height: htmlCmn.Em(t.h),
+							width: htmlCmn.Em(t.w),
 							"background-color": "red"
 						}}],
 						["mjx-box", { style: {
-							height: h.Em(t.d),
-							width: h.Em(t.w),
-							"margin-left": h.Em(-t.w),
-							"vertical-align": h.Em(-t.d),
+							height: htmlCmn.Em(t.d),
+							width: htmlCmn.Em(t.w),
+							"margin-left": htmlCmn.Em(-t.w),
+							"vertical-align": htmlCmn.Em(-t.d),
 							"background-color": "green"
 						}}]
 					]
@@ -1440,11 +1705,11 @@
 			}
 		}, {
 			CHTMLautoload: function () {
-				var r = h.autoloadDir + "/" + this.type + ".js"; c.RestartAfter(j.Require(r));
+				var r = htmlCmn.autoloadDir + "/" + this.type + ".js"; hub.RestartAfter(ajax.Require(r));
 			},
 			CHTMLautoloadFile: function (r) {
-				var s = h.autoloadDir + "/" + r + ".js";
-				c.RestartAfter(j.Require(s));
+				var s = htmlCmn.autoloadDir + "/" + r + ".js";
+				hub.RestartAfter(ajax.Require(s));
 			},
 			CHTMLstretchV: function (r, s) {
 				this.Core().CHTMLstretchV(r, s);
@@ -1457,7 +1722,7 @@
 				return this.CHTML;
 			}
 		});
-		i.chars.Augment({
+		mml.chars.Augment({
 			toCommonHTML: function (s, r) {
 				if (r == null) { r = {} }
 				var t = this.toString();
@@ -1465,7 +1730,7 @@
 				this.CHTMLhandleText(s, t, r.variant || this.parent.CHTMLvariant);
 			}
 		});
-		i.entity.Augment({
+		mml.entity.Augment({
 			toCommonHTML: function (s, r) {
 				if (r == null) { r = {} }
 				var t = this.toString();
@@ -1473,41 +1738,41 @@
 				this.CHTMLhandleText(s, t, r.variant || this.parent.CHTMLvariant);
 			}
 		});
-		i.math.Augment({
+		mml.math.Augment({
 			toCommonHTML: function (w) {
 				w = this.CHTMLdefaultNode(w);
 				if (this.CHTML.w < 0) {
 					w.parentNode.style.width = "0px";
-					w.parentNode.style.marginRight = h.Em(this.CHTML.w);
+					w.parentNode.style.marginRight = htmlCmn.Em(this.CHTML.w);
 				}
 				var u = this.Get("alttext");
 				if (u && !w.getAttribute("aria-label")) { w.setAttribute("aria-label", u) }
 				if (this.CHTML.pwidth) {
-					w.parentNode.style.minWidth = this.CHTML.mwidth || h.Em(this.CHTML.w);
+					w.parentNode.style.minWidth = this.CHTML.mwidth || htmlCmn.Em(this.CHTML.w);
 					w.parentNode.className = "mjx-full-width " + w.parentNode.className;
 					w.style.width = this.CHTML.pwidth;
 				} else {
 					if (!this.isMultiline && this.Get("display") === "block") {
 						var t = this.getValues("indentalignfirst", "indentshiftfirst", "indentalign", "indentshift");
-						if (t.indentalignfirst !== i.INDENTALIGN.INDENTALIGN) {
+						if (t.indentalignfirst !== mml.INDENTALIGN.INDENTALIGN) {
 							t.indentalign = t.indentalignfirst;
 						}
-						if (t.indentalign === i.INDENTALIGN.AUTO) { t.indentalign = o.displayAlign }
-						if (t.indentshiftfirst !== i.INDENTSHIFT.INDENTSHIFT) { t.indentshift = t.indentshiftfirst }
+						if (t.indentalign === mml.INDENTALIGN.AUTO) { t.indentalign = hubConfig.displayAlign }
+						if (t.indentshiftfirst !== mml.INDENTSHIFT.INDENTSHIFT) { t.indentshift = t.indentshiftfirst }
 						if (t.indentshift === "auto") { t.indentshift = "0" }
-						var s = this.CHTMLlength2em(t.indentshift, h.cwidth);
-						if (o.displayIndent !== "0") {
-							var r = this.CHTMLlength2em(o.displayIndent, h.cwidth);
-							s += (t.indentalign === i.INDENTALIGN.RIGHT ? -r : r);
+						var s = this.CHTMLlength2em(t.indentshift, htmlCmn.cwidth);
+						if (hubConfig.displayIndent !== "0") {
+							var r = this.CHTMLlength2em(hubConfig.displayIndent, htmlCmn.cwidth);
+							s += (t.indentalign === mml.INDENTALIGN.RIGHT ? -r : r);
 						}
 						var v = w.parentNode.parentNode.style;
 						w.parentNode.style.textAlign = v.textAlign = t.indentalign;
 						if (s) {
-							s *= h.em / h.outerEm;
-							c.Insert(v, ({
-								left: { marginLeft: h.Em(s) },
-								right: { marginRight: h.Em(-s) },
-								center: { marginLeft: h.Em(s), marginRight: h.Em(-s) }
+							s *= htmlCmn.em / htmlCmn.outerEm;
+							hub.Insert(v, ({
+								left: { marginLeft: htmlCmn.Em(s) },
+								right: { marginRight: htmlCmn.Em(-s) },
+								center: { marginLeft: htmlCmn.Em(s), marginRight: htmlCmn.Em(-s) }
 							})[t.indentalign]);
 						}
 					}
@@ -1515,7 +1780,7 @@
 				return w;
 			}
 		});
-		i.mi.Augment({
+		mml.mi.Augment({
 			toCommonHTML: function (r) {
 				r = this.CHTMLdefaultNode(r);
 				var t = this.CHTML, s = this.data.join("");
@@ -1523,12 +1788,12 @@
 				if (t.r > t.w && s.length === 1 && !this.CHTMLvariant.noIC) {
 					t.ic = t.r - t.w;
 					t.w = t.r;
-					r.lastChild.style.paddingRight = h.Em(t.ic);
+					r.lastChild.style.paddingRight = htmlCmn.Em(t.ic);
 				}
 				return r;
 			}
 		});
-		i.mn.Augment({
+		mml.mn.Augment({
 			CHTMLremapMinus: function (r) {
 				return r.replace(/^-/, "\u2212");
 			},
@@ -1541,24 +1806,24 @@
 				if (t.r > t.w && s.length === 1 && !this.CHTMLvariant.noIC) {
 					t.ic = t.r - t.w;
 					t.w = t.r;
-					r.lastChild.style.paddingRight = h.Em(t.ic);
+					r.lastChild.style.paddingRight = htmlCmn.Em(t.ic);
 				}
 				return r;
 			}
 		});
-		i.mo.Augment({
+		mml.mo.Augment({
 			toCommonHTML: function (u) {
 				u = this.CHTMLcreateNode(u);
 				this.CHTMLhandleStyle(u);
 				this.CHTMLgetVariant();
 				this.CHTMLhandleScale(u);
-				h.BBOX.empty(this.CHTML);
+				htmlCmn.BBOX.empty(this.CHTML);
 				var s = this.getValues("displaystyle", "largeop");
 				s.variant = this.CHTMLvariant;
 				s.text = this.data.join("");
 				if (s.text == "") {
 					if (this.fence) {
-						u.style.width = h.Em(h.TEX.nulldelimiterspace);
+						u.style.width = htmlCmn.Em(htmlCmn.TEX.nulldelimiterspace);
 					}
 				} else {
 					this.CHTMLadjustAccent(s);
@@ -1598,8 +1863,8 @@
 						t = t.Parent();
 						u = r.CHTMLnodeElement();
 					}
-					if (s.lspace) { u.style.paddingLeft = h.Em(s.lspace) }
-					if (s.rspace) { u.style.paddingRight = h.Em(s.rspace) }
+					if (s.lspace) { u.style.paddingLeft = htmlCmn.Em(s.lspace) }
+					if (s.rspace) { u.style.paddingRight = htmlCmn.Em(s.rspace) }
 					this.CHTML.L = s.lspace;
 					this.CHTML.R = s.rspace;
 				} else {
@@ -1609,19 +1874,19 @@
 			CHTMLadjustAccent: function (t) {
 				var s = this.CoreParent();
 				t.parent = s;
-				if (t.text.length === 1 && s && s.isa(i.munderover) && this.CoreText(s.data[s.base]).length === 1) {
+				if (t.text.length === 1 && s && s.isa(mml.munderover) && this.CoreText(s.data[s.base]).length === 1) {
 					var u = s.data[s.over], r = s.data[s.under];
 					if (u && this === u.CoreMO() && s.Get("accent")) {
-						t.remapchars = h.FONTDATA.REMAPACCENT;
+						t.remapchars = htmlCmn.FONTDATA.REMAPACCENT;
 					} else {
 						if (r && this === r.CoreMO() && s.Get("accentunder")) {
-							t.remapchars = h.FONTDATA.REMAPACCENTUNDER;
+							t.remapchars = htmlCmn.FONTDATA.REMAPACCENTUNDER;
 						}
 					}
 				}
 			},
 			CHTMLadjustVariant: function (s) {
-				var r = s.parent, t = (r && r.isa(i.msubsup) && this !== r.data[r.base]);
+				var r = s.parent, t = (r && r.isa(mml.msubsup) && this !== r.data[r.base]);
 				if (s.largeop) {
 					s.mathvariant = (s.displaystyle ? "-largeOp" : "-smallOp");
 				}
@@ -1634,21 +1899,21 @@
 			},
 			CHTMLfixCombiningChar: function (r) {
 				r = r.firstChild;
-				var s = h.Element("mjx-box", { style: { width: ".25em", "margin-left": "-.25em" } });
+				var s = htmlCmn.Element("mjx-box", { style: { width: ".25em", "margin-left": "-.25em" } });
 				r.insertBefore(s, r.firstChild);
 			},
 			CHTMLcenterOp: function (r) {
 				var t = this.CHTML;
-				var s = (t.h - t.d) / 2 - h.TEX.axis_height;
+				var s = (t.h - t.d) / 2 - htmlCmn.TEX.axis_height;
 				if (Math.abs(s) > 0.001) {
-					r.style.verticalAlign = h.Em(-s);
+					r.style.verticalAlign = htmlCmn.Em(-s);
 				}
 				t.h -= s;
 				t.d += s;
 				if (t.r > t.w) {
 					t.ic = t.r - t.w;
 					t.w = t.r;
-					r.style.paddingRight = h.Em(t.ic);
+					r.style.paddingRight = htmlCmn.Em(t.ic);
 				}
 			},
 			CHTMLcanStretch: function (v, t, u) {
@@ -1658,7 +1923,7 @@
 				var s = { text: w };
 				this.CHTMLadjustAccent(s);
 				if (s.remapchars) { w = s.remapchars[w] || w }
-				w = h.FONTDATA.DELIMITERS[w.charCodeAt(0)];
+				w = htmlCmn.FONTDATA.DELIMITERS[w.charCodeAt(0)];
 				var r = (w && w.dir === v.substr(0, 1));
 				if (r) {
 					r = (this.CHTML.h !== t || this.CHTML.d !== u || !!this.Get("minsize", true) || !!this.Get("maxsize", true));
@@ -1671,7 +1936,7 @@
 			CHTMLstretchV: function (u, x) {
 				var v = this.CHTMLnodeElement(), w = this.CHTML;
 				var s = this.getValues("symmetric", "maxsize", "minsize");
-				var t, r = h.TEX.axis_height;
+				var t, r = htmlCmn.TEX.axis_height;
 				if (s.symmetric) {
 					t = 2 * Math.max(u - r, x + r);
 				} else {
@@ -1682,12 +1947,12 @@
 				t = Math.max(s.minsize, Math.min(s.maxsize, t));
 				if (t !== w.sH) {
 					if (t != s.minsize) {
-						t = [Math.max(t * h.TEX.delimiterfactor / 1000, t - h.TEX.delimitershortfall), t];
+						t = [Math.max(t * htmlCmn.TEX.delimiterfactor / 1000, t - htmlCmn.TEX.delimitershortfall), t];
 					}
 					while (v.firstChild) {
 						v.removeChild(v.firstChild);
 					}
-					this.CHTML = w = h.createDelimiter(v, this.data.join("").charCodeAt(0), t, w);
+					this.CHTML = w = htmlCmn.createDelimiter(v, this.data.join("").charCodeAt(0), t, w);
 					w.sH = (t instanceof Array ? t[1] : t);
 					if (s.symmetric) {
 						t = (w.h + w.d) / 2 + r;
@@ -1696,7 +1961,7 @@
 					}
 					t -= w.h;
 					if (Math.abs(t) > 0.05) {
-						v.style.verticalAlign = h.Em(t);
+						v.style.verticalAlign = htmlCmn.Em(t);
 						w.h += t;
 						w.d -= t;
 						w.t += t;
@@ -1709,29 +1974,29 @@
 				var u = this.CHTML;
 				var s = this.getValues("maxsize", "minsize", "mathvariant", "fontweight");
 				if ((s.fontweight === "bold" || (this.removedStyles || {}).fontWeight === "bold" || parseInt(s.fontweight) >= 600) && !this.Get("mathvariant", true)) {
-					s.mathvariant = i.VARIANT.BOLD;
+					s.mathvariant = mml.VARIANT.BOLD;
 				}
 				s.maxsize = this.CHTMLlength2em(s.maxsize, u.w);
 				s.minsize = this.CHTMLlength2em(s.minsize, u.w);
 				r = Math.max(s.minsize, Math.min(s.maxsize, r));
 				if (r !== u.sW) {
 					while (t.firstChild) { t.removeChild(t.firstChild) }
-					this.CHTML = u = h.createDelimiter(t, this.data.join("").charCodeAt(0), r, u, s.mathvariant);
+					this.CHTML = u = htmlCmn.createDelimiter(t, this.data.join("").charCodeAt(0), r, u, s.mathvariant);
 					u.sW = r;
 				}
 				return this.CHTML;
 			}
 		});
-		i.mtext.Augment({
+		mml.mtext.Augment({
 			CHTMLgetVariant: function () {
-				if (h.config.mtextFontInherit || this.Parent().type === "merror") {
-					var t = (h.config.scale / 100) / h.scale;
+				if (htmlCmn.config.mtextFontInherit || this.Parent().type === "merror") {
+					var t = (htmlCmn.config.scale / 100) / htmlCmn.scale;
 					var s = {
 						cache: {},
 						fonts: [],
 						className: "MJXc-font-inherit",
 						rscale: t,
-						style: { "font-size": h.Percent(t) }
+						style: { "font-size": htmlCmn.Percent(t) }
 					};
 					var r = this.Get("mathvariant");
 					if (r.match(/bold/)) {
@@ -1761,22 +2026,22 @@
 				}
 			}
 		});
-		i.merror.Augment({
+		mml.merror.Augment({
 			toCommonHTML: function (r) {
 				r = this.CHTMLdefaultNode(r);
 				var s = this.CHTML;
 				s.rescale(0.9);
-				s.h += 3 / h.em;
+				s.h += 3 / htmlCmn.em;
 				if (s.h > s.t) { s.t = s.h }
-				s.d += 3 / h.em;
+				s.d += 3 / htmlCmn.em;
 				if (s.d > s.b) { s.b = s.d }
-				s.w += 8 / h.em;
+				s.w += 8 / htmlCmn.em;
 				s.r = s.w;
 				s.l = 0;
 				return r;
 			}
 		});
-		i.mspace.Augment({
+		mml.mspace.Augment({
 			toCommonHTML: function (u) {
 				u = this.CHTMLcreateNode(u);
 				this.CHTMLhandleStyle(u);
@@ -1789,20 +2054,20 @@
 				v.d = v.b = x;
 				v.l = 0;
 				if (r < 0) {
-					u.style.marginRight = h.Em(r);
+					u.style.marginRight = htmlCmn.Em(r);
 					r = 0;
 				}
-				u.style.width = h.Em(r);
-				u.style.height = h.Em(Math.max(0, t + x));
+				u.style.width = htmlCmn.Em(r);
+				u.style.height = htmlCmn.Em(Math.max(0, t + x));
 				if (x) {
-					u.style.verticalAlign = h.Em(-x);
+					u.style.verticalAlign = htmlCmn.Em(-x);
 				}
 				this.CHTMLhandleBBox(u);
 				this.CHTMLhandleColor(u);
 				return u;
 			}
 		});
-		i.mpadded.Augment({
+		mml.mpadded.Augment({
 			toCommonHTML: function (s, E) {
 				var r;
 				if (E && E.stretch) {
@@ -1811,15 +2076,15 @@
 				} else {
 					s = this.CHTMLdefaultNode(s, { childNodes: "mjx-box", forceChild: true });
 					r = s.firstChild;
-					s = h.addElement(s, "mjx-block");
+					s = htmlCmn.addElement(s, "mjx-block");
 					s.appendChild(r);
-					h.addElement(s, "mjx-strut");
+					htmlCmn.addElement(s, "mjx-strut");
 				}
 				var v = this.CHTMLbboxFor(0);
 				var C = this.getValues("width", "height", "depth", "lspace", "voffset");
 				var A = 0, z = 0, B = v.w, t = v.h, u = v.d;
 				r.style.width = 0;
-				r.style.margin = h.Em(-t) + " 0 " + h.Em(-u);
+				r.style.margin = htmlCmn.Em(-t) + " 0 " + htmlCmn.Em(-u);
 				if (C.width !== "") {
 					B = this.CHTMLdimen(C.width, "w", B, 0);
 				}
@@ -1833,20 +2098,20 @@
 					z = this.CHTMLdimen(C.voffset);
 					if (z) {
 						r.style.position = "relative";
-						r.style.top = h.Em(-z);
+						r.style.top = htmlCmn.Em(-z);
 					}
 				}
 				if (C.lspace !== "") {
 					A = this.CHTMLdimen(C.lspace);
 					if (A) {
 						r.style.position = "relative";
-						r.style.left = h.Em(A);
+						r.style.left = htmlCmn.Em(A);
 					}
 				}
 				s.style.width = 0;
-				s.style.marginTop = h.Em(t - e);
-				s.style.padding = "0 " + h.Em(B) + " " + h.Em(u) + " 0";
-				var D = h.BBOX({
+				s.style.marginTop = htmlCmn.Em(t - e);
+				s.style.padding = "0 " + htmlCmn.Em(B) + " " + htmlCmn.Em(u) + " 0";
+				var D = htmlCmn.BBOX({
 					w: B,
 					h: t,
 					d: u,
@@ -1864,8 +2129,8 @@
 				this.CHTML = D;
 				return s.parentNode;
 			},
-			CHTMLstretchV: i.mbase.CHTMLstretchV,
-			CHTMLstretchH: i.mbase.CHTMLstretchH,
+			CHTMLstretchV: mml.mbase.CHTMLstretchV,
+			CHTMLstretchH: mml.mbase.CHTMLstretchH,
 			CHTMLdimen: function (v, x, w, r) {
 				if (r == null) { r = -n }
 				v = String(v);
@@ -1877,23 +2142,23 @@
 				return u;
 			}
 		});
-		i.munderover.Augment({
+		mml.munderover.Augment({
 			toCommonHTML: function (v, F) {
 				var D = this.getValues("displaystyle", "accent", "accentunder", "align");
 				var t = this.data[this.base];
 				if (!D.displaystyle && t != null && (t.movablelimits || t.CoreMO().Get("movablelimits"))) {
-					return i.msubsup.prototype.toCommonHTML.call(this, v, s);
+					return mml.msubsup.prototype.toCommonHTML.call(this, v, s);
 				}
 				var A, y, r = [], s = false;
 				if (F && F.stretch) {
 					if (this.data[this.base]) {
-						t = h.getNode(v, "mjx-op");
+						t = htmlCmn.getNode(v, "mjx-op");
 					}
 					if (this.data[this.under]) {
-						A = h.getNode(v, "mjx-under");
+						A = htmlCmn.getNode(v, "mjx-under");
 					}
 					if (this.data[this.over]) {
-						y = h.getNode(v, "mjx-over");
+						y = htmlCmn.getNode(v, "mjx-over");
 					}
 					r[0] = t;
 					r[1] = A || y;
@@ -1956,29 +2221,29 @@
 						r = Math.max(r, y * (z[x].w + (z[x].L || 0) + (z[x].R || 0)));
 					}
 				}
-				if (!z[this.base]) { z[this.base] = h.BBOX.empty() }
+				if (!z[this.base]) { z[this.base] = htmlCmn.BBOX.empty() }
 				return r;
 			},
 			CHTMLaddOverscript: function (A, y, E, D, s, r) {
 				var C = this.CHTML;
-				var x, w, v = h.TEX.big_op_spacing5, u; 
+				var x, w, v = htmlCmn.TEX.big_op_spacing5, u; 
 				var z = y[this.over], F = y[this.base], t = z.rscale;
 				if (!r) {
-					var B = h.Element("mjx-stack");
+					var B = htmlCmn.Element("mjx-stack");
 					B.appendChild(A);
 					B.appendChild(s);
 				}
 				if (z.D) { z.d = z.D }
 				if (z.d < 0) {
 					A.firstChild.style.verticalAlign = "top";
-					A.style.height = h.Em(z.h + z.d);
+					A.style.height = htmlCmn.Em(z.h + z.d);
 				}
 				z.x = 0;
 				if (E.accent) {
 					if (z.w < 0.001) {
 						z.x += (z.r - z.l) / 2;
 					}
-					u = h.TEX.rule_thickness;
+					u = htmlCmn.TEX.rule_thickness;
 					v = 0;
 					if (F.skew) {
 						z.x += t * F.skew;
@@ -1988,54 +2253,54 @@
 						}
 					}
 				} else {
-					x = h.TEX.big_op_spacing1;
-					w = h.TEX.big_op_spacing3;
+					x = htmlCmn.TEX.big_op_spacing1;
+					w = htmlCmn.TEX.big_op_spacing3;
 					u = Math.max(x, w - Math.max(0, t * z.d));
 				}
 				z.x += D / 2;
 				z.y = C.h + u + v + t * z.d;
 				if (u) {
-					A.style.paddingBottom = h.Em(u / t);
+					A.style.paddingBottom = htmlCmn.Em(u / t);
 				}
 				if (v) {
-					A.style.paddingTop = h.Em(v / t);
+					A.style.paddingTop = htmlCmn.Em(v / t);
 				}
 				return B;
 			},
 			CHTMLaddUnderscript: function (A, y, D, C, s, z, r) {
 				var B = this.CHTML;
-				var x, w, v = h.TEX.big_op_spacing5, u;
+				var x, w, v = htmlCmn.TEX.big_op_spacing5, u;
 				var E = y[this.under], t = E.rscale;
 				if (!r) {
-					h.addElement(s, "mjx-itable", {}, [["mjx-row", {}, [["mjx-cell"]]], ["mjx-row"]]);
+					htmlCmn.addElement(s, "mjx-itable", {}, [["mjx-row", {}, [["mjx-cell"]]], ["mjx-row"]]);
 					s.firstChild.firstChild.firstChild.appendChild(z);
 					s.firstChild.lastChild.appendChild(A);
 				}
 				if (E.D) { E.d = E.D }
 				if (E.d < 0) {
 					A.firstChild.style.verticalAlign = "top";
-					s.firstChild.style.marginBottom = h.Em(E.d);
+					s.firstChild.style.marginBottom = htmlCmn.Em(E.d);
 				}
 				if (D.accentunder) {
-					u = 2 * h.TEX.rule_thickness;
+					u = 2 * htmlCmn.TEX.rule_thickness;
 					v = 0;
 				} else {
-					x = h.TEX.big_op_spacing2;
-					w = h.TEX.big_op_spacing4;
+					x = htmlCmn.TEX.big_op_spacing2;
+					w = htmlCmn.TEX.big_op_spacing4;
 					u = Math.max(x, w - t * E.h);
 				}
 				E.x = -C / 2;
 				E.y = -(B.d + u + v + t * E.h);
 				if (u) {
-					A.style.paddingTop = h.Em(u / t);
+					A.style.paddingTop = htmlCmn.Em(u / t);
 				}
 				if (v) {
-					A.style.paddingBottom = h.Em(v / t);
+					A.style.paddingBottom = htmlCmn.Em(v / t);
 				}
 			},
 			CHTMLplaceBoxes: function (r, A, z, D, y) {
 				var s = this.CHTML.w, x, u = y.length, v;
-				var C = h.BBOX.zero();
+				var C = htmlCmn.BBOX.zero();
 				C.scale = this.CHTML.scale;
 				C.rscale = this.CHTML.rscale;
 				y[this.base].x = y[this.base].y = 0;
@@ -2055,30 +2320,30 @@
 						v = (x === this.base ? 1 : y[x].rscale);
 						if (y[x].x - E) {
 							var t = (x === this.base ? r : x === this.over ? z : A);
-							t.style.paddingLeft = h.Em((y[x].x - E) / v);
+							t.style.paddingLeft = htmlCmn.Em((y[x].x - E) / v);
 						}
 						C.combine(y[x], y[x].x - E, y[x].y);
 					}
 				}
 				this.CHTML = C;
 			},
-			CHTMLstretchV: i.mbase.CHTMLstretchV,
-			CHTMLstretchH: i.mbase.CHTMLstretchH,
+			CHTMLstretchV: mml.mbase.CHTMLstretchV,
+			CHTMLstretchH: mml.mbase.CHTMLstretchH,
 			CHTMLchildNode: function (t, s) {
 				var r = ["mjx-op", "mjx-under", "mjx-over"];
 				if (this.over === 1) { r[1] = r[2] }
-				return h.getNode(t, r[s]);
+				return htmlCmn.getNode(t, r[s]);
 			}
 		});
-		i.msubsup.Augment({
+		mml.msubsup.Augment({
 			toCommonHTML: function (S, C) {
 				var A = this.getValues("displaystyle", "subscriptshift", "superscriptshift", "texprimestyle");
 				var D, H, z;
 				if (C && C.stretch) {
-					if (this.data[this.base]) { D = h.getNode(S, "mjx-base") }
-					if (this.data[this.sub]) { H = h.getNode(S, "mjx-sub") }
-					if (this.data[this.sup]) { z = h.getNode(S, "mjx-sup") }
-					E = h.getNode(S, "mjx-stack");
+					if (this.data[this.base]) { D = htmlCmn.getNode(S, "mjx-base") }
+					if (this.data[this.sub]) { H = htmlCmn.getNode(S, "mjx-sub") }
+					if (this.data[this.sup]) { z = htmlCmn.getNode(S, "mjx-sup") }
+					E = htmlCmn.getNode(S, "mjx-stack");
 				} else {
 					var K = ["mjx-base", "mjx-sub", "mjx-sup"];
 					if (this.sup === 1) { K[1] = K[2] }
@@ -2100,24 +2365,24 @@
 						z = null;
 					}
 					if (S.childNodes.length === 3) {
-						var E = h.addElement(S, "mjx-stack");
+						var E = htmlCmn.addElement(S, "mjx-stack");
 						E.appendChild(z);
 						E.appendChild(H);
 					}
 				}
-				var F = [], G = h.BBOX.empty(this.CHTML);
+				var F = [], G = htmlCmn.BBOX.empty(this.CHTML);
 				for (var V = 0, T = this.data.length; V < T; V++) {
 					F[V] = this.CHTMLbboxFor(V);
 				}
-				var y = F[this.base] || h.BBOX.empty(), P = F[this.sub], W = F[this.sup];
+				var y = F[this.base] || htmlCmn.BBOX.empty(), P = F[this.sub], W = F[this.sup];
 				var B = (H ? P.rscale : 1), w = (z ? W.rscale : 1);
 				G.combine(y, 0, 0);
-				var X = h.TEX.x_height, N = h.TEX.scriptspace;
-				var Q = h.TEX.sup_drop * w, O = h.TEX.sub_drop * B;
+				var X = htmlCmn.TEX.x_height, N = htmlCmn.TEX.scriptspace;
+				var Q = htmlCmn.TEX.sup_drop * w, O = htmlCmn.TEX.sub_drop * B;
 				var L = y.h - Q, J = y.d + O, Y = 0, R;
 				if (y.ic) {
 					G.w -= y.ic;
-					D.style.marginRight = h.Em(-y.ic);
+					D.style.marginRight = htmlCmn.Em(-y.ic);
 					Y = 1.3 * y.ic + 0.05;
 				}
 				var U = this.data[this.base];
@@ -2133,22 +2398,22 @@
 				if (z) { W.w += N }
 				if (!z) {
 					if (H) {
-						J = Math.max(J, h.TEX.sub1, B * P.h - (4 / 5) * X, A.subscriptshift);
-						H.style.verticalAlign = h.Em(-J / B);
-						H.style.paddingRight = h.Em(N / B);
+						J = Math.max(J, htmlCmn.TEX.sub1, B * P.h - (4 / 5) * X, A.subscriptshift);
+						H.style.verticalAlign = htmlCmn.Em(-J / B);
+						H.style.paddingRight = htmlCmn.Em(N / B);
 						G.combine(P, I, -J);
 					}
 				} else {
 					if (!H) {
-						R = h.TEX[(A.displaystyle ? "sup1" : (A.texprimestyle ? "sup3" : "sup2"))];
+						R = htmlCmn.TEX[(A.displaystyle ? "sup1" : (A.texprimestyle ? "sup3" : "sup2"))];
 						L = Math.max(L, R, w * W.d + (1 / 4) * X, A.superscriptshift);
-						z.style.verticalAlign = h.Em(L / w);
-						z.style.paddingLeft = h.Em(Y / w);
-						z.style.paddingRight = h.Em(N / w);
+						z.style.verticalAlign = htmlCmn.Em(L / w);
+						z.style.paddingLeft = htmlCmn.Em(Y / w);
+						z.style.paddingRight = htmlCmn.Em(N / w);
 						G.combine(W, I + Y, L);
 					} else {
-						J = Math.max(J, h.TEX.sub2);
-						var M = h.TEX.rule_thickness;
+						J = Math.max(J, htmlCmn.TEX.sub2);
+						var M = htmlCmn.TEX.rule_thickness;
 						if ((L - w * W.d) - (B * P.h - J) < 3 * M) {
 							J = 3 * M - L + w * W.d + B * P.h;
 							Q = (4 / 5) * X - (L - w * W.d);
@@ -2156,11 +2421,11 @@
 						}
 						L = Math.max(L, A.superscriptshift);
 						J = Math.max(J, A.subscriptshift);
-						H.style.paddingRight = h.Em(N / B);
-						z.style.paddingBottom = h.Em(L / w + J / B - W.d - P.h / B * w);
-						z.style.paddingLeft = h.Em(Y / w);
-						z.style.paddingRight = h.Em(N / w);
-						E.style.verticalAlign = h.Em(-J);
+						H.style.paddingRight = htmlCmn.Em(N / B);
+						z.style.paddingBottom = htmlCmn.Em(L / w + J / B - W.d - P.h / B * w);
+						z.style.paddingLeft = htmlCmn.Em(Y / w);
+						z.style.paddingRight = htmlCmn.Em(N / w);
+						E.style.verticalAlign = htmlCmn.Em(-J);
 						G.combine(W, I + Y, L);
 						G.combine(P, I, -J);
 					}
@@ -2168,15 +2433,15 @@
 				G.clean();
 				return S;
 			},
-			CHTMLstretchV: i.mbase.CHTMLstretchV,
-			CHTMLstretchH: i.mbase.CHTMLstretchH,
+			CHTMLstretchV: mml.mbase.CHTMLstretchV,
+			CHTMLstretchH: mml.mbase.CHTMLstretchH,
 			CHTMLchildNode: function (t, s) {
 				var r = ["mjx-base", "mjx-sub", "mjx-sup"];
 				if (this.over === 1) { r[1] = r[2] }
-				return h.getNode(t, r[s]);
+				return htmlCmn.getNode(t, r[s]);
 			}
 		});
-		i.mfrac.Augment({
+		mml.mfrac.Augment({
 			toCommonHTML: function (M) {
 				M = this.CHTMLdefaultNode(M, {
 					childNodes: ["mjx-numerator", "mjx-denominator"],
@@ -2188,7 +2453,7 @@
 				var w = this.getValues("linethickness", "displaystyle", "numalign", "denomalign", "bevelled");
 				var N = w.displaystyle;
 				var C = M.firstChild, s = M.lastChild;
-				var x = h.addElement(M, "mjx-box");
+				var x = htmlCmn.addElement(M, "mjx-box");
 				x.appendChild(C);
 				x.appendChild(s);
 				M.appendChild(x);
@@ -2198,21 +2463,21 @@
 				if (w.denomalign !== "center") {
 					s.style.textAlign = w.denomalign;
 				}
-				var O = this.CHTMLbboxFor(0), A = this.CHTMLbboxFor(1), B = h.BBOX.empty(this.CHTML), E = O.rscale, y = A.rscale; w.linethickness = Math.max(0, h.thickness2em(w.linethickness || "0", B.scale));
-				var L = h.TEX.min_rule_thickness / h.em, S = h.TEX.axis_height;
+				var O = this.CHTMLbboxFor(0), A = this.CHTMLbboxFor(1), B = htmlCmn.BBOX.empty(this.CHTML), E = O.rscale, y = A.rscale; w.linethickness = Math.max(0, htmlCmn.thickness2em(w.linethickness || "0", B.scale));
+				var L = htmlCmn.TEX.min_rule_thickness / htmlCmn.em, S = htmlCmn.TEX.axis_height;
 				var I = w.linethickness, K, J, G, F;
 				if (w.bevelled) {
 					x.className += " MJXc-bevelled";
 					var R = (N ? 0.4 : 0.15);
 					var D = Math.max(E * (O.h + O.d), y * (A.h + A.d)) + 2 * R;
-					var Q = h.Element("mjx-bevel");
+					var Q = htmlCmn.Element("mjx-bevel");
 					x.insertBefore(Q, s);
-					var r = h.createDelimiter(Q, 47, D);
+					var r = htmlCmn.createDelimiter(Q, 47, D);
 					G = E * (O.d - O.h) / 2 + S + R;
 					F = y * (A.d - A.h) / 2 + S - R;
-					if (G) { C.style.verticalAlign = h.Em(G / E) }
-					if (F) { s.style.verticalAlign = h.Em(F / y) }
-					Q.style.marginLeft = Q.style.marginRight = h.Em(-R / 2);
+					if (G) { C.style.verticalAlign = htmlCmn.Em(G / E) }
+					if (F) { s.style.verticalAlign = htmlCmn.Em(F / y) }
+					Q.style.marginLeft = Q.style.marginRight = htmlCmn.Em(-R / 2);
 					B.combine(O, 0, G);
 					B.combine(r, E * O.w - R / 2, 0);
 					B.combine(A, E * O.w + r.w - R, F);
@@ -2220,13 +2485,13 @@
 				} else {
 					x.className += " MJXc-stacked";
 					if (N) {
-						G = h.TEX.num1; F = h.TEX.denom1;
+						G = htmlCmn.TEX.num1; F = htmlCmn.TEX.denom1;
 					} else {
-						G = (I === 0 ? h.TEX.num3 : h.TEX.num2);
-						F = h.TEX.denom2;
+						G = (I === 0 ? htmlCmn.TEX.num3 : htmlCmn.TEX.num2);
+						F = htmlCmn.TEX.denom2;
 					}
 					if (I === 0) {
-						K = Math.max((N ? 7 : 3) * h.TEX.rule_thickness, 2 * L);
+						K = Math.max((N ? 7 : 3) * htmlCmn.TEX.rule_thickness, 2 * L);
 						J = (G - O.d * E) - (A.h * y - F);
 						if (J < K) {
 							G += (K - J) / 2;
@@ -2242,26 +2507,26 @@
 						J = (S - I / 2) - (A.h * y - F);
 						if (J < K) { F += (K - J) }
 						O.L = O.R = A.L = A.R = 0.1;
-						var z = h.addElement(x, "mjx-line", {
-							style: { "border-bottom": h.Px(I * B.scale, 1) + " solid", top: h.Em(-I / 2 - S) }
+						var z = htmlCmn.addElement(x, "mjx-line", {
+							style: { "border-bottom": htmlCmn.Px(I * B.scale, 1) + " solid", top: htmlCmn.Em(-I / 2 - S) }
 						});
 					}
 					B.combine(O, 0, G);
 					B.combine(A, 0, -F);
 					B.clean();
-					x.style.width = h.Em(B.w);
-					C.style.width = h.Em(B.w / E);
-					s.style.width = h.Em(B.w / y);
+					x.style.width = htmlCmn.Em(B.w);
+					C.style.width = htmlCmn.Em(B.w / E);
+					s.style.width = htmlCmn.Em(B.w / y);
 					if (z) { z.style.width = x.style.width }
-					C.style.top = h.Em(-B.h / E);
-					s.style.bottom = h.Em(-B.d / y);
-					h.addElement(M, "mjx-vsize", {
-						style: { height: h.Em(B.h + B.d), verticalAlign: h.Em(-B.d) }
+					C.style.top = htmlCmn.Em(-B.h / E);
+					s.style.bottom = htmlCmn.Em(-B.d / y);
+					htmlCmn.addElement(M, "mjx-vsize", {
+						style: { height: htmlCmn.Em(B.h + B.d), verticalAlign: htmlCmn.Em(-B.d) }
 					});
 				}
 				if (!this.texWithDelims && !this.useMMLspacing) {
-					var P = h.TEX.nulldelimiterspace;
-					x.style.padding = "0 " + h.Em(P);
+					var P = htmlCmn.TEX.nulldelimiterspace;
+					x.style.padding = "0 " + htmlCmn.Em(P);
 					B.l += P;
 					B.r += P;
 					B.w += 2 * P;
@@ -2270,32 +2535,32 @@
 			},
 			CHTMLcanStretch: function (r) { return false }
 		});
-		i.msqrt.Augment({
+		mml.msqrt.Augment({
 			toCommonHTML: function (v) {
 				v = this.CHTMLdefaultNode(v, {
 					childNodes: ["mjx-box", "mjx-root"],
 					forceChild: true,
 					noBBox: true
 				});
-				var u = v.firstChild || h.Element("mjx-box");
-				var D = h.addElement(v, "mjx-box");
+				var u = v.firstChild || htmlCmn.Element("mjx-box");
+				var D = htmlCmn.addElement(v, "mjx-box");
 				D.appendChild(u);
-				var E = this.CHTMLbboxFor(0), B = h.BBOX.empty(this.CHTML);
-				var F = h.TEX.rule_thickness, w = h.TEX.surd_height, s = F, r, C;
+				var E = this.CHTMLbboxFor(0), B = htmlCmn.BBOX.empty(this.CHTML);
+				var F = htmlCmn.TEX.rule_thickness, w = htmlCmn.TEX.surd_height, s = F, r, C;
 				if (this.Get("displaystyle")) {
-					s = h.TEX.x_height;
+					s = htmlCmn.TEX.x_height;
 				}
 				r = F + s / 4;
 				C = E.h + E.d + r + F;
-				var y = h.Element("mjx-surd");
+				var y = htmlCmn.Element("mjx-surd");
 				D.insertBefore(y, u);
-				var z = h.createDelimiter(y, 8730, [C - 0.04, C]);
+				var z = htmlCmn.createDelimiter(y, 8730, [C - 0.04, C]);
 				if (z.h + z.d > C) { r = ((z.h + z.d) - (C - F)) / 2 }
 				C = E.h + r + F;
 				var A = this.CHTMLaddRoot(v, z, z.h + z.d - C);
-				u.style.paddingTop = h.Em(r);
-				u.style.borderTop = h.Px(w * E.scale, 1) + " solid";
-				D.style.paddingTop = h.Em(2 * F - w);
+				u.style.paddingTop = htmlCmn.Em(r);
+				u.style.borderTop = htmlCmn.Px(w * E.scale, 1) + " solid";
+				D.style.paddingTop = htmlCmn.Em(2 * F - w);
 				E.h += r + 2 * F;
 				B.combine(z, A, C - z.h);
 				B.combine(E, A + z.w, 0);
@@ -2304,8 +2569,8 @@
 			},
 			CHTMLaddRoot: function () { return 0 }
 		});
-		i.mroot.Augment({
-			toCommonHTML: i.msqrt.prototype.toCommonHTML,
+		mml.mroot.Augment({
+			toCommonHTML: mml.msqrt.prototype.toCommonHTML,
 			CHTMLaddRoot: function (z, t, u) {
 				if (!this.data[1]) { return }
 				var y = this.CHTML, A = this.data[1].CHTML, v = z.firstChild;
@@ -2314,13 +2579,13 @@
 				var x = Math.min(A.w, A.r);
 				var B = Math.max(x, t.offset / r);
 				if (s) {
-					v.style.verticalAlign = h.Em(s / r);
+					v.style.verticalAlign = htmlCmn.Em(s / r);
 				}
 				if (B > x) {
-					v.firstChild.style.paddingLeft = h.Em(B - x);
+					v.firstChild.style.paddingLeft = htmlCmn.Em(B - x);
 				}
 				B -= t.offset / r;
-				v.style.width = h.Em(B);
+				v.style.width = htmlCmn.Em(B);
 				y.combine(A, 0, s);
 				return B * r;
 			},
@@ -2328,7 +2593,7 @@
 				return 0.45 * (r.h + r.d - 0.9) + r.offset + Math.max(0, t.d - 0.075);
 			}
 		});
-		i.mfenced.Augment({
+		mml.mfenced.Augment({
 			toCommonHTML: function (u) {
 				u = this.CHTMLcreateNode(u);
 				this.CHTMLhandleStyle(u);
@@ -2352,7 +2617,7 @@
 				return u;
 			}
 		});
-		i.mrow.Augment({
+		mml.mrow.Augment({
 			toCommonHTML: function (v, s) {
 				s = s || {};
 				v = this.CHTMLdefaultNode(v);
@@ -2366,15 +2631,15 @@
 					if (s.autowidth) { v.style.width = "" }
 				} else {
 					if (x && y.w) {
-						v.style.width = h.Em(Math.max(0, y.w));
+						v.style.width = htmlCmn.Em(Math.max(0, y.w));
 					}
-					if (y.w < 0) { v.style.marginRight = h.Em(y.w) }
+					if (y.w < 0) { v.style.marginRight = htmlCmn.Em(y.w) }
 				}
 				return v;
 			},
 			CHTMLlineBreaks: function () {
 				if (!this.parent.linebreakContainer) { return false }
-				return (l.automatic && this.CHTML.w > h.linebreakWidth) || this.hasNewline();
+				return (line.automatic && this.CHTML.w > htmlCmn.linebreakWidth) || this.hasNewline();
 			},
 			CHTMLstretchV: function (r, s) {
 				this.CHTMLstretchChildV(this.CoreIndex(), r, s); return this.CHTML;
@@ -2383,7 +2648,7 @@
 				this.CHTMLstretchChildH(this.CoreIndex(), r, s); return this.CHTML;
 			}
 		});
-		i.mstyle.Augment({
+		mml.mstyle.Augment({
 			toCommonHTML: function (r) {
 				r = this.CHTMLdefaultNode(r);
 				if (this.scriptlevel && this.data[0]) {
@@ -2392,16 +2657,16 @@
 				return r;
 			}
 		});
-		i.TeXAtom.Augment({
+		mml.TeXAtom.Augment({
 			toCommonHTML: function (w, u) {
 				if (!u || !u.stretch) {
 					w = this.CHTMLdefaultNode(w);
 				}
-				if (this.texClass === i.TEXCLASS.VCENTER) {
-					var r = h.TEX.axis_height, t = this.CHTML;
+				if (this.texClass === mml.TEXCLASS.VCENTER) {
+					var r = htmlCmn.TEX.axis_height, t = this.CHTML;
 					var s = r - (t.h + t.d) / 2 + t.d;
 					if (Math.abs(s) > 0.001) {
-						w.style.verticalAlign = h.Em(s);
+						w.style.verticalAlign = htmlCmn.Em(s);
 						t.h += s;
 						t.t += s;
 						t.d -= s;
@@ -2421,7 +2686,7 @@
 				return this.CHTML;
 			}
 		});
-		i.semantics.Augment({
+		mml.semantics.Augment({
 			toCommonHTML: function (r) {
 				r = this.CHTMLcreateNode(r);
 				if (this.data[0]) {
@@ -2432,25 +2697,26 @@
 				return r;
 			}
 		});
-		i.annotation.Augment({
+		mml.annotation.Augment({
 			toCommonHTML: function (r) {
 				return this.CHTMLcreateNode(r);
 			}
 		});
-		i["annotation-xml"].Augment({ toCommonHTML: i.mbase.CHTMLautoload });
-		i.ms.Augment({ toCommonHTML: i.mbase.CHTMLautoload });
-		i.mglyph.Augment({ toCommonHTML: i.mbase.CHTMLautoload });
-		i.menclose.Augment({ toCommonHTML: i.mbase.CHTMLautoload });
-		i.maction.Augment({ toCommonHTML: i.mbase.CHTMLautoload });
-		i.mmultiscripts.Augment({ toCommonHTML: i.mbase.CHTMLautoload });
-		i.mtable.Augment({ toCommonHTML: i.mbase.CHTMLautoload });
+		mml["annotation-xml"].Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
+		mml.ms.Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
+		mml.mglyph.Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
+		mml.menclose.Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
+		mml.maction.Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
+		mml.mmultiscripts.Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
+		mml.mtable.Augment({ toCommonHTML: mml.mbase.CHTMLautoload });
 		MathJax.Hub.Register.StartupHook("onLoad", function () {
-			setTimeout(MathJax.Callback(["loadComplete", h, "jax.js"]), 0);
+			setTimeout(MathJax.Callback(["loadComplete", htmlCmn, "jax.js"]), 0);
 		})
 	});
+
 	MathJax.Hub.Register.StartupHook("End Cookie", function () {
-		if (c.config.menuSettings.zoom !== "None") {
-			j.Require("[MathJax]/extensions/MathZoom.js");
+		if (hub.config.menuSettings.zoom !== "None") {
+			ajax.Require("[MathJax]/extensions/MathZoom.js");
 		}
 	});
 })(MathJax.Ajax, MathJax.Hub, MathJax.HTML, MathJax.OutputJax.CommonHTML);
