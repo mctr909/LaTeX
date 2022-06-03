@@ -201,6 +201,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				return this.hook.toString.apply(this.hook, arguments);
 			}
 		};
+
 		var ISCALLBACK = function (f) {
 			return (typeof (f) === "function" && f.isCallback);
 		};
@@ -315,14 +316,16 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			}
 			throw Error("Can't make callback from given data");
 		};
-		var DELAY = function (time, callback) {
-			callback = CONSTRUCTOR(callback);
-			callback.timeout = setTimeout(callback, time);
-			return callback;
-		};
-		var WAITFOR = function (callback, signal) {
-			callback = CONSTRUCTOR(callback);
-			if (!callback.called) { WAITSIGNAL(callback, signal); signal.pending++ }
+		var WAITSIGNAL = function (callback, signals) {
+			if (!MathJax.Object.isArray(signals)) { signals = [signals] }
+			if (!callback.signal) {
+				callback.oldExecute = callback.execute;
+				callback.execute = WAITEXECUTE;
+				callback.signal = signals;
+			} else {
+				if (signals.length === 1) { callback.signal.push(signals[0]) }
+				else { callback.signal = callback.signal.concat(signals) }
+			}
 		};
 		var WAITEXECUTE = function () {
 			var signals = this.signal;
@@ -338,43 +341,44 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				}
 			}
 		};
-		var WAITSIGNAL = function (callback, signals) {
-			if (!MathJax.Object.isArray(signals)) { signals = [signals] }
-			if (!callback.signal) {
-				callback.oldExecute = callback.execute;
-				callback.execute = WAITEXECUTE;
-				callback.signal = signals;
-			} else {
-				if (signals.length === 1) { callback.signal.push(signals[0]) }
-				else { callback.signal = callback.signal.concat(signals) }
-			}
-		};
-		var AFTER = function (callback) {
+		var WAITFOR = function (callback, signal) {
 			callback = CONSTRUCTOR(callback);
-			callback.pending = 0;
-			for (var i = 1, m = arguments.length; i < m; i++) {
-				if (arguments[i]) { WAITFOR(arguments[i], callback) }
-			}
-			if (callback.pending === 0) {
-				var result = callback();
-				if (ISCALLBACK(result)) { callback = result }
-			}
-			return callback;
-		};
-		var EXECUTEHOOKS = function (hooks, data, reset) {
-			if (!hooks) { return null }
-			if (!MathJax.Object.isArray(hooks)) { hooks = [hooks] }
-			if (!MathJax.Object.isArray(data)) { data = (data == null ? [] : [data]) }
-			var handler = new HOOKS(reset);
-			for (var i = 0, m = hooks.length; i < m; i++) { handler.Add(hooks[i]) }
-			return handler.Execute.apply(handler, data);
+			if (!callback.called) { WAITSIGNAL(callback, signal); signal.pending++ }
 		};
 
-		MathJax.Callback = CONSTRUCTOR;
-		MathJax.Callback.Delay = DELAY;
-		MathJax.Callback.After = AFTER;
-		MathJax.Callback.ExecuteHooks = EXECUTEHOOKS;
-		
+		(function (name) {
+			var mathJax = window[name];
+			var DELAY = function (time, callback) {
+				callback = CONSTRUCTOR(callback);
+				callback.timeout = setTimeout(callback, time);
+				return callback;
+			};
+			var AFTER = function (callback) {
+				callback = CONSTRUCTOR(callback);
+				callback.pending = 0;
+				for (var i = 1, m = arguments.length; i < m; i++) {
+					if (arguments[i]) { WAITFOR(arguments[i], callback) }
+				}
+				if (callback.pending === 0) {
+					var result = callback();
+					if (ISCALLBACK(result)) { callback = result }
+				}
+				return callback;
+			};
+			var EXECUTEHOOKS = function (hooks, data, reset) {
+				if (!hooks) { return null }
+				if (!MathJax.Object.isArray(hooks)) { hooks = [hooks] }
+				if (!MathJax.Object.isArray(data)) { data = (data == null ? [] : [data]) }
+				var handler = new HOOKS(reset);
+				for (var i = 0, m = hooks.length; i < m; i++) { handler.Add(hooks[i]) }
+				return handler.Execute.apply(handler, data);
+			};
+			mathJax.Callback = CONSTRUCTOR;
+			mathJax.Callback.Delay = DELAY;
+			mathJax.Callback.After = AFTER;
+			mathJax.Callback.ExecuteHooks = EXECUTEHOOKS;
+		})("MathJax");
+
 		MathJax.isPacked = true;
 		MathJax.version = "2.7.1";
 		MathJax.fileversion = "2.7.1";
@@ -395,9 +399,12 @@ if (document.getElementById && document.childNodes && document.createElement) {
 		JAX_WINDOW.Ajax = new AJAX("MathJax");
 
 		(function (d) {
-			var b = window[d], e = "[" + d + "]";
-			var c = b.Hub, a = b.Ajax, f = b.Callback;
-			var g = MathJax.Object.Subclass({
+			var mathJax = window[d];
+			var nameTag = "[" + d + "]";
+			var hub = mathJax.Hub;
+			var ajax = mathJax.Ajax;
+			var callBack = mathJax.Callback;
+			var g = mathJax.Object.Subclass({
 				JAXFILE: "jax.js",
 				require: null,
 				config: {},
@@ -423,7 +430,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 							i.protoFunction("toString", k.toString);
 						}
 					}
-					c.Insert(i.prototype, h);
+					hub.Insert(i.prototype, h);
 					i.Augment(null, j);
 					return this;
 				},
@@ -432,29 +439,29 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				},
 				Register: function (h) { },
 				Config: function () {
-					this.config = c.CombineConfig(this.id, this.config);
+					this.config = hub.CombineConfig(this.id, this.config);
 					if (this.config.Augment) { this.Augment(this.config.Augment) }
 				},
 				Startup: function () { },
 				loadComplete: function (i) {
 					if (i === "config.js") {
-						return a.loadComplete(this.directory + "/" + i);
+						return ajax.loadComplete(this.directory + "/" + i);
 					} else {
 						var h = new QUEUE();
 						h.Push(
-							c.Register.StartupHook("End Config", {}),
-							["Post", c.Startup.signal, this.id + " Jax Config"],
+							hub.Register.StartupHook("End Config", {}),
+							["Post", hub.Startup.signal, this.id + " Jax Config"],
 							["Config", this],
-							["Post", c.Startup.signal, this.id + " Jax Require"],
+							["Post", hub.Startup.signal, this.id + " Jax Require"],
 							[function (j) {
 								return MathJax.Hub.Startup.loadArray(j.require, this.directory);
 							}, this],
 							[function (j, k) {
 								return MathJax.Hub.Startup.loadArray(j.extensions, "extensions/" + k);
 							}, this.config || {}, this.id],
-							["Post", c.Startup.signal, this.id + " Jax Startup"],
+							["Post", hub.Startup.signal, this.id + " Jax Startup"],
 							["Startup", this],
-							["Post", c.Startup.signal, this.id + " Jax Ready"]
+							["Post", hub.Startup.signal, this.id + " Jax Ready"]
 						);
 						if (this.copyTranslate) {
 							h.Push([function (j) {
@@ -463,35 +470,35 @@ if (document.getElementById && document.childNodes && document.createElement) {
 								j.postProcess = j.postTranslate;
 							}, this.constructor.prototype]);
 						}
-						return h.Push(["loadComplete", a, this.directory + "/" + i]);
+						return h.Push(["loadComplete", ajax, this.directory + "/" + i]);
 					}
 				}
 			}, {
 				id: "Jax",
 				version: "2.7.1",
-				directory: e + "/jax",
-				extensionDir: e + "/extensions"
+				directory: nameTag + "/jax",
+				extensionDir: nameTag + "/extensions"
 			});
-			b.InputJax = g.Subclass({
+			mathJax.InputJax = g.Subclass({
 				elementJax: "mml",
 				sourceMenuTitle: ["Original", "Original Form"],
 				copyTranslate: true,
 				Process: function (l, q) {
-					var j = f.Queue(), o;
+					var j = callBack.Queue(), o;
 					var k = this.elementJax;
-					if (!b.Object.isArray(k)) { k = [k] }
+					if (!mathJax.Object.isArray(k)) { k = [k] }
 					for (var n = 0, h = k.length; n < h; n++) {
-						o = b.ElementJax.directory + "/" + k[n] + "/" + this.JAXFILE;
+						o = mathJax.ElementJax.directory + "/" + k[n] + "/" + this.JAXFILE;
 						if (!this.require) {
 							this.require = [];
 						} else {
-							if (!b.Object.isArray(this.require)) { this.require = [this.require] }
+							if (!mathJax.Object.isArray(this.require)) { this.require = [this.require] }
 						}
 						this.require.push(o);
-						j.Push(a.Require(o));
+						j.Push(ajax.Require(o));
 					}
 					o = this.directory + "/" + this.JAXFILE;
-					var p = j.Push(a.Require(o));
+					var p = j.Push(ajax.Require(o));
 					if (!p.called) {
 						this.constructor.prototype.Process = function () {
 							if (!p.called) {
@@ -500,21 +507,21 @@ if (document.getElementById && document.childNodes && document.createElement) {
 							throw Error(o + " failed to load properly");
 						}
 					}
-					k = c.outputJax["jax/" + k[0]];
+					k = hub.outputJax["jax/" + k[0]];
 					if (k) {
-						j.Push(a.Require(k[0].directory + "/" + this.JAXFILE));
+						j.Push(ajax.Require(k[0].directory + "/" + this.JAXFILE));
 					}
 					return j.Push({});
 				},
 				needsUpdate: function (h) {
 					var i = h.SourceElement();
-					return (h.originalText !== b.HTML.getScript(i));
+					return (h.originalText !== mathJax.HTML.getScript(i));
 				},
 				Register: function (h) {
-					if (!c.inputJax) {
-						c.inputJax = {};
+					if (!hub.inputJax) {
+						hub.inputJax = {};
 					}
-					c.inputJax[h] = this;
+					hub.inputJax[h] = this;
 				}
 			}, {
 				id: "InputJax",
@@ -522,7 +529,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				directory: g.directory + "/input",
 				extensionDir: g.extensionDir
 			});
-			b.OutputJax = g.Subclass({
+			mathJax.OutputJax = g.Subclass({
 				copyTranslate: true,
 				preProcess: function (j) {
 					var i, h = this.directory + "/" + this.JAXFILE;
@@ -532,13 +539,13 @@ if (document.getElementById && document.childNodes && document.createElement) {
 						}
 						throw Error(h + " failed to load properly");
 					};
-					i = a.Require(h);
+					i = ajax.Require(h);
 					return i;
 				},
 				Register: function (i) {
-					var h = c.outputJax;
+					var h = hub.outputJax;
 					if (!h[i]) { h[i] = [] }
-					if (h[i].length && (this.id === c.config.menuSettings.renderer || (h.order[this.id] || 0) < (h.order[h[i][0].id] || 0))) {
+					if (h[i].length && (this.id === hub.config.menuSettings.renderer || (h.order[this.id] || 0) < (h.order[h[i][0].id] || 0))) {
 						h[i].unshift(this);
 					} else {
 						h[i].push(this);
@@ -546,11 +553,11 @@ if (document.getElementById && document.childNodes && document.createElement) {
 					if (!this.require) {
 						this.require = []
 					} else {
-						if (!b.Object.isArray(this.require)) {
+						if (!mathJax.Object.isArray(this.require)) {
 							this.require = [this.require];
 						}
 					}
-					this.require.push(b.ElementJax.directory + "/" + (i.split(/\//)[1]) + "/" + this.JAXFILE);
+					this.require.push(mathJax.ElementJax.directory + "/" + (i.split(/\//)[1]) + "/" + this.JAXFILE);
 				},
 				Remove: function (h) { }
 			}, {
@@ -558,10 +565,10 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				version: "2.7.1",
 				directory: g.directory + "/output",
 				extensionDir: g.extensionDir,
-				fontDir: e + (b.isPacked ? "" : "/..") + "/fonts",
-				imageDir: e + (b.isPacked ? "" : "/..") + "/images"
+				fontDir: nameTag + (mathJax.isPacked ? "" : "/..") + "/fonts",
+				imageDir: nameTag + (mathJax.isPacked ? "" : "/..") + "/images"
 			});
-			b.ElementJax = g.Subclass({
+			mathJax.ElementJax = g.Subclass({
 				Init: function (i, h) {
 					return this.constructor.Subclass(i, h);
 				},
@@ -573,14 +580,14 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				sourceMenuTitle: ["MathMLcode", "MathML Code"],
 				Text: function (i, j) {
 					var h = this.SourceElement();
-					b.HTML.setScript(h, i);
+					mathJax.HTML.setScript(h, i);
 					h.MathJax.state = this.STATE.UPDATE;
-					return c.Update(h, j);
+					return hub.Update(h, j);
 				},
 				Reprocess: function (i) {
 					var h = this.SourceElement();
 					h.MathJax.state = this.STATE.UPDATE;
-					return c.Reprocess(h, i);
+					return hub.Reprocess(h, i);
 				},
 				Update: function (h) {
 					return this.Rerender(h);
@@ -588,20 +595,20 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				Rerender: function (i) {
 					var h = this.SourceElement();
 					h.MathJax.state = this.STATE.OUTPUT;
-					return c.Process(h, i);
+					return hub.Process(h, i);
 				},
 				Remove: function (h) {
 					if (this.hover) {
 						this.hover.clear(this);
 					}
-					b.OutputJax[this.outputJax].Remove(this);
+					mathJax.OutputJax[this.outputJax].Remove(this);
 					if (!h) {
-						c.signal.Post(["Remove Math", this.inputID]);
+						hub.signal.Post(["Remove Math", this.inputID]);
 						this.Detach();
 					}
 				},
 				needsUpdate: function () {
-					return b.InputJax[this.inputJax].needsUpdate(this);
+					return mathJax.InputJax[this.inputJax].needsUpdate(this);
 				},
 				SourceElement: function () {
 					return document.getElementById(this.inputID);
@@ -615,11 +622,11 @@ if (document.getElementById && document.childNodes && document.createElement) {
 						if (i.id) {
 							this.inputID = i.id;
 						} else {
-							i.id = this.inputID = b.ElementJax.GetID();
+							i.id = this.inputID = mathJax.ElementJax.GetID();
 							this.newID = 1;
 						}
 					}
-					h.originalText = b.HTML.getScript(i);
+					h.originalText = mathJax.HTML.getScript(i);
 					h.inputJax = j;
 					if (h.root) { h.root.inputID = h.inputID }
 					return h;
@@ -672,17 +679,17 @@ if (document.getElementById && document.childNodes && document.createElement) {
 					return h;
 				}
 			});
-			b.ElementJax.prototype.STATE = b.ElementJax.STATE;
-			b.OutputJax.Error = {
+			mathJax.ElementJax.prototype.STATE = mathJax.ElementJax.STATE;
+			mathJax.OutputJax.Error = {
 				id: "Error",
 				version: "2.7.1",
 				config: {},
 				errors: 0,
 				ContextMenu: function () {
-					return b.Extension.MathEvents.Event.ContextMenu.apply(b.Extension.MathEvents.Event, arguments);
+					return mathJax.Extension.MathEvents.Event.ContextMenu.apply(mathJax.Extension.MathEvents.Event, arguments);
 				},
 				Mousedown: function () {
-					return b.Extension.MathEvents.Event.AltContextMenu.apply(b.Extension.MathEvents.Event, arguments);
+					return mathJax.Extension.MathEvents.Event.AltContextMenu.apply(mathJax.Extension.MathEvents.Event, arguments);
 				},
 				getJaxFromMath: function (h) {
 					return (h.nextSibling.MathJax || {}).error;
@@ -701,7 +708,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 					};
 				}
 			};
-			b.InputJax.Error = {
+			mathJax.InputJax.Error = {
 				id: "Error",
 				version: "2.7.1",
 				config: {},
