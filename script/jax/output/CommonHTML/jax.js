@@ -125,8 +125,10 @@
 		".mjx-box": { display: "inline-block" },
 		".mjx-block": { display: "block" },
 		".mjx-span": { display: "inline" },
-		".mjx-char": { display: "block",
-		"white-space": "pre" },
+		".mjx-char": {
+			display: "block",
+			"white-space": "pre"
+		},
 		".mjx-itable": { display: "inline-table", width: "auto" },
 		".mjx-row": { display: "table-row" },
 		".mjx-cell": { display: "table-cell" },
@@ -747,7 +749,8 @@
 					if (B) { y.push.apply(y, B) }
 				}
 			} else {
-				if (v.cache[u]) { y = v.cache[u]
+				if (v.cache[u]) {
+					y = v.cache[u]
 				} else {
 					v.cache[u] = y = [this.lookupChar(v, u)];
 				}
@@ -1317,7 +1320,8 @@
 			this.t = r.t;
 			this.b = r.b;
 			if (r.pwidth) { this.pwidth = r.pwidth }
-			if (r.D) { this.D = r.D;
+			if (r.D) {
+				this.D = r.D;
 			} else {
 				delete this.D;
 			}
@@ -1390,7 +1394,8 @@
 					if (!r.noBBox) {
 						var x = this.CHTML, u = y.CHTML;
 						x.append(u);
-						if (u.ic) { x.ic = u.ic;
+						if (u.ic) {
+							x.ic = u.ic;
 						} else {
 							delete x.ic;
 						}
@@ -1673,23 +1678,29 @@
 			CHTMLdrawBBox: function (s, t) {
 				if (!t) { t = this.CHTML }
 				var r = htmlCmn.Element(
-					"mjx-box", { style: {
-						opacity: 0.25,
-						"margin-left": htmlCmn.Em(-(t.w + (t.R || 0)))
-					}}, [
-						["mjx-box", { style: {
+					"mjx-box", {
+						style: {
+							opacity: 0.25,
+							"margin-left": htmlCmn.Em(-(t.w + (t.R || 0)))
+						}
+				}, [
+					["mjx-box", {
+						style: {
 							height: htmlCmn.Em(t.h),
 							width: htmlCmn.Em(t.w),
 							"background-color": "red"
-						}}],
-						["mjx-box", { style: {
+						}
+					}],
+					["mjx-box", {
+						style: {
 							height: htmlCmn.Em(t.d),
 							width: htmlCmn.Em(t.w),
 							"margin-left": htmlCmn.Em(-t.w),
 							"vertical-align": htmlCmn.Em(-t.d),
 							"background-color": "green"
-						}}]
-					]
+						}
+					}]
+				]
 				);
 				if (s.nextSibling) {
 					s.parentNode.insertBefore(r, s.nextSibling);
@@ -2226,7 +2237,7 @@
 			},
 			CHTMLaddOverscript: function (A, y, E, D, s, r) {
 				var C = this.CHTML;
-				var x, w, v = htmlCmn.TEX.big_op_spacing5, u; 
+				var x, w, v = htmlCmn.TEX.big_op_spacing5, u;
 				var z = y[this.over], F = y[this.base], t = z.rscale;
 				if (!r) {
 					var B = htmlCmn.Element("mjx-stack");

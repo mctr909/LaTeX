@@ -1,56 +1,116 @@
 ///<reference path="../MathJax.js"/>
-///<reference path="timer.js"/>
+///<reference path="hooks.js"/>
 
+class CONFIG {
+    constructor(root = "", path = { MathJax: "" }) {
+        this.root = root;
+        this.path = path;
+    }
+}
+class STATUS {
+    constructor() {
+        this.OK = true;
+        this.ERROR = false;
+    }
+}
+class TIMER {
+    /**
+     * @param {AJAX} ajax
+     * @param {any} i
+     * @param {number} timeOut
+     * @param {any} l
+     */
+    start(ajax, i, timeOut, l) {
+        var cb = JAX_WINDOW.Callback(i);
+        cb.execute = this.execute;
+        cb.time = this.time;
+        cb.STATUS = ajax.STATUS;
+        cb.timeout = l || ajax.timeout;
+        cb.delay = cb.total = timeOut || 0;
+        if (timeOut) {
+            setTimeout(cb, timeOut);
+        } else {
+            cb();
+        }
+    }
+
+    /**
+     * @param {function} func
+     * @returns 
+     */
+    time(func) {
+        this.total += this.delay;
+        this.delay = Math.floor(this.delay * 1.05 + 5);
+        if (this.total >= this.timeout) {
+            func(this.STATUS.ERROR);
+            return 1;
+        }
+        return 0;
+    }
+
+    file(j, i) {
+        if (i < 0) { JAX_WINDOW.Ajax.loadTimeout(j) }
+        else { JAX_WINDOW.Ajax.loadComplete(j) }
+    }
+
+    execute() {
+        this.hook.call(this.object, this, this.data[0], this.data[1]);
+    }
+
+    checkSafari2(i, j, k) {
+        if (i.time(k)) {
+            return;
+        }
+        if (document.styleSheets.length > j && document.styleSheets[j].cssRules && document.styleSheets[j].cssRules.length) {
+            k(i.STATUS.OK);
+        } else {
+            setTimeout(i, i.delay);
+        }
+    }
+
+    checkLength(i, l, n) {
+        if (i.time(n)) {
+            return;
+        }
+        var m = 0;
+        var j = (l.sheet || l.styleSheet);
+        try {
+            if ((j.cssRules || j.rules || []).length > 0) { m = 1 }
+        } catch (k) {
+            if (k.message.match(/protected variable|restricted URI/)) {
+                m = 1;
+            } else {
+                if (k.message.match(/Security error/)) { m = 1 }
+            }
+        }
+        if (m) {
+            setTimeout(JAX_WINDOW.Callback([n, i.STATUS.OK]), 0);
+        } else {
+            setTimeout(i, i.delay);
+        }
+    }
+}
 class AJAX {
     static SCRIPTS = [];
     static PATH = {};
     static SS_COUNT = 0;
 
-    constructor(name) {
+    constructor(name = "") {
         AJAX.PATH[name] = "";
         //AJAX.PATH.a11y = "[MathJax]/extensions/a11y";
         //AJAX.PATH.Contrib = "https://cdn.mathjax.org/mathjax/contrib";
         this.name = name;
+        /** @type {Array<number>} */
         this.loaded = {};
+        /** @type {Array<{callback:any, timeout:number, status: STATUS, script: any}>} */
         this.loading = {};
+        /** @type {Array<HOOKS>} */
         this.loadHooks = {};
         this.timeout = 15 * 1000;
         this.styleDelay = 1;
-        this.config = { root: "", path: AJAX.PATH };
         this.params = {};
-        this.STATUS = { OK: 1, ERROR: -1 };
-        this.loader = {
-            JS: function (k, m) {
-                var j = this.fileName(k);
-                var i = document.createElement("script");
-                var l = JAX_WINDOW.Callback(["loadTimeout", this, k]);
-                this.loading[k] = {
-                    callback: m,
-                    timeout: setTimeout(l, this.timeout),
-                    status: this.STATUS.OK,
-                    script: i
-                };
-                this.loading[k].message = JAX_WINDOW.Message.File(j);
-                i.onerror = l;
-                i.type = "text/javascript";
-                i.src = k + this.fileRev(j);
-                this.head.appendChild(i);
-            },
-            CSS: function (j, l) {
-                var i = this.fileName(j);
-                var k = document.createElement("link");
-                k.rel = "stylesheet";
-                k.type = "text/css";
-                k.href = j + this.fileRev(i);
-                this.loading[j] = {
-                    callback: l,
-                    message: JAX_WINDOW.Message.File(i),
-                    status: this.STATUS.OK
-                };
-                this.head.appendChild(k);
-                this.timer.create.call(this, [this.timer.file, j], k);
-            }
-        };
+        this.config = new CONFIG("", AJAX.PATH);
+        this.STATUS = new STATUS();
         this.timer = new TIMER();
     }
 
@@ -67,88 +127,126 @@ class AJAX {
         return head;
     }
 
-    fileURL(j) {
-        var i;
-        while ((i = j.match(/^\[([-._a-z0-9]+)\]/i)) && AJAX.PATH.hasOwnProperty(i[1])) {
-            j = (AJAX.PATH[i[1]] || this.config.root) + j.substr(i[1].length + 2);
-        }
-        return j;
+    static FILE_REV(j) {
+        var i = JAX_WINDOW.cdnFileVersions[j] || JAX_WINDOW.cdnVersion || "";
+        if (i) { i = "?V=" + i }
+        return i;
     }
 
-    fileName(j) {
+    /**
+     * @param {string} path 
+     * @returns
+     */
+    fileURL(path) {
+        var i;
+        while ((i = path.match(/^\[([-._a-z0-9]+)\]/i)) && AJAX.PATH.hasOwnProperty(i[1])) {
+            path = (AJAX.PATH[i[1]] || this.config.root) + path.substr(i[1].length + 2);
+        }
+        return path;
+    }
+
+    /**
+     * @param {string} path
+     * @returns
+     */
+    fileName(path) {
         var i = this.config.root;
-        if (j.substr(0, i.length) === i) {
-            j = "[" + this.name + "]" + j.substr(i.length);
+        if (path.substr(0, i.length) === i) {
+            path = "[" + this.name + "]" + path.substr(i.length);
         }
         do {
             var k = false;
             for (var l in AJAX.PATH) {
                 if (AJAX.PATH.hasOwnProperty(l) && AJAX.PATH[l]) {
-                    if (j.substr(0, AJAX.PATH[l].length) === AJAX.PATH[l]) {
-                        j = "[" + l + "]" + j.substr(AJAX.PATH[l].length);
+                    if (path.substr(0, AJAX.PATH[l].length) === AJAX.PATH[l]) {
+                        path = "[" + l + "]" + path.substr(AJAX.PATH[l].length);
                         k = true;
                         break;
                     }
                 }
             }
         } while (k);
-        return j;
-    }
-
-    fileRev(j) {
-        var i = JAX_WINDOW.cdnFileVersions[j] || JAX_WINDOW.cdnVersion || "";
-        if (i) { i = "?V=" + i }
-        return i;
+        return path;
     }
 
     urlRev(i) {
         return this.fileURL(i) + this.fileRev(i);
     }
 
-    Require(k, n) {
-        n = JAX_WINDOW.Callback(n); var l;
-        if (k instanceof Object) {
-            for (var j in k) {
-                if (k.hasOwnProperty(j)) { l = j.toUpperCase(); k = k[j] }
+    /**
+     * @param {string} path 
+     * @param {any} n 
+     * @returns 
+     */
+    Require(path, n) {
+        n = JAX_WINDOW.Callback(n);
+        var ext;
+        if (path instanceof Object) {
+            for (var j in path) {
+                if (path.hasOwnProperty(j)) {
+                    ext = j.toUpperCase();
+                    path = path[j];
+                }
             }
         } else {
-            l = k.split(/\./).pop().toUpperCase();
+            ext = path.split(/\./).pop().toUpperCase();
         }
-        if (this.params.noContrib && k.substr(0, 9) === "[Contrib]") {
+
+        if (this.params.noContrib && path.substr(0, 9) === "[Contrib]") {
             n(this.STATUS.ERROR);
         } else {
-            k = this.fileURL(k);
-            if (this.loaded[k]) {
-                n(this.loaded[k]);
+            path = this.fileURL(path);
+            if (this.loaded[path]) {
+                n(this.loaded[path]);
             } else {
                 var m = {};
-                m[l] = k;
+                m[ext] = path;
                 this.Load(m, n);
             }
         }
         return n;
     }
 
-    Load(k, m) {
+    /**
+     * @param {string} path 
+     * @param {any} m 
+     */
+    JS(path, m) {
+        var j = this.fileName(path);
+        var i = document.createElement("script");
+        var l = JAX_WINDOW.Callback(["loadTimeout", this, path]);
+        this.loading[path] = {
+            callback: m,
+            timeout: setTimeout(l, this.timeout),
+            status: this.STATUS.OK,
+            script: i
+        };
+        this.loading[path].message = JAX_WINDOW.Message.File(j);
+        i.onerror = l;
+        i.type = "text/javascript";
+        i.src = path + AJAX.FILE_REV(j);
+        this.head = AJAX.GET_HEAD(this.head);
+        this.head.appendChild(i);
+    }
+
+    Load(kv, m) {
         m = JAX_WINDOW.Callback(m);
         var l;
-        if (k instanceof Object) {
-            for (var j in k) {
-                if (k.hasOwnProperty(j)) { l = j.toUpperCase(); k = k[j] }
+        if (kv instanceof Object) {
+            for (var j in kv) {
+                if (kv.hasOwnProperty(j)) {
+                    l = j.toUpperCase();
+                    kv = kv[j];
+                }
             }
         } else {
-            l = k.split(/\./).pop().toUpperCase();
+            l = kv.split(/\./).pop().toUpperCase();
         }
-        k = this.fileURL(k);
-        if (this.loading[k]) {
-            this.addHook(k, m);
+        kv = this.fileURL(kv);
+        if (this.loading[kv]) {
+            this.addHook(kv, m);
         } else {
-            this.head = AJAX.GET_HEAD(this.head);
-            if (this.loader[l]) {
-                this.loader[l].call(this, k, m);
-            } else {
-                throw Error("Can't load files of type " + l);
-            }
+            this.JS(kv, m);
         }
         return m;
     }
