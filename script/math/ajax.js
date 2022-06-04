@@ -108,7 +108,6 @@ class AJAX {
         this.loadHooks = {};
         this.timeout = 15 * 1000;
         this.styleDelay = 1;
-        this.params = {};
         this.config = new CONFIG("", AJAX.PATH);
         this.STATUS = new STATUS();
         this.timer = new TIMER();
@@ -174,12 +173,12 @@ class AJAX {
     }
 
     /**
-     * @param {string} path 
-     * @param {any} n 
+     * @param {string} path
+     * @param {array<any>} arr
      * @returns 
      */
-    Require(path, n) {
-        n = JAX_WINDOW.Callback(n);
+    Require(path, arr) {
+        var func = JAX_WINDOW.Callback(arr);
         var ext;
         if (path instanceof Object) {
             for (var j in path) {
@@ -192,31 +191,31 @@ class AJAX {
             ext = path.split(/\./).pop().toUpperCase();
         }
 
-        if (this.params.noContrib && path.substr(0, 9) === "[Contrib]") {
-            n(this.STATUS.ERROR);
+        if (path.substr(0, 9) === "[Contrib]") {
+            func(this.STATUS.ERROR);
         } else {
             path = this.fileURL(path);
             if (this.loaded[path]) {
-                n(this.loaded[path]);
+                func(this.loaded[path]);
             } else {
                 var m = {};
                 m[ext] = path;
-                this.Load(m, n);
+                this.Load(m, func);
             }
         }
-        return n;
+        return func;
     }
 
     /**
      * @param {string} path 
-     * @param {any} m 
+     * @param {any} cb
      */
-    JS(path, m) {
+    JS(path, cb) {
         var j = this.fileName(path);
         var i = document.createElement("script");
         var l = JAX_WINDOW.Callback(["loadTimeout", this, path]);
         this.loading[path] = {
-            callback: m,
+            callback: cb,
             timeout: setTimeout(l, this.timeout),
             status: this.STATUS.OK,
             script: i
@@ -229,8 +228,8 @@ class AJAX {
         this.head.appendChild(i);
     }
 
-    Load(kv, m) {
-        m = JAX_WINDOW.Callback(m);
+    Load(kv, arr) {
+        var func = JAX_WINDOW.Callback(arr);
         var l;
         if (kv instanceof Object) {
             for (var j in kv) {
@@ -244,11 +243,11 @@ class AJAX {
         }
         kv = this.fileURL(kv);
         if (this.loading[kv]) {
-            this.addHook(kv, m);
+            this.addHook(kv, func);
         } else {
-            this.JS(kv, m);
+            this.JS(kv, func);
         }
-        return m;
+        return func;
     }
 
     LoadHook(l, m, k) {

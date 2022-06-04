@@ -18,6 +18,11 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				b = window[d] = {};
 			}
 			var e = [];
+			var a = function () {
+				return function () {
+					return arguments.callee.Init.call(this, arguments);
+				};
+			};
 			var c = function (f) {
 				var g = f.constructor;
 				if (!g) {
@@ -29,11 +34,6 @@ if (document.getElementById && document.childNodes && document.createElement) {
 					}
 				}
 				return g;
-			};
-			var a = function () {
-				return function () {
-					return arguments.callee.Init.call(this, arguments);
-				};
 			};
 			b.Object = c({
 				constructor: a(),
@@ -191,7 +191,8 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			execute: function () {
 				if (!this.called || this.autoReset) {
 					this.called = !this.autoReset;
-					return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
+					var arr = [].slice.call(arguments, 0);
+					return this.hook.apply(this.object, this.data.concat(arr));
 				}
 			},
 			reset: function () {
