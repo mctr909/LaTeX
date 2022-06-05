@@ -4,6 +4,16 @@
 ///<reference path="math/hub.js"/>
 ///<reference path="math/ajax.js"/>
 
+var CALLBACK = null;
+var ISCALLBACK = null;
+var EVAL = null;
+var TESTEVAL = null;
+var CONSTRUCTOR = null;
+var WAITSIGNAL = null;
+var WAITEXECUTE = null;
+var WAITFOR = null;
+var JAX_WINDOW = null;
+
 if (document.getElementById && document.childNodes && document.createElement) {
 	if (!(window.MathJax && MathJax.Hub)) {
 		if (window.MathJax) {
@@ -167,7 +177,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			b.Object.Array = Array;
 		})("MathJax");
 
-		var CALLBACK = function (data) {
+		CALLBACK = function (data) {
 			var cb = function () {
 				return arguments.callee.execute.apply(arguments.callee, arguments);
 			};
@@ -203,13 +213,13 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			}
 		};
 
-		var ISCALLBACK = function (f) {
+		ISCALLBACK = function (f) {
 			return (typeof (f) === "function" && f.isCallback);
 		};
-		var EVAL = function (code) {
+		EVAL = function (code) {
 			return eval.call(window, code);
 		};
-		var TESTEVAL = function () {
+		TESTEVAL = function () {
 			EVAL("var __TeSt_VaR__ = 1");
 			if (window.__TeSt_VaR__) {
 				try { delete window.__TeSt_VaR__ }
@@ -246,7 +256,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			}
 			TESTEVAL = null;
 		};
-		var CONSTRUCTOR = function (args, i) {
+		CONSTRUCTOR = function (args, i) {
 			if (arguments.length > 1) {
 				if (arguments.length === 2 &&
 					!(typeof arguments[0] === "function") &&
@@ -317,7 +327,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 			}
 			throw Error("Can't make callback from given data");
 		};
-		var WAITSIGNAL = function (callback, signals) {
+		WAITSIGNAL = function (callback, signals) {
 			if (!MathJax.Object.isArray(signals)) { signals = [signals] }
 			if (!callback.signal) {
 				callback.oldExecute = callback.execute;
@@ -328,7 +338,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				else { callback.signal = callback.signal.concat(signals) }
 			}
 		};
-		var WAITEXECUTE = function () {
+		WAITEXECUTE = function () {
 			var signals = this.signal;
 			delete this.signal;
 			this.execute = this.oldExecute;
@@ -342,7 +352,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 				}
 			}
 		};
-		var WAITFOR = function (callback, signal) {
+		WAITFOR = function (callback, signal) {
 			callback = CONSTRUCTOR(callback);
 			if (!callback.called) { WAITSIGNAL(callback, signal); signal.pending++ }
 		};
@@ -393,7 +403,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 		MathJax.Hub.Insert(MathJax.Hub.config.styles, MathJax.Message.styles);
 		MathJax.Hub.Insert(MathJax.Hub.config.styles, { ".MathJax_Error": MathJax.Hub.config.errorSettings.style });
 
-		var JAX_WINDOW = window["MathJax"];
+		JAX_WINDOW = window["MathJax"];
 		if (!JAX_WINDOW) {
 			JAX_WINDOW = window["MathJax"] = {};
 		}
