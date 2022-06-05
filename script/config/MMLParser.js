@@ -1355,7 +1355,7 @@ function MML_PARSER(mml) {
 	c.postfix["\u2223"] = d.CLOSE;
 	c.postfix["\u2225"] = d.CLOSE;
 
-	MathJax.ElementJax.mml.loadComplete("jax.js");
+	mml.loadComplete("jax.js");
 }
 
 function MML(mml, browser) {
