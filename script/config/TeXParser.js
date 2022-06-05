@@ -3,7 +3,7 @@ function TEX_PARSER(tex, hub, ajax) {
 	var mml;
 	var isArray = MathJax.Object.isArray;
 
-	var baseClass = {
+	var texBase = {
 		type: "base",
 		endError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
 		closeError: ["ExtraCloseMissingOpen", "Extra close brace or missing open brace"],
@@ -17,6 +17,9 @@ function TEX_PARSER(tex, hub, ajax) {
 		},
 		Push: function () {
 			this.data.push.apply(this.data, arguments);
+			if (0 < this.data.length) {
+				let a = 1;
+			}
 		},
 		Pop: function () {
 			return this.data.pop();
@@ -54,11 +57,12 @@ function TEX_PARSER(tex, hub, ajax) {
 			return this.type + "[" + this.data.join("; ") + "]";
 		}
 	};
-
-	var e = MathJax.Object.Subclass({
+	var texStack = MathJax.Object.Subclass({
 		Init: function (n, m) {
 			this.global = { isInner: m };
-			this.data = [base.start(this.global)];
+			this.data = [
+				base.start(this.global)
+			];
 			if (n) { this.data[0].env = n }
 			this.env = this.data[0].env;
 		},
@@ -67,7 +71,9 @@ function TEX_PARSER(tex, hub, ajax) {
 			for (o = 0, n = arguments.length; o < n; o++) {
 				p = arguments[o];
 				if (!p) { continue }
-				if (p instanceof mml.mbase) { p = base.mml(p) }
+				if (p instanceof mml.mbase) {
+					p = base.mml(p);
+				}
 				p.global = this.global;
 				q = (this.data.length ? this.Top().checkItem(p) : true);
 				if (q instanceof Array) {
@@ -120,7 +126,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			return "stack[\n  " + this.data.join("\n  ") + "\n]"
 		}
 	});
-	var base = e.Item = MathJax.Object.Subclass(baseClass);
+	var base = texStack.Item = MathJax.Object.Subclass(texBase);
 	base.start = base.Subclass({
 		type: "start",
 		isOpen: true,
@@ -2309,7 +2315,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		}
 	};
 	tex.Augment({
-		Stack: e,
+		Stack: texStack,
 		Parse: parser,
 		Definitions: g,
 		Startup: startUp,
