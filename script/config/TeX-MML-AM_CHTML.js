@@ -1853,7 +1853,19 @@ TEX_PARSER(MathJax.InputJax.TeX, MathJax.Hub, MathJax.Ajax);
 		});
 		f.start.Augment({
 			oldCheckItem: f.start.prototype.checkItem,
-			checkItem: function (k) { if (k.type === "stop") { var i = this.mmlData(), j = this.global; if (g.display && !j.tag && !j.tagged && !j.isInner && (a.autoNumber === "all" || j.forcetag)) { this.autoTag() } if (j.tag) { var m = [this.getTag(), b.mtd(i)]; var l = { side: h.config.TagSide, minlabelspacing: h.config.TagIndent, displaystyle: "inherit" }; i = b.mtable(b.mlabeledtr.apply(b, m)).With(l) } return f.mml(i) } return this.oldCheckItem.call(this, k) }
+			checkItem: function (k) {
+				if (k.type === "stop") {
+					var i = this.mmlData(), j = this.global;
+					if (g.display && !j.tag && !j.tagged && !j.isInner && (a.autoNumber === "all" || j.forcetag)) { this.autoTag() }
+					if (j.tag) {
+						var m = [this.getTag(), b.mtd(i)];
+						var l = { side: h.config.TagSide, minlabelspacing: h.config.TagIndent, displaystyle: "inherit" };
+						i = b.mtable(b.mlabeledtr.apply(b, m)).With(l);
+					}
+					return f.mml(i);
+				}
+				return this.oldCheckItem.call(this, k);
+			}
 		});
 		h.prefilterHooks.Add(function (i) {
 			g.display = i.display;

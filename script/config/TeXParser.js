@@ -3,6 +3,58 @@ function TEX_PARSER(tex, hub, ajax) {
 	var mml;
 	var isArray = MathJax.Object.isArray;
 
+	var baseClass = {
+		type: "base",
+		endError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
+		closeError: ["ExtraCloseMissingOpen", "Extra close brace or missing open brace"],
+		rightError: ["MissingLeftExtraRight", "Missing \\left or extra \\right"],
+		Init: function () {
+			if (this.isOpen) {
+				this.env = {};
+			}
+			this.data = [];
+			this.Push.apply(this, arguments);
+		},
+		Push: function () {
+			this.data.push.apply(this.data, arguments);
+		},
+		Pop: function () {
+			return this.data.pop();
+		},
+		mmlData: function (m, n) {
+			if (m == null) { m = true }
+			if (this.data.length === 1 && !n) {
+				return this.data[0];
+			}
+			return mml.mrow.apply(mml, this.data).With((m ? { inferred: true } : {}));
+		},
+		checkItem: function (m) {
+			if (m.type === "over" && this.isOpen) {
+				m.num = this.mmlData(false);
+				this.data = [];
+			}
+			if (m.type === "cell" && this.isOpen) {
+				if (m.linebreak) { return false }
+				tex.Error(["Misplaced", "Misplaced %1", m.name]);
+			}
+			if (m.isClose && this[m.type + "Error"]) {
+				tex.Error(this[m.type + "Error"]);
+			}
+			if (!m.isNotStack) { return true }
+			this.Push(m.data[0]);
+			return false;
+		},
+		With: function (m) {
+			for (var n in m) {
+				if (m.hasOwnProperty(n)) { this[n] = m[n] }
+			}
+			return this;
+		},
+		toString: function () {
+			return this.type + "[" + this.data.join("; ") + "]";
+		}
+	};
+
 	var e = MathJax.Object.Subclass({
 		Init: function (n, m) {
 			this.global = { isInner: m };
@@ -68,58 +120,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			return "stack[\n  " + this.data.join("\n  ") + "\n]"
 		}
 	});
-	var base = e.Item = MathJax.Object.Subclass({
-		type: "base",
-		endError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
-		closeError: ["ExtraCloseMissingOpen", "Extra close brace or missing open brace"],
-		rightError: ["MissingLeftExtraRight", "Missing \\left or extra \\right"],
-		Init: function () {
-			if (this.isOpen) {
-				this.env = {};
-			}
-			this.data = [];
-			this.Push.apply(this, arguments);
-		},
-		Push: function () {
-			this.data.push.apply(this.data, arguments);
-		},
-		Pop: function () {
-			return this.data.pop();
-		},
-		mmlData: function (m, n) {
-			if (m == null) { m = true }
-			if (this.data.length === 1 && !n) {
-				return this.data[0];
-			}
-			return mml.mrow.apply(mml, this.data).With((m ? { inferred: true } : {}));
-		},
-		checkItem: function (m) {
-			if (m.type === "over" && this.isOpen) {
-				m.num = this.mmlData(false);
-				this.data = [];
-			}
-			if (m.type === "cell" && this.isOpen) {
-				if (m.linebreak) { return false }
-				tex.Error(["Misplaced", "Misplaced %1", m.name]);
-			}
-			if (m.isClose && this[m.type + "Error"]) {
-				tex.Error(this[m.type + "Error"]);
-			}
-			if (!m.isNotStack) { return true }
-			this.Push(m.data[0]);
-			return false;
-		},
-		With: function (m) {
-			for (var n in m) {
-				if (m.hasOwnProperty(n)) { this[n] = m[n] }
-			}
-			return this;
-		},
-		toString: function () {
-			return this.type + "[" + this.data.join("; ") + "]";
-		}
-	});
-
+	var base = e.Item = MathJax.Object.Subclass(baseClass);
 	base.start = base.Subclass({
 		type: "start",
 		isOpen: true,
@@ -235,7 +236,8 @@ function TEX_PARSER(tex, hub, ajax) {
 	});
 	base.begin = base.Subclass({
 		type: "begin",
-		isOpen: true, checkItem: function (m) {
+		isOpen: true,
+		checkItem: function (m) {
 			if (m.type === "end") {
 				if (m.name !== this.name) {
 					tex.Error(["EnvBadEnd", "\\begin{%1} ended with \\end{%2}", this.name, m.name]);
@@ -528,7 +530,7 @@ function TEX_PARSER(tex, hub, ajax) {
 	});
 
 	var k = function (m) {
-		return MathJax.Localization._.apply(MathJax.Localization, [["TeX", m]].concat([].slice.call(arguments, 1)))
+		return MathJax.Localization._.apply(MathJax.Localization, [["TeX", m]].concat([].slice.call(arguments, 1)));
 	};
 	var g = {
 		Add: function (m, p, o) {
