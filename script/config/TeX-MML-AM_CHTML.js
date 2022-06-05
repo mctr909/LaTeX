@@ -794,6 +794,20 @@ class Ascii2Jax {
 	MathJax.InputJax.MathML.loadComplete("config.js");
 }
 {
+	MathJax.OutputJax.CommonHTML = MathJax.OutputJax(new CommonHTML());
+	if (!MathJax.Hub.config.delayJaxRegistration) {
+		MathJax.OutputJax.CommonHTML.Register("jax/mml");
+	}
+	MathJax.OutputJax.CommonHTML.loadComplete("config.js");
+}
+{
+	MathJax.OutputJax.PreviewHTML = MathJax.OutputJax(new PreviewHTML());
+	if (!MathJax.Hub.config.delayJaxRegistration) {
+		MathJax.OutputJax.PreviewHTML.Register("jax/mml");
+	}
+	MathJax.OutputJax.PreviewHTML.loadComplete("config.js");
+}
+{
 	MathJax.InputJax.AsciiMath = MathJax.InputJax({
 		id: "AsciiMath",
 		version: "2.7.1",
@@ -809,35 +823,16 @@ class Ascii2Jax {
 	MathJax.InputJax.AsciiMath.Register("math/asciimath");
 	MathJax.InputJax.AsciiMath.loadComplete("config.js");
 }
-{
-	MathJax.OutputJax.CommonHTML = MathJax.OutputJax(new CommonHTML());
-	if (!MathJax.Hub.config.delayJaxRegistration) {
-		MathJax.OutputJax.CommonHTML.Register("jax/mml");
-	}
-	MathJax.OutputJax.CommonHTML.loadComplete("config.js");
-}
-{
-	MathJax.OutputJax.PreviewHTML = MathJax.OutputJax(new PreviewHTML());
-	if (!MathJax.Hub.config.delayJaxRegistration) {
-		MathJax.OutputJax.PreviewHTML.Register("jax/mml");
-	}
-	MathJax.OutputJax.PreviewHTML.loadComplete("config.js");
-}
-{
-	MathJax.Extension.tex2jax = new Tex2Jax();
-	MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.tex2jax]);
-	MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");
-}
-{
-	MathJax.Extension.mml2jax = new MML2Jax();
-	MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.mml2jax], 5);
-	MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
-}
-{
-	MathJax.Extension.asciimath2jax = new Ascii2Jax();
-	MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.asciimath2jax]);
-	MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
-}
+
+MathJax.Extension.tex2jax = new Tex2Jax();
+MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.tex2jax]);
+MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");
+MathJax.Extension.mml2jax = new MML2Jax();
+MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.mml2jax], 5);
+MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
+MathJax.Extension.asciimath2jax = new Ascii2Jax();
+MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.asciimath2jax]);
+MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 
 (function (hub, html, ajax, cb, loc, ojax, ijax) {
 	var version = "2.7.1";
@@ -1126,7 +1121,7 @@ MathJax.ElementJax.mml.Augment({
 
 MML_PARSER(MathJax.ElementJax.mml);
 
-{
+if (false){
 	MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function () {
 		var c = "2.7.1";
 		var a = MathJax.ElementJax.mml, b = MathJax.Hub.config.menuSettings;
@@ -1366,7 +1361,7 @@ MML_PARSER(MathJax.ElementJax.mml);
 	});
 	MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
 }
-{
+if (false){
 	(function (b, e) {
 		var d = "2.7.1";
 		var a = b.CombineConfig("TeX.noErrors", {
@@ -1627,7 +1622,7 @@ MML_PARSER(MathJax.ElementJax.mml);
 	})(MathJax.Hub, MathJax.HTML);
 	MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noErrors.js");
 }
-{
+if (false){
 	MathJax.Extension["TeX/noUndefined"] = {
 		version: "2.7.1",
 		config: MathJax.Hub.CombineConfig("TeX.noUndefined", { disabled: false, attributes: { mathcolor: "red" } })
@@ -1652,7 +1647,7 @@ MML_PARSER(MathJax.ElementJax.mml);
 
 TEX_PARSER(MathJax.InputJax.TeX, MathJax.Hub, MathJax.Ajax);
 
-{
+if (true){
 	MathJax.Extension["TeX/AMSmath"] = {
 		version: "2.7.1",
 		number: 0,
@@ -2005,7 +2000,7 @@ TEX_PARSER(MathJax.InputJax.TeX, MathJax.Hub, MathJax.Ajax);
 	});
 	MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSmath.js");
 }
-{
+if (false){
 	MathJax.Extension["TeX/AMSsymbols"] = { version: "2.7.1" };
 	MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
 		var a = MathJax.ElementJax.mml, b = MathJax.InputJax.TeX.Definitions;
@@ -2079,276 +2074,12 @@ TEX_PARSER(MathJax.InputJax.TeX, MathJax.Hub, MathJax.Ajax);
 	MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 }
 
-(function (mml, browser) {
-	var a;
-	var b = function (e) {
-		return MathJax.Localization._.apply(MathJax.Localization, [["MathML", e]].concat([].slice.call(arguments, 1)));
-	};
-	mml.Parse = MathJax.Object.Subclass({
-		Init: function (f, e) { this.Parse(f, e) },
-		Parse: function (h, e) { var j; if (typeof h !== "string") { j = h.parentNode } else { j = mml.ParseXML(this.preProcessMath.call(this, h)); if (j == null) { mml.Error(["ErrorParsingMathML", "Error parsing MathML"]) } } var g = j.getElementsByTagName("parsererror")[0]; if (g) { mml.Error(["ParsingError", "Error parsing MathML: %1", g.textContent.replace(/This page.*?errors:|XML Parsing Error: |Below is a rendering of the page.*/g, "")]) } if (j.childNodes.length !== 1) { mml.Error(["MathMLSingleElement", "MathML must be formed by a single element"]) } if (j.firstChild.nodeName.toLowerCase() === "html") { var f = j.getElementsByTagName("h1")[0]; if (f && f.textContent === "XML parsing error" && f.nextSibling) { mml.Error(["ParsingError", "Error parsing MathML: %1", String(f.nextSibling.nodeValue).replace(/fatal parsing error: /, "")]) } } if (j.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/, "") !== "math") { mml.Error(["MathMLRootElement", "MathML must be formed by a <math> element, not %1", "<" + j.firstChild.nodeName + ">"]) } var i = { math: j.firstChild, script: e }; mml.DOMfilterHooks.Execute(i); this.mml = this.MakeMML(i.math) },
-		MakeMML: function (h) { var i = String(h.getAttribute("class") || ""); var f, g = h.nodeName.toLowerCase().replace(/^[a-z]+:/, ""); var e = (i.match(/(^| )MJX-TeXAtom-([^ ]*)/)); if (e) { f = this.TeXAtom(e[2], e[2] === "OP" && !i.match(/MJX-fixedlimits/)) } else { if (!(a[g] && a[g].isa && a[g].isa(a.mbase))) { MathJax.Hub.signal.Post(["MathML Jax - unknown node type", g]); return a.Error(b("UnknownNodeType", "Unknown node type: %1", g)) } else { f = a[g]() } } this.AddAttributes(f, h); this.CheckClass(f, f["class"]); this.AddChildren(f, h); if (mml.config.useMathMLspacing) { f.useMMLspacing = 8 } return f },
-		TeXAtom: function (g, f) { var e = a.TeXAtom().With({ texClass: a.TEXCLASS[g] }); if (f) { e.movesupsub = e.movablelimits = true } return e },
-		CheckClass: function (f, h) { h = (h || "").split(/ /); var j = []; for (var g = 0, e = h.length; g < e; g++) { if (h[g].substr(0, 4) === "MJX-") { if (h[g] === "MJX-arrow") { if (!f.notation.match("/" + a.NOTATION.UPDIAGONALARROW + "/")) { f.notation += " " + a.NOTATION.UPDIAGONALARROW } } else { if (h[g] === "MJX-variant") { f.variantForm = true; if (!MathJax.Extension["TeX/AMSsymbols"]) { MathJax.Hub.RestartAfter(MathJax.Ajax.Require("[MathJax]/extensions/TeX/AMSsymbols.js")) } } else { if (h[g].substr(0, 11) !== "MJX-TeXAtom") { f.mathvariant = h[g].substr(3); if (f.mathvariant === "-tex-caligraphic-bold" || f.mathvariant === "-tex-oldstyle-bold") { if (!MathJax.Extension["TeX/boldsymbol"]) { MathJax.Hub.RestartAfter(MathJax.Ajax.Require("[MathJax]/extensions/TeX/boldsymbol.js")) } } } } } } else { j.push(h[g]) } } if (j.length) { f["class"] = j.join(" ") } else { delete f["class"] } },
-		AddAttributes: function (g, j) { g.attr = {}; g.attrNames = []; for (var h = 0, e = j.attributes.length; h < e; h++) { var f = j.attributes[h].name; if (f == "xlink:href") { f = "href" } if (f.match(/:/)) { continue } if (f.match(/^_moz-math-((column|row)(align|line)|font-style)$/)) { continue } var k = j.attributes[h].value; k = this.filterAttribute(f, k); var l = (g.type === "mstyle" ? a.math.prototype.defaults : g.defaults); if (k != null) { var n = k.toLowerCase(); if (n === "true" || n === "false") { if (typeof (l[f]) === "boolean" || l[f] === a.INHERIT || g.type === "math" || g.type === "mstyle" || (l[f] === a.AUTO && (g.defaultDef == null || typeof (g.defaultDef[f]) === "boolean"))) { k = (n === "true") } } if (l[f] != null || a.copyAttributes[f]) { g[f] = k } else { g.attr[f] = k } g.attrNames.push(f) } } },
-		filterAttribute: function (_e, f) { return f },
-		AddChildren: function (e, g) { for (var k = 0, j = g.childNodes.length; k < j; k++) { var f = g.childNodes[k]; if (f.nodeName === "#comment") { continue } if (f.nodeName === "#text") { if ((e.isToken || e.isChars) && !e.mmlSelfClosing) { var o = f.nodeValue; if (e.isToken) { o = o.replace(/&([a-z][a-z0-9]*);/ig, this.replaceEntity); o = this.trimSpace(o) } e.Append(a.chars(o)) } else { if (f.nodeValue.match(/\S/)) { mml.Error(["UnexpectedTextNode", "Unexpected text node: %1", "'" + f.nodeValue + "'"]) } } } else { if (e.type === "annotation-xml") { e.Append(a.xml(f)) } else { var h = this.MakeMML(f); e.Append(h); if (h.mmlSelfClosing && h.data.length) { e.Append.apply(e, h.data); h.data = [] } } } } if (e.type === "mrow" && e.data.length >= 2) { var l = e.data[0], n = e.data[e.data.length - 1]; if (l.type === "mo" && l.Get("fence") && n.type === "mo" && n.Get("fence")) { if (l.data[0]) { e.open = l.data.join("") } if (n.data[0]) { e.close = n.data.join("") } } } },
-		preProcessMath: function (f) { if (f.match(/^<[a-z]+:/i) && !f.match(/^<[^<>]* xmlns:/)) { f = f.replace(/^<([a-z]+)(:math)/i, '<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"') } var e = f.match(/^(<math( ('.*?'|".*?"|[^>])+)>)/i); if (e && e[2].match(/ (?!xmlns=)[a-z]+=\"http:/i)) { f = e[1].replace(/ (?!xmlns=)([a-z]+=(['"])http:.*?\2)/ig, " xmlns:$1 $1") + f.substr(e[0].length) } if (f.match(/^<math/i) && !f.match(/^<[^<>]* xmlns=/)) { f = f.replace(/^<(math)/i, '<math xmlns="http://www.w3.org/1998/Math/MathML"') } f = f.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/, "$2"); return f.replace(/&([a-z][a-z0-9]*);/ig, this.replaceEntity) },
-		trimSpace: function (e) { return e.replace(/[\t\n\r]/g, " ").replace(/^ +/, "").replace(/ +$/, "").replace(/  +/g, " ") },
-		replaceEntity: function (g, f) { if (f.match(/^(lt|amp|quot)$/)) { return g } if (mml.Parse.Entity[f]) { return mml.Parse.Entity[f] } var h = f.charAt(0).toLowerCase(); var e = f.match(/^[a-zA-Z](fr|scr|opf)$/); if (e) { h = e[1] } if (!mml.Parse.loaded[h]) { mml.Parse.loaded[h] = true; MathJax.Hub.RestartAfter(MathJax.Ajax.Require(mml.entityDir + "/" + h + ".js")) } return g }
-	}, {
-		loaded: []
-	});
-	mml.Augment({
-		sourceMenuTitle: [
-			"OriginalMathML",
-			"Original MathML"
-		],
-		prefilterHooks: new HOOKS(true),
-		DOMfilterHooks: new HOOKS(true),
-		postfilterHooks: new HOOKS(true),
-		Translate: function (e) { if (!this.ParseXML) { this.ParseXML = this.createParser() } var f, h, i = { script: e }; if (e.firstChild && e.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/, "") === "math") { i.math = e.firstChild } else { h = MathJax.HTML.getScript(e); if (browser.isMSIE) { h = h.replace(/(&nbsp;)+$/, "") } i.math = h } var j = this.prefilterHooks.Execute(i); if (j) { return j } h = i.math; try { f = mml.Parse(h, e).mml } catch (g) { if (!g.mathmlError) { throw g } f = this.formatError(g, h, e) } i.math = a(f); return this.postfilterHooks.Execute(i) || i.math },
-		prefilterMath: function (f, _e) { return f },
-		prefilterMathML: function (f, _e) { return f },
-		formatError: function (h, g, e) { var f = h.message.replace(/\n.*/, ""); MathJax.Hub.signal.Post(["MathML Jax - parse error", f, g, e]); return a.Error(f) },
-		Error: function (e) { if (MathJax.Object.isArray(e)) { e = b.apply(b, e) } throw MathJax.Hub.Insert(Error(e), { mathmlError: true }) },
-		parseDOM: function (e) { return this.parser.parseFromString(e, "text/xml") },
-		parseMS: function (e) { return (this.parser.loadXML(e) ? this.parser : null) },
-		parseDIV: function (e) { this.div.innerHTML = "<div>" + e.replace(/<([a-z]+)([^>]*)\/>/g, "<$1$2></$1>") + "</div>"; var f = this.div.firstChild; this.div.innerHTML = ""; return f },
-		parseError: function (_e) { return null },
-		createMSParser: function () { var j = null; var f = ["MSXML2.DOMDocument.6.0", "MSXML2.DOMDocument.5.0", "MSXML2.DOMDocument.4.0", "MSXML2.DOMDocument.3.0", "MSXML2.DOMDocument.2.0", "Microsoft.XMLDOM"]; for (var g = 0, e = f.length; g < e && !j; g++) { try { j = new ActiveXObject(f[g]) } catch (h) { } } return j },
-		createParser: function () { if (window.DOMParser) { this.parser = new DOMParser(); return (this.parseDOM) } else { if (window.ActiveXObject) { this.parser = this.createMSParser(); if (!this.parser) { MathJax.Localization.Try(this.parserCreationError); return (this.parseError) } this.parser.async = false; return (this.parseMS) } } this.div = MathJax.Hub.Insert(document.createElement("div"), { style: { visibility: "hidden", overflow: "hidden", height: "1px", position: "absolute", top: 0 } }); if (!document.body.firstChild) { document.body.appendChild(this.div) } else { document.body.insertBefore(this.div, document.body.firstChild) } return (this.parseDIV) },
-		parserCreationError: function () { alert(b("CantCreateXMLParser", "MathJax can't create an XML parser for MathML.  Check that\nthe 'Script ActiveX controls marked safe for scripting' security\nsetting is enabled (use the Internet Options item in the Tools\nmenu, and select the Security panel, then press the Custom Level\nbutton to check this).\n\nMathML equations will not be able to be processed by MathJax.")) },
-		Startup: function () { a = MathJax.ElementJax.mml; a.mspace.Augment({ mmlSelfClosing: true }); a.none.Augment({ mmlSelfClosing: true }); a.mprescripts.Augment({ mmlSelfClosing: true }); a.maligngroup.Augment({ mmlSelfClosing: true }); a.malignmark.Augment({ mmlSelfClosing: true }) }
-	});
-	mml.prefilterHooks.Add(function (e) {
-		e.math = (typeof (e.math) === "string" ? mml.prefilterMath(e.math, e.script) : mml.prefilterMathML(e.math, e.script));
-	});
-	mml.Parse.Entity = {
-		ApplyFunction: "\u2061", Backslash: "\u2216", Because: "\u2235", Breve: "\u02D8", Cap: "\u22D2", CenterDot: "\u00B7", CircleDot: "\u2299", CircleMinus: "\u2296", CirclePlus: "\u2295", CircleTimes: "\u2297", Congruent: "\u2261", ContourIntegral: "\u222E", Coproduct: "\u2210", Cross: "\u2A2F", Cup: "\u22D3", CupCap: "\u224D", Dagger: "\u2021", Del: "\u2207", Delta: "\u0394", Diamond: "\u22C4", DifferentialD: "\u2146", DotEqual: "\u2250", DoubleDot: "\u00A8", DoubleRightTee: "\u22A8", DoubleVerticalBar: "\u2225", DownArrow: "\u2193", DownLeftVector: "\u21BD", DownRightVector: "\u21C1", DownTee: "\u22A4", Downarrow: "\u21D3", Element: "\u2208", EqualTilde: "\u2242", Equilibrium: "\u21CC", Exists: "\u2203", ExponentialE: "\u2147", FilledVerySmallSquare: "\u25AA", ForAll: "\u2200", Gamma: "\u0393", Gg: "\u22D9", GreaterEqual: "\u2265", GreaterEqualLess: "\u22DB", GreaterFullEqual: "\u2267", GreaterLess: "\u2277", GreaterSlantEqual: "\u2A7E", GreaterTilde: "\u2273", Hacek: "\u02C7", Hat: "\u005E", HumpDownHump: "\u224E", HumpEqual: "\u224F", Im: "\u2111", ImaginaryI: "\u2148", Integral: "\u222B", Intersection: "\u22C2", InvisibleComma: "\u2063", InvisibleTimes: "\u2062", Lambda: "\u039B", Larr: "\u219E", LeftAngleBracket: "\u27E8", LeftArrow: "\u2190", LeftArrowRightArrow: "\u21C6", LeftCeiling: "\u2308", LeftDownVector: "\u21C3", LeftFloor: "\u230A", LeftRightArrow: "\u2194", LeftTee: "\u22A3", LeftTriangle: "\u22B2", LeftTriangleEqual: "\u22B4", LeftUpVector: "\u21BF", LeftVector: "\u21BC", Leftarrow: "\u21D0", Leftrightarrow: "\u21D4", LessEqualGreater: "\u22DA", LessFullEqual: "\u2266", LessGreater: "\u2276", LessSlantEqual: "\u2A7D", LessTilde: "\u2272", Ll: "\u22D8", Lleftarrow: "\u21DA", LongLeftArrow: "\u27F5", LongLeftRightArrow: "\u27F7", LongRightArrow: "\u27F6", Longleftarrow: "\u27F8", Longleftrightarrow: "\u27FA", Longrightarrow: "\u27F9", Lsh: "\u21B0", MinusPlus: "\u2213", NestedGreaterGreater: "\u226B", NestedLessLess: "\u226A", NotDoubleVerticalBar: "\u2226", NotElement: "\u2209", NotEqual: "\u2260", NotExists: "\u2204", NotGreater: "\u226F", NotGreaterEqual: "\u2271", NotLeftTriangle: "\u22EA", NotLeftTriangleEqual: "\u22EC", NotLess: "\u226E", NotLessEqual: "\u2270", NotPrecedes: "\u2280", NotPrecedesSlantEqual: "\u22E0", NotRightTriangle: "\u22EB", NotRightTriangleEqual: "\u22ED", NotSubsetEqual: "\u2288", NotSucceeds: "\u2281", NotSucceedsSlantEqual: "\u22E1", NotSupersetEqual: "\u2289", NotTilde: "\u2241", NotVerticalBar: "\u2224", Omega: "\u03A9", OverBar: "\u203E", OverBrace: "\u23DE", PartialD: "\u2202", Phi: "\u03A6", Pi: "\u03A0", PlusMinus: "\u00B1", Precedes: "\u227A", PrecedesEqual: "\u2AAF", PrecedesSlantEqual: "\u227C", PrecedesTilde: "\u227E", Product: "\u220F", Proportional: "\u221D", Psi: "\u03A8", Rarr: "\u21A0", Re: "\u211C", ReverseEquilibrium: "\u21CB", RightAngleBracket: "\u27E9", RightArrow: "\u2192", RightArrowLeftArrow: "\u21C4", RightCeiling: "\u2309", RightDownVector: "\u21C2", RightFloor: "\u230B", RightTee: "\u22A2", RightTeeArrow: "\u21A6", RightTriangle: "\u22B3", RightTriangleEqual: "\u22B5", RightUpVector: "\u21BE", RightVector: "\u21C0", Rightarrow: "\u21D2", Rrightarrow: "\u21DB", Rsh: "\u21B1", Sigma: "\u03A3", SmallCircle: "\u2218", Sqrt: "\u221A", Square: "\u25A1", SquareIntersection: "\u2293", SquareSubset: "\u228F", SquareSubsetEqual: "\u2291", SquareSuperset: "\u2290", SquareSupersetEqual: "\u2292", SquareUnion: "\u2294", Star: "\u22C6", Subset: "\u22D0", SubsetEqual: "\u2286", Succeeds: "\u227B", SucceedsEqual: "\u2AB0", SucceedsSlantEqual: "\u227D", SucceedsTilde: "\u227F", SuchThat: "\u220B", Sum: "\u2211", Superset: "\u2283", SupersetEqual: "\u2287", Supset: "\u22D1", Therefore: "\u2234", Theta: "\u0398", Tilde: "\u223C", TildeEqual: "\u2243", TildeFullEqual: "\u2245", TildeTilde: "\u2248", UnderBar: "\u005F", UnderBrace: "\u23DF", Union: "\u22C3", UnionPlus: "\u228E", UpArrow: "\u2191", UpDownArrow: "\u2195", UpTee: "\u22A5", Uparrow: "\u21D1", Updownarrow: "\u21D5", Upsilon: "\u03A5", Vdash: "\u22A9", Vee: "\u22C1", VerticalBar: "\u2223", VerticalTilde: "\u2240", Vvdash: "\u22AA", Wedge: "\u22C0", Xi: "\u039E", acute: "\u00B4", aleph: "\u2135", alpha: "\u03B1", amalg: "\u2A3F", and: "\u2227", ang: "\u2220", angmsd: "\u2221", angsph: "\u2222", ape: "\u224A", backprime: "\u2035", backsim: "\u223D", backsimeq: "\u22CD", beta: "\u03B2", beth: "\u2136", between: "\u226C", bigcirc: "\u25EF", bigodot: "\u2A00", bigoplus: "\u2A01", bigotimes: "\u2A02", bigsqcup: "\u2A06", bigstar: "\u2605", bigtriangledown: "\u25BD", bigtriangleup: "\u25B3", biguplus: "\u2A04", blacklozenge: "\u29EB", blacktriangle: "\u25B4", blacktriangledown: "\u25BE", blacktriangleleft: "\u25C2", bowtie: "\u22C8", boxdl: "\u2510", boxdr: "\u250C", boxminus: "\u229F", boxplus: "\u229E", boxtimes: "\u22A0", boxul: "\u2518", boxur: "\u2514", bsol: "\u005C", bull: "\u2022", cap: "\u2229", check: "\u2713", chi: "\u03C7", circ: "\u02C6", circeq: "\u2257", circlearrowleft: "\u21BA", circlearrowright: "\u21BB", circledR: "\u00AE", circledS: "\u24C8", circledast: "\u229B", circledcirc: "\u229A", circleddash: "\u229D", clubs: "\u2663", colon: "\u003A", comp: "\u2201", ctdot: "\u22EF", cuepr: "\u22DE", cuesc: "\u22DF", cularr: "\u21B6", cup: "\u222A", curarr: "\u21B7", curlyvee: "\u22CE", curlywedge: "\u22CF", dagger: "\u2020", daleth: "\u2138", ddarr: "\u21CA", deg: "\u00B0", delta: "\u03B4", digamma: "\u03DD", div: "\u00F7", divideontimes: "\u22C7", dot: "\u02D9", doteqdot: "\u2251", dotplus: "\u2214", dotsquare: "\u22A1", dtdot: "\u22F1", ecir: "\u2256", efDot: "\u2252", egs: "\u2A96", ell: "\u2113", els: "\u2A95", empty: "\u2205", epsi: "\u03B5", epsiv: "\u03F5", erDot: "\u2253", eta: "\u03B7", eth: "\u00F0", flat: "\u266D", fork: "\u22D4", frown: "\u2322", gEl: "\u2A8C", gamma: "\u03B3", gap: "\u2A86", gimel: "\u2137", gnE: "\u2269", gnap: "\u2A8A", gne: "\u2A88", gnsim: "\u22E7", gt: "\u003E", gtdot: "\u22D7", harrw: "\u21AD", hbar: "\u210F", hellip: "\u2026", hookleftarrow: "\u21A9", hookrightarrow: "\u21AA", imath: "\u0131", infin: "\u221E", intcal: "\u22BA", iota: "\u03B9", jmath: "\u0237", kappa: "\u03BA", kappav: "\u03F0", lEg: "\u2A8B", lambda: "\u03BB", lap: "\u2A85", larrlp: "\u21AB", larrtl: "\u21A2", lbrace: "\u007B", lbrack: "\u005B", le: "\u2264", leftleftarrows: "\u21C7", leftthreetimes: "\u22CB", lessdot: "\u22D6", lmoust: "\u23B0", lnE: "\u2268", lnap: "\u2A89", lne: "\u2A87", lnsim: "\u22E6", longmapsto: "\u27FC", looparrowright: "\u21AC", lowast: "\u2217", loz: "\u25CA", lt: "\u003C", ltimes: "\u22C9", ltri: "\u25C3", macr: "\u00AF", malt: "\u2720", mho: "\u2127", mu: "\u03BC", multimap: "\u22B8", nLeftarrow: "\u21CD", nLeftrightarrow: "\u21CE", nRightarrow: "\u21CF", nVDash: "\u22AF", nVdash: "\u22AE", natur: "\u266E", nearr: "\u2197", nharr: "\u21AE", nlarr: "\u219A", not: "\u00AC", nrarr: "\u219B", nu: "\u03BD", nvDash: "\u22AD", nvdash: "\u22AC", nwarr: "\u2196", omega: "\u03C9", omicron: "\u03BF", or: "\u2228", osol: "\u2298", period: "\u002E", phi: "\u03C6", phiv: "\u03D5", pi: "\u03C0", piv: "\u03D6", prap: "\u2AB7", precnapprox: "\u2AB9", precneqq: "\u2AB5", precnsim: "\u22E8", prime: "\u2032", psi: "\u03C8", rarrtl: "\u21A3", rbrace: "\u007D", rbrack: "\u005D", rho: "\u03C1", rhov: "\u03F1", rightrightarrows: "\u21C9", rightthreetimes: "\u22CC", ring: "\u02DA", rmoust: "\u23B1", rtimes: "\u22CA", rtri: "\u25B9", scap: "\u2AB8", scnE: "\u2AB6", scnap: "\u2ABA", scnsim: "\u22E9", sdot: "\u22C5", searr: "\u2198", sect: "\u00A7", sharp: "\u266F", sigma: "\u03C3", sigmav: "\u03C2", simne: "\u2246", smile: "\u2323", spades: "\u2660", sub: "\u2282", subE: "\u2AC5", subnE: "\u2ACB", subne: "\u228A", supE: "\u2AC6", supnE: "\u2ACC", supne: "\u228B", swarr: "\u2199", tau: "\u03C4", theta: "\u03B8", thetav: "\u03D1", tilde: "\u02DC", times: "\u00D7", triangle: "\u25B5", triangleq: "\u225C", upsi: "\u03C5", upuparrows: "\u21C8", veebar: "\u22BB", vellip: "\u22EE", weierp: "\u2118", xi: "\u03BE", yen: "\u00A5", zeta: "\u03B6", zigrarr: "\u21DD"
-	};
-	mml.loadComplete("jax.js");
-})(MathJax.InputJax.MathML, MathJax.Hub.Browser);
-
 ASCII_PARSER(MathJax.InputJax.AsciiMath);
 
-(function (ajax, hub, html, pre) {
-	var h; var j, a, d;
-	var f = "'Times New Roman',Times,STIXGeneral,serif";
-	var m = {
-		".MJXp-script": { "font-size": ".8em" }, ".MJXp-right": { "-webkit-transform-origin": "right", "-moz-transform-origin": "right", "-ms-transform-origin": "right", "-o-transform-origin": "right", "transform-origin": "right" }, ".MJXp-bold": { "font-weight": "bold" }, ".MJXp-italic": { "font-style": "italic" }, ".MJXp-scr": { "font-family": "MathJax_Script," + f }, ".MJXp-frak": { "font-family": "MathJax_Fraktur," + f }, ".MJXp-sf": { "font-family": "MathJax_SansSerif," + f }, ".MJXp-cal": { "font-family": "MathJax_Caligraphic," + f }, ".MJXp-mono": { "font-family": "MathJax_Typewriter," + f }, ".MJXp-largeop": { "font-size": "150%" }, ".MJXp-largeop.MJXp-int": { "vertical-align": "-.2em" }, ".MJXp-math": { display: "inline-block", "line-height": "1.2", "text-indent": "0", "font-family": f, "white-space": "nowrap", "border-collapse": "collapse" }, ".MJXp-display": { display: "block", "text-align": "center", margin: "1em 0" }, ".MJXp-math span": { display: "inline-block" }, ".MJXp-box": { display: "block!important", "text-align": "center" }, ".MJXp-box:after": { content: '" "' }, ".MJXp-rule": { display: "block!important", "margin-top": ".1em" }, ".MJXp-char": { display: "block!important" }, ".MJXp-mo": { margin: "0 .15em" }, ".MJXp-mfrac": { margin: "0 .125em", "vertical-align": ".25em" }, ".MJXp-denom": { display: "inline-table!important", width: "100%" }, ".MJXp-denom > *": { display: "table-row!important" }, ".MJXp-surd": { "vertical-align": "top" }, ".MJXp-surd > *": { display: "block!important" }, ".MJXp-script-box > * ": { display: "table!important", height: "50%" }, ".MJXp-script-box > * > *": { display: "table-cell!important", "vertical-align": "top" }, ".MJXp-script-box > *:last-child > *": { "vertical-align": "bottom" }, ".MJXp-script-box > * > * > *": { display: "block!important" }, ".MJXp-mphantom": { visibility: "hidden" }, ".MJXp-munderover": { display: "inline-table!important" }, ".MJXp-over": { display: "inline-block!important", "text-align": "center" }, ".MJXp-over > *": { display: "block!important" }, ".MJXp-munderover > *": { display: "table-row!important" }, ".MJXp-mtable": { "vertical-align": ".25em", margin: "0 .125em" }, ".MJXp-mtable > *": { display: "inline-table!important", "vertical-align": "middle" }, ".MJXp-mtr": { display: "table-row!important" }, ".MJXp-mtd": { display: "table-cell!important", "text-align": "center", padding: ".5em 0 0 .5em" }, ".MJXp-mtr > .MJXp-mtd:first-child": { "padding-left": 0 }, ".MJXp-mtr:first-child > .MJXp-mtd": { "padding-top": 0 }, ".MJXp-mlabeledtr": { display: "table-row!important" }, ".MJXp-mlabeledtr > .MJXp-mtd:first-child": { "padding-left": 0 }, ".MJXp-mlabeledtr:first-child > .MJXp-mtd": { "padding-top": 0 }, ".MJXp-merror": { "background-color": "#FFFF88", color: "#CC0000", border: "1px solid #CC0000", padding: "1px 3px", "font-style": "normal", "font-size": "90%" }
-	};
-	(function () {
-		for (var n = 0; n < 10; n++) { var o = "scaleX(." + n + ")"; m[".MJXp-scale" + n] = { "-webkit-transform": o, "-moz-transform": o, "-ms-transform": o, "-o-transform": o, transform: o } }
-	})();
-	var k = 1000000;
-	var c = "V", l = "H";
-	pre.Augment({
-		settings: hub.config.menuSettings,
-		config: { styles: m },
-		hideProcessedMath: false,
-		maxStretchyParts: 1000,
-		Config: function () {
-			if (!this.require) { this.require = [] }
-			this.SUPER(arguments).Config.call(this);
-			var n = this.settings;
-			if (n.scale) { this.config.scale = n.scale }
-			this.require.push(MathJax.OutputJax.extensionDir + "/MathEvents.js");
-		},
-		Startup: function () { j = MathJax.Extension.MathEvents.Event; a = MathJax.Extension.MathEvents.Touch; d = MathJax.Extension.MathEvents.Hover; this.ContextMenu = j.ContextMenu; this.Mousedown = j.AltContextMenu; this.Mouseover = d.Mouseover; this.Mouseout = d.Mouseout; this.Mousemove = d.Mousemove; var n = html.addElement(document.body, "div", { style: { width: "5in" } }); this.pxPerInch = n.offsetWidth / 5; n.parentNode.removeChild(n); return ajax.Styles(this.config.styles, ["InitializePHTML", this]) },
-		InitializePHTML: function () { },
-		preTranslate: function (p) { var s = p.jax[this.id], t, q = s.length, u, r, v, o, n; for (t = 0; t < q; t++) { u = s[t]; if (!u.parentNode) { continue } r = u.previousSibling; if (r && String(r.className).match(/^MathJax(_PHTML)?(_Display)?( MathJax_Process(ing|ed))?$/)) { r.parentNode.removeChild(r) } n = u.MathJax.elementJax; if (!n) { continue } n.PHTML = { display: (n.root.Get("display") === "block") }; v = o = html.Element("span", { className: "MathJax_PHTML", id: n.inputID + "-Frame", isMathJax: true, jaxID: this.id, oncontextmenu: j.Menu, onmousedown: j.Mousedown, onmouseover: j.Mouseover, onmouseout: j.Mouseout, onmousemove: j.Mousemove, onclick: j.Click, ondblclick: j.DblClick, onkeydown: j.Keydown, tabIndex: hub.getTabOrder(n) }); if (hub.Browser.noContextMenu) { v.ontouchstart = a.start; v.ontouchend = a.end } if (n.PHTML.display) { o = html.Element("div", { className: "MathJax_PHTML_Display" }); o.appendChild(v) } o.className += " MathJax_Processing"; u.parentNode.insertBefore(o, u) } },
-		Translate: function (o, _s) { if (!o.parentNode) { return } var n = o.MathJax.elementJax, r = n.root, p = document.getElementById(n.inputID + "-Frame"), t = (n.PHTML.display ? p.parentNode : p); this.initPHTML(r, p); try { r.toPreviewHTML(p) } catch (q) { if (q.restart) { while (p.firstChild) { p.removeChild(p.firstChild) } } throw q } t.className = t.className.split(/ /)[0]; if (this.hideProcessedMath) { t.className += " MathJax_Processed"; if (o.MathJax.preview) { n.PHTML.preview = o.MathJax.preview; delete o.MathJax.preview } } },
-		postTranslate: function (s) { var o = s.jax[this.id]; if (!this.hideProcessedMath) { return } for (var q = 0, n = o.length; q < n; q++) { var p = o[q]; if (p && p.MathJax.elementJax) { p.previousSibling.className = p.previousSibling.className.split(/ /)[0]; var r = p.MathJax.elementJax.PHTML; if (r.preview) { r.preview.innerHTML = ""; r.preview.style.display = "none"; p.MathJax.preview = r.preview; delete r.preview } } } },
-		getJaxFromMath: function (n) { if (n.parentNode.className.match(/MathJax_PHTML_Display/)) { n = n.parentNode } do { n = n.nextSibling } while (n && n.nodeName.toLowerCase() !== "script"); return hub.getJaxFor(n) },
-		getHoverSpan: function (n, _o) { return n.root.PHTMLspanElement() },
-		getHoverBBox: function (n, _q, _r) { var s = n.root.PHTML, p = n.PHTML.outerEm; var o = { w: s.w * p, h: s.h * p, d: s.d * p }; if (s.width) { o.width = s.width } return o },
-		Zoom: function (o, u, s, _n, _r) { u.className = "MathJax"; this.idPostfix = "-zoom"; o.root.toPHTML(u, u); this.idPostfix = ""; u.style.position = "absolute"; if (!width) { s.style.position = "absolute" } var t = u.offsetWidth, q = u.offsetHeight, v = s.offsetHeight, p = s.offsetWidth; if (p === 0) { p = s.parentNode.offsetWidth } u.style.position = s.style.position = ""; return { Y: -j.getBBox(u).h, mW: p, mH: v, zW: t, zH: q } },
-		initPHTML: function (_o, _n) { },
-		Remove: function (n) { var o = document.getElementById(n.inputID + "-Frame"); if (o) { if (n.PHTML.display) { o = o.parentNode } o.parentNode.removeChild(o) } delete n.PHTML }, ID: 0, idPostfix: "",
-		GetID: function () { this.ID++; return this.ID }, VARIANT: { bold: "MJXp-bold", italic: "MJXp-italic", "bold-italic": "MJXp-bold MJXp-italic", script: "MJXp-scr", "bold-script": "MJXp-scr MJXp-bold", fraktur: "MJXp-frak", "bold-fraktur": "MJXp-frak MJXp-bold", monospace: "MJXp-mono", "sans-serif": "MJXp-sf", "-tex-caligraphic": "MJXp-cal" }, MATHSPACE: { veryverythinmathspace: 1 / 18, verythinmathspace: 2 / 18, thinmathspace: 3 / 18, mediummathspace: 4 / 18, thickmathspace: 5 / 18, verythickmathspace: 6 / 18, veryverythickmathspace: 7 / 18, negativeveryverythinmathspace: -1 / 18, negativeverythinmathspace: -2 / 18, negativethinmathspace: -3 / 18, negativemediummathspace: -4 / 18, negativethickmathspace: -5 / 18, negativeverythickmathspace: -6 / 18, negativeveryverythickmathspace: -7 / 18, thin: 0.08, medium: 0.1, thick: 0.15, infinity: k }, TeX: { x_height: 0.430554 }, pxPerInch: 72, em: 16, DELIMITERS: { "(": { dir: c }, "{": { dir: c, w: 0.58 }, "[": { dir: c }, "|": { dir: c, w: 0.275 }, ")": { dir: c }, "}": { dir: c, w: 0.58 }, "]": { dir: c }, "/": { dir: c }, "\\": { dir: c }, "\u2223": { dir: c, w: 0.275 }, "\u2225": { dir: c, w: 0.55 }, "\u230A": { dir: c, w: 0.5 }, "\u230B": { dir: c, w: 0.5 }, "\u2308": { dir: c, w: 0.5 }, "\u2309": { dir: c, w: 0.5 }, "\u27E8": { dir: c, w: 0.5 }, "\u27E9": { dir: c, w: 0.5 }, "\u2191": { dir: c, w: 0.65 }, "\u2193": { dir: c, w: 0.65 }, "\u21D1": { dir: c, w: 0.75 }, "\u21D3": { dir: c, w: 0.75 }, "\u2195": { dir: c, w: 0.65 }, "\u21D5": { dir: c, w: 0.75 }, "\u27EE": { dir: c, w: 0.275 }, "\u27EF": { dir: c, w: 0.275 }, "\u23B0": { dir: c, w: 0.6 }, "\u23B1": { dir: c, w: 0.6 } }, REMAPACCENT: { "\u20D7": "\u2192", "'": "\u02CB", "`": "\u02CA", ".": "\u02D9", "^": "\u02C6", "-": "\u02C9", "~": "\u02DC", "\u00AF": "\u02C9", "\u00B0": "\u02DA", "\u00B4": "\u02CA", "\u0300": "\u02CB", "\u0301": "\u02CA", "\u0302": "\u02C6", "\u0303": "\u02DC", "\u0304": "\u02C9", "\u0305": "\u02C9", "\u0306": "\u02D8", "\u0307": "\u02D9", "\u0308": "\u00A8", "\u030C": "\u02C7" }, REMAPACCENTUNDER: {},
-		length2em: function (r, p) { if (typeof (r) !== "string") { r = r.toString() } if (r === "") { return "" } if (r === h.SIZE.NORMAL) { return 1 } if (r === h.SIZE.BIG) { return 2 } if (r === h.SIZE.SMALL) { return 0.71 } if (this.MATHSPACE[r]) { return this.MATHSPACE[r] } var o = r.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/); var n = parseFloat(o[1] || "1"), q = o[2]; if (p == null) { p = 1 } if (q === "em") { return n } if (q === "ex") { return n * this.TeX.x_height } if (q === "%") { return n / 100 * p } if (q === "px") { return n / this.em } if (q === "pt") { return n / 10 } if (q === "pc") { return n * 1.2 } if (q === "in") { return n * this.pxPerInch / this.em } if (q === "cm") { return n * this.pxPerInch / this.em / 2.54 } if (q === "mm") { return n * this.pxPerInch / this.em / 25.4 } if (q === "mu") { return n / 18 } return n * p },
-		Em: function (n) { if (Math.abs(n) < 0.001) { return "0em" } return (n.toFixed(3).replace(/\.?0+$/, "")) + "em" },
-		arrayEntry: function (n, o) { return n[Math.max(0, Math.min(o, n.length - 1))] }
-	});
-	MathJax.Hub.Register.StartupHook("mml Jax Ready", function () {
-		h = MathJax.ElementJax.mml; h.mbase.Augment({
-			toPreviewHTML: function (o, n) { return this.PHTMLdefaultSpan(o, n) },
-			PHTMLdefaultSpan: function (q, o) { if (!o) { o = {} } q = this.PHTMLcreateSpan(q); this.PHTMLhandleStyle(q); this.PHTMLhandleColor(q); if (this.isToken) { this.PHTMLhandleToken(q) } for (var p = 0, n = this.data.length; p < n; p++) { this.PHTMLaddChild(q, p, o) } return q },
-			PHTMLaddChild: function (p, o, n) { var q = this.data[o]; if (q) { if (n.childSpans) { p = html.addElement(p, "span", { className: n.className }) } q.toPreviewHTML(p); if (!n.noBBox) { this.PHTML.w += q.PHTML.w + q.PHTML.l + q.PHTML.r; if (q.PHTML.h > this.PHTML.h) { this.PHTML.h = q.PHTML.h } if (q.PHTML.d > this.PHTML.d) { this.PHTML.d = q.PHTML.d } if (q.PHTML.t > this.PHTML.t) { this.PHTML.t = q.PHTML.t } if (q.PHTML.b > this.PHTML.b) { this.PHTML.b = q.PHTML.b } } } else { if (n.forceChild) { html.addElement(p, "span") } } },
-			PHTMLstretchChild: function (q, p, s) { var r = this.data[q]; if (r && r.PHTMLcanStretch("Vertical", p, s)) { var t = this.PHTML, o = r.PHTML, n = o.w; r.PHTMLstretchV(p, s); t.w += o.w - n; if (o.h > t.h) { t.h = o.h } if (o.d > t.d) { t.d = o.d } } },
-			PHTMLcreateSpan: function (n) { if (!this.PHTML) { this.PHTML = {} } this.PHTML = { w: 0, h: 0, d: 0, l: 0, r: 0, t: 0, b: 0 }; if (this.inferred) { return n } if (this.type === "mo" && this.data.join("") === "\u222B") { pre.lastIsInt = true } else { if (this.type !== "mspace" || this.width !== "negativethinmathspace") { pre.lastIsInt = false } } if (!this.PHTMLspanID) { this.PHTMLspanID = pre.GetID() } var o = (this.id || "MJXp-Span-" + this.PHTMLspanID); return html.addElement(n, "span", { className: "MJXp-" + this.type, id: o }) },
-			PHTMLspanElement: function () { if (!this.PHTMLspanID) { return null } return document.getElementById(this.id || "MJXp-Span-" + this.PHTMLspanID) },
-			PHTMLhandleToken: function (o) { var n = this.getValues("mathvariant"); if (n.mathvariant !== h.VARIANT.NORMAL) { o.className += " " + pre.VARIANT[n.mathvariant] } },
-			PHTMLhandleStyle: function (n) { if (this.style) { n.style.cssText = this.style } },
-			PHTMLhandleColor: function (n) { if (this.mathcolor) { n.style.color = this.mathcolor } if (this.mathbackground) { n.style.backgroundColor = this.mathbackground } },
-			PHTMLhandleScriptlevel: function (n) { var o = this.Get("scriptlevel"); if (o) { n.className += " MJXp-script" } },
-			PHTMLhandleText: function (y, A) { var v, p; var z = 0, o = 0, q = 0; for (var s = 0, r = A.length; s < r; s++) { p = A.charCodeAt(s); v = A.charAt(s); if (p >= 55296 && p < 56319) { s++; p = (((p - 55296) << 10) + (A.charCodeAt(s) - 56320)) + 65536 } var t = 0.7, u = 0.22, x = 0.5; if (p < 127) { if (v.match(/[A-Za-ehik-or-xz0-9]/)) { u = 0 } if (v.match(/[A-HK-Z]/)) { x = 0.67 } else { if (v.match(/[IJ]/)) { x = 0.36 } } if (v.match(/[acegm-su-z]/)) { t = 0.45 } else { if (v.match(/[ij]/)) { t = 0.75 } } if (v.match(/[ijlt]/)) { x = 0.28 } } if (pre.DELIMITERS[v]) { x = pre.DELIMITERS[v].w || 0.4 } if (t > z) { z = t } if (u > o) { o = u } q += x } if (!this.CHML) { this.PHTML = {} } this.PHTML = { h: 0.9, d: 0.3, w: q, l: 0, r: 0, t: z, b: o }; html.addText(y, A) },
-			PHTMLbboxFor: function (o) { if (this.data[o] && this.data[o].PHTML) { return this.data[o].PHTML } return { w: 0, h: 0, d: 0, l: 0, r: 0, t: 0, b: 0 } },
-			PHTMLcanStretch: function (q, o, p) { if (this.isEmbellished()) { var n = this.Core(); if (n && n !== this) { return n.PHTMLcanStretch(q, o, p) } } return false },
-			PHTMLstretchV: function (_n, _o) { },
-			PHTMLstretchH: function (_n) { },
-			CoreParent: function () { var n = this; while (n && n.isEmbellished() && n.CoreMO() === this && !n.isa(h.math)) { n = n.Parent() } return n },
-			CoreText: function (n) {
-				if (!n) { return "" } if (n.isEmbellished()) { return n.CoreMO().data.join("") } while ((n.isa(h.mrow) || n.isa(h.TeXAtom) || n.isa(h.mstyle) || n.isa(h.mphantom)) && n.data.length === 1 && n.data[0]) { n = n.data[0] } if (!n.isToken) { return "" } else { return n.data.join("") }
-			}
-		});
-		h.chars.Augment({
-			toPreviewHTML: function (n) { var o = this.toString().replace(/[\u2061-\u2064]/g, ""); this.PHTMLhandleText(n, o) }
-		});
-		h.entity.Augment({
-			toPreviewHTML: function (n) { var o = this.toString().replace(/[\u2061-\u2064]/g, ""); this.PHTMLhandleText(n, o) }
-		});
-		h.math.Augment({
-			toPreviewHTML: function (n) { n = this.PHTMLdefaultSpan(n); if (this.Get("display") === "block") { n.className += " MJXp-display" } return n }
-		});
-		h.mo.Augment({
-			toPreviewHTML: function (o) { o = this.PHTMLdefaultSpan(o); this.PHTMLadjustAccent(o); var n = this.getValues("lspace", "rspace", "scriptlevel", "displaystyle", "largeop"); if (n.scriptlevel === 0) { this.PHTML.l = pre.length2em(n.lspace); this.PHTML.r = pre.length2em(n.rspace); o.style.marginLeft = pre.Em(this.PHTML.l); o.style.marginRight = pre.Em(this.PHTML.r) } else { this.PHTML.l = 0.15; this.PHTML.r = 0.1 } if (n.displaystyle && n.largeop) { var p = html.Element("span", { className: "MJXp-largeop" }); p.appendChild(o.firstChild); o.appendChild(p); this.PHTML.h *= 1.2; this.PHTML.d *= 1.2; if (this.data.join("") === "\u222B") { p.className += " MJXp-int" } } return o }, PHTMLadjustAccent: function (p) { var o = this.CoreParent(); if (o && o.isa(h.munderover) && this.CoreText(o.data[o.base]).length === 1) { var q = o.data[o.over], n = o.data[o.under]; var s = this.data.join(""), r; if (q && this === q.CoreMO() && o.Get("accent")) { r = pre.REMAPACCENT[s] } else { if (n && this === n.CoreMO() && o.Get("accentunder")) { r = pre.REMAPACCENTUNDER[s] } } if (r) { s = p.innerHTML = r } if (s.match(/[\u02C6-\u02DC\u00A8]/)) { this.PHTML.acc = -0.52 } else { if (s === "\u2192") { this.PHTML.acc = -0.15; this.PHTML.vec = true } } } }, PHTMLcanStretch: function (q, o, p) { if (!this.Get("stretchy")) { return false } var r = this.data.join(""); if (r.length > 1) { return false } r = pre.DELIMITERS[r]; var n = (r && r.dir === q.substr(0, 1)); if (n) { n = (this.PHTML.h !== o || this.PHTML.d !== p || (this.Get("minsize", true) || this.Get("maxsize", true))) } return n }, PHTMLstretchV: function (p, u) { var o = this.PHTMLspanElement(), t = this.PHTML; var n = this.getValues("symmetric", "maxsize", "minsize"); if (n.symmetric) { l = 2 * Math.max(p - 0.25, u + 0.25) } else { l = p + u } n.maxsize = pre.length2em(n.maxsize, t.h + t.d); n.minsize = pre.length2em(n.minsize, t.h + t.d); l = Math.max(n.minsize, Math.min(n.maxsize, l)); var s = l / (t.h + t.d - 0.3); var q = html.Element("span", { style: { "font-size": pre.Em(s) } }); if (s > 1.25) { var r = Math.ceil(1.25 / s * 10); q.className = "MJXp-right MJXp-scale" + r; q.style.marginLeft = pre.Em(t.w * (r / 10 - 1) + 0.07); t.w *= s * r / 10 } q.appendChild(o.firstChild); o.appendChild(q); if (n.symmetric) { o.style.verticalAlign = pre.Em(0.25 * (1 - s)) } }
-		});
-		h.mspace.Augment({
-			toPreviewHTML: function (q) { q = this.PHTMLdefaultSpan(q); var o = this.getValues("height", "depth", "width"); var n = pre.length2em(o.width), p = pre.length2em(o.height), s = pre.length2em(o.depth); var r = this.PHTML; r.w = n; r.h = p; r.d = s; if (n < 0) { if (!pre.lastIsInt) { q.style.marginLeft = pre.Em(n) } n = 0 } q.style.width = pre.Em(n); q.style.height = pre.Em(p + s); if (s) { q.style.verticalAlign = pre.Em(-s) } return q }
-		});
-		h.mpadded.Augment({
-			toPreviewHTML: function (u) { u = this.PHTMLdefaultSpan(u, { childSpans: true, className: "MJXp-box", forceChild: true }); var o = u.firstChild; var v = this.getValues("width", "height", "depth", "lspace", "voffset"); var s = this.PHTMLdimen(v.lspace); var q = 0, n = 0, t = s.len, r = -s.len, p = 0; if (v.width !== "") { s = this.PHTMLdimen(v.width, "w", 0); if (s.pm) { r += s.len } else { u.style.width = pre.Em(s.len) } } if (v.height !== "") { s = this.PHTMLdimen(v.height, "h", 0); if (!s.pm) { q += -this.PHTMLbboxFor(0).h } q += s.len } if (v.depth !== "") { s = this.PHTMLdimen(v.depth, "d", 0); if (!s.pm) { n += -this.PHTMLbboxFor(0).d; p += -s.len } n += s.len } if (v.voffset !== "") { s = this.PHTMLdimen(v.voffset); q -= s.len; n += s.len; p += s.len } if (q) { o.style.marginTop = pre.Em(q) } if (n) { o.style.marginBottom = pre.Em(n) } if (t) { o.style.marginLeft = pre.Em(t) } if (r) { o.style.marginRight = pre.Em(r) } if (p) { u.style.verticalAlign = pre.Em(p) } return u }, PHTMLdimen: function (q, r, n) { if (n == null) { n = -k } q = String(q); var o = q.match(/width|height|depth/); var p = (o ? this.PHTML[o[0].charAt(0)] : (r ? this.PHTML[r] : 0)); return { len: pre.length2em(q, p) || 0, pm: !!q.match(/^[-+]/) } }
-		});
-		h.munderover.Augment({
-			toPreviewHTML: function (r) { var t = this.getValues("displaystyle", "accent", "accentunder", "align"); var n = this.data[this.base]; if (!t.displaystyle && n != null && (n.movablelimits || n.CoreMO().Get("movablelimits"))) { r = h.msubsup.prototype.toPreviewHTML.call(this, r); r.className = r.className.replace(/munderover/, "msubsup"); return r } r = this.PHTMLdefaultSpan(r, { childSpans: true, className: "", noBBox: true }); var p = this.PHTMLbboxFor(this.over), v = this.PHTMLbboxFor(this.under), u = this.PHTMLbboxFor(this.base), s = this.PHTML, o = p.acc; if (this.data[this.over]) { if (r.lastChild.firstChild) { r.lastChild.firstChild.style.marginLeft = p.l = r.lastChild.firstChild.style.marginRight = p.r = 0 } var q = html.Element("span", {}, [["span", { className: "MJXp-over" }]]); q.firstChild.appendChild(r.lastChild); if (r.childNodes.length > (this.data[this.under] ? 1 : 0)) { q.firstChild.appendChild(r.firstChild) } this.data[this.over].PHTMLhandleScriptlevel(q.firstChild.firstChild); if (o != null) { if (p.vec) { q.firstChild.firstChild.firstChild.style.fontSize = "60%"; p.h *= 0.6; p.d *= 0.6; p.w *= 0.6 } o = o - p.d + 0.1; if (u.t != null) { o += u.t - u.h } q.firstChild.firstChild.style.marginBottom = pre.Em(o) } if (r.firstChild) { r.insertBefore(q, r.firstChild) } else { r.appendChild(q) } } if (this.data[this.under]) { if (r.lastChild.firstChild) { r.lastChild.firstChild.style.marginLeft = v.l = r.lastChild.firstChild.marginRight = v.r = 0 } this.data[this.under].PHTMLhandleScriptlevel(r.lastChild) } s.w = Math.max(0.8 * p.w, 0.8 * v.w, u.w); s.h = 0.8 * (p.h + p.d + (o || 0)) + u.h; s.d = u.d + 0.8 * (v.h + v.d); return r }
-		});
-		h.msubsup.Augment({
-			toPreviewHTML: function (q) { q = this.PHTMLdefaultSpan(q, { noBBox: true }); if (!this.data[this.base]) { if (q.firstChild) { q.insertBefore(html.Element("span"), q.firstChild) } else { q.appendChild(html.Element("span")) } } var s = this.data[this.base], p = this.data[this.sub], n = this.data[this.sup]; if (!s) { s = { bbox: { h: 0.8, d: 0.2 } } } q.firstChild.style.marginRight = ".05em"; var o = Math.max(0.4, s.PHTML.h - 0.4), u = Math.max(0.2, s.PHTML.d + 0.1); var t = this.PHTML; if (n && p) { var r = html.Element("span", { className: "MJXp-script-box", style: { height: pre.Em(o + n.PHTML.h * 0.8 + u + p.PHTML.d * 0.8), "vertical-align": pre.Em(-u - p.PHTML.d * 0.8) } }, [["span", {}, [["span", {}, [["span", { style: { "margin-bottom": pre.Em(-(n.PHTML.d - 0.05)) } }]]]]], ["span", {}, [["span", {}, [["span", { style: { "margin-top": pre.Em(-(n.PHTML.h - 0.05)) } }]]]]]]); p.PHTMLhandleScriptlevel(r.firstChild); n.PHTMLhandleScriptlevel(r.lastChild); r.firstChild.firstChild.firstChild.appendChild(q.lastChild); r.lastChild.firstChild.firstChild.appendChild(q.lastChild); q.appendChild(r); t.h = Math.max(s.PHTML.h, n.PHTML.h * 0.8 + o); t.d = Math.max(s.PHTML.d, p.PHTML.d * 0.8 + u); t.w = s.PHTML.w + Math.max(n.PHTML.w, p.PHTML.w) + 0.07 } else { if (n) { q.lastChild.style.verticalAlign = pre.Em(o); n.PHTMLhandleScriptlevel(q.lastChild); t.h = Math.max(s.PHTML.h, n.PHTML.h * 0.8 + o); t.d = Math.max(s.PHTML.d, n.PHTML.d * 0.8 - o); t.w = s.PHTML.w + n.PHTML.w + 0.07 } else { if (p) { q.lastChild.style.verticalAlign = pre.Em(-u); p.PHTMLhandleScriptlevel(q.lastChild); t.h = Math.max(s.PHTML.h, p.PHTML.h * 0.8 - u); t.d = Math.max(s.PHTML.d, p.PHTML.d * 0.8 + u); t.w = s.PHTML.w + p.PHTML.w + 0.07 } } } return q }
-		});
-		h.mfrac.Augment({
-			toPreviewHTML: function (r) { r = this.PHTMLdefaultSpan(r, { childSpans: true, className: "MJXp-box", forceChild: true, noBBox: true }); var o = this.getValues("linethickness", "displaystyle"); if (!o.displaystyle) { if (this.data[0]) { this.data[0].PHTMLhandleScriptlevel(r.firstChild) } if (this.data[1]) { this.data[1].PHTMLhandleScriptlevel(r.lastChild) } } var n = html.Element("span", { className: "MJXp-box" }, [["span", { className: "MJXp-denom" }, [["span", {}, [["span", { className: "MJXp-rule", style: { height: "1em" } }]]], ["span"]]]]); n.firstChild.lastChild.appendChild(r.lastChild); r.appendChild(n); var s = this.PHTMLbboxFor(0), p = this.PHTMLbboxFor(1), v = this.PHTML; v.w = Math.max(s.w, p.w) * 0.8; v.h = s.h + s.d + 0.1 + 0.25; v.d = p.h + p.d - 0.25; v.l = v.r = 0.125; o.linethickness = Math.max(0, pre.length2em(o.linethickness || "0", 0)); if (o.linethickness) { var u = n.firstChild.firstChild.firstChild; var q = pre.Em(o.linethickness); u.style.borderTop = "none"; u.style.borderBottom = (o.linethickness < 0.15 ? "1px" : q) + " solid"; u.style.margin = q + " 0"; q = o.linethickness; n.style.marginTop = pre.Em(3 * q - 1.2); r.style.verticalAlign = pre.Em(1.5 * q + 0.1); v.h += 1.5 * q - 0.1; v.d += 1.5 * q } else { n.style.marginTop = "-.7em" } return r }
-		});
-		h.msqrt.Augment({
-			toPreviewHTML: function (n) { n = this.PHTMLdefaultSpan(n, { childSpans: true, className: "MJXp-box", forceChild: true, noBBox: true }); this.PHTMLlayoutRoot(n, n.firstChild); return n }, PHTMLlayoutRoot: function (u, n) { var v = this.PHTMLbboxFor(0); var q = Math.ceil((v.h + v.d + 0.14) * 100), w = pre.Em(14 / q); var r = html.Element("span", { className: "MJXp-surd" }, [["span", { style: { "font-size": q + "%", "margin-top": w } }, ["\u221A"]]]); var s = html.Element("span", { className: "MJXp-root" }, [["span", { className: "MJXp-rule", style: { "border-top": ".08em solid" } }]]); var p = (1.2 / 2.2) * q / 100; if (q > 150) { var o = Math.ceil(150 / q * 10); r.firstChild.className = "MJXp-right MJXp-scale" + o; r.firstChild.style.marginLeft = pre.Em(p * (o / 10 - 1) / q * 100); p = p * o / 10; s.firstChild.style.borderTopWidth = pre.Em(0.08 / Math.sqrt(o / 10)) } s.appendChild(n); u.appendChild(r); u.appendChild(s); this.PHTML.h = v.h + 0.18; this.PHTML.d = v.d; this.PHTML.w = v.w + p; return u }
-		});
-		h.mroot.Augment({
-			toPreviewHTML: function (q) { q = this.PHTMLdefaultSpan(q, { childSpans: true, className: "MJXp-box", forceChild: true, noBBox: true }); var p = this.PHTMLbboxFor(1), n = q.removeChild(q.lastChild); var t = this.PHTMLlayoutRoot(html.Element("span"), q.firstChild); n.className = "MJXp-script"; var u = parseInt(t.firstChild.firstChild.style.fontSize); var o = 0.55 * (u / 120) + p.d * 0.8, s = -0.6 * (u / 120); if (u > 150) { s *= 0.95 * Math.ceil(150 / u * 10) / 10 } n.style.marginRight = pre.Em(s); n.style.verticalAlign = pre.Em(o); if (-s > p.w * 0.8) { n.style.marginLeft = pre.Em(-s - p.w * 0.8) } q.appendChild(n); q.appendChild(t); this.PHTML.w += Math.max(0, p.w * 0.8 + s); this.PHTML.h = Math.max(this.PHTML.h, p.h * 0.8 + o); return q }, PHTMLlayoutRoot: h.msqrt.prototype.PHTMLlayoutRoot
-		});
-		h.mfenced.Augment({
-			toPreviewHTML: function (q) { q = this.PHTMLcreateSpan(q); this.PHTMLhandleStyle(q); this.PHTMLhandleColor(q); this.addFakeNodes(); this.PHTMLaddChild(q, "open", {}); for (var p = 0, n = this.data.length; p < n; p++) { this.PHTMLaddChild(q, "sep" + p, {}); this.PHTMLaddChild(q, p, {}) } this.PHTMLaddChild(q, "close", {}); var o = this.PHTML.h, r = this.PHTML.d; this.PHTMLstretchChild("open", o, r); for (p = 0, n = this.data.length; p < n; p++) { this.PHTMLstretchChild("sep" + p, o, r); this.PHTMLstretchChild(p, o, r) } this.PHTMLstretchChild("close", o, r); return q }
-		});
-		h.mrow.Augment({
-			toPreviewHTML: function (q) { q = this.PHTMLdefaultSpan(q); var p = this.PHTML.h, r = this.PHTML.d; for (var o = 0, n = this.data.length; o < n; o++) { this.PHTMLstretchChild(o, p, r) } return q }
-		});
-		h.mstyle.Augment({
-			toPreviewHTML: function (n) { n = this.PHTMLdefaultSpan(n); this.PHTMLhandleScriptlevel(n); return n }
-		});
-		h.TeXAtom.Augment({
-			toPreviewHTML: function (n) { n = this.PHTMLdefaultSpan(n); n.className = "MJXp-mrow"; return n }
-		});
-		h.mtable.Augment({
-			toPreviewHTML: function (E) { E = this.PHTMLdefaultSpan(E, { noBBox: true }); var r = this.getValues("columnalign", "rowalign", "columnspacing", "rowspacing", "columnwidth", "equalcolumns", "equalrows", "columnlines", "rowlines", "frame", "framespacing", "align", "width"); var u = MathJax.Hub.SplitList, F, A, D, z; var N = u(r.columnspacing), w = u(r.rowspacing), L = u(r.columnalign), t = u(r.rowalign); for (F = 0, A = N.length; F < A; F++) { N[F] = pre.length2em(N[F]) } for (F = 0, A = w.length; F < A; F++) { w[F] = pre.length2em(w[F]) } var K = html.Element("span"); while (E.firstChild) { K.appendChild(E.firstChild) } E.appendChild(K); var y = 0, s = 0; for (F = 0, A = this.data.length; F < A; F++) { var v = this.data[F]; if (v) { var J = pre.arrayEntry(w, F - 1), C = pre.arrayEntry(t, F); var x = v.PHTML, q = v.PHTMLspanElement(); q.style.verticalAlign = C; var B = (v.type === "mlabeledtr" ? 1 : 0); for (D = 0, z = v.data.length; D < z - B; D++) { var p = v.data[D + B]; if (p) { var M = pre.arrayEntry(N, D - 1), G = pre.arrayEntry(L, D); var I = p.PHTMLspanElement(); if (D) { x.w += M; I.style.paddingLeft = pre.Em(M) } if (F) { I.style.paddingTop = pre.Em(J) } I.style.textAlign = G } } y += x.h + x.d; if (F) { y += J } if (x.w > s) { s = x.w } } } var o = this.PHTML; o.w = s; o.h = y / 2 + 0.25; o.d = y / 2 - 0.25; o.l = o.r = 0.125; return E }
-		});
-		h.mlabeledtr.Augment({
-			PHTMLdefaultSpan: function (q, o) { if (!o) { o = {} } q = this.PHTMLcreateSpan(q); this.PHTMLhandleStyle(q); this.PHTMLhandleColor(q); if (this.isToken) { this.PHTMLhandleToken(q) } for (var p = 1, n = this.data.length; p < n; p++) { this.PHTMLaddChild(q, p, o) } return q }
-		});
-		h.semantics.Augment({
-			toPreviewHTML: function (n) { n = this.PHTMLcreateSpan(n); if (this.data[0]) { this.data[0].toPreviewHTML(n); MathJax.Hub.Insert(this.data[0].PHTML || {}, this.PHTML) } return n }
-		});
-		h.annotation.Augment({
-			toPreviewHTML: function (_n) { }
-		});
-		h["annotation-xml"].Augment({
-			toPreviewHTML: function (_n) { }
-		});
-		MathJax.Hub.Register.StartupHook("onLoad", function () {
-			setTimeout(MathJax.Callback(["loadComplete", pre, "jax.js"]), 0);
-		});
-	});
-	MathJax.Hub.Register.StartupHook("End Cookie", function () {
-		if (hub.config.menuSettings.zoom !== "None") {
-			ajax.Require("[MathJax]/extensions/MathZoom.js");
-		}
-	});
-})(MathJax.Ajax, MathJax.Hub, MathJax.HTML, MathJax.OutputJax.PreviewHTML);
-
-(function (hub, html, browser) {
-	var c = hub.config.menuSettings;
-	var e = MathJax.OutputJax;
-	var a = browser.isMSIE && (document.documentMode || 0) < 8;
-	var d = MathJax.Extension["fast-preview"] = {
-		version: "2.7.1",
-		enabled: true,
-		config: hub.CombineConfig("fast-preview", {
-			Chunks: { EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0 },
-			color: "inherit!important",
-			updateTime: 30,
-			updateDelay: 6,
-			messageStyle: "none",
-			disabled: browser.isMSIE && !browser.versionAtLeast("8.0")
-		}),
-		Config: function () {
-			if (hub.config["CHTML-preview"]) {
-				MathJax.Hub.Config({ "fast-preview": hub.config["CHTML-preview"] });
-			}
-			var m, j, k, h, l;
-			var i = this.config;
-			if (!i.disabled && c.FastPreview == null) {
-				hub.Config({ menuSettings: { FastPreview: true } });
-			}
-			if (c.FastPreview) {
-				MathJax.Ajax.Styles({ ".MathJax_Preview .MJXf-math": { color: i.color } });
-				hub.Config({ "HTML-CSS": i.Chunks, CommonHTML: i.Chunks, SVG: i.Chunks });
-			}
-			hub.Register.MessageHook("Begin Math Output", function () {
-				if (!h && d.Active()) {
-					m = hub.processUpdateTime;
-					j = hub.processUpdateDelay;
-					k = hub.config.messageStyle;
-					hub.processUpdateTime = i.updateTime;
-					hub.processUpdateDelay = i.updateDelay;
-					hub.Config({ messageStyle: i.messageStyle });
-					MathJax.Message.Clear(0, 0);
-					l = true;
-				}
-			});
-			hub.Register.MessageHook("End Math Output", function () {
-				if (!h && l) {
-					hub.processUpdateTime = m;
-					hub.processUpdateDelay = j;
-					hub.Config({ messageStyle: k });
-					h = true;
-				}
-			});
-		},
-		Disable: function () { this.enabled = false },
-		Enable: function () { this.enabled = true },
-		Active: function () { return c.FastPreview && this.enabled && !(e[c.renderer] || {}).noFastPreview },
-		Preview: function (h) { if (!this.Active() || !h.script.parentNode) { return } var i = h.script.MathJax.preview || h.script.previousSibling; if (!i || i.className !== MathJax.Hub.config.preRemoveClass) { i = html.Element("span", { className: MathJax.Hub.config.preRemoveClass }); h.script.parentNode.insertBefore(i, h.script); h.script.MathJax.preview = i } i.innerHTML = ""; i.style.color = (a ? "black" : "inherit"); return this.postFilter(i, h) },
-		postFilter: function (j, i) { if (!i.math.root.toPreviewHTML) { var h = new QUEUE(); h.Push(["Require", MathJax.Ajax, "[MathJax]/jax/output/PreviewHTML/config.js"], ["Require", MathJax.Ajax, "[MathJax]/jax/output/PreviewHTML/jax.js"]); hub.RestartAfter(h.Push({})) } i.math.root.toPreviewHTML(j) },
-		Register: function (h) { hub.Register.StartupHook(h + " Jax Require", function () { var i = MathJax.InputJax[h]; i.postfilterHooks.Add(["Preview", MathJax.Extension["fast-preview"]], 50) }) }
-	};
-	d.Register("TeX");
-	d.Register("MathML");
-	d.Register("AsciiMath");
-	hub.Register.StartupHook("End Config", ["Config", d]);
-	hub.Startup.signal.Post("fast-preview Ready");
-})(MathJax.Hub, MathJax.HTML, MathJax.Hub.Browser);
-MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
-
-(function (ajax, _cb, hub, html) {
-	var c = hub.config.menuSettings;
-	var d = MathJax.Extension.AssistiveMML = {
-		version: "2.7.1",
-		config: hub.CombineConfig("AssistiveMML", {
-			disabled: false,
-			styles: { ".MJX_Assistive_MathML": { position: "absolute!important", top: 0, left: 0, clip: (hub.Browser.isMSIE && (document.documentMode || 0) < 8 ? "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"), padding: "1px 0 0 0!important", border: "0!important", height: "1px!important", width: "1px!important", overflow: "hidden!important", display: "block!important", "-webkit-touch-callout": "none", "-webkit-user-select": "none", "-khtml-user-select": "none", "-moz-user-select": "none", "-ms-user-select": "none", "user-select": "none" }, ".MJX_Assistive_MathML.MJX_Assistive_MathML_Block": { width: "100%!important" } }
-		}),
-		Config: function () { if (!this.config.disabled && c.assistiveMML == null) { hub.Config({ menuSettings: { assistiveMML: true } }) } ajax.Styles(this.config.styles); hub.Register.MessageHook("End Math", function (g) { if (c.assistiveMML) { return d.AddAssistiveMathML(g[1]) } }) },
-		AddAssistiveMathML: function (g) { var h = { jax: hub.getAllJax(g), i: 0, callback: MathJax.Callback({}) }; this.HandleMML(h); return h.callback },
-		RemoveAssistiveMathML: function (k) { var h = hub.getAllJax(k), l; for (var j = 0, g = h.length; j < g; j++) { l = document.getElementById(h[j].inputID + "-Frame"); if (l && l.getAttribute("data-mathml")) { l.removeAttribute("data-mathml"); if (l.lastChild && l.lastChild.className.match(/MJX_Assistive_MathML/)) { l.removeChild(l.lastChild) } } } },
-		HandleMML: function (l) { var g = l.jax.length, h, i, n, j; while (l.i < g) { h = l.jax[l.i]; n = document.getElementById(h.inputID + "-Frame"); if (h.outputJax !== "NativeMML" && h.outputJax !== "PlainSource" && n && !n.getAttribute("data-mathml")) { try { i = h.root.toMathML("").replace(/\n */g, "").replace(/<!--.*?-->/g, "") } catch (k) { if (!k.restart) { throw k } return MathJax.Callback.After(["HandleMML", this, l], k.restart) } n.setAttribute("data-mathml", i); j = html.addElement(n, "span", { isMathJax: true, unselectable: "on", className: "MJX_Assistive_MathML" + (h.root.Get("display") === "block" ? " MJX_Assistive_MathML_Block" : "") }); try { j.innerHTML = i } catch (k) { } n.style.position = "relative"; n.setAttribute("role", "presentation"); n.firstChild.setAttribute("aria-hidden", "true"); j.setAttribute("role", "presentation") } l.i++ } l.callback() }
-	};
-	hub.Startup.signal.Post("AssistiveMML Ready");
-})(MathJax.Ajax, MathJax.Callback, MathJax.Hub, MathJax.HTML);
-
-new QUEUE(
-	["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.js"],
-	["loadComplete", MathJax.Ajax, "[MathJax]/extensions/AssistiveMML.js"],
-	function () { MathJax.Hub.Register.StartupHook("End Config", ["Config", MathJax.Extension.AssistiveMML]) }
-);
+PREVIEW_HTML(MathJax.Ajax, MathJax.Hub, MathJax.HTML, MathJax.OutputJax.PreviewHTML);
+//FAST_PREVIEW(MathJax.Hub, MathJax.HTML, MathJax.Hub.Browser);
+//MML(MathJax.InputJax.MathML, MathJax.Hub.Browser);
+//ASSISTIVE_MML(MathJax.Ajax, MathJax.Callback, MathJax.Hub, MathJax.HTML);
 
 !function (a, b) {
 	var c, d, e = a.config.menuSettings;
