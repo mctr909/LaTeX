@@ -1,3 +1,29 @@
+class CommonHTML {
+	constructor() {
+		this.id = "CommonHTML";
+		this.version = "2.7.1";
+		this.directory = MathJax.OutputJax.directory + "/CommonHTML";
+		this.extensionDir = MathJax.OutputJax.extensionDir + "/CommonHTML";
+		this.autoloadDir = MathJax.OutputJax.directory + "/CommonHTML/autoload";
+		this.fontDir = MathJax.OutputJax.directory + "/CommonHTML/fonts";
+		this.webfontDir = MathJax.OutputJax.fontDir + "/HTML-CSS";
+		this.config = {
+			matchFontHeight: true,
+			scale: 100,
+			minScaleAdjust: 50,
+			mtextFontInherit: false,
+			undefinedFamily: "STIXGeneral,'Cambria Math','Arial Unicode MS',serif",
+			EqnChunk: (MathJax.Hub.Browser.isMobile ? 20 : 100),
+			EqnChunkFactor: 1.5,
+			EqnChunkDelay: 100,
+			linebreaks: {
+				automatic: false,
+				width: "container"
+			}
+		};
+	}
+}
+
 class TeX {
 	constructor() {
 		this.id = "TeX";
