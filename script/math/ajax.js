@@ -21,7 +21,7 @@ class TIMER {
      * @param {any} l
      */
     start(ajax, i, timeOut, l) {
-        var cb = JAX_WINDOW.Callback(i);
+        var cb = MathJax.Callback(i);
         cb.execute = this.execute;
         cb.time = this.time;
         cb.STATUS = ajax.STATUS;
@@ -49,8 +49,8 @@ class TIMER {
     }
 
     file(j, i) {
-        if (i < 0) { JAX_WINDOW.Ajax.loadTimeout(j) }
-        else { JAX_WINDOW.Ajax.loadComplete(j) }
+        if (i < 0) { MathJax.Ajax.loadTimeout(j) }
+        else { MathJax.Ajax.loadComplete(j) }
     }
 
     execute() {
@@ -84,7 +84,7 @@ class TIMER {
             }
         }
         if (m) {
-            setTimeout(JAX_WINDOW.Callback([n, i.STATUS.OK]), 0);
+            setTimeout(MathJax.Callback([n, i.STATUS.OK]), 0);
         } else {
             setTimeout(i, i.delay);
         }
@@ -127,7 +127,7 @@ class AJAX {
     }
 
     static FILE_REV(j) {
-        var i = JAX_WINDOW.cdnFileVersions[j] || JAX_WINDOW.cdnVersion || "";
+        var i = MathJax.cdnFileVersions[j] || MathJax.cdnVersion || "";
         if (i) { i = "?V=" + i }
         return i;
     }
@@ -178,7 +178,7 @@ class AJAX {
      * @returns 
      */
     Require(path, arr) {
-        var func = JAX_WINDOW.Callback(arr);
+        var func = MathJax.Callback(arr);
         var ext;
         if (path instanceof Object) {
             for (var j in path) {
@@ -213,14 +213,14 @@ class AJAX {
     JS(path, cb) {
         var j = this.fileName(path);
         var i = document.createElement("script");
-        var l = JAX_WINDOW.Callback(["loadTimeout", this, path]);
+        var l = MathJax.Callback(["loadTimeout", this, path]);
         this.loading[path] = {
             callback: cb,
             timeout: setTimeout(l, this.timeout),
             status: this.STATUS.OK,
             script: i
         };
-        this.loading[path].message = JAX_WINDOW.Message.File(j);
+        this.loading[path].message = MathJax.Message.File(j);
         i.onerror = l;
         i.type = "text/javascript";
         i.src = path + AJAX.FILE_REV(j);
@@ -229,7 +229,7 @@ class AJAX {
     }
 
     Load(kv, arr) {
-        var func = JAX_WINDOW.Callback(arr);
+        var func = MathJax.Callback(arr);
         var l;
         if (kv instanceof Object) {
             for (var j in kv) {
@@ -251,7 +251,7 @@ class AJAX {
     }
 
     LoadHook(l, m, k) {
-        m = JAX_WINDOW.Callback(m);
+        m = MathJax.Callback(m);
         if (l instanceof Object) {
             for (var j in l) {
                 if (l.hasOwnProperty(j)) { l = l[j] }
@@ -296,13 +296,13 @@ class AJAX {
         i = this.fileURL(i);
         var j = this.loading[i];
         if (j && !j.preloaded) {
-            JAX_WINDOW.Message.Clear(j.message);
+            MathJax.Message.Clear(j.message);
             clearTimeout(j.timeout);
             if (j.script) {
                 if (AJAX.SCRIPTS.length === 0) {
                     setTimeout(function () {
                         for (var k = 0, j = AJAX.SCRIPTS.length; k < j; k++) {
-                            JAX_WINDOW.Ajax.head.removeChild(AJAX.SCRIPTS[k]);
+                            MathJax.Ajax.head.removeChild(AJAX.SCRIPTS[k]);
                         }
                         AJAX.SCRIPTS = [];
                     }, 0);
@@ -334,13 +334,13 @@ class AJAX {
     }
 
     loadError(i) {
-        JAX_WINDOW.Message.Set(["LoadFailed", "File failed to load: %1", i], null, 2000);
-        JAX_WINDOW.Hub.signal.Post(["file load error", i]);
+        MathJax.Message.Set(["LoadFailed", "File failed to load: %1", i], null, 2000);
+        MathJax.Hub.signal.Post(["file load error", i]);
     }
 
     Styles(k, l) {
         var i = this.StyleString(k);
-        if (i === "") { l = JAX_WINDOW.Callback(l); l() }
+        if (i === "") { l = MathJax.Callback(l); l() }
         else {
             var j = document.createElement("style");
             j.type = "text/css";
@@ -354,7 +354,7 @@ class AJAX {
     }
 
     createTimer(j, i) {
-        j = JAX_WINDOW.Callback(j);
+        j = MathJax.Callback(j);
         if (i.nodeName === "STYLE" && i.styleSheet && typeof (i.styleSheet.cssText) !== "undefined") {
             j(this.STATUS.OK);
         } else {
@@ -379,7 +379,7 @@ class AJAX {
                 if (typeof n[o] === "string") {
                     k += o + " {" + n[o] + "}\n";
                 } else {
-                    if (JAX_WINDOW.Object.isArray(n[o])) {
+                    if (MathJax.Object.isArray(n[o])) {
                         for (var l = 0; l < n[o].length; l++) {
                             m = {};
                             m[o] = n[o][l];

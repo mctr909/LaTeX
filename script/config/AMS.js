@@ -460,7 +460,7 @@ function AMSmath() {
 					}
 					return stackItem.mml(i);
 				}
-				return this.oldCheckItem.call(this, k);
+				return this.oldCheckItem(k);
 			}
 		});
 		tex.prefilterHooks.Add(function (i) {

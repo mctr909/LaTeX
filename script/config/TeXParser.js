@@ -326,7 +326,8 @@ class Tex2Jax {
 
 function TEX_PARSER(tex, hub, ajax) {
 	const h = "\u00A0";
-	var mml;
+	var mMML = null;
+	var mBase = null;
 	var isArray = MathJax.Object.isArray;
 
 	var texBase = {
@@ -355,7 +356,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (this.data.length === 1 && !n) {
 				return this.data[0];
 			}
-			return mml.mrow.apply(mml, this.data).With((m ? { inferred: true } : {}));
+			return mMML.mrow.apply(mMML, this.data).With((m ? { inferred: true } : {}));
 		},
 		checkItem: function (m) {
 			if (m.type === "over" && this.isOpen) {
@@ -390,7 +391,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		Init: function (n, m) {
 			this.global = { isInner: m };
 			this.data = [
-				base.start(this.global)
+				mBase.start(this.global)
 			];
 			if (n) { this.data[0].env = n }
 			this.env = this.data[0].env;
@@ -400,8 +401,8 @@ function TEX_PARSER(tex, hub, ajax) {
 			for (o = 0, n = arguments.length; o < n; o++) {
 				p = arguments[o];
 				if (!p) { continue }
-				if (p instanceof mml.mbase) {
-					p = base.mml(p);
+				if (p instanceof mMML.mbase) {
+					p = mBase.mml(p);
 				}
 				p.global = this.global;
 				q = (this.data.length ? this.Top().checkItem(p) : true);
@@ -409,7 +410,7 @@ function TEX_PARSER(tex, hub, ajax) {
 					this.Pop();
 					this.Push.apply(this, q);
 				} else {
-					if (q instanceof base) {
+					if (q instanceof mBase) {
 						this.Pop();
 						this.Push(q);
 					} else {
@@ -456,8 +457,8 @@ function TEX_PARSER(tex, hub, ajax) {
 		}
 	});
 
-	var base = texStack.Item = MathJax.Object.Subclass(texBase);
-	base.start = base.Subclass({
+	mBase = texStack.Item = MathJax.Object.Subclass(texBase);
+	mBase.start = mBase.Subclass({
 		type: "start",
 		isOpen: true,
 		Init: function (m) {
@@ -466,42 +467,43 @@ function TEX_PARSER(tex, hub, ajax) {
 		},
 		checkItem: function (m) {
 			if (m.type === "stop") {
-				return base.mml(this.mmlData());
+				return mBase.mml(this.mmlData());
 			}
 			return this.SUPER(arguments).checkItem.call(this, m);
 		}
 	});
-	base.stop = base.Subclass({
+	mBase.stop = mBase.Subclass({
 		type: "stop",
 		isClose: true
 	});
-	base.open = base.Subclass({
+	mBase.open = mBase.Subclass({
 		type: "open",
 		isOpen: true,
 		stopError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
 		checkItem: function (n) {
 			if (n.type === "close") {
 				var m = this.mmlData();
-				return base.mml(mml.TeXAtom(m));
+				var atom = mMML.TeXAtom(m);
+				return mBase.mml(atom);
 			}
 			return this.SUPER(arguments).checkItem.call(this, n);
 		}
 	});
-	base.close = base.Subclass({
+	mBase.close = mBase.Subclass({
 		type: "close",
 		isClose: true
 	});
-	base.prime = base.Subclass({
+	mBase.prime = mBase.Subclass({
 		type: "prime",
 		checkItem: function (m) {
 			if (this.data[0].type !== "msubsup") {
-				return [mml.msup(this.data[0], this.data[1]), m];
+				return [mMML.msup(this.data[0], this.data[1]), m];
 			}
 			this.data[0].SetData(this.data[0].sup, this.data[1]);
 			return [this.data[0], m];
 		}
 	});
-	base.subsup = base.Subclass({
+	mBase.subsup = mBase.Subclass({
 		type: "subsup",
 		stopError: ["MissingScript", "Missing superscript or subscript argument"],
 		supError: ["MissingOpenForSup", "Missing open brace for superscript"],
@@ -513,14 +515,14 @@ function TEX_PARSER(tex, hub, ajax) {
 					if (this.position !== 2) {
 						this.data[0].SetData(2, this.primes);
 					} else {
-						m.data[0] = mml.mrow(this.primes.With({ variantForm: true }), m.data[0]);
+						m.data[0] = mMML.mrow(this.primes.With({ variantForm: true }), m.data[0]);
 					}
 				}
 				this.data[0].SetData(this.position, m.data[0]);
 				if (this.movesupsub != null) {
 					this.data[0].movesupsub = this.movesupsub;
 				}
-				return base.mml(this.data[0]);
+				return mBase.mml(this.data[0]);
 			}
 			if (this.SUPER(arguments).checkItem.call(this, m)) {
 				tex.Error(this[["", "subError", "supError"][this.position]]);
@@ -528,7 +530,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		},
 		Pop: function () { }
 	});
-	base.over = base.Subclass({
+	mBase.over = mBase.Subclass({
 		type: "over",
 		isClose: true,
 		name: "\\over",
@@ -537,7 +539,7 @@ function TEX_PARSER(tex, hub, ajax) {
 				tex.Error(["AmbiguousUseOf", "Ambiguous use of %1", o.name]);
 			}
 			if (o.isClose) {
-				var n = mml.mfrac(this.num, this.mmlData(false));
+				var n = mMML.mfrac(this.num, this.mmlData(false));
 				if (this.thickness != null) {
 					n.linethickness = this.thickness;
 				}
@@ -545,7 +547,7 @@ function TEX_PARSER(tex, hub, ajax) {
 					n.texWithDelims = true;
 					n = tex.fixedFence(this.open, n, this.close);
 				}
-				return [base.mml(n), o];
+				return [mBase.mml(n), o];
 			}
 			return this.SUPER(arguments).checkItem.call(this, o);
 		},
@@ -553,24 +555,24 @@ function TEX_PARSER(tex, hub, ajax) {
 			return "over[" + this.num + " / " + this.data.join("; ") + "]";
 		}
 	});
-	base.left = base.Subclass({
+	mBase.left = mBase.Subclass({
 		type: "left",
 		isOpen: true,
 		delim: "(",
 		stopError: ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
 		checkItem: function (m) {
 			if (m.type === "right") {
-				return base.mml(tex.fenced(this.delim, this.mmlData(), m.delim));
+				return mBase.mml(tex.fenced(this.delim, this.mmlData(), m.delim));
 			}
 			return this.SUPER(arguments).checkItem.call(this, m);
 		}
 	});
-	base.right = base.Subclass({
+	mBase.right = mBase.Subclass({
 		type: "right",
 		isClose: true,
 		delim: ")"
 	});
-	base.begin = base.Subclass({
+	mBase.begin = mBase.Subclass({
 		type: "begin",
 		isOpen: true,
 		checkItem: function (m) {
@@ -579,7 +581,7 @@ function TEX_PARSER(tex, hub, ajax) {
 					tex.Error(["EnvBadEnd", "\\begin{%1} ended with \\end{%2}", this.name, m.name]);
 				}
 				if (!this.end) {
-					return base.mml(this.mmlData());
+					return mBase.mml(this.mmlData());
 				}
 				return this.parse[this.end].call(this.parse, this, this.data);
 			}
@@ -589,21 +591,21 @@ function TEX_PARSER(tex, hub, ajax) {
 			return this.SUPER(arguments).checkItem.call(this, m);
 		}
 	});
-	base.end = base.Subclass({
+	mBase.end = mBase.Subclass({
 		type: "end",
 		isClose: true
 	});
-	base.style = base.Subclass({
+	mBase.style = mBase.Subclass({
 		type: "style",
 		checkItem: function (n) {
 			if (!n.isClose) {
 				return this.SUPER(arguments).checkItem.call(this, n);
 			}
-			var m = mml.mstyle.apply(mml, this.data).With(this.styles);
-			return [base.mml(m), n];
+			var m = mMML.mstyle.apply(mMML, this.data).With(this.styles);
+			return [mBase.mml(m), n];
 		}
 	});
-	base.position = base.Subclass({
+	mBase.position = mBase.Subclass({
 		type: "position",
 		checkItem: function (n) {
 			if (n.isClose) {
@@ -613,20 +615,20 @@ function TEX_PARSER(tex, hub, ajax) {
 				var m = n.mmlData();
 				switch (this.move) {
 					case "vertical":
-						m = mml.mpadded(m).With({
+						m = mMML.mpadded(m).With({
 							height: this.dh,
 							depth: this.dd,
 							voffset: this.dh
 						});
-						return [base.mml(m)];
+						return [mBase.mml(m)];
 					case "horizontal":
-						return [base.mml(this.left), n, base.mml(this.right)];
+						return [mBase.mml(this.left), n, mBase.mml(this.right)];
 				}
 			}
 			return this.SUPER(arguments).checkItem.call(this, n);
 		}
 	});
-	base.array = base.Subclass({
+	mBase.array = mBase.Subclass({
 		type: "array",
 		isOpen: true,
 		copyEnv: false,
@@ -655,7 +657,7 @@ function TEX_PARSER(tex, hub, ajax) {
 				this.clearEnv();
 				var o = this.arraydef.scriptlevel;
 				delete this.arraydef.scriptlevel;
-				var m = mml.mtable.apply(mml, this.table).With(this.arraydef);
+				var m = mMML.mtable.apply(mMML, this.table).With(this.arraydef);
 				if (this.frame.length === 4) {
 					m.frame = (this.frame.dashed ? "dashed" : "solid");
 				} else {
@@ -664,19 +666,19 @@ function TEX_PARSER(tex, hub, ajax) {
 						if (this.arraydef.rowlines) {
 							this.arraydef.rowlines = this.arraydef.rowlines.replace(/none( none)+$/, "none");
 						}
-						m = mml.menclose(m).With({ notation: this.frame.join(" "), isFrame: true });
+						m = mMML.menclose(m).With({ notation: this.frame.join(" "), isFrame: true });
 						if ((this.arraydef.columnlines || "none") != "none" || (this.arraydef.rowlines || "none") != "none") {
 							m.padding = 0;
 						}
 					}
 				}
 				if (o) {
-					m = mml.mstyle(m).With({ scriptlevel: o });
+					m = mMML.mstyle(m).With({ scriptlevel: o });
 				}
 				if (this.open || this.close) {
 					m = tex.fenced(this.open, m, this.close);
 				}
-				m = base.mml(m);
+				m = mBase.mml(m);
 				if (this.requireClose) {
 					if (n.type === "close") { return m }
 					tex.Error(["MissingCloseBrace", "Missing close brace"]);
@@ -686,7 +688,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			return this.SUPER(arguments).checkItem.call(this, n);
 		},
 		EndEntry: function () {
-			var m = mml.mtd.apply(mml, this.data);
+			var m = mMML.mtd.apply(mMML, this.data);
 			if (this.hfill.length) {
 				if (this.hfill[0] === 0) {
 					m.columnalign = "right";
@@ -700,12 +702,12 @@ function TEX_PARSER(tex, hub, ajax) {
 			this.hfill = [];
 		},
 		EndRow: function () {
-			var m = mml.mtr;
+			var m = mMML.mtr;
 			if (this.isNumbered && this.row.length === 3) {
 				this.row.unshift(this.row.pop());
-				m = mml.mlabeledtr;
+				m = mMML.mlabeledtr;
 			}
-			this.table.push(m.apply(mml, this.row));
+			this.table.push(m.apply(mMML, this.row));
 			this.row = [];
 		},
 		EndTable: function () {
@@ -743,11 +745,11 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 		}
 	});
-	base.cell = base.Subclass({
+	mBase.cell = mBase.Subclass({
 		type: "cell",
 		isClose: true
 	});
-	base.mml = base.Subclass({
+	mBase.mml = mBase.Subclass({
 		type: "mml",
 		isNotStack: true,
 		Add: function () {
@@ -755,7 +757,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			return this;
 		}
 	});
-	base.fn = base.Subclass({
+	mBase.fn = mBase.Subclass({
 		type: "fn",
 		checkItem: function (n) {
 			if (this.data[0]) {
@@ -764,7 +766,7 @@ function TEX_PARSER(tex, hub, ajax) {
 					if (n.type !== "mml" || !n.data[0]) {
 						return [this.data[0], n];
 					}
-					if (n.data[0].isa(mml.mspace)) {
+					if (n.data[0].isa(mMML.mspace)) {
 						return [this.data[0], n];
 					}
 					var m = n.data[0];
@@ -777,35 +779,35 @@ function TEX_PARSER(tex, hub, ajax) {
 				}
 				return [
 					this.data[0],
-					mml.mo(mml.entity("#x2061")).With({ texClass: mml.TEXCLASS.NONE }),
+					mMML.mo(mMML.entity("#x2061")).With({ texClass: mMML.TEXCLASS.NONE }),
 					n
 				];
 			}
 			return this.SUPER(arguments).checkItem.apply(this, arguments);
 		}
 	});
-	base.not = base.Subclass({
+	mBase.not = mBase.Subclass({
 		type: "not",
 		checkItem: function (n) {
 			var m, o; if (n.type === "open" || n.type === "left") { return true }
 			if (n.type === "mml" && n.data[0].type.match(/^(mo|mi|mtext)$/)) {
 				m = n.data[0], o = m.data.join("");
 				if (o.length === 1 && !m.movesupsub) {
-					o = base.not.remap[o.charCodeAt(0)];
+					o = mBase.not.remap[o.charCodeAt(0)];
 					if (o) {
-						m.SetData(0, mml.chars(String.fromCharCode(o)));
+						m.SetData(0, mMML.chars(String.fromCharCode(o)));
 					} else {
-						m.Append(mml.chars("\u0338"));
+						m.Append(mMML.chars("\u0338"));
 					}
 					return n;
 				}
 			}
-			m = mml.mpadded(mml.mtext("\u29F8")).With({ width: 0 });
-			m = mml.TeXAtom(m).With({ texClass: mml.TEXCLASS.REL });
+			m = mMML.mpadded(mMML.mtext("\u29F8")).With({ width: 0 });
+			m = mMML.TeXAtom(m).With({ texClass: mMML.TEXCLASS.REL });
 			return [m, n];
 		}
 	});
-	base.not.remap = {
+	mBase.not.remap = {
 		8592: 8602,
 		8594: 8603,
 		8596: 8622,
@@ -852,14 +854,14 @@ function TEX_PARSER(tex, hub, ajax) {
 		8885: 8941,
 		8707: 8708
 	};
-	base.dots = base.Subclass({
+	mBase.dots = mBase.Subclass({
 		type: "dots",
 		checkItem: function (n) {
 			if (n.type === "open" || n.type === "left") { return true }
 			var o = this.ldots;
 			if (n.type === "mml" && n.data[0].isEmbellished()) {
 				var m = n.data[0].CoreMO().Get("texClass");
-				if (m === mml.TEXCLASS.BIN || m === mml.TEXCLASS.REL) { o = this.cdots }
+				if (m === mMML.TEXCLASS.BIN || m === mMML.TEXCLASS.REL) { o = this.cdots }
 			}
 			return [o, n];
 		}
@@ -937,55 +939,55 @@ function TEX_PARSER(tex, hub, ajax) {
 				varrho: "03F1",
 				varsigma: "03C2",
 				varphi: "03C6",
-				S: ["00A7", { mathvariant: mml.VARIANT.NORMAL }],
-				aleph: ["2135", { mathvariant: mml.VARIANT.NORMAL }],
+				S: ["00A7", { mathvariant: mMML.VARIANT.NORMAL }],
+				aleph: ["2135", { mathvariant: mMML.VARIANT.NORMAL }],
 				hbar: ["210F", { variantForm: true }],
 				imath: "0131",
 				jmath: "0237",
 				ell: "2113",
-				wp: ["2118", { mathvariant: mml.VARIANT.NORMAL }],
-				Re: ["211C", { mathvariant: mml.VARIANT.NORMAL }],
-				Im: ["2111", { mathvariant: mml.VARIANT.NORMAL }],
-				partial: ["2202", { mathvariant: mml.VARIANT.NORMAL }],
-				infty: ["221E", { mathvariant: mml.VARIANT.NORMAL }],
-				prime: ["2032", { mathvariant: mml.VARIANT.NORMAL, variantForm: true }],
-				emptyset: ["2205", { mathvariant: mml.VARIANT.NORMAL }],
-				nabla: ["2207", { mathvariant: mml.VARIANT.NORMAL }],
-				top: ["22A4", { mathvariant: mml.VARIANT.NORMAL }],
-				bot: ["22A5", { mathvariant: mml.VARIANT.NORMAL }],
-				angle: ["2220", { mathvariant: mml.VARIANT.NORMAL }],
-				triangle: ["25B3", { mathvariant: mml.VARIANT.NORMAL }],
-				backslash: ["2216", { mathvariant: mml.VARIANT.NORMAL, variantForm: true }],
-				forall: ["2200", { mathvariant: mml.VARIANT.NORMAL }],
-				exists: ["2203", { mathvariant: mml.VARIANT.NORMAL }],
-				neg: ["00AC", { mathvariant: mml.VARIANT.NORMAL }],
-				lnot: ["00AC", { mathvariant: mml.VARIANT.NORMAL }],
-				flat: ["266D", { mathvariant: mml.VARIANT.NORMAL }],
-				natural: ["266E", { mathvariant: mml.VARIANT.NORMAL }],
-				sharp: ["266F", { mathvariant: mml.VARIANT.NORMAL }],
-				clubsuit: ["2663", { mathvariant: mml.VARIANT.NORMAL }],
-				diamondsuit: ["2662", { mathvariant: mml.VARIANT.NORMAL }],
-				heartsuit: ["2661", { mathvariant: mml.VARIANT.NORMAL }],
-				spadesuit: ["2660", { mathvariant: mml.VARIANT.NORMAL }]
+				wp: ["2118", { mathvariant: mMML.VARIANT.NORMAL }],
+				Re: ["211C", { mathvariant: mMML.VARIANT.NORMAL }],
+				Im: ["2111", { mathvariant: mMML.VARIANT.NORMAL }],
+				partial: ["2202", { mathvariant: mMML.VARIANT.NORMAL }],
+				infty: ["221E", { mathvariant: mMML.VARIANT.NORMAL }],
+				prime: ["2032", { mathvariant: mMML.VARIANT.NORMAL, variantForm: true }],
+				emptyset: ["2205", { mathvariant: mMML.VARIANT.NORMAL }],
+				nabla: ["2207", { mathvariant: mMML.VARIANT.NORMAL }],
+				top: ["22A4", { mathvariant: mMML.VARIANT.NORMAL }],
+				bot: ["22A5", { mathvariant: mMML.VARIANT.NORMAL }],
+				angle: ["2220", { mathvariant: mMML.VARIANT.NORMAL }],
+				triangle: ["25B3", { mathvariant: mMML.VARIANT.NORMAL }],
+				backslash: ["2216", { mathvariant: mMML.VARIANT.NORMAL, variantForm: true }],
+				forall: ["2200", { mathvariant: mMML.VARIANT.NORMAL }],
+				exists: ["2203", { mathvariant: mMML.VARIANT.NORMAL }],
+				neg: ["00AC", { mathvariant: mMML.VARIANT.NORMAL }],
+				lnot: ["00AC", { mathvariant: mMML.VARIANT.NORMAL }],
+				flat: ["266D", { mathvariant: mMML.VARIANT.NORMAL }],
+				natural: ["266E", { mathvariant: mMML.VARIANT.NORMAL }],
+				sharp: ["266F", { mathvariant: mMML.VARIANT.NORMAL }],
+				clubsuit: ["2663", { mathvariant: mMML.VARIANT.NORMAL }],
+				diamondsuit: ["2662", { mathvariant: mMML.VARIANT.NORMAL }],
+				heartsuit: ["2661", { mathvariant: mMML.VARIANT.NORMAL }],
+				spadesuit: ["2660", { mathvariant: mMML.VARIANT.NORMAL }]
 			},
 			mathchar0mo: {
-				surd: "221A", coprod: ["2210", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigvee: ["22C1", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigwedge: ["22C0", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				biguplus: ["2A04", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigcap: ["22C2", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigcup: ["22C3", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				"int": ["222B", { texClass: mml.TEXCLASS.OP }],
-				intop: ["222B", { texClass: mml.TEXCLASS.OP, movesupsub: true, movablelimits: true }],
-				iint: ["222C", { texClass: mml.TEXCLASS.OP }],
-				iiint: ["222D", { texClass: mml.TEXCLASS.OP }],
-				prod: ["220F", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				sum: ["2211", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigotimes: ["2A02", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigoplus: ["2A01", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				bigodot: ["2A00", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
-				oint: ["222E", { texClass: mml.TEXCLASS.OP }],
-				bigsqcup: ["2A06", { texClass: mml.TEXCLASS.OP, movesupsub: true }],
+				surd: "221A", coprod: ["2210", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigvee: ["22C1", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigwedge: ["22C0", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				biguplus: ["2A04", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigcap: ["22C2", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigcup: ["22C3", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				"int": ["222B", { texClass: mMML.TEXCLASS.OP }],
+				intop: ["222B", { texClass: mMML.TEXCLASS.OP, movesupsub: true, movablelimits: true }],
+				iint: ["222C", { texClass: mMML.TEXCLASS.OP }],
+				iiint: ["222D", { texClass: mMML.TEXCLASS.OP }],
+				prod: ["220F", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				sum: ["2211", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigotimes: ["2A02", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigoplus: ["2A01", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				bigodot: ["2A00", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
+				oint: ["222E", { texClass: mMML.TEXCLASS.OP }],
+				bigsqcup: ["2A06", { texClass: mMML.TEXCLASS.OP, movesupsub: true }],
 				smallint: ["222B", { largeop: false }],
 				triangleleft: "25C3",
 				triangleright: "25B9",
@@ -1099,9 +1101,9 @@ function TEX_PARSER(tex, hub, ajax) {
 				dotsm: "22EF",
 				dotsi: "22EF",
 				dotso: "2026",
-				ldotp: ["002E", { texClass: mml.TEXCLASS.PUNCT }],
-				cdotp: ["22C5", { texClass: mml.TEXCLASS.PUNCT }],
-				colon: ["003A", { texClass: mml.TEXCLASS.PUNCT }]
+				ldotp: ["002E", { texClass: mMML.TEXCLASS.PUNCT }],
+				cdotp: ["22C5", { texClass: mMML.TEXCLASS.PUNCT }],
+				colon: ["003A", { texClass: mMML.TEXCLASS.PUNCT }]
 			},
 			mathchar7: {
 				Gamma: "0393",
@@ -1132,7 +1134,7 @@ function TEX_PARSER(tex, hub, ajax) {
 				"\\lt": "27E8",
 				"\\gt": "27E9",
 				"/": "/",
-				"|": ["|", { texClass: mml.TEXCLASS.ORD }],
+				"|": ["|", { texClass: mMML.TEXCLASS.ORD }],
 				".": "",
 				"\\\\": "\\",
 				"\\lmoustache": "23B0",
@@ -1142,9 +1144,9 @@ function TEX_PARSER(tex, hub, ajax) {
 				"\\arrowvert": "23D0",
 				"\\Arrowvert": "2016",
 				"\\bracevert": "23AA",
-				"\\Vert": ["2016", { texClass: mml.TEXCLASS.ORD }],
-				"\\|": ["2016", { texClass: mml.TEXCLASS.ORD }],
-				"\\vert": ["|", { texClass: mml.TEXCLASS.ORD }],
+				"\\Vert": ["2016", { texClass: mMML.TEXCLASS.ORD }],
+				"\\|": ["2016", { texClass: mMML.TEXCLASS.ORD }],
+				"\\vert": ["|", { texClass: mMML.TEXCLASS.ORD }],
 				"\\uparrow": "2191",
 				"\\downarrow": "2193",
 				"\\updownarrow": "2195",
@@ -1170,17 +1172,17 @@ function TEX_PARSER(tex, hub, ajax) {
 				textstyle: ["SetStyle", "T", false, 0],
 				scriptstyle: ["SetStyle", "S", false, 1],
 				scriptscriptstyle: ["SetStyle", "SS", false, 2],
-				rm: ["SetFont", mml.VARIANT.NORMAL],
-				mit: ["SetFont", mml.VARIANT.ITALIC],
-				oldstyle: ["SetFont", mml.VARIANT.OLDSTYLE],
-				cal: ["SetFont", mml.VARIANT.CALIGRAPHIC],
+				rm: ["SetFont", mMML.VARIANT.NORMAL],
+				mit: ["SetFont", mMML.VARIANT.ITALIC],
+				oldstyle: ["SetFont", mMML.VARIANT.OLDSTYLE],
+				cal: ["SetFont", mMML.VARIANT.CALIGRAPHIC],
 				it: ["SetFont", "-tex-mathit"],
-				bf: ["SetFont", mml.VARIANT.BOLD],
-				bbFont: ["SetFont", mml.VARIANT.DOUBLESTRUCK],
-				scr: ["SetFont", mml.VARIANT.SCRIPT],
-				frak: ["SetFont", mml.VARIANT.FRAKTUR],
-				sf: ["SetFont", mml.VARIANT.SANSSERIF],
-				tt: ["SetFont", mml.VARIANT.MONOSPACE],
+				bf: ["SetFont", mMML.VARIANT.BOLD],
+				bbFont: ["SetFont", mMML.VARIANT.DOUBLESTRUCK],
+				scr: ["SetFont", mMML.VARIANT.SCRIPT],
+				frak: ["SetFont", mMML.VARIANT.FRAKTUR],
+				sf: ["SetFont", mMML.VARIANT.SANSSERIF],
+				tt: ["SetFont", mMML.VARIANT.MONOSPACE],
 				tiny: ["SetSize", 0.5],
 				Tiny: ["SetSize", 0.6],
 				scriptsize: ["SetSize", 0.7],
@@ -1263,16 +1265,16 @@ function TEX_PARSER(tex, hub, ajax) {
 				lower: "RaiseLower",
 				moveleft: "MoveLeftRight",
 				moveright: "MoveLeftRight",
-				",": ["Spacer", mml.LENGTH.THINMATHSPACE],
-				":": ["Spacer", mml.LENGTH.MEDIUMMATHSPACE],
-				">": ["Spacer", mml.LENGTH.MEDIUMMATHSPACE],
-				";": ["Spacer", mml.LENGTH.THICKMATHSPACE],
-				"!": ["Spacer", mml.LENGTH.NEGATIVETHINMATHSPACE],
+				",": ["Spacer", mMML.LENGTH.THINMATHSPACE],
+				":": ["Spacer", mMML.LENGTH.MEDIUMMATHSPACE],
+				">": ["Spacer", mMML.LENGTH.MEDIUMMATHSPACE],
+				";": ["Spacer", mMML.LENGTH.THICKMATHSPACE],
+				"!": ["Spacer", mMML.LENGTH.NEGATIVETHINMATHSPACE],
 				enspace: ["Spacer", ".5em"],
 				quad: ["Spacer", "1em"],
 				qquad: ["Spacer", "2em"],
-				thinspace: ["Spacer", mml.LENGTH.THINMATHSPACE],
-				negthinspace: ["Spacer", mml.LENGTH.NEGATIVETHINMATHSPACE],
+				thinspace: ["Spacer", mMML.LENGTH.THINMATHSPACE],
+				negthinspace: ["Spacer", mMML.LENGTH.NEGATIVETHINMATHSPACE],
 				hskip: "Hskip",
 				hspace: "Hskip",
 				kern: "Hskip",
@@ -1281,31 +1283,31 @@ function TEX_PARSER(tex, hub, ajax) {
 				mkern: "Hskip",
 				Rule: ["Rule"],
 				Space: ["Rule", "blank"],
-				big: ["MakeBig", mml.TEXCLASS.ORD, 0.85],
-				Big: ["MakeBig", mml.TEXCLASS.ORD, 1.15],
-				bigg: ["MakeBig", mml.TEXCLASS.ORD, 1.45],
-				Bigg: ["MakeBig", mml.TEXCLASS.ORD, 1.75],
-				bigl: ["MakeBig", mml.TEXCLASS.OPEN, 0.85],
-				Bigl: ["MakeBig", mml.TEXCLASS.OPEN, 1.15],
-				biggl: ["MakeBig", mml.TEXCLASS.OPEN, 1.45],
-				Biggl: ["MakeBig", mml.TEXCLASS.OPEN, 1.75],
-				bigr: ["MakeBig", mml.TEXCLASS.CLOSE, 0.85],
-				Bigr: ["MakeBig", mml.TEXCLASS.CLOSE, 1.15],
-				biggr: ["MakeBig", mml.TEXCLASS.CLOSE, 1.45],
-				Biggr: ["MakeBig", mml.TEXCLASS.CLOSE, 1.75],
-				bigm: ["MakeBig", mml.TEXCLASS.REL, 0.85],
-				Bigm: ["MakeBig", mml.TEXCLASS.REL, 1.15],
-				biggm: ["MakeBig", mml.TEXCLASS.REL, 1.45],
-				Biggm: ["MakeBig", mml.TEXCLASS.REL, 1.75],
-				mathord: ["TeXAtom", mml.TEXCLASS.ORD],
-				mathop: ["TeXAtom", mml.TEXCLASS.OP],
-				mathopen: ["TeXAtom", mml.TEXCLASS.OPEN],
-				mathclose: ["TeXAtom", mml.TEXCLASS.CLOSE],
-				mathbin: ["TeXAtom", mml.TEXCLASS.BIN],
-				mathrel: ["TeXAtom", mml.TEXCLASS.REL],
-				mathpunct: ["TeXAtom", mml.TEXCLASS.PUNCT],
-				mathinner: ["TeXAtom", mml.TEXCLASS.INNER],
-				vcenter: ["TeXAtom", mml.TEXCLASS.VCENTER],
+				big: ["MakeBig", mMML.TEXCLASS.ORD, 0.85],
+				Big: ["MakeBig", mMML.TEXCLASS.ORD, 1.15],
+				bigg: ["MakeBig", mMML.TEXCLASS.ORD, 1.45],
+				Bigg: ["MakeBig", mMML.TEXCLASS.ORD, 1.75],
+				bigl: ["MakeBig", mMML.TEXCLASS.OPEN, 0.85],
+				Bigl: ["MakeBig", mMML.TEXCLASS.OPEN, 1.15],
+				biggl: ["MakeBig", mMML.TEXCLASS.OPEN, 1.45],
+				Biggl: ["MakeBig", mMML.TEXCLASS.OPEN, 1.75],
+				bigr: ["MakeBig", mMML.TEXCLASS.CLOSE, 0.85],
+				Bigr: ["MakeBig", mMML.TEXCLASS.CLOSE, 1.15],
+				biggr: ["MakeBig", mMML.TEXCLASS.CLOSE, 1.45],
+				Biggr: ["MakeBig", mMML.TEXCLASS.CLOSE, 1.75],
+				bigm: ["MakeBig", mMML.TEXCLASS.REL, 0.85],
+				Bigm: ["MakeBig", mMML.TEXCLASS.REL, 1.15],
+				biggm: ["MakeBig", mMML.TEXCLASS.REL, 1.45],
+				Biggm: ["MakeBig", mMML.TEXCLASS.REL, 1.75],
+				mathord: ["TeXAtom", mMML.TEXCLASS.ORD],
+				mathop: ["TeXAtom", mMML.TEXCLASS.OP],
+				mathopen: ["TeXAtom", mMML.TEXCLASS.OPEN],
+				mathclose: ["TeXAtom", mMML.TEXCLASS.CLOSE],
+				mathbin: ["TeXAtom", mMML.TEXCLASS.BIN],
+				mathrel: ["TeXAtom", mMML.TEXCLASS.REL],
+				mathpunct: ["TeXAtom", mMML.TEXCLASS.PUNCT],
+				mathinner: ["TeXAtom", mMML.TEXCLASS.INNER],
+				vcenter: ["TeXAtom", mMML.TEXCLASS.VCENTER],
 				mathchoice: ["Extension", "mathchoice"],
 				buildrel: "BuildRel",
 				hbox: ["HBox", 0],
@@ -1334,15 +1336,15 @@ function TEX_PARSER(tex, hub, ajax) {
 				array: "Matrix",
 				pmatrix: ["Matrix", "(", ")"],
 				cases: ["Matrix", "{", "", "left left", null, ".1em", null, true],
-				eqalign: ["Matrix", null, null, "right left", mml.LENGTH.THICKMATHSPACE, ".5em", "D"],
+				eqalign: ["Matrix", null, null, "right left", mMML.LENGTH.THICKMATHSPACE, ".5em", "D"],
 				displaylines: ["Matrix", null, null, "center", null, ".5em", "D"],
 				cr: "Cr",
 				"\\": "CrLaTeX",
 				newline: "Cr",
 				hline: ["HLine", "solid"],
 				hdashline: ["HLine", "dashed"],
-				eqalignno: ["Matrix", null, null, "right left", mml.LENGTH.THICKMATHSPACE, ".5em", "D", null, "right"],
-				leqalignno: ["Matrix", null, null, "right left", mml.LENGTH.THICKMATHSPACE, ".5em", "D", null, "left"],
+				eqalignno: ["Matrix", null, null, "right left", mMML.LENGTH.THICKMATHSPACE, ".5em", "D", null, "right"],
+				leqalignno: ["Matrix", null, null, "right left", mMML.LENGTH.THICKMATHSPACE, ".5em", "D", null, "left"],
 				hfill: "HFill",
 				hfil: "HFill",
 				hfilll: "HFill",
@@ -1462,7 +1464,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 			this.stack = tex.Stack(m, !!o);
 			this.Parse();
-			this.Push(base.stop());
+			this.Push(mBase.stop());
 		},
 		Parse: function () {
 			var o, m;
@@ -1495,15 +1497,15 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (this.stack.env.font) {
 				m.mathvariant = this.stack.env.font;
 			}
-			this.Push(this.mmlToken(mml.mi(mml.chars(n)).With(m)));
+			this.Push(this.mmlToken(mMML.mi(mMML.chars(n)).With(m)));
 		},
 		Number: function (p) {
 			var m, o = this.string.slice(this.i - 1).match(g.number);
 			if (o) {
-				m = mml.mn(o[0].replace(/[{}]/g, ""));
+				m = mMML.mn(o[0].replace(/[{}]/g, ""));
 				this.i += o[0].length - 1;
 			} else {
-				m = mml.mo(mml.chars(p));
+				m = mMML.mo(mMML.chars(p));
 			}
 			if (this.stack.env.font) {
 				m.mathvariant = this.stack.env.font;
@@ -1520,15 +1522,15 @@ function TEX_PARSER(tex, hub, ajax) {
 				if (isArray(o)) {
 					n = o[1]; o = o[0];
 				}
-				m = mml.mo(mml.entity("#x" + o)).With(n);
+				m = mMML.mo(mMML.entity("#x" + o)).With(n);
 			} else {
-				m = mml.mo(o).With(n);
+				m = mMML.mo(o).With(n);
 			}
 			if (m.autoDefault("stretchy", true)) {
 				m.stretchy = false;
 			}
 			if (m.autoDefault("texClass", true) == "") {
-				m = mml.TeXAtom(m);
+				m = mMML.TeXAtom(m);
 			}
 			this.Push(this.mmlToken(m))
 		},
@@ -1571,9 +1573,9 @@ function TEX_PARSER(tex, hub, ajax) {
 			return g.macros[m];
 		},
 		csMathchar0mi: function (_m, o) {
-			var n = { mathvariant: mml.VARIANT.ITALIC };
+			var n = { mathvariant: mMML.VARIANT.ITALIC };
 			if (isArray(o)) { n = o[1]; o = o[0] }
-			this.Push(this.mmlToken(mml.mi(mml.entity("#x" + o)).With(n)));
+			this.Push(this.mmlToken(mMML.mi(mMML.entity("#x" + o)).With(n)));
 		},
 		csMathchar0mo: function (_m, o) {
 			var n = { stretchy: false };
@@ -1582,10 +1584,10 @@ function TEX_PARSER(tex, hub, ajax) {
 				n.stretchy = false;
 				o = o[0];
 			}
-			this.Push(this.mmlToken(mml.mo(mml.entity("#x" + o)).With(n)));
+			this.Push(this.mmlToken(mMML.mo(mMML.entity("#x" + o)).With(n)));
 		},
 		csMathchar7: function (_m, o) {
-			var n = { mathvariant: mml.VARIANT.NORMAL };
+			var n = { mathvariant: mMML.VARIANT.NORMAL };
 			if (isArray(o)) {
 				n = o[1];
 				o = o[0];
@@ -1593,7 +1595,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (this.stack.env.font) {
 				n.mathvariant = this.stack.env.font;
 			}
-			this.Push(this.mmlToken(mml.mi(mml.entity("#x" + o)).With(n)));
+			this.Push(this.mmlToken(mMML.mi(mMML.entity("#x" + o)).With(n)));
 		},
 		csDelimiter: function (_m, o) {
 			var n = {};
@@ -1602,23 +1604,23 @@ function TEX_PARSER(tex, hub, ajax) {
 				o = o[0];
 			}
 			if (o.length === 4) {
-				o = mml.entity("#x" + o);
+				o = mMML.entity("#x" + o);
 			} else {
-				o = mml.chars(o);
+				o = mMML.chars(o);
 			}
-			this.Push(this.mmlToken(mml.mo(o).With({ fence: false, stretchy: false }).With(n)));
+			this.Push(this.mmlToken(mMML.mo(o).With({ fence: false, stretchy: false }).With(n)));
 		},
 		csUndefined: function (m) {
 			tex.Error(["UndefinedControlSequence", "Undefined control sequence %1", m]);
 		},
 		Open: function (_m) {
-			this.Push(base.open());
+			this.Push(mBase.open());
 		},
 		Close: function (_m) {
-			this.Push(base.close());
+			this.Push(mBase.close());
 		},
 		Tilde: function (_m) {
-			this.Push(mml.mtext(mml.chars(h)));
+			this.Push(mMML.mtext(mMML.chars(h)));
 		},
 		Space: function (_m) { },
 		Superscript: function (_r) {
@@ -1633,7 +1635,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			} else {
 				o = this.stack.Prev();
 				if (!o) {
-					o = mml.mi("");
+					o = mMML.mi("");
 				}
 			}
 			if (o.isEmbellishedWrapper) {
@@ -1646,18 +1648,18 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (o.type !== "msubsup") {
 				if (n) {
 					if (o.type !== "munderover" || o.data[o.over]) {
-						if (o.movablelimits && o.isa(mml.mi)) {
+						if (o.movablelimits && o.isa(mMML.mi)) {
 							o = this.mi2mo(o);
 						}
-						o = mml.munderover(o, null, null).With({ movesupsub: true });
+						o = mMML.munderover(o, null, null).With({ movesupsub: true });
 					}
 					m = o.over;
 				} else {
-					o = mml.msubsup(o, null, null);
+					o = mMML.msubsup(o, null, null);
 					m = o.sup;
 				}
 			}
-			this.Push(base.subsup(o).With({ position: m, primes: q, movesupsub: n }));
+			this.Push(mBase.subsup(o).With({ position: m, primes: q, movesupsub: n }));
 		},
 		Subscript: function (_r) {
 			if (this.GetNext().match(/\d/)) {
@@ -1671,7 +1673,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			} else {
 				o = this.stack.Prev();
 				if (!o) {
-					o = mml.mi("");
+					o = mMML.mi("");
 				}
 			}
 			if (o.isEmbellishedWrapper) {
@@ -1684,23 +1686,23 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (o.type !== "msubsup") {
 				if (n) {
 					if (o.type !== "munderover" || o.data[o.under]) {
-						if (o.movablelimits && o.isa(mml.mi)) {
+						if (o.movablelimits && o.isa(mMML.mi)) {
 							o = this.mi2mo(o);
 						}
-						o = mml.munderover(o, null, null).With({ movesupsub: true });
+						o = mMML.munderover(o, null, null).With({ movesupsub: true });
 					}
 					m = o.under;
 				} else {
-					o = mml.msubsup(o, null, null);
+					o = mMML.msubsup(o, null, null);
 					m = o.sub;
 				}
 			}
-			this.Push(base.subsup(o).With({ position: m, primes: q, movesupsub: n }));
+			this.Push(mBase.subsup(o).With({ position: m, primes: q, movesupsub: n }));
 		},
 		Prime: function (o) {
 			var n = this.stack.Prev();
 			if (!n) {
-				n = mml.mi();
+				n = mMML.mi();
 			}
 			if (n.type === "msubsup" && n.data[n.sup]) {
 				tex.Error(["DoubleExponentPrime", "Prime causes double exponent: use braces to clarify"]);
@@ -1712,18 +1714,18 @@ function TEX_PARSER(tex, hub, ajax) {
 				this.i++, o = this.GetNext();
 			} while (o === "'" || o === this.SMARTQUOTE);
 			m = ["", "\u2032", "\u2033", "\u2034", "\u2057"][m.length] || m;
-			this.Push(base.prime(n, this.mmlToken(mml.mo(m))));
+			this.Push(mBase.prime(n, this.mmlToken(mMML.mo(m))));
 		},
 		mi2mo: function (m) {
-			var n = mml.mo();
+			var n = mMML.mo();
 			n.Append.apply(n, m.data);
 			var o; for (o in n.defaults) {
 				if (n.defaults.hasOwnProperty(o) && m[o] != null) {
 					n[o] = m[o];
 				}
 			}
-			for (o in mml.copyAttributes) {
-				if (mml.copyAttributes.hasOwnProperty(o) && m[o] != null) { n[o] = m[o] }
+			for (o in mMML.copyAttributes) {
+				if (mMML.copyAttributes.hasOwnProperty(o) && m[o] != null) { n[o] = m[o] }
 			}
 			n.lspace = n.rspace = "0";
 			n.useMMLspacing &= ~(n.SPACE_ATTR.lspace | n.SPACE_ATTR.rspace);
@@ -1741,11 +1743,11 @@ function TEX_PARSER(tex, hub, ajax) {
 		SetStyle: function (_n, m, o, p) {
 			this.stack.env.style = m;
 			this.stack.env.level = p;
-			this.Push(base.style().With({ styles: { displaystyle: o, scriptlevel: p } }))
+			this.Push(mBase.style().With({ styles: { displaystyle: o, scriptlevel: p } }))
 		},
 		SetSize: function (_m, n) {
 			this.stack.env.size = n;
-			this.Push(base.style().With({ styles: { mathsize: n + "em" } }));
+			this.Push(mBase.style().With({ styles: { mathsize: n + "em" } }));
 		},
 		Color: function (o) {
 			var n = this.GetArgument(o);
@@ -1757,46 +1759,46 @@ function TEX_PARSER(tex, hub, ajax) {
 			} else {
 				delete this.stack.env.color;
 			}
-			this.Push(mml.mstyle(p).With({ mathcolor: n }));
+			this.Push(mMML.mstyle(p).With({ mathcolor: n }));
 		},
 		Spacer: function (_m, n) {
-			this.Push(mml.mspace().With({ width: n, mathsize: mml.SIZE.NORMAL, scriptlevel: 0 }));
+			this.Push(mMML.mspace().With({ width: n, mathsize: mMML.SIZE.NORMAL, scriptlevel: 0 }));
 		},
 		LeftRight: function (m) {
-			this.Push(base[m.substr(1)]().With({ delim: this.GetDelimiter(m) }));
+			this.Push(mBase[m.substr(1)]().With({ delim: this.GetDelimiter(m) }));
 		},
 		Middle: function (m) {
 			var n = this.GetDelimiter(m);
-			this.Push(mml.TeXAtom().With({ texClass: mml.TEXCLASS.CLOSE }));
+			this.Push(mMML.TeXAtom().With({ texClass: mMML.TEXCLASS.CLOSE }));
 			if (this.stack.Top().type !== "left") {
 				tex.Error(["MisplacedMiddle", "%1 must be within \\left and \\right", m]);
 			}
-			this.Push(mml.mo(n).With({ stretchy: true }));
-			this.Push(mml.TeXAtom().With({ texClass: mml.TEXCLASS.OPEN }));
+			this.Push(mMML.mo(n).With({ stretchy: true }));
+			this.Push(mMML.TeXAtom().With({ texClass: mMML.TEXCLASS.OPEN }));
 		},
 		NamedFn: function (n, o) {
 			if (!o) { o = n.substr(1) }
-			var m = mml.mi(o).With({ texClass: mml.TEXCLASS.OP });
-			this.Push(base.fn(this.mmlToken(m)));
+			var m = mMML.mi(o).With({ texClass: mMML.TEXCLASS.OP });
+			this.Push(mBase.fn(this.mmlToken(m)));
 		},
 		NamedOp: function (n, o) {
 			if (!o) { o = n.substr(1) }
 			o = o.replace(/&thinsp;/, "\u2006");
-			var m = mml.mo(o).With({ movablelimits: true, movesupsub: true, form: mml.FORM.PREFIX, texClass: mml.TEXCLASS.OP });
+			var m = mMML.mo(o).With({ movablelimits: true, movesupsub: true, form: mMML.FORM.PREFIX, texClass: mMML.TEXCLASS.OP });
 			m.useMMLspacing &= ~m.SPACE_ATTR.form;
 			this.Push(this.mmlToken(m));
 		},
 		Limits: function (n, m) {
 			var p = this.stack.Prev("nopop");
-			if (!p || (p.Get("texClass") !== mml.TEXCLASS.OP && p.movesupsub == null)) {
+			if (!p || (p.Get("texClass") !== mMML.TEXCLASS.OP && p.movesupsub == null)) {
 				tex.Error(["MisplacedLimits", "%1 is allowed only on operators", n]);
 			}
 			var o = this.stack.Top();
 			if (p.type === "munderover" && !m) {
-				p = o.data[o.data.length - 1] = mml.msubsup.apply(mml.subsup, p.data);
+				p = o.data[o.data.length - 1] = mMML.msubsup.apply(mMML.subsup, p.data);
 			} else {
 				if (p.type === "msubsup" && m) {
-					p = o.data[o.data.length - 1] = mml.munderover.apply(mml.underover, p.data);
+					p = o.data[o.data.length - 1] = mMML.munderover.apply(mMML.underover, p.data);
 				}
 			}
 			p.movesupsub = (m ? true : false);
@@ -1806,7 +1808,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 		},
 		Over: function (o, n, p) {
-			var m = base.over().With({ name: o });
+			var m = mBase.over().With({ name: o });
 			if (n || p) {
 				m.open = n; m.close = p;
 			} else {
@@ -1825,7 +1827,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		Frac: function (n) {
 			var m = this.ParseArg(n);
 			var o = this.ParseArg(n);
-			this.Push(mml.mfrac(m, o));
+			this.Push(mMML.mfrac(m, o));
 		},
 		Sqrt: function (p) {
 			var q = this.GetBrackets(p), m = this.GetArgument(p);
@@ -1834,16 +1836,16 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 			var o = tex.Parse(m, this.stack.env).mml();
 			if (!q) {
-				o = mml.msqrt.apply(mml, o.array());
+				o = mMML.msqrt.apply(mMML, o.array());
 			} else {
-				o = mml.mroot(o, this.parseRoot(q));
+				o = mMML.mroot(o, this.parseRoot(q));
 			}
 			this.Push(o);
 		},
 		Root: function (o) {
 			var p = this.GetUpTo(o, "\\of");
 			var m = this.ParseArg(o);
-			this.Push(mml.mroot(m, this.parseRoot(p)));
+			this.Push(mMML.mroot(m, this.parseRoot(p)));
 		},
 		parseRoot: function (r) {
 			var o = this.stack.env, m = o.inRoot;
@@ -1852,7 +1854,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			r = q.mml();
 			var p = q.stack.global;
 			if (p.leftRoot || p.upRoot) {
-				r = mml.mpadded(r);
+				r = mMML.mpadded(r);
 				if (p.leftRoot) { r.width = p.leftRoot }
 				if (p.upRoot) { r.voffset = p.upRoot; r.height = p.upRoot }
 			}
@@ -1880,51 +1882,51 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (this.stack.env.font) {
 				q.mathvariant = this.stack.env.font;
 			}
-			var n = this.mmlToken(mml.mo(mml.entity("#x" + m)).With(q));
+			var n = this.mmlToken(mMML.mo(mMML.entity("#x" + m)).With(q));
 			n.stretchy = (s ? true : false);
 			var p = (r.isEmbellished() ? r.CoreMO() : r);
-			if (p.isa(mml.mo)) { p.movablelimits = false }
-			this.Push(mml.TeXAtom(mml.munderover(r, null, n).With({ accent: true })));
+			if (p.isa(mMML.mo)) { p.movablelimits = false }
+			this.Push(mMML.TeXAtom(mMML.munderover(r, null, n).With({ accent: true })));
 		},
 		UnderOver: function (o, s, m, q) {
 			var r = { o: "over", u: "under" }[o.charAt(1)];
 			var p = this.ParseArg(o);
 			if (p.Get("movablelimits")) { p.movablelimits = false }
-			if (p.isa(mml.munderover) && p.isEmbellished()) {
+			if (p.isa(mMML.munderover) && p.isEmbellished()) {
 				p.Core().With({ lspace: 0, rspace: 0 });
-				p = mml.mrow(mml.mo().With({ rspace: 0 }), p);
+				p = mMML.mrow(mMML.mo().With({ rspace: 0 }), p);
 			}
-			var n = mml.munderover(p, null, null);
-			n.SetData(n[r], this.mmlToken(mml.mo(mml.entity("#x" + s)).With({ stretchy: true, accent: !q })));
+			var n = mMML.munderover(p, null, null);
+			n.SetData(n[r], this.mmlToken(mMML.mo(mMML.entity("#x" + s)).With({ stretchy: true, accent: !q })));
 			if (m) {
-				n = mml.TeXAtom(n).With({ texClass: mml.TEXCLASS.OP, movesupsub: true });
+				n = mMML.TeXAtom(n).With({ texClass: mMML.TEXCLASS.OP, movesupsub: true });
 			}
 			this.Push(n.With({ subsupOK: true }));
 		},
 		Overset: function (m) {
 			var o = this.ParseArg(m), n = this.ParseArg(m);
 			if (n.movablelimits) { n.movablelimits = false }
-			this.Push(mml.mover(n, o));
+			this.Push(mMML.mover(n, o));
 		},
 		Underset: function (m) {
 			var o = this.ParseArg(m), n = this.ParseArg(m);
 			if (n.movablelimits) { n.movablelimits = false }
-			this.Push(mml.munder(n, o));
+			this.Push(mMML.munder(n, o));
 		},
 		TeXAtom: function (p, r) {
 			var q = { texClass: r }, o;
-			if (r == mml.TEXCLASS.OP) {
+			if (r == mMML.TEXCLASS.OP) {
 				q.movesupsub = q.movablelimits = true;
 				var m = this.GetArgument(p);
 				var n = m.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
 				if (n) {
-					q.mathvariant = mml.VARIANT.NORMAL;
-					o = base.fn(this.mmlToken(mml.mi(n[1]).With(q)));
+					q.mathvariant = mMML.VARIANT.NORMAL;
+					o = mBase.fn(this.mmlToken(mMML.mi(n[1]).With(q)));
 				} else {
-					o = base.fn(mml.TeXAtom(tex.Parse(m, this.stack.env).mml()).With(q));
+					o = mBase.fn(mMML.TeXAtom(tex.Parse(m, this.stack.env).mml()).With(q));
 				}
 			} else {
-				o = mml.TeXAtom(this.ParseArg(p)).With(q);
+				o = mMML.TeXAtom(this.ParseArg(p)).With(q);
 			}
 			this.Push(o);
 		},
@@ -1934,7 +1936,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			var s = this.GetArgument(o);
 			var r = { attrNames: [] };
 			var n;
-			if (!mml[p] || !mml[p].prototype.isToken) {
+			if (!mMML[p] || !mMML[p].prototype.isToken) {
 				tex.Error(["NotMathMLToken", "%1 is not a token element", p]);
 			}
 			while (m !== "") {
@@ -1942,7 +1944,7 @@ function TEX_PARSER(tex, hub, ajax) {
 				if (!n) {
 					tex.Error(["InvalidMathMLAttr", "Invalid MathML attribute: %1", m]);
 				}
-				if (mml[p].prototype.defaults[n[1]] == null && !this.MmlTokenAllow[n[1]]) {
+				if (mMML[p].prototype.defaults[n[1]] == null && !this.MmlTokenAllow[n[1]]) {
 					tex.Error(["UnknownAttrForElement", "%1 is not a recognized attribute for %2", n[1], p]);
 				}
 				var q = this.MmlFilterAttribute(n[1], n[2].replace(/^(['"])(.*)\1$/, "$2"));
@@ -1959,41 +1961,41 @@ function TEX_PARSER(tex, hub, ajax) {
 				}
 				m = m.substr(n[0].length);
 			}
-			this.Push(this.mmlToken(mml[p](s).With(r)));
+			this.Push(this.mmlToken(mMML[p](s).With(r)));
 		},
 		MmlFilterAttribute: function (_m, n) {
 			return n;
 		},
 		Strut: function (_m) {
-			this.Push(mml.mpadded(mml.mrow()).With({ height: "8.6pt", depth: "3pt", width: 0 }));
+			this.Push(mMML.mpadded(mMML.mrow()).With({ height: "8.6pt", depth: "3pt", width: 0 }));
 		},
 		Phantom: function (n, m, o) {
-			var p = mml.mphantom(this.ParseArg(n));
+			var p = mMML.mphantom(this.ParseArg(n));
 			if (m || o) {
-				p = mml.mpadded(p);
+				p = mMML.mpadded(p);
 				if (o) { p.height = p.depth = 0 }
 				if (m) { p.width = 0 }
 			}
-			this.Push(mml.TeXAtom(p));
+			this.Push(mMML.TeXAtom(p));
 		},
 		Smash: function (o) {
 			var n = this.trimSpaces(this.GetBrackets(o, ""));
-			var m = mml.mpadded(this.ParseArg(o));
+			var m = mMML.mpadded(this.ParseArg(o));
 			switch (n) {
 				case "b": m.depth = 0; break;
 				case "t": m.height = 0; break;
 				default: m.height = m.depth = 0;
 			}
-			this.Push(mml.TeXAtom(m));
+			this.Push(mMML.TeXAtom(m));
 		},
 		Lap: function (n) {
-			var m = mml.mpadded(this.ParseArg(n)).With({ width: 0 });
+			var m = mMML.mpadded(this.ParseArg(n)).With({ width: 0 });
 			if (n === "\\llap") { m.lspace = "-1width" }
-			this.Push(mml.TeXAtom(m));
+			this.Push(mMML.TeXAtom(m));
 		},
 		RaiseLower: function (m) {
 			var n = this.GetDimen(m);
-			var o = base.position().With({ name: m, move: "vertical" });
+			var o = mBase.position().With({ name: m, move: "vertical" });
 			if (n.charAt(0) === "-") {
 				n = n.slice(1);
 				m = { raise: "\\lower", lower: "\\raise" }[m.substr(1)];
@@ -2015,18 +2017,18 @@ function TEX_PARSER(tex, hub, ajax) {
 				p = o;
 				o = n;
 			}
-			this.Push(base.position().With({
+			this.Push(mBase.position().With({
 				name: m,
 				move: "horizontal",
-				left: mml.mspace().With({
+				left: mMML.mspace().With({
 					width: p,
-					mathsize: mml.SIZE.NORMAL
+					mathsize: mMML.SIZE.NORMAL
 				}),
-				right: mml.mspace().With({ width: o, mathsize: mml.SIZE.NORMAL })
+				right: mMML.mspace().With({ width: o, mathsize: mMML.SIZE.NORMAL })
 			}));
 		},
 		Hskip: function (m) {
-			this.Push(mml.mspace().With({ width: this.GetDimen(m), mathsize: mml.SIZE.NORMAL }));
+			this.Push(mMML.mspace().With({ width: this.GetDimen(m), mathsize: mMML.SIZE.NORMAL }));
 		},
 		Rule: function (o, q) {
 			var m = this.GetDimen(o), p = this.GetDimen(o), s = this.GetDimen(o);
@@ -2035,9 +2037,9 @@ function TEX_PARSER(tex, hub, ajax) {
 				if (parseFloat(m) && parseFloat(p) + parseFloat(s)) {
 					r.mathbackground = (this.stack.env.color || "black");
 				}
-				n = mml.mpadded(mml.mrow()).With(r);
+				n = mMML.mpadded(mMML.mrow()).With(r);
 			} else {
-				n = mml.mspace().With(r);
+				n = mMML.mspace().With(r);
 			}
 			this.Push(n);
 		},
@@ -2045,7 +2047,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			n *= g.p_height;
 			n = String(n).replace(/(\.\d\d\d).+/, "$1") + "em";
 			var o = this.GetDelimiter(m, true);
-			this.Push(mml.TeXAtom(mml.mo(o).With({
+			this.Push(mMML.TeXAtom(mMML.mo(o).With({
 				minsize: n,
 				maxsize: n,
 				fence: true,
@@ -2056,21 +2058,21 @@ function TEX_PARSER(tex, hub, ajax) {
 		BuildRel: function (m) {
 			var n = this.ParseUpTo(m, "\\over");
 			var o = this.ParseArg(m);
-			this.Push(mml.TeXAtom(mml.munderover(o, null, n)).With({ texClass: mml.TEXCLASS.REL }));
+			this.Push(mMML.TeXAtom(mMML.munderover(o, null, n)).With({ texClass: mMML.TEXCLASS.REL }));
 		},
 		HBox: function (m, n) {
 			this.Push.apply(this, this.InternalMath(this.GetArgument(m), n));
 		},
 		FBox: function (m) {
-			this.Push(mml.menclose.apply(mml, this.InternalMath(this.GetArgument(m))).With({ notation: "box" }));
+			this.Push(mMML.menclose.apply(mMML, this.InternalMath(this.GetArgument(m))).With({ notation: "box" }));
 		},
 		Not: function (_m) {
-			this.Push(base.not());
+			this.Push(mBase.not());
 		},
 		Dots: function (_m) {
-			this.Push(base.dots().With({
-				ldots: this.mmlToken(mml.mo(mml.entity("#x2026")).With({ stretchy: false })),
-				cdots: this.mmlToken(mml.mo(mml.entity("#x22EF")).With({ stretchy: false }))
+			this.Push(mBase.dots().With({
+				ldots: this.mmlToken(mMML.mo(mMML.entity("#x2026")).With({ stretchy: false })),
+				cdots: this.mmlToken(mMML.mo(mMML.entity("#x22EF")).With({ stretchy: false }))
 			}));
 		},
 		Require: function (m) {
@@ -2117,7 +2119,7 @@ function TEX_PARSER(tex, hub, ajax) {
 				this.string = s + "}" + this.string.slice(this.i + 1);
 				this.i = 0;
 			}
-			var q = base.array().With({
+			var q = mBase.array().With({
 				requireClose: true,
 				arraydef: { rowspacing: (o || "4pt"), columnspacing: (u || "1em") }
 			});
@@ -2135,7 +2137,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			this.Push(q);
 		},
 		Entry: function (p) {
-			this.Push(base.cell().With({ isEntry: true, name: p }));
+			this.Push(mBase.cell().With({ isEntry: true, name: p }));
 			if (this.stack.Top().isCases) {
 				var o = this.string;
 				var s = 0, q = this.i, n = o.length;
@@ -2177,7 +2179,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 		},
 		Cr: function (m) {
-			this.Push(base.cell().With({ isCR: true, name: m }));
+			this.Push(mBase.cell().With({ isCR: true, name: m }));
 		},
 		CrLaTeX: function (m) {
 			var q;
@@ -2187,9 +2189,9 @@ function TEX_PARSER(tex, hub, ajax) {
 					tex.Error(["BracketMustBeDimension", "Bracket argument to %1 must be a dimension", m]);
 				}
 			}
-			this.Push(base.cell().With({ isCR: true, name: m, linebreak: true }));
+			this.Push(mBase.cell().With({ isCR: true, name: m, linebreak: true }));
 			var p = this.stack.Top();
-			if (p.isa(base.array)) {
+			if (p.isa(mBase.array)) {
 				if (q && p.arraydef.rowspacing) {
 					var o = p.arraydef.rowspacing.split(/ /);
 					if (!p.rowspacing) {
@@ -2203,9 +2205,9 @@ function TEX_PARSER(tex, hub, ajax) {
 				}
 			} else {
 				if (q) {
-					this.Push(mml.mspace().With({ depth: q }));
+					this.Push(mMML.mspace().With({ depth: q }));
 				}
-				this.Push(mml.mspace().With({ linebreak: mml.LINEBREAK.NEWLINE }));
+				this.Push(mMML.mspace().With({ linebreak: mMML.LINEBREAK.NEWLINE }));
 			}
 		},
 		matchDimen: function (m) {
@@ -2232,7 +2234,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		HLine: function (n, o) {
 			if (o == null) { o = "solid" }
 			var p = this.stack.Top();
-			if (!p.isa(base.array) || p.data.length) {
+			if (!p.isa(mBase.array) || p.data.length) {
 				tex.Error(["Misplaced", "Misplaced %1", n]);
 			}
 			if (p.table.length == 0) {
@@ -2246,7 +2248,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		},
 		HFill: function (m) {
 			var n = this.stack.Top();
-			if (n.isa(base.array)) {
+			if (n.isa(mBase.array)) {
 				n.hfill.push(n.data.length);
 			} else {
 				tex.Error(["UnsupportedHFill", "Unsupported use of %1", m]);
@@ -2264,12 +2266,12 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 			if (!isArray(q)) { q = [q] }
 			var m = (isArray(q[1]) ? q[1][0] : q[1]);
-			var n = base.begin().With({ name: p, end: m, parse: this });
+			var n = mBase.begin().With({ name: p, end: m, parse: this });
 			if (o === "\\end") {
 				if (!r && isArray(q[1]) && this[q[1][1]]) {
 					n = this[q[1][1]].apply(this, [n].concat(q.slice(2)));
 				} else {
-					n = base.end().With({ name: p });
+					n = mBase.end().With({ name: p });
 				}
 			} else {
 				if (++this.macroCount > tex.config.MAXMACROS) {
@@ -2295,7 +2297,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			var v = ("c" + s).replace(/[^clr|:]/g, "").replace(/[^|:]([|:])+/g, "$1");
 			s = s.replace(/[^clr]/g, "").split("").join(" ");
 			s = s.replace(/l/g, "left").replace(/r/g, "right").replace(/c/g, "center");
-			var r = base.array().With({
+			var r = mBase.array().With({
 				arraydef: { columnalign: s, columnspacing: (t || "1em"), rowspacing: (o || "4pt") }
 			});
 			if (v.match(/[|:]/)) {
@@ -2511,7 +2513,7 @@ function TEX_PARSER(tex, hub, ajax) {
 					u = v.charAt(r++);
 					if (u === "$") {
 						if (s === "$" && p === 0) {
-							n.push(mml.TeXAtom(tex.Parse(v.slice(q, r - 1), {}).mml()));
+							n.push(mMML.TeXAtom(tex.Parse(v.slice(q, r - 1), {}).mml()));
 							s = "";
 							q = r;
 						} else {
@@ -2529,7 +2531,7 @@ function TEX_PARSER(tex, hub, ajax) {
 						} else {
 							if (u === "}") {
 								if (s === "}" && p === 0) {
-									n.push(mml.TeXAtom(tex.Parse(v.slice(q, r), {}).mml().With(o)));
+									n.push(mMML.TeXAtom(tex.Parse(v.slice(q, r), {}).mml().With(o)));
 									s = "";
 									q = r;
 								} else {
@@ -2557,7 +2559,7 @@ function TEX_PARSER(tex, hub, ajax) {
 											q = r;
 										} else {
 											if (u === ")" && s === ")" && p === 0) {
-												n.push(mml.TeXAtom(tex.Parse(v.slice(q, r - 2), {}).mml()));
+												n.push(mMML.TeXAtom(tex.Parse(v.slice(q, r - 2), {}).mml()));
 												s = "";
 												q = r;
 											} else {
@@ -2581,15 +2583,15 @@ function TEX_PARSER(tex, hub, ajax) {
 				n.push(this.InternalText(v.slice(q), o));
 			}
 			if (m != null) {
-				n = [mml.mstyle.apply(mml, n).With({ displaystyle: false, scriptlevel: m })];
+				n = [mMML.mstyle.apply(mMML, n).With({ displaystyle: false, scriptlevel: m })];
 			} else {
-				if (n.length > 1) { n = [mml.mrow.apply(mml, n)] }
+				if (n.length > 1) { n = [mMML.mrow.apply(mMML, n)] }
 			}
 			return n;
 		},
 		InternalText: function (n, m) {
 			n = n.replace(/^\s+/, h).replace(/\s+$/, h);
-			return mml.mtext(mml.chars(n)).With(m);
+			return mMML.mtext(mMML.chars(n)).With(m);
 		},
 		SubstituteArgs: function (n, m) {
 			var q = "";
@@ -2628,7 +2630,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		}
 	});
 	var startUp = function () {
-		mml = MathJax.ElementJax.mml;
+		mMML = MathJax.ElementJax.mml;
 		hub.Insert(g, parseList());
 		if (this.config.Macros) {
 			var m = this.config.Macros;
@@ -2680,13 +2682,13 @@ function TEX_PARSER(tex, hub, ajax) {
 				n = this.formatError(p, q, s, m);
 				o = true;
 			}
-			if (n.isa(mml.mtable) && n.displaystyle === "inherit") {
+			if (n.isa(mMML.mtable) && n.displaystyle === "inherit") {
 				n.displaystyle = s;
 			}
 			if (n.inferred) {
-				n = mml.apply(MathJax.ElementJax, n.data);
+				n = mMML.apply(MathJax.ElementJax, n.data);
 			} else {
-				n = mml(n);
+				n = mMML(n);
 			}
 			if (s) { n.root.display = "block" }
 			if (o) { n.texError = true }
@@ -2698,7 +2700,7 @@ function TEX_PARSER(tex, hub, ajax) {
 		formatError: function (p, o, q, m) {
 			var n = p.message.replace(/\n.*/, "");
 			hub.signal.Post(["TeX Jax - parse error", n, o, q, m]);
-			return mml.Error(n);
+			return mMML.Error(n);
 		},
 		Error: function (m) {
 			if (isArray(m)) { m = k.apply(k, m) }
@@ -2709,25 +2711,25 @@ function TEX_PARSER(tex, hub, ajax) {
 			g.macros[m].isUser = true;
 		},
 		fenced: function (o, n, p) {
-			var m = mml.mrow().With({ open: o, close: p, texClass: mml.TEXCLASS.INNER });
-			m.Append(mml.mo(o).With({
+			var m = mMML.mrow().With({ open: o, close: p, texClass: mMML.TEXCLASS.INNER });
+			m.Append(mMML.mo(o).With({
 				fence: true,
 				stretchy: true,
 				symmetric: true,
-				texClass: mml.TEXCLASS.OPEN
-			}), n, mml.mo(p).With({
+				texClass: mMML.TEXCLASS.OPEN
+			}), n, mMML.mo(p).With({
 				fence: true,
 				stretchy: true,
 				symmetric: true,
-				texClass: mml.TEXCLASS.CLOSE
+				texClass: mMML.TEXCLASS.CLOSE
 			}));
 			return m;
 		},
 		fixedFence: function (o, n, p) {
-			var m = mml.mrow().With({
+			var m = mMML.mrow().With({
 				open: o,
 				close: p,
-				texClass: mml.TEXCLASS.ORD
+				texClass: mMML.TEXCLASS.ORD
 			});
 			if (o) {
 				m.Append(this.mathPalette(o, "l"));
@@ -2751,14 +2753,14 @@ function TEX_PARSER(tex, hub, ajax) {
 			var r, n, p, o;
 			for (r = 0, n = q.data.length; r < n; r++) {
 				if (q.data[r]) {
-					if (q.isa(mml.mrow)) {
+					if (q.isa(mMML.mrow)) {
 						while (r + 1 < n &&
 							(p = q.data[r]) &&
 							(o = q.data[r + 1]) &&
-							p.isa(mml.mo) &&
-							o.isa(mml.mo) &&
-							p.Get("texClass") === mml.TEXCLASS.REL &&
-							o.Get("texClass") === mml.TEXCLASS.REL
+							p.isa(mMML.mo) &&
+							o.isa(mMML.mo) &&
+							p.Get("texClass") === mMML.TEXCLASS.REL &&
+							o.Get("texClass") === mMML.TEXCLASS.REL
 						) {
 							if (p.variantForm == o.variantForm &&
 								p.Get("mathvariant") == o.Get("mathvariant") &&
