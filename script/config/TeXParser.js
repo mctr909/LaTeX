@@ -334,18 +334,18 @@ function TEX_PARSER(tex, hub, ajax) {
 		endError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
 		closeError: ["ExtraCloseMissingOpen", "Extra close brace or missing open brace"],
 		rightError: ["MissingLeftExtraRight", "Missing \\left or extra \\right"],
-		Init: function () {
+		Init: function (data = null) {
 			if (this.isOpen) {
 				this.env = {};
 			}
 			this.data = [];
-			this.Push.apply(this, arguments);
-		},
-		Push: function () {
-			this.data.push.apply(this.data, arguments);
-			if (0 < this.data.length) {
-				let a = 1;
+			if (null == data) {
+				return;
 			}
+			this.Push(data);
+		},
+		Push: function (data) {
+			this.data.push(data);
 		},
 		Pop: function () {
 			return this.data.pop();
@@ -369,7 +369,9 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (m.isClose && this[m.type + "Error"]) {
 				tex.Error(this[m.type + "Error"]);
 			}
-			if (!m.isNotStack) { return true }
+			if (!m.isNotStack) {
+				return true;
+			}
 			this.Push(m.data[0]);
 			return false;
 		},
@@ -383,6 +385,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			return this.type + "[" + this.data.join("; ") + "]";
 		}
 	};
+
 	var texStack = MathJax.Object.Subclass({
 		Init: function (n, m) {
 			this.global = { isInner: m };
@@ -392,7 +395,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			if (n) { this.data[0].env = n }
 			this.env = this.data[0].env;
 		},
-		Push: function () {
+		Push: function (data = null) {
 			var o, n, p, q;
 			for (o = 0, n = arguments.length; o < n; o++) {
 				p = arguments[o];
@@ -452,6 +455,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			return "stack[\n  " + this.data.join("\n  ") + "\n]"
 		}
 	});
+
 	var base = texStack.Item = MathJax.Object.Subclass(texBase);
 	base.start = base.Subclass({
 		type: "start",
@@ -1484,7 +1488,7 @@ function TEX_PARSER(tex, hub, ajax) {
 			}
 		},
 		Push: function () {
-			this.stack.Push.apply(this.stack, arguments)
+			this.stack.Push.apply(this.stack, arguments);
 		},
 		Variable: function (n) {
 			var m = {};
