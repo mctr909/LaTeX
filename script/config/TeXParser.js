@@ -1,3 +1,30 @@
+class TeX {
+	constructor() {
+		this.id = "TeX";
+		this.version = "2.7.1";
+		this.directory = MathJax.InputJax.directory + "/TeX";
+		this.extensionDir = MathJax.InputJax.extensionDir + "/TeX";
+		this.config = {
+			TagSide: "right",
+			TagIndent: "0.8em",
+			MultLineWidth: "85%",
+			equationNumbers: {
+				autoNumber: "none",
+				formatNumber: function (a) { return a },
+				formatTag: function (a) {
+					return "(" + a + ")";
+				},
+				formatID: function (a) {
+					return "mjx-eqn-" + String(a).replace(/[:"'<>&]/g, "");
+				},
+				formatURL: function (b, a) { return a + "#" + escape(b) },
+				useLabelIds: true
+			}
+		};
+	}
+	resetEquationNumbers() { }
+}
+
 class Tex2Jax {
 	constructor() {
 		this.version = "2.7.1";
