@@ -2367,6 +2367,8 @@ function createMathJax() {
             sourceMenuTitle: ["Original", "Original Form"]
         }
     })();
+
+    checkBrowser();
 }
 
 function createCallback() {
@@ -3217,39 +3219,8 @@ function createAjax() {
     }
 }
 
-function loadScript() {
+function checkBrowser() {
     var mathJaxHub = MathJax.Hub;
-    var startup = mathJaxHub.Startup;
-    var config = mathJaxHub.config;
-    var g = document.head || (document.getElementsByTagName("head")[0]);
-    if (!g) {
-        g = document.childNodes[0]
-    }
-    var script = (document.documentElement || document).getElementsByTagName("script");
-    if (script.length === 0 && g.namespaceURI) {
-        script = document.getElementsByTagNameNS(g.namespaceURI, "script")
-    }
-    var f = new RegExp("(^|/)" + NAME_TAG + "\\.js(\\?.*)?$");
-    for (var q = script.length - 1; q >= 0; q--) {
-        if ((script[q].src || "").match(f)) {
-            startup.script = script[q].innerHTML;
-            if (RegExp.$2) {
-                var t = RegExp.$2.substr(1).split(/\&/);
-                for (var p = 0, l = t.length; p < l; p++) {
-                    var n = t[p].match(/(.*)=(.*)/);
-                    if (n) {
-                        startup.params[unescape(n[1])] = unescape(n[2])
-                    } else {
-                        startup.params[t[p]] = true
-                    }
-                }
-            }
-            config.root = script[q].src.replace(/(^|\/)[^\/]*(\?.*)?$/, "");
-            MathJax.Ajax.config.root = config.root;
-            MathJax.Ajax.params = startup.params;
-            break
-        }
-    }
     var k = navigator.userAgent;
     var a = {
         isMac: (navigator.platform.substr(0, 3) === "Mac"),
@@ -3444,6 +3415,42 @@ function loadScript() {
     if (MathJax.AuthorConfig && typeof MathJax.AuthorConfig.AuthorInit === "function") {
         MathJax.AuthorConfig.AuthorInit()
     }
+}
+
+function loadScript() {
+    var mathJaxHub = MathJax.Hub;
+    var startup = mathJaxHub.Startup;
+    var config = mathJaxHub.config;
+    var g = document.head || (document.getElementsByTagName("head")[0]);
+    if (!g) {
+        g = document.childNodes[0]
+    }
+    var script = (document.documentElement || document).getElementsByTagName("script");
+    if (script.length === 0 && g.namespaceURI) {
+        script = document.getElementsByTagNameNS(g.namespaceURI, "script")
+    }
+    var f = new RegExp("(^|/)" + NAME_TAG + "\\.js(\\?.*)?$");
+    for (var q = script.length - 1; q >= 0; q--) {
+        if ((script[q].src || "").match(f)) {
+            startup.script = script[q].innerHTML;
+            if (RegExp.$2) {
+                var t = RegExp.$2.substr(1).split(/\&/);
+                for (var p = 0, l = t.length; p < l; p++) {
+                    var n = t[p].match(/(.*)=(.*)/);
+                    if (n) {
+                        startup.params[unescape(n[1])] = unescape(n[2])
+                    } else {
+                        startup.params[t[p]] = true
+                    }
+                }
+            }
+            config.root = script[q].src.replace(/(^|\/)[^\/]*(\?.*)?$/, "");
+            MathJax.Ajax.config.root = config.root;
+            MathJax.Ajax.params = startup.params;
+            break
+        }
+    }
+
     mathJaxHub.queue = MathJax.Callback.Queue();
     mathJaxHub.queue.Push(
         ["Post", startup.signal, "Begin"],
