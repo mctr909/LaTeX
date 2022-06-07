@@ -1,20 +1,28 @@
-function loadLatex() {
+const NAME_TAG = "MathJax";
+var MathJax = null;
+
+function createMathJax() {
     MathJax.isPacked = true;
     MathJax.version = "2.7.2";
     MathJax.fileversion = "2.7.2";
     MathJax.cdnVersion = "2.7.2";
     MathJax.cdnFileVersions = {};
 
-    (function(d) {
-        var b = window[d];
-        if (!b) {
-            b = window[d] = {}
+    (function () {
+        if (MathJax.Object) {
+            return;
         }
+
+        MathJax = window[NAME_TAG];
+        if (!MathJax) {
+            MathJax = window[NAME_TAG] = {};
+        }
+
         var e = [];
-        var c = function(f) {
+        var c = function (f) {
             var g = f.constructor;
             if (!g) {
-                g = function() {}
+                g = function () { }
             }
             for (var h in f) {
                 if (h !== "constructor" && f.hasOwnProperty(h)) {
@@ -23,14 +31,14 @@ function loadLatex() {
             }
             return g
         };
-        var a = function() {
-            return function() {
+        var a = function () {
+            return function () {
                 return arguments.callee.Init.call(this, arguments)
             }
         };
-        b.Object = c({
+        MathJax.Object = c({
             constructor: a(),
-            Subclass: function(f, h) {
+            Subclass: function (f, h) {
                 var g = a();
                 g.SUPER = this;
                 g.Init = this.Init;
@@ -45,7 +53,7 @@ function loadLatex() {
                 g.Augment(f, h);
                 return g
             },
-            Init: function(f) {
+            Init: function (f) {
                 var g = this;
                 if (f.length === 1 && f[0] === e) {
                     return g
@@ -55,7 +63,7 @@ function loadLatex() {
                 }
                 return g.Init.apply(g, f) || g
             },
-            Augment: function(f, g) {
+            Augment: function (f, g) {
                 var h;
                 if (f != null) {
                     for (h in f) {
@@ -76,34 +84,34 @@ function loadLatex() {
                 }
                 return this
             },
-            protoFunction: function(g, f) {
+            protoFunction: function (g, f) {
                 this.prototype[g] = f;
                 if (typeof f === "function") {
                     f.SUPER = this.SUPER.prototype
                 }
             },
             prototype: {
-                Init: function() {},
-                SUPER: function(f) {
+                Init: function () { },
+                SUPER: function (f) {
                     return f.callee.SUPER
                 },
-                can: function(f) {
+                can: function (f) {
                     return typeof (this[f]) === "function"
                 },
-                has: function(f) {
+                has: function (f) {
                     return typeof (this[f]) !== "undefined"
                 },
-                isa: function(f) {
+                isa: function (f) {
                     return (f instanceof Object) && (this instanceof f)
                 }
             },
-            can: function(f) {
+            can: function (f) {
                 return this.prototype.can.call(this, f)
             },
-            has: function(f) {
+            has: function (f) {
                 return this.prototype.has.call(this, f)
             },
-            isa: function(g) {
+            isa: function (g) {
                 var f = this;
                 while (f) {
                     if (f === g) {
@@ -115,10 +123,10 @@ function loadLatex() {
                 return false
             },
             SimpleSUPER: c({
-                constructor: function(f) {
+                constructor: function (f) {
                     return this.SimpleSUPER.define(f)
                 },
-                define: function(f) {
+                define: function (f) {
                     var h = {};
                     if (f != null) {
                         for (var g in f) {
@@ -132,11 +140,11 @@ function loadLatex() {
                     }
                     return h
                 },
-                wrap: function(i, h) {
+                wrap: function (i, h) {
                     if (typeof (h) !== "function" || !h.toString().match(/\.\s*SUPER\s*\(/)) {
                         return h
                     }
-                    var g = function() {
+                    var g = function () {
                         this.SUPER = g.SUPER[i];
                         try {
                             var f = h.apply(this, arguments)
@@ -147,879 +155,26 @@ function loadLatex() {
                         delete this.SUPER;
                         return f
                     };
-                    g.toString = function() {
+                    g.toString = function () {
                         return h.toString.apply(h, arguments)
                     }
-                    ;
+                        ;
                     return g
                 }
             })
         });
-        b.Object.isArray = Array.isArray || function(f) {
+        MathJax.Object.isArray = Array.isArray || function (f) {
             return Object.prototype.toString.call(f) === "[object Array]"
         }
-        ;
-        b.Object.Array = Array
-    })("MathJax");
+            ;
+        MathJax.Object.Array = Array
+    })();
 
-    (function(BASENAME) {
-        var BASE = window[BASENAME];
-        if (!BASE) {
-            BASE = window[BASENAME] = {}
-        }
-        var isArray = BASE.Object.isArray;
-        var CALLBACK = function(data) {
-            var cb = function() {
-                return arguments.callee.execute.apply(arguments.callee, arguments)
-            };
-            for (var id in CALLBACK.prototype) {
-                if (CALLBACK.prototype.hasOwnProperty(id)) {
-                    if (typeof (data[id]) !== "undefined") {
-                        cb[id] = data[id]
-                    } else {
-                        cb[id] = CALLBACK.prototype[id]
-                    }
-                }
-            }
-            cb.toString = CALLBACK.prototype.toString;
-            return cb
-        };
-        CALLBACK.prototype = {
-            isCallback: true,
-            hook: function() {},
-            data: [],
-            object: window,
-            execute: function() {
-                if (!this.called || this.autoReset) {
-                    this.called = !this.autoReset;
-                    return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)))
-                }
-            },
-            reset: function() {
-                delete this.called
-            },
-            toString: function() {
-                return this.hook.toString.apply(this.hook, arguments)
-            }
-        };
-        var ISCALLBACK = function(f) {
-            return (typeof (f) === "function" && f.isCallback)
-        };
-        var EVAL = function(code) {
-            return eval.call(window, code)
-        };
-        var TESTEVAL = function() {
-            EVAL("var __TeSt_VaR__ = 1");
-            if (window.__TeSt_VaR__) {
-                try {
-                    delete window.__TeSt_VaR__
-                } catch (error) {
-                    window.__TeSt_VaR__ = null
-                }
-            } else {
-                if (window.execScript) {
-                    EVAL = function(code) {
-                        BASE.__code = code;
-                        code = "try {" + BASENAME + ".__result = eval(" + BASENAME + ".__code)} catch(err) {" + BASENAME + ".__result = err}";
-                        window.execScript(code);
-                        var result = BASE.__result;
-                        delete BASE.__result;
-                        delete BASE.__code;
-                        if (result instanceof Error) {
-                            throw result
-                        }
-                        return result
-                    }
-                } else {
-                    EVAL = function(code) {
-                        BASE.__code = code;
-                        code = "try {" + BASENAME + ".__result = eval(" + BASENAME + ".__code)} catch(err) {" + BASENAME + ".__result = err}";
-                        var head = (document.getElementsByTagName("head"))[0];
-                        if (!head) {
-                            head = document.body
-                        }
-                        var script = document.createElement("script");
-                        script.appendChild(document.createTextNode(code));
-                        head.appendChild(script);
-                        head.removeChild(script);
-                        var result = BASE.__result;
-                        delete BASE.__result;
-                        delete BASE.__code;
-                        if (result instanceof Error) {
-                            throw result
-                        }
-                        return result
-                    }
-                }
-            }
-            TESTEVAL = null
-        };
-        var USING = function(args, i) {
-            if (arguments.length > 1) {
-                if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0]instanceof Object && typeof arguments[1] === "number") {
-                    args = [].slice.call(args, i)
-                } else {
-                    args = [].slice.call(arguments, 0)
-                }
-            }
-            if (isArray(args) && args.length === 1 && typeof (args[0]) === "function") {
-                args = args[0]
-            }
-            if (typeof args === "function") {
-                if (args.execute === CALLBACK.prototype.execute) {
-                    return args
-                }
-                return CALLBACK({
-                    hook: args
-                })
-            } else {
-                if (isArray(args)) {
-                    if (typeof (args[0]) === "string" && args[1]instanceof Object && typeof args[1][args[0]] === "function") {
-                        return CALLBACK({
-                            hook: args[1][args[0]],
-                            object: args[1],
-                            data: args.slice(2)
-                        })
-                    } else {
-                        if (typeof args[0] === "function") {
-                            return CALLBACK({
-                                hook: args[0],
-                                data: args.slice(1)
-                            })
-                        } else {
-                            if (typeof args[1] === "function") {
-                                return CALLBACK({
-                                    hook: args[1],
-                                    object: args[0],
-                                    data: args.slice(2)
-                                })
-                            }
-                        }
-                    }
-                } else {
-                    if (typeof (args) === "string") {
-                        if (TESTEVAL) {
-                            TESTEVAL()
-                        }
-                        return CALLBACK({
-                            hook: EVAL,
-                            data: [args]
-                        })
-                    } else {
-                        if (args instanceof Object) {
-                            return CALLBACK(args)
-                        } else {
-                            if (typeof (args) === "undefined") {
-                                return CALLBACK({})
-                            }
-                        }
-                    }
-                }
-            }
-            throw Error("Can't make callback from given data")
-        };
-        var DELAY = function(time, callback) {
-            callback = USING(callback);
-            callback.timeout = setTimeout(callback, time);
-            return callback
-        };
-        var WAITFOR = function(callback, signal) {
-            callback = USING(callback);
-            if (!callback.called) {
-                WAITSIGNAL(callback, signal);
-                signal.pending++
-            }
-        };
-        var WAITEXECUTE = function() {
-            var signals = this.signal;
-            delete this.signal;
-            this.execute = this.oldExecute;
-            delete this.oldExecute;
-            var result = this.execute.apply(this, arguments);
-            if (ISCALLBACK(result) && !result.called) {
-                WAITSIGNAL(result, signals)
-            } else {
-                for (var i = 0, m = signals.length; i < m; i++) {
-                    signals[i].pending--;
-                    if (signals[i].pending <= 0) {
-                        signals[i].call()
-                    }
-                }
-            }
-        };
-        var WAITSIGNAL = function(callback, signals) {
-            if (!isArray(signals)) {
-                signals = [signals]
-            }
-            if (!callback.signal) {
-                callback.oldExecute = callback.execute;
-                callback.execute = WAITEXECUTE;
-                callback.signal = signals
-            } else {
-                if (signals.length === 1) {
-                    callback.signal.push(signals[0])
-                } else {
-                    callback.signal = callback.signal.concat(signals)
-                }
-            }
-        };
-        var AFTER = function(callback) {
-            callback = USING(callback);
-            callback.pending = 0;
-            for (var i = 1, m = arguments.length; i < m; i++) {
-                if (arguments[i]) {
-                    WAITFOR(arguments[i], callback)
-                }
-            }
-            if (callback.pending === 0) {
-                var result = callback();
-                if (ISCALLBACK(result)) {
-                    callback = result
-                }
-            }
-            return callback
-        };
-        var HOOKS = MathJax.Object.Subclass({
-            Init: function(reset) {
-                this.hooks = [];
-                this.remove = [];
-                this.reset = reset;
-                this.running = false
-            },
-            Add: function(hook, priority) {
-                if (priority == null) {
-                    priority = 10
-                }
-                if (!ISCALLBACK(hook)) {
-                    hook = USING(hook)
-                }
-                hook.priority = priority;
-                var i = this.hooks.length;
-                while (i > 0 && priority < this.hooks[i - 1].priority) {
-                    i--
-                }
-                this.hooks.splice(i, 0, hook);
-                return hook
-            },
-            Remove: function(hook) {
-                for (var i = 0, m = this.hooks.length; i < m; i++) {
-                    if (this.hooks[i] === hook) {
-                        if (this.running) {
-                            this.remove.push(i)
-                        } else {
-                            this.hooks.splice(i, 1)
-                        }
-                        return
-                    }
-                }
-            },
-            Execute: function() {
-                var callbacks = [{}];
-                this.running = true;
-                for (var i = 0, m = this.hooks.length; i < m; i++) {
-                    if (this.reset) {
-                        this.hooks[i].reset()
-                    }
-                    var result = this.hooks[i].apply(window, arguments);
-                    if (ISCALLBACK(result) && !result.called) {
-                        callbacks.push(result)
-                    }
-                }
-                this.running = false;
-                if (this.remove.length) {
-                    this.RemovePending()
-                }
-                if (callbacks.length === 1) {
-                    return null
-                }
-                if (callbacks.length === 2) {
-                    return callbacks[1]
-                }
-                return AFTER.apply({}, callbacks)
-            },
-            RemovePending: function() {
-                this.remove = this.remove.sort();
-                for (var i = this.remove.length - 1; i >= 0; i--) {
-                    this.hooks.splice(i, 1)
-                }
-                this.remove = []
-            }
-        });
-        var EXECUTEHOOKS = function(hooks, data, reset) {
-            if (!hooks) {
-                return null
-            }
-            if (!isArray(hooks)) {
-                hooks = [hooks]
-            }
-            if (!isArray(data)) {
-                data = (data == null ? [] : [data])
-            }
-            var handler = HOOKS(reset);
-            for (var i = 0, m = hooks.length; i < m; i++) {
-                handler.Add(hooks[i])
-            }
-            return handler.Execute.apply(handler, data)
-        };
-        var QUEUE = BASE.Object.Subclass({
-            Init: function() {
-                this.pending = this.running = 0;
-                this.queue = [];
-                this.Push.apply(this, arguments)
-            },
-            Push: function() {
-                var callback;
-                for (var i = 0, m = arguments.length; i < m; i++) {
-                    callback = USING(arguments[i]);
-                    if (callback === arguments[i] && !callback.called) {
-                        callback = USING(["wait", this, callback])
-                    }
-                    this.queue.push(callback)
-                }
-                if (!this.running && !this.pending) {
-                    this.Process()
-                }
-                return callback
-            },
-            Process: function(queue) {
-                while (!this.running && !this.pending && this.queue.length) {
-                    var callback = this.queue[0];
-                    queue = this.queue.slice(1);
-                    this.queue = [];
-                    this.Suspend();
-                    var result = callback();
-                    this.Resume();
-                    if (queue.length) {
-                        this.queue = queue.concat(this.queue)
-                    }
-                    if (ISCALLBACK(result) && !result.called) {
-                        WAITFOR(result, this)
-                    }
-                }
-            },
-            Suspend: function() {
-                this.running++
-            },
-            Resume: function() {
-                if (this.running) {
-                    this.running--
-                }
-            },
-            call: function() {
-                this.Process.apply(this, arguments)
-            },
-            wait: function(callback) {
-                return callback
-            }
-        });
-        var SIGNAL = QUEUE.Subclass({
-            Init: function(name) {
-                QUEUE.prototype.Init.call(this);
-                this.name = name;
-                this.posted = [];
-                this.listeners = HOOKS(true);
-                this.posting = false;
-                this.callback = null
-            },
-            Post: function(message, callback, forget) {
-                callback = USING(callback);
-                if (this.posting || this.pending) {
-                    this.Push(["Post", this, message, callback, forget])
-                } else {
-                    this.callback = callback;
-                    callback.reset();
-                    if (!forget) {
-                        this.posted.push(message)
-                    }
-                    this.Suspend();
-                    this.posting = true;
-                    var result = this.listeners.Execute(message);
-                    if (ISCALLBACK(result) && !result.called) {
-                        WAITFOR(result, this)
-                    }
-                    this.Resume();
-                    this.posting = false;
-                    if (!this.pending) {
-                        this.call()
-                    }
-                }
-                return callback
-            },
-            Clear: function(callback) {
-                callback = USING(callback);
-                if (this.posting || this.pending) {
-                    callback = this.Push(["Clear", this, callback])
-                } else {
-                    this.posted = [];
-                    callback()
-                }
-                return callback
-            },
-            call: function() {
-                this.callback(this);
-                this.Process()
-            },
-            Interest: function(callback, ignorePast, priority) {
-                callback = USING(callback);
-                this.listeners.Add(callback, priority);
-                if (!ignorePast) {
-                    for (var i = 0, m = this.posted.length; i < m; i++) {
-                        callback.reset();
-                        var result = callback(this.posted[i]);
-                        if (ISCALLBACK(result) && i === this.posted.length - 1) {
-                            WAITFOR(result, this)
-                        }
-                    }
-                }
-                return callback
-            },
-            NoInterest: function(callback) {
-                this.listeners.Remove(callback)
-            },
-            MessageHook: function(msg, callback, priority) {
-                callback = USING(callback);
-                if (!this.hooks) {
-                    this.hooks = {};
-                    this.Interest(["ExecuteHooks", this])
-                }
-                if (!this.hooks[msg]) {
-                    this.hooks[msg] = HOOKS(true)
-                }
-                this.hooks[msg].Add(callback, priority);
-                for (var i = 0, m = this.posted.length; i < m; i++) {
-                    if (this.posted[i] == msg) {
-                        callback.reset();
-                        callback(this.posted[i])
-                    }
-                }
-                callback.msg = msg;
-                return callback
-            },
-            ExecuteHooks: function(msg) {
-                var type = (isArray(msg) ? msg[0] : msg);
-                if (!this.hooks[type]) {
-                    return null
-                }
-                return this.hooks[type].Execute(msg)
-            },
-            RemoveHook: function(hook) {
-                this.hooks[hook.msg].Remove(hook)
-            }
-        }, {
-            signals: {},
-            find: function(name) {
-                if (!SIGNAL.signals[name]) {
-                    SIGNAL.signals[name] = new SIGNAL(name)
-                }
-                return SIGNAL.signals[name]
-            }
-        });
-        BASE.Callback = BASE.CallBack = USING;
-        BASE.Callback.Delay = DELAY;
-        BASE.Callback.After = AFTER;
-        BASE.Callback.Queue = QUEUE;
-        BASE.Callback.Signal = SIGNAL.find;
-        BASE.Callback.Hooks = HOOKS;
-        BASE.Callback.ExecuteHooks = EXECUTEHOOKS
-    })("MathJax");
-
-    (function(e) {
-        var a = window[e];
-        if (!a) {
-            a = window[e] = {}
-        }
-        var d = (navigator.vendor === "Apple Computer, Inc." && typeof navigator.vendorSub === "undefined");
-        var g = 0;
-        var h = function(i) {
-            if (document.styleSheets && document.styleSheets.length > g) {
-                g = document.styleSheets.length
-            }
-            if (!i) {
-                i = document.head || ((document.getElementsByTagName("head"))[0]);
-                if (!i) {
-                    i = document.body
-                }
-            }
-            return i
-        };
-        var f = [];
-        var c = function() {
-            for (var k = 0, j = f.length; k < j; k++) {
-                a.Ajax.head.removeChild(f[k])
-            }
-            f = []
-        };
-        var b = {};
-        b[e] = "";
-        b.a11y = "[MathJax]/extensions/a11y";
-        b.Contrib = "https://cdn.mathjax.org/mathjax/contrib";
-        a.Ajax = {
-            loaded: {},
-            loading: {},
-            loadHooks: {},
-            timeout: 15 * 1000,
-            styleDelay: 1,
-            config: {
-                root: "",
-                path: b
-            },
-            params: {},
-            STATUS: {
-                OK: 1,
-                ERROR: -1
-            },
-            fileURL: function(j) {
-                var i;
-                while ((i = j.match(/^\[([-._a-z0-9]+)\]/i)) && b.hasOwnProperty(i[1])) {
-                    j = (b[i[1]] || this.config.root) + j.substr(i[1].length + 2)
-                }
-                return j
-            },
-            fileName: function(j) {
-                var i = this.config.root;
-                if (j.substr(0, i.length) === i) {
-                    j = "[" + e + "]" + j.substr(i.length)
-                }
-                do {
-                    var k = false;
-                    for (var l in b) {
-                        if (b.hasOwnProperty(l) && b[l]) {
-                            if (j.substr(0, b[l].length) === b[l]) {
-                                j = "[" + l + "]" + j.substr(b[l].length);
-                                k = true;
-                                break
-                            }
-                        }
-                    }
-                } while (k);
-                return j
-            },
-            fileRev: function(j) {
-                var i = a.cdnFileVersions[j] || a.cdnVersion || "";
-                if (i) {
-                    i = "?V=" + i
-                }
-                return i
-            },
-            urlRev: function(i) {
-                return this.fileURL(i) + this.fileRev(i)
-            },
-            Require: function(k, n) {
-                n = a.Callback(n);
-                var l;
-                if (k instanceof Object) {
-                    for (var j in k) {
-                        if (k.hasOwnProperty(j)) {
-                            l = j.toUpperCase();
-                            k = k[j]
-                        }
-                    }
-                } else {
-                    l = k.split(/\./).pop().toUpperCase()
-                }
-                if (this.params.noContrib && k.substr(0, 9) === "[Contrib]") {
-                    n(this.STATUS.ERROR)
-                } else {
-                    k = this.fileURL(k);
-                    if (this.loaded[k]) {
-                        n(this.loaded[k])
-                    } else {
-                        var m = {};
-                        m[l] = k;
-                        this.Load(m, n)
-                    }
-                }
-                return n
-            },
-            Load: function(k, m) {
-                m = a.Callback(m);
-                var l;
-                if (k instanceof Object) {
-                    for (var j in k) {
-                        if (k.hasOwnProperty(j)) {
-                            l = j.toUpperCase();
-                            k = k[j]
-                        }
-                    }
-                } else {
-                    l = k.split(/\./).pop().toUpperCase()
-                }
-                k = this.fileURL(k);
-                if (this.loading[k]) {
-                    this.addHook(k, m)
-                } else {
-                    this.head = h(this.head);
-                    if (this.loader[l]) {
-                        this.loader[l].call(this, k, m)
-                    } else {
-                        throw Error("Can't load files of type " + l)
-                    }
-                }
-                return m
-            },
-            LoadHook: function(l, m, k) {
-                m = a.Callback(m);
-                if (l instanceof Object) {
-                    for (var j in l) {
-                        if (l.hasOwnProperty(j)) {
-                            l = l[j]
-                        }
-                    }
-                }
-                l = this.fileURL(l);
-                if (this.loaded[l]) {
-                    m(this.loaded[l])
-                } else {
-                    this.addHook(l, m, k)
-                }
-                return m
-            },
-            addHook: function(j, k, i) {
-                if (!this.loadHooks[j]) {
-                    this.loadHooks[j] = MathJax.Callback.Hooks()
-                }
-                this.loadHooks[j].Add(k, i);
-                k.file = j
-            },
-            removeHook: function(i) {
-                if (this.loadHooks[i.file]) {
-                    this.loadHooks[i.file].Remove(i);
-                    if (!this.loadHooks[i.file].hooks.length) {
-                        delete this.loadHooks[i.file]
-                    }
-                }
-            },
-            Preloading: function() {
-                for (var l = 0, j = arguments.length; l < j; l++) {
-                    var k = this.fileURL(arguments[l]);
-                    if (!this.loading[k]) {
-                        this.loading[k] = {
-                            preloaded: true
-                        }
-                    }
-                }
-            },
-            loader: {
-                JS: function(k, m) {
-                    var j = this.fileName(k);
-                    var i = document.createElement("script");
-                    var l = a.Callback(["loadTimeout", this, k]);
-                    this.loading[k] = {
-                        callback: m,
-                        timeout: setTimeout(l, this.timeout),
-                        status: this.STATUS.OK,
-                        script: i
-                    };
-                    this.loading[k].message = a.Message.File(j);
-                    i.onerror = l;
-                    i.type = "text/javascript";
-                    i.src = k + this.fileRev(j);
-                    this.head.appendChild(i)
-                },
-                CSS: function(j, l) {
-                    var i = this.fileName(j);
-                    var k = document.createElement("link");
-                    k.rel = "stylesheet";
-                    k.type = "text/css";
-                    k.href = j + this.fileRev(i);
-                    this.loading[j] = {
-                        callback: l,
-                        message: a.Message.File(i),
-                        status: this.STATUS.OK
-                    };
-                    this.head.appendChild(k);
-                    this.timer.create.call(this, [this.timer.file, j], k)
-                }
-            },
-            timer: {
-                create: function(j, i) {
-                    j = a.Callback(j);
-                    if (i.nodeName === "STYLE" && i.styleSheet && typeof (i.styleSheet.cssText) !== "undefined") {
-                        j(this.STATUS.OK)
-                    } else {
-                        if (window.chrome && i.nodeName === "LINK") {
-                            j(this.STATUS.OK)
-                        } else {
-                            if (d) {
-                                this.timer.start(this, [this.timer.checkSafari2, g++, j], this.styleDelay)
-                            } else {
-                                this.timer.start(this, [this.timer.checkLength, i, j], this.styleDelay)
-                            }
-                        }
-                    }
-                    return j
-                },
-                start: function(j, i, k, l) {
-                    i = a.Callback(i);
-                    i.execute = this.execute;
-                    i.time = this.time;
-                    i.STATUS = j.STATUS;
-                    i.timeout = l || j.timeout;
-                    i.delay = i.total = k || 0;
-                    if (k) {
-                        setTimeout(i, k)
-                    } else {
-                        i()
-                    }
-                },
-                time: function(i) {
-                    this.total += this.delay;
-                    this.delay = Math.floor(this.delay * 1.05 + 5);
-                    if (this.total >= this.timeout) {
-                        i(this.STATUS.ERROR);
-                        return 1
-                    }
-                    return 0
-                },
-                file: function(j, i) {
-                    if (i < 0) {
-                        a.Ajax.loadTimeout(j)
-                    } else {
-                        a.Ajax.loadComplete(j)
-                    }
-                },
-                execute: function() {
-                    this.hook.call(this.object, this, this.data[0], this.data[1])
-                },
-                checkSafari2: function(i, j, k) {
-                    if (i.time(k)) {
-                        return
-                    }
-                    if (document.styleSheets.length > j && document.styleSheets[j].cssRules && document.styleSheets[j].cssRules.length) {
-                        k(i.STATUS.OK)
-                    } else {
-                        setTimeout(i, i.delay)
-                    }
-                },
-                checkLength: function(i, l, n) {
-                    if (i.time(n)) {
-                        return
-                    }
-                    var m = 0;
-                    var j = (l.sheet || l.styleSheet);
-                    try {
-                        if ((j.cssRules || j.rules || []).length > 0) {
-                            m = 1
-                        }
-                    } catch (k) {
-                        if (k.message.match(/protected variable|restricted URI/)) {
-                            m = 1
-                        } else {
-                            if (k.message.match(/Security error/)) {
-                                m = 1
-                            }
-                        }
-                    }
-                    if (m) {
-                        setTimeout(a.Callback([n, i.STATUS.OK]), 0)
-                    } else {
-                        setTimeout(i, i.delay)
-                    }
-                }
-            },
-            loadComplete: function(i) {
-                i = this.fileURL(i);
-                var j = this.loading[i];
-                if (j && !j.preloaded) {
-                    a.Message.Clear(j.message);
-                    clearTimeout(j.timeout);
-                    if (j.script) {
-                        if (f.length === 0) {
-                            setTimeout(c, 0)
-                        }
-                        f.push(j.script)
-                    }
-                    this.loaded[i] = j.status;
-                    delete this.loading[i];
-                    this.addHook(i, j.callback)
-                } else {
-                    if (j) {
-                        delete this.loading[i]
-                    }
-                    this.loaded[i] = this.STATUS.OK;
-                    j = {
-                        status: this.STATUS.OK
-                    }
-                }
-                if (!this.loadHooks[i]) {
-                    return null
-                }
-                return this.loadHooks[i].Execute(j.status)
-            },
-            loadTimeout: function(i) {
-                if (this.loading[i].timeout) {
-                    clearTimeout(this.loading[i].timeout)
-                }
-                this.loading[i].status = this.STATUS.ERROR;
-                this.loadError(i);
-                this.loadComplete(i)
-            },
-            loadError: function(i) {
-                a.Message.Set(["LoadFailed", "File failed to load: %1", i], null, 2000);
-                a.Hub.signal.Post(["file load error", i])
-            },
-            Styles: function(k, l) {
-                var i = this.StyleString(k);
-                if (i === "") {
-                    l = a.Callback(l);
-                    l()
-                } else {
-                    var j = document.createElement("style");
-                    j.type = "text/css";
-                    this.head = h(this.head);
-                    this.head.appendChild(j);
-                    if (j.styleSheet && typeof (j.styleSheet.cssText) !== "undefined") {
-                        j.styleSheet.cssText = i
-                    } else {
-                        j.appendChild(document.createTextNode(i))
-                    }
-                    l = this.timer.create.call(this, l, j)
-                }
-                return l
-            },
-            StyleString: function(n) {
-                if (typeof (n) === "string") {
-                    return n
-                }
-                var k = "", o, m;
-                for (o in n) {
-                    if (n.hasOwnProperty(o)) {
-                        if (typeof n[o] === "string") {
-                            k += o + " {" + n[o] + "}\n"
-                        } else {
-                            if (a.Object.isArray(n[o])) {
-                                for (var l = 0; l < n[o].length; l++) {
-                                    m = {};
-                                    m[o] = n[o][l];
-                                    k += this.StyleString(m)
-                                }
-                            } else {
-                                if (o.substr(0, 6) === "@media") {
-                                    k += o + " {" + this.StyleString(n[o]) + "}\n"
-                                } else {
-                                    if (n[o] != null) {
-                                        m = [];
-                                        for (var j in n[o]) {
-                                            if (n[o].hasOwnProperty(j)) {
-                                                if (n[o][j] != null) {
-                                                    m[m.length] = j + ": " + n[o][j]
-                                                }
-                                            }
-                                        }
-                                        k += o + " {" + m.join("; ") + "}\n"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return k
-            }
-        }
-    })("MathJax");
+    createCallback();
+    createAjax();
 
     MathJax.HTML = {
-        Element: function(d, f, e) {
+        Element: function (d, f, e) {
             var g = document.createElement(d), h;
             if (f) {
                 if (f.hasOwnProperty("style")) {
@@ -1056,19 +211,19 @@ function loadLatex() {
             }
             return g
         },
-        ucMatch: function(a, b) {
+        ucMatch: function (a, b) {
             return b.toUpperCase()
         },
-        addElement: function(b, a, d, c) {
+        addElement: function (b, a, d, c) {
             return b.appendChild(this.Element(a, d, c))
         },
-        TextNode: function(a) {
+        TextNode: function (a) {
             return document.createTextNode(a)
         },
-        addText: function(a, b) {
+        addText: function (a, b) {
             return a.appendChild(this.TextNode(b))
         },
-        setScript: function(a, b) {
+        setScript: function (a, b) {
             if (this.setScriptBug) {
                 a.text = b
             } else {
@@ -1078,14 +233,14 @@ function loadLatex() {
                 this.addText(a, b)
             }
         },
-        getScript: function(a) {
+        getScript: function (a) {
             var b = (a.text === "" ? a.innerHTML : a.text);
             return b.replace(/^\s+/, "").replace(/\s+$/, "")
         },
         Cookie: {
             prefix: "mjx",
             expires: 365,
-            Set: function(a, e) {
+            Set: function (a, e) {
                 var d = [];
                 if (e) {
                     for (var g in e) {
@@ -1102,9 +257,9 @@ function loadLatex() {
                 }
                 try {
                     document.cookie = b + "; path=/"
-                } catch (c) {}
+                } catch (c) { }
             },
-            Get: function(a, d) {
+            Get: function (a, d) {
                 if (!d) {
                     d = {}
                 }
@@ -1112,7 +267,7 @@ function loadLatex() {
                 var f;
                 try {
                     f = g.exec(document.cookie)
-                } catch (c) {}
+                } catch (c) { }
                 if (f && f[1] !== "") {
                     var j = unescape(f[1]).split("&;");
                     for (var e = 0, b = j.length; e < b; e++) {
@@ -1278,38 +433,38 @@ function loadLatex() {
             }
         },
         pattern: /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g,
-        SPLIT: ("axb".split(/(x)/).length === 3 ? function(a, b) {
+        SPLIT: ("axb".split(/(x)/).length === 3 ? function (a, b) {
             return a.split(b)
         }
-        : function(c, e) {
-            var a = [], b, d = 0;
-            e.lastIndex = 0;
-            while ((b = e.exec(c))) {
-                a.push(c.substr(d, b.index - d));
-                a.push.apply(a, b.slice(1));
-                d = b.index + b[0].length
+            : function (c, e) {
+                var a = [], b, d = 0;
+                e.lastIndex = 0;
+                while ((b = e.exec(c))) {
+                    a.push(c.substr(d, b.index - d));
+                    a.push.apply(a, b.slice(1));
+                    d = b.index + b[0].length
+                }
+                a.push(c.substr(d));
+                return a
             }
-            a.push(c.substr(d));
-            return a
-        }
         ),
-        _: function(b, a) {
+        _: function (b, a) {
             if (MathJax.Object.isArray(a)) {
                 return this.processSnippet(b, a)
             }
             return this.processString(this.lookupPhrase(b, a), [].slice.call(arguments, 2))
         },
-        processString: function(l, p, g) {
+        processString: function (l, p, g) {
             var j, e, o = MathJax.Object.isArray;
             for (j = 0,
-            e = p.length; j < e; j++) {
+                e = p.length; j < e; j++) {
                 if (g && o(p[j])) {
                     p[j] = this.processSnippet(g, p[j])
                 }
             }
             var f = this.SPLIT(l, this.pattern);
             for (j = 1,
-            e = f.length; j < e; j += 2) {
+                e = f.length; j < e; j += 2) {
                 var q = f[j].charAt(0);
                 if (q >= "0" && q <= "9") {
                     f[j] = p[f[j] - 1];
@@ -1355,7 +510,7 @@ function loadLatex() {
                 return f.join("")
             }
             var a = []
-              , b = "";
+                , b = "";
             for (j = 0; j < e; j++) {
                 b += f[j];
                 j++;
@@ -1374,7 +529,7 @@ function loadLatex() {
             }
             return a
         },
-        processSnippet: function(g, e) {
+        processSnippet: function (g, e) {
             var c = [];
             for (var d = 0, b = e.length; d < b; d++) {
                 if (MathJax.Object.isArray(e[d])) {
@@ -1404,7 +559,7 @@ function loadLatex() {
             return c
         },
         markdownPattern: /(%.)|(\*{1,3})((?:%.|.)+?)\2|(`+)((?:%.|.)+?)\4|\[((?:%.|.)+?)\]\(([^\s\)]+)\)/,
-        processMarkdown: function(b, h, d) {
+        processMarkdown: function (b, h, d) {
             var j = [], e;
             var c = b.split(this.markdownPattern);
             var g = c[0];
@@ -1453,7 +608,7 @@ function loadLatex() {
             j = this.concatString(j, g, h, d);
             return j
         },
-        concatString: function(a, c, b, d) {
+        concatString: function (a, c, b, d) {
             if (c != "") {
                 c = this.processString(c, b, d);
                 if (!MathJax.Object.isArray(c)) {
@@ -1463,7 +618,7 @@ function loadLatex() {
             }
             return a
         },
-        lookupPhrase: function(f, a, d) {
+        lookupPhrase: function (f, a, d) {
             if (!d) {
                 d = "_"
             }
@@ -1486,7 +641,7 @@ function loadLatex() {
             }
             return a
         },
-        loadFile: function(b, d, e) {
+        loadFile: function (b, d, e) {
             e = MathJax.Callback(e);
             b = (d.file || b);
             if (!b.match(/\.js$/)) {
@@ -1496,13 +651,13 @@ function loadLatex() {
                 var a = (this.strings[this.locale].directory || this.directory + "/" + this.locale || "[MathJax]/localization/" + this.locale);
                 b = a + "/" + b
             }
-            var c = MathJax.Ajax.Require(b, function() {
+            var c = MathJax.Ajax.Require(b, function () {
                 d.isLoaded = true;
                 return e()
             });
             return (c.called ? null : c)
         },
-        loadDomain: function(c, e) {
+        loadDomain: function (c, e) {
             var b, a = this.strings[this.locale];
             if (a) {
                 if (!a.isLoaded) {
@@ -1523,7 +678,7 @@ function loadLatex() {
             }
             return MathJax.Callback(e)()
         },
-        Try: function(a) {
+        Try: function (a) {
             a = MathJax.Callback(a);
             a.autoReset = true;
             try {
@@ -1535,7 +690,7 @@ function loadLatex() {
                 MathJax.Callback.After(["Try", this, a], b.restart)
             }
         },
-        resetLocale: function(a) {
+        resetLocale: function (a) {
             if (!a) {
                 return
             }
@@ -1550,15 +705,15 @@ function loadLatex() {
             var b = this.strings[a].remap;
             this.locale = b ? b : a
         },
-        setLocale: function(a) {
+        setLocale: function (a) {
             this.resetLocale(a);
             if (MathJax.Menu) {
                 this.loadDomain("MathMenu")
             }
         },
-        addTranslation: function(b, e, c) {
+        addTranslation: function (b, e, c) {
             var d = this.strings[b]
-              , a = false;
+                , a = false;
             if (!d) {
                 d = this.strings[b] = {};
                 a = true
@@ -1577,7 +732,7 @@ function loadLatex() {
                 MathJax.Menu.CreateLocaleMenu()
             }
         },
-        setCSS: function(b) {
+        setCSS: function (b) {
             var a = this.strings[this.locale];
             if (a) {
                 if (a.fontFamily) {
@@ -1592,15 +747,15 @@ function loadLatex() {
             }
             return b
         },
-        fontFamily: function() {
+        fontFamily: function () {
             var a = this.strings[this.locale];
             return (a ? a.fontFamily : null)
         },
-        fontDirection: function() {
+        fontDirection: function () {
             var a = this.strings[this.locale];
             return (a ? a.fontDirection : null)
         },
-        plural: function(b) {
+        plural: function (b) {
             var a = this.strings[this.locale];
             if (a && a.plural) {
                 return a.plural(b)
@@ -1610,7 +765,7 @@ function loadLatex() {
             }
             return 2
         },
-        number: function(b) {
+        number: function (b) {
             var a = this.strings[this.locale];
             if (a && a.number) {
                 return a.number(b)
@@ -1650,19 +805,19 @@ function loadLatex() {
             }
         },
         browsers: {
-            MSIE: function(a) {
+            MSIE: function (a) {
                 MathJax.Message.msieFixedPositionBug = ((document.documentMode || 0) < 7);
                 if (MathJax.Message.msieFixedPositionBug) {
                     MathJax.Hub.config.styles["#MathJax_Message"].position = "absolute"
                 }
                 MathJax.Message.quirks = (document.compatMode === "BackCompat")
             },
-            Chrome: function(a) {
+            Chrome: function (a) {
                 MathJax.Hub.config.styles["#MathJax_Message"].bottom = "1.5em";
                 MathJax.Hub.config.styles["#MathJax_Message"].left = "1em"
             }
         },
-        Init: function(a) {
+        Init: function (a) {
             if (a) {
                 this.ready = true
             }
@@ -1696,7 +851,7 @@ function loadLatex() {
             }
             return true
         },
-        addDiv: function(a) {
+        addDiv: function (a) {
             var b = document.createElement("div");
             b.id = "MathJax_Message";
             if (a.firstChild) {
@@ -1706,7 +861,7 @@ function loadLatex() {
             }
             return b
         },
-        MoveFrame: function() {
+        MoveFrame: function () {
             var a = (MathJax.Message.quirks ? document.body : document.documentElement);
             var b = MathJax.Message.frame;
             b.style.left = a.scrollLeft + "px";
@@ -1715,10 +870,10 @@ function loadLatex() {
             b = b.firstChild;
             b.style.height = a.clientHeight + "px"
         },
-        localize: function(a) {
+        localize: function (a) {
             return MathJax.Localization._(a, a)
         },
-        filterText: function(a, c, b) {
+        filterText: function (a, c, b) {
             if (MathJax.Hub.config.messageStyle === "simple") {
                 if (b === "LoadFile") {
                     if (!this.loading) {
@@ -1746,12 +901,12 @@ function loadLatex() {
             }
             return a
         },
-        clearCounts: function() {
+        clearCounts: function () {
             delete this.loading;
             delete this.processing;
             delete this.typesetting
         },
-        Set: function(c, e, b) {
+        Set: function (c, e, b) {
             if (e == null) {
                 e = this.log.length;
                 this.log[e] = {}
@@ -1826,7 +981,7 @@ function loadLatex() {
             }
             return e
         },
-        Clear: function(b, a) {
+        Clear: function (b, a) {
             if (this.log[b].prev != null) {
                 this.log[this.log[b].prev].next = this.log[b].next
             }
@@ -1878,14 +1033,14 @@ function loadLatex() {
                 this.log[b].cleared = true
             }
         },
-        Remove: function() {
+        Remove: function () {
             this.text.nodeValue = "";
             this.div.style.display = "none"
         },
-        File: function(a) {
+        File: function (a) {
             return this.Set(["LoadFile", "Loading %1", a], null, null)
         },
-        Log: function() {
+        Log: function () {
             var b = [];
             for (var c = 1, a = this.log.length; c < a; c++) {
                 b[c] = this.log[c].text
@@ -1956,13 +1111,13 @@ function loadLatex() {
         processUpdateTime: 250,
         processUpdateDelay: 10,
         signal: MathJax.Callback.Signal("Hub"),
-        Config: function(a) {
+        Config: function (a) {
             this.Insert(this.config, a);
             if (this.config.Augment) {
                 this.Augment(this.config.Augment)
             }
         },
-        CombineConfig: function(c, f) {
+        CombineConfig: function (c, f) {
             var b = this.config, g, e;
             c = c.split(/\./);
             for (var d = 0, a = c.length; d < a; d++) {
@@ -1977,36 +1132,36 @@ function loadLatex() {
             return b
         },
         Register: {
-            PreProcessor: function() {
+            PreProcessor: function () {
                 return MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors, arguments)
             },
-            MessageHook: function() {
+            MessageHook: function () {
                 return MathJax.Hub.signal.MessageHook.apply(MathJax.Hub.signal, arguments)
             },
-            StartupHook: function() {
+            StartupHook: function () {
                 return MathJax.Hub.Startup.signal.MessageHook.apply(MathJax.Hub.Startup.signal, arguments)
             },
-            LoadHook: function() {
+            LoadHook: function () {
                 return MathJax.Ajax.LoadHook.apply(MathJax.Ajax, arguments)
             }
         },
         UnRegister: {
-            PreProcessor: function(a) {
+            PreProcessor: function (a) {
                 MathJax.Hub.preProcessors.Remove(a)
             },
-            MessageHook: function(a) {
+            MessageHook: function (a) {
                 MathJax.Hub.signal.RemoveHook(a)
             },
-            StartupHook: function(a) {
+            StartupHook: function (a) {
                 MathJax.Hub.Startup.signal.RemoveHook(a)
             },
-            LoadHook: function(a) {
+            LoadHook: function (a) {
                 MathJax.Ajax.removeHook(a)
             }
         },
-        getAllJax: function(e) {
+        getAllJax: function (e) {
             var c = []
-              , b = this.elementScripts(e);
+                , b = this.elementScripts(e);
             for (var d = 0, a = b.length; d < a; d++) {
                 if (b[d].MathJax && b[d].MathJax.elementJax) {
                     c.push(b[d].MathJax.elementJax)
@@ -2014,9 +1169,9 @@ function loadLatex() {
             }
             return c
         },
-        getJaxByType: function(f, e) {
+        getJaxByType: function (f, e) {
             var c = []
-              , b = this.elementScripts(e);
+                , b = this.elementScripts(e);
             for (var d = 0, a = b.length; d < a; d++) {
                 if (b[d].MathJax && b[d].MathJax.elementJax && b[d].MathJax.elementJax.mimeType === f) {
                     c.push(b[d].MathJax.elementJax)
@@ -2024,9 +1179,9 @@ function loadLatex() {
             }
             return c
         },
-        getJaxByInputType: function(f, e) {
+        getJaxByInputType: function (f, e) {
             var c = []
-              , b = this.elementScripts(e);
+                , b = this.elementScripts(e);
             for (var d = 0, a = b.length; d < a; d++) {
                 if (b[d].MathJax && b[d].MathJax.elementJax && b[d].type && b[d].type.replace(/ *;(.|\s)*/, "") === f) {
                     c.push(b[d].MathJax.elementJax)
@@ -2034,7 +1189,7 @@ function loadLatex() {
             }
             return c
         },
-        getJaxFor: function(a) {
+        getJaxFor: function (a) {
             if (typeof (a) === "string") {
                 a = document.getElementById(a)
             }
@@ -2054,7 +1209,7 @@ function loadLatex() {
             }
             return null
         },
-        isJax: function(a) {
+        isJax: function (a) {
             if (typeof (a) === "string") {
                 a = document.getElementById(a)
             }
@@ -2071,10 +1226,10 @@ function loadLatex() {
             }
             return 0
         },
-        isMathJaxNode: function(a) {
+        isMathJaxNode: function (a) {
             return !!a && (a.isMathJax || (a.className || "") === "MathJax_MathML")
         },
-        setRenderer: function(d, c) {
+        setRenderer: function (d, c) {
             if (!d) {
                 return
             }
@@ -2097,10 +1252,10 @@ function loadLatex() {
                 return null
             }
         },
-        Queue: function() {
+        Queue: function () {
             return this.queue.Push.apply(this.queue, arguments)
         },
-        Typeset: function(c, d) {
+        Typeset: function (c, d) {
             if (!MathJax.isReady) {
                 return null
             }
@@ -2110,7 +1265,7 @@ function loadLatex() {
             }
             return a.Push(b.callback)
         },
-        PreProcess: function(e, g) {
+        PreProcess: function (e, g) {
             var c = this.elementCallback(e, g);
             var b = MathJax.Callback.Queue();
             if (c.count) {
@@ -2125,19 +1280,19 @@ function loadLatex() {
             }
             return b.Push(c.callback)
         },
-        Process: function(a, b) {
+        Process: function (a, b) {
             return this.takeAction("Process", a, b)
         },
-        Update: function(a, b) {
+        Update: function (a, b) {
             return this.takeAction("Update", a, b)
         },
-        Reprocess: function(a, b) {
+        Reprocess: function (a, b) {
             return this.takeAction("Reprocess", a, b)
         },
-        Rerender: function(a, b) {
+        Rerender: function (a, b) {
             return this.takeAction("Rerender", a, b)
         },
-        takeAction: function(g, d, h) {
+        takeAction: function (g, d, h) {
             var c = this.elementCallback(d, h);
             var f = c.elements;
             var a = MathJax.Callback.Queue(["Clear", this.signal]);
@@ -2154,13 +1309,33 @@ function loadLatex() {
                 if (!b[2]) {
                     b = {}
                 }
-                a.Push(["clearCounts", MathJax.Message], ["Post", this.signal, ["Begin " + g, f]], ["Post", this.signal, ["Begin Math", f, g]], ["prepareScripts", this, g, f, e], ["Post", this.signal, ["Begin Math Input", f, g]], ["processInput", this, e], ["Post", this.signal, ["End Math Input", f, g]], b, ["prepareOutput", this, e, "preProcess"], b, ["Post", this.signal, ["Begin Math Output", f, g]], ["processOutput", this, e], ["Post", this.signal, ["End Math Output", f, g]], b, ["prepareOutput", this, e, "postProcess"], b, ["Post", this.signal, ["End Math", f, g]], ["Post", this.signal, ["End " + g, f]], ["clearCounts", MathJax.Message])
+                a.Push(
+                    ["clearCounts", MathJax.Message],
+                    ["Post", this.signal, ["Begin " + g, f]],
+                    ["Post", this.signal, ["Begin Math", f, g]],
+                    ["prepareScripts", this, g, f, e],
+                    ["Post", this.signal, ["Begin Math Input", f, g]],
+                    ["processInput", this, e],
+                    ["Post", this.signal, ["End Math Input", f, g]],
+                    b,
+                    ["prepareOutput", this, e, "preProcess"],
+                    b,
+                    ["Post", this.signal, ["Begin Math Output", f, g]],
+                    ["processOutput", this, e],
+                    ["Post", this.signal, ["End Math Output", f, g]],
+                    b,
+                    ["prepareOutput", this, e, "postProcess"],
+                    b,
+                    ["Post", this.signal, ["End Math", f, g]],
+                    ["Post", this.signal, ["End " + g, f]],
+                    ["clearCounts", MathJax.Message]
+                );
             }
             return a.Push(c.callback)
         },
         scriptAction: {
-            Process: function(a) {},
-            Update: function(b) {
+            Process: function (a) { },
+            Update: function (b) {
                 var a = b.MathJax.elementJax;
                 if (a && a.needsUpdate()) {
                     a.Remove(true);
@@ -2169,14 +1344,14 @@ function loadLatex() {
                     b.MathJax.state = a.STATE.PROCESSED
                 }
             },
-            Reprocess: function(b) {
+            Reprocess: function (b) {
                 var a = b.MathJax.elementJax;
                 if (a) {
                     a.Remove(true);
                     b.MathJax.state = a.STATE.UPDATE
                 }
             },
-            Rerender: function(b) {
+            Rerender: function (b) {
                 var a = b.MathJax.elementJax;
                 if (a) {
                     a.Remove(true);
@@ -2184,7 +1359,7 @@ function loadLatex() {
                 }
             }
         },
-        prepareScripts: function(h, e, g) {
+        prepareScripts: function (h, e, g) {
             if (arguments.callee.disabled) {
                 return
             }
@@ -2215,12 +1390,12 @@ function loadLatex() {
                 }
             }
         },
-        checkScriptSiblings: function(a) {
+        checkScriptSiblings: function (a) {
             if (a.MathJax.checked) {
                 return
             }
             var b = this.config
-              , f = a.previousSibling;
+                , f = a.previousSibling;
             if (f && f.nodeName === "#text") {
                 var d, e, c = a.nextSibling;
                 if (c && c.nodeName !== "#text") {
@@ -2254,7 +1429,7 @@ function loadLatex() {
             }
             a.MathJax.checked = 1
         },
-        processInput: function(a) {
+        processInput: function (a) {
             var b, i = MathJax.ElementJax.STATE;
             var h, e, d = a.scripts.length;
             try {
@@ -2309,7 +1484,7 @@ function loadLatex() {
             return null
         },
         postInputHooks: MathJax.Callback.Hooks(true),
-        saveScript: function(a, d, b, c) {
+        saveScript: function (a, d, b, c) {
             if (!this.outputJax[a.mimeType]) {
                 b.MathJax.state = c.UPDATE;
                 throw Error("No output jax registered for " + a.mimeType)
@@ -2331,10 +1506,10 @@ function loadLatex() {
             }
             b.MathJax.state = c.OUTPUT
         },
-        prepareOutput: function(c, f) {
+        prepareOutput: function (c, f) {
             while (c.j < c.jaxIDs.length) {
                 var e = c.jaxIDs[c.j]
-                  , d = MathJax.OutputJax[e];
+                    , d = MathJax.OutputJax[e];
                 if (d[f]) {
                     try {
                         var a = d[f](c);
@@ -2357,7 +1532,7 @@ function loadLatex() {
             }
             return null
         },
-        processOutput: function(h) {
+        processOutput: function (h) {
             var b, g = MathJax.ElementJax.STATE, d, a = h.scripts.length;
             try {
                 while (h.i < a) {
@@ -2397,14 +1572,14 @@ function loadLatex() {
             h.i = h.j = 0;
             return null
         },
-        processMessage: function(d, b) {
+        processMessage: function (d, b) {
             var a = Math.floor(d.i / (d.scripts.length) * 100);
             var c = (b === "Output" ? ["TypesetMath", "Typesetting math: %1%%"] : ["ProcessMath", "Processing math: %1%%"]);
             if (this.config.showProcessingMessages) {
                 MathJax.Message.Set(c.concat(a), 0)
             }
         },
-        processError: function(b, c, a) {
+        processError: function (b, c, a) {
             if (!b.restart) {
                 if (!this.config.errorSettings.message) {
                     throw b
@@ -2415,8 +1590,8 @@ function loadLatex() {
             this.processMessage(c, a);
             return MathJax.Callback.After(["process" + a, this, c], b.restart)
         },
-        formatError: function(b, f) {
-            var h = function(l, k, j, i) {
+        formatError: function (b, f) {
+            var h = function (l, k, j, i) {
                 return MathJax.Localization._(l, k, j, i)
             };
             var e = h("ErrorMessage", "Error: %1", f.message) + "\n";
@@ -2439,9 +1614,9 @@ function loadLatex() {
                 isMathJax: true,
                 id: b.MathJax.error.inputID + "-Frame"
             }, [["span", null, a]]);
-            MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js", function() {
+            MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js", function () {
                 var j = MathJax.Extension.MathEvents.Event
-                  , i = MathJax.Hub;
+                    , i = MathJax.Hub;
                 c.oncontextmenu = j.Menu;
                 c.onmousedown = j.Mousedown;
                 c.onkeydown = j.Keydown;
@@ -2461,18 +1636,18 @@ function loadLatex() {
             this.lastError = f;
             this.signal.Post(["Math Processing Error", b, f])
         },
-        RestartAfter: function(a) {
+        RestartAfter: function (a) {
             throw this.Insert(Error("restart"), {
                 restart: MathJax.Callback(a)
             })
         },
-        elementCallback: function(c, f) {
+        elementCallback: function (c, f) {
             if (f == null && (MathJax.Object.isArray(c) || typeof c === "function")) {
                 try {
                     MathJax.Callback(c);
                     f = c;
                     c = null
-                } catch (d) {}
+                } catch (d) { }
             }
             if (c == null) {
                 c = this.config.elements || []
@@ -2504,7 +1679,7 @@ function loadLatex() {
                 callback: f
             }
         },
-        elementScripts: function(e) {
+        elementScripts: function (e) {
             var b = [];
             if (MathJax.Object.isArray(e) || this.isHTMLCollection(e)) {
                 for (var d = 0, a = e.length; d < a; d++) {
@@ -2536,10 +1711,10 @@ function loadLatex() {
             }
             return b
         },
-        isHTMLCollection: function(a) {
-            return ("HTMLCollection"in window && typeof (a) === "object" && a instanceof HTMLCollection)
+        isHTMLCollection: function (a) {
+            return ("HTMLCollection" in window && typeof (a) === "object" && a instanceof HTMLCollection)
         },
-        HTMLCollection2Array: function(c) {
+        HTMLCollection2Array: function (c) {
             if (!this.msieHTMLCollectionBug) {
                 return [].slice.call(c)
             }
@@ -2549,7 +1724,7 @@ function loadLatex() {
             }
             return b
         },
-        Insert: function(c, a) {
+        Insert: function (c, a) {
             for (var b in a) {
                 if (a.hasOwnProperty(b)) {
                     if (typeof a[b] === "object" && !(MathJax.Object.isArray(a[b])) && (typeof c[b] === "object" || typeof c[b] === "function")) {
@@ -2561,15 +1736,15 @@ function loadLatex() {
             }
             return c
         },
-        getTabOrder: function(a) {
+        getTabOrder: function (a) {
             return this.config.menuSettings.inTabOrder ? 0 : -1
         },
-        SplitList: ("trim"in String.prototype ? function(a) {
+        SplitList: ("trim" in String.prototype ? function (a) {
             return a.trim().split(/\s+/)
         }
-        : function(a) {
-            return a.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/)
-        }
+            : function (a) {
+                return a.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/)
+            }
         )
     };
     MathJax.Hub.Insert(MathJax.Hub.config.styles, MathJax.Message.styles);
@@ -2583,7 +1758,7 @@ function loadLatex() {
         queue: MathJax.Callback.Queue(),
         signal: MathJax.Callback.Signal("Startup"),
         params: {},
-        Config: function() {
+        Config: function () {
             this.queue.Push(["Post", this.signal, "Begin Config"]);
             if (MathJax.AuthorConfig && MathJax.AuthorConfig.root) {
                 MathJax.Ajax.config.root = MathJax.AuthorConfig.root
@@ -2605,12 +1780,12 @@ function loadLatex() {
             if (this.script.match(/\S/)) {
                 this.queue.Push(this.script + ";\n1;")
             }
-            this.queue.Push(["ConfigDelay", this], ["ConfigBlocks", this], [function(d) {
+            this.queue.Push(["ConfigDelay", this], ["ConfigBlocks", this], [function (d) {
                 return d.loadArray(MathJax.Hub.config.config, "config", null, true)
             }
-            , this], ["Post", this.signal, "End Config"])
+                , this], ["Post", this.signal, "End Config"])
         },
-        ConfigDelay: function() {
+        ConfigDelay: function () {
             var a = this.params.delayStartupUntil || MathJax.Hub.config.delayStartupUntil;
             if (a === "onload") {
                 return this.onload
@@ -2620,7 +1795,7 @@ function loadLatex() {
             }
             return a
         },
-        ConfigBlocks: function() {
+        ConfigBlocks: function () {
             var c = document.getElementsByTagName("script");
             var b = MathJax.Callback.Queue();
             for (var d = 0, a = c.length; d < a; d++) {
@@ -2630,60 +1805,69 @@ function loadLatex() {
                     b.Push(c[d].innerHTML + ";\n1;")
                 }
             }
-            return b.Push(function() {
+            return b.Push(function () {
                 MathJax.Ajax.config.root = MathJax.Hub.config.root
             })
         },
-        Cookie: function() {
-            return this.queue.Push(["Post", this.signal, "Begin Cookie"], ["Get", MathJax.HTML.Cookie, "menu", MathJax.Hub.config.menuSettings], [function(e) {
-                var d = e.menuSettings;
-                if (d.locale) {
-                    MathJax.Localization.resetLocale(d.locale)
-                }
-                var g = e.menuSettings.renderer
-                  , b = e.jax;
-                if (g) {
-                    var c = "output/" + g;
-                    b.sort();
-                    for (var f = 0, a = b.length; f < a; f++) {
-                        if (b[f].substr(0, 7) === "output/") {
-                            break
-                        }
+        Cookie: function () {
+            return this.queue.Push(
+                ["Post", this.signal, "Begin Cookie"],
+                ["Get", MathJax.HTML.Cookie, "menu", MathJax.Hub.config.menuSettings],
+                [function (e) {
+                    var d = e.menuSettings;
+                    if (d.locale) {
+                        MathJax.Localization.resetLocale(d.locale)
                     }
-                    if (f == a - 1) {
-                        b.pop()
-                    } else {
-                        while (f < a) {
-                            if (b[f] === c) {
-                                b.splice(f, 1);
+                    var g = e.menuSettings.renderer
+                        , b = e.jax;
+                    if (g) {
+                        var c = "output/" + g;
+                        b.sort();
+                        for (var f = 0, a = b.length; f < a; f++) {
+                            if (b[f].substr(0, 7) === "output/") {
                                 break
                             }
-                            f++
                         }
+                        if (f == a - 1) {
+                            b.pop()
+                        } else {
+                            while (f < a) {
+                                if (b[f] === c) {
+                                    b.splice(f, 1);
+                                    break
+                                }
+                                f++
+                            }
+                        }
+                        b.unshift(c)
                     }
-                    b.unshift(c)
-                }
-                if (d.CHTMLpreview != null) {
-                    if (d.FastPreview == null) {
-                        d.FastPreview = d.CHTMLpreview
+                    if (d.CHTMLpreview != null) {
+                        if (d.FastPreview == null) {
+                            d.FastPreview = d.CHTMLpreview
+                        }
+                        delete d.CHTMLpreview
                     }
-                    delete d.CHTMLpreview
-                }
-                if (d.FastPreview && !MathJax.Extension["fast-preview"]) {
-                    MathJax.Hub.config.extensions.push("fast-preview.js")
-                }
-                if (e.menuSettings.assistiveMML && !MathJax.Extension.AssistiveMML) {
-                    MathJax.Hub.config.extensions.push("AssistiveMML.js")
-                }
-            }
-            , MathJax.Hub.config], ["Post", this.signal, "End Cookie"])
+                    if (d.FastPreview && !MathJax.Extension["fast-preview"]) {
+                        MathJax.Hub.config.extensions.push("fast-preview.js")
+                    }
+                    if (e.menuSettings.assistiveMML && !MathJax.Extension.AssistiveMML) {
+                        MathJax.Hub.config.extensions.push("AssistiveMML.js")
+                    }
+                }, MathJax.Hub.config],
+                ["Post", this.signal, "End Cookie"]
+            );
         },
-        Styles: function() {
-            return this.queue.Push(["Post", this.signal, "Begin Styles"], ["loadArray", this, MathJax.Hub.config.styleSheets, "config"], ["Styles", MathJax.Ajax, MathJax.Hub.config.styles], ["Post", this.signal, "End Styles"])
+        Styles: function () {
+            return this.queue.Push(
+                ["Post", this.signal, "Begin Styles"],
+                ["loadArray", this, MathJax.Hub.config.styleSheets, "config"],
+                ["Styles", MathJax.Ajax, MathJax.Hub.config.styles],
+                ["Post", this.signal, "End Styles"]
+            );
         },
-        Jax: function() {
+        Jax: function () {
             var f = MathJax.Hub.config
-              , c = MathJax.Hub.outputJax;
+                , c = MathJax.Hub.outputJax;
             for (var g = 0, b = f.jax.length, d = 0; g < b; g++) {
                 var e = f.jax[g].substr(7);
                 if (f.jax[g].substr(0, 7) === "output/" && c.order[e] == null) {
@@ -2692,16 +1876,24 @@ function loadLatex() {
                 }
             }
             var a = MathJax.Callback.Queue();
-            return a.Push(["Post", this.signal, "Begin Jax"], ["loadArray", this, f.jax, "jax", "config.js"], ["Post", this.signal, "End Jax"])
+            return a.Push(
+                ["Post", this.signal, "Begin Jax"],
+                ["loadArray", this, f.jax, "jax", "config.js"],
+                ["Post", this.signal, "End Jax"]
+            );
         },
-        Extensions: function() {
+        Extensions: function () {
             var a = MathJax.Callback.Queue();
-            return a.Push(["Post", this.signal, "Begin Extensions"], ["loadArray", this, MathJax.Hub.config.extensions, "extensions"], ["Post", this.signal, "End Extensions"])
+            return a.Push(
+                ["Post", this.signal, "Begin Extensions"],
+                ["loadArray", this, MathJax.Hub.config.extensions, "extensions"],
+                ["Post", this.signal, "End Extensions"]
+            );
         },
-        Message: function() {
+        Message: function () {
             MathJax.Message.Init(true)
         },
-        Menu: function() {
+        Menu: function () {
             var b = MathJax.Hub.config.menuSettings, a = MathJax.Hub.outputJax, d;
             for (var c in a) {
                 if (a.hasOwnProperty(c)) {
@@ -2718,7 +1910,7 @@ function loadLatex() {
                 b.renderer = d[0].id
             }
         },
-        Hash: function() {
+        Hash: function () {
             if (MathJax.Hub.config.positionToHash && document.location.hash && document.body && document.body.scrollIntoView) {
                 var d = document.location.hash.substr(1);
                 var f = document.getElementById(d);
@@ -2737,36 +1929,39 @@ function loadLatex() {
                     }
                     f = this.HashCheck(f);
                     if (f && f.scrollIntoView) {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             f.scrollIntoView(true)
                         }, 1)
                     }
                 }
             }
         },
-        HashCheck: function(b) {
+        HashCheck: function (b) {
             var a = MathJax.Hub.getJaxFor(b);
             if (a && MathJax.OutputJax[a.outputJax].hashCheck) {
                 b = MathJax.OutputJax[a.outputJax].hashCheck(b)
             }
             return b
         },
-        MenuZoom: function() {
+        MenuZoom: function () {
             if (MathJax.Hub.config.showMathMenu) {
                 if (!MathJax.Extension.MathMenu) {
-                    setTimeout(function() {
-                        MathJax.Callback.Queue(["Require", MathJax.Ajax, "[MathJax]/extensions/MathMenu.js", {}], ["loadDomain", MathJax.Localization, "MathMenu"])
+                    setTimeout(function () {
+                        MathJax.Callback.Queue(
+                            ["Require", MathJax.Ajax, "[MathJax]/extensions/MathMenu.js", {}],
+                            ["loadDomain", MathJax.Localization, "MathMenu"]
+                        );
                     }, 1000)
                 } else {
                     setTimeout(MathJax.Callback(["loadDomain", MathJax.Localization, "MathMenu"]), 1000)
                 }
                 if (!MathJax.Extension.MathZoom) {
-                    setTimeout(MathJax.Callback(["Require", MathJax.Ajax, "[MathJax]/extensions/MathZoom.js", {}]), 2000)
+                    setTimeout(MathJax.Callback(["Require", MathJax.Ajax, "[MathJax]/extensions/MathZoom.js", {}]), 2000);
                 }
             }
         },
-        onLoad: function() {
-            var a = this.onload = MathJax.Callback(function() {
+        onLoad: function () {
+            var a = this.onload = MathJax.Callback(function () {
                 MathJax.Hub.Startup.signal.Post("onLoad")
             });
             if (document.body && document.readyState) {
@@ -2794,19 +1989,23 @@ function loadLatex() {
             }
             return a
         },
-        Typeset: function(a, b) {
+        Typeset: function (a, b) {
             if (MathJax.Hub.config.skipStartupTypeset) {
-                return function() {}
+                return function () { }
             }
-            return this.queue.Push(["Post", this.signal, "Begin Typeset"], ["Typeset", MathJax.Hub, a, b], ["Post", this.signal, "End Typeset"])
+            return this.queue.Push(
+                ["Post", this.signal, "Begin Typeset"],
+                ["Typeset", MathJax.Hub, a, b],
+                ["Post", this.signal, "End Typeset"]
+            );
         },
-        URL: function(b, a) {
+        URL: function (b, a) {
             if (!a.match(/^([a-z]+:\/\/|\[|\/)/)) {
                 a = "[MathJax]/" + b + "/" + a
             }
             return a
         },
-        loadArray: function(b, f, c, a) {
+        loadArray: function (b, f, c, a) {
             if (b) {
                 if (!MathJax.Object.isArray(b)) {
                     b = [b]
@@ -2831,25 +2030,24 @@ function loadLatex() {
         }
     };
 
-    (function(d) {
-        var b = window[d]
-          , e = "[" + d + "]";
-        var c = b.Hub
-          , a = b.Ajax
-          , f = b.Callback;
+    (function () {
+        var e = "[" + NAME_TAG + "]";
+        var c = MathJax.Hub
+            , a = MathJax.Ajax
+            , f = MathJax.Callback;
         var g = MathJax.Object.Subclass({
             JAXFILE: "jax.js",
             require: null,
             config: {},
-            Init: function(i, h) {
+            Init: function (i, h) {
                 if (arguments.length === 0) {
                     return this
                 }
                 return (this.constructor.Subclass(i, h))()
             },
-            Augment: function(k, j) {
+            Augment: function (k, j) {
                 var i = this.constructor
-                  , h = {};
+                    , h = {};
                 if (k != null) {
                     for (var l in k) {
                         if (k.hasOwnProperty(l)) {
@@ -2868,36 +2066,43 @@ function loadLatex() {
                 i.Augment(null, j);
                 return this
             },
-            Translate: function(h, i) {
+            Translate: function (h, i) {
                 throw Error(this.directory + "/" + this.JAXFILE + " failed to define the Translate() method")
             },
-            Register: function(h) {},
-            Config: function() {
+            Register: function (h) { },
+            Config: function () {
                 this.config = c.CombineConfig(this.id, this.config);
                 if (this.config.Augment) {
                     this.Augment(this.config.Augment)
                 }
             },
-            Startup: function() {},
-            loadComplete: function(i) {
+            Startup: function () { },
+            loadComplete: function (i) {
                 if (i === "config.js") {
                     return a.loadComplete(this.directory + "/" + i)
                 } else {
                     var h = f.Queue();
-                    h.Push(c.Register.StartupHook("End Config", {}), ["Post", c.Startup.signal, this.id + " Jax Config"], ["Config", this], ["Post", c.Startup.signal, this.id + " Jax Require"], [function(j) {
-                        return MathJax.Hub.Startup.loadArray(j.require, this.directory)
-                    }
-                    , this], [function(j, k) {
-                        return MathJax.Hub.Startup.loadArray(j.extensions, "extensions/" + k)
-                    }
-                    , this.config || {}, this.id], ["Post", c.Startup.signal, this.id + " Jax Startup"], ["Startup", this], ["Post", c.Startup.signal, this.id + " Jax Ready"]);
+                    h.Push(c.Register.StartupHook("End Config", {}),
+                        ["Post", c.Startup.signal, this.id + " Jax Config"],
+                        ["Config", this],
+                        ["Post", c.Startup.signal, this.id + " Jax Require"],
+                        [function (j) {
+                            return MathJax.Hub.Startup.loadArray(j.require, this.directory)
+                        }, this],
+                        [function (j, k) {
+                            return MathJax.Hub.Startup.loadArray(j.extensions, "extensions/" + k)
+                        }, this.config || {}, this.id],
+                        ["Post", c.Startup.signal, this.id + " Jax Startup"],
+                        ["Startup", this],
+                        ["Post", c.Startup.signal, this.id + " Jax Ready"]
+                    );
                     if (this.copyTranslate) {
-                        h.Push([function(j) {
+                        h.Push([function (j) {
                             j.preProcess = j.preTranslate;
                             j.Process = j.Translate;
                             j.postProcess = j.postTranslate
                         }
-                        , this.constructor.prototype])
+                            , this.constructor.prototype])
                     }
                     return h.Push(["loadComplete", a, this.directory + "/" + i])
                 }
@@ -2908,22 +2113,22 @@ function loadLatex() {
             directory: e + "/jax",
             extensionDir: e + "/extensions"
         });
-        b.InputJax = g.Subclass({
+        MathJax.InputJax = g.Subclass({
             elementJax: "mml",
             sourceMenuTitle: ["Original", "Original Form"],
             copyTranslate: true,
-            Process: function(l, q) {
+            Process: function (l, q) {
                 var j = f.Queue(), o;
                 var k = this.elementJax;
-                if (!b.Object.isArray(k)) {
+                if (!MathJax.Object.isArray(k)) {
                     k = [k]
                 }
                 for (var n = 0, h = k.length; n < h; n++) {
-                    o = b.ElementJax.directory + "/" + k[n] + "/" + this.JAXFILE;
+                    o = MathJax.ElementJax.directory + "/" + k[n] + "/" + this.JAXFILE;
                     if (!this.require) {
                         this.require = []
                     } else {
-                        if (!b.Object.isArray(this.require)) {
+                        if (!MathJax.Object.isArray(this.require)) {
                             this.require = [this.require]
                         }
                     }
@@ -2933,7 +2138,7 @@ function loadLatex() {
                 o = this.directory + "/" + this.JAXFILE;
                 var p = j.Push(a.Require(o));
                 if (!p.called) {
-                    this.constructor.prototype.Process = function() {
+                    this.constructor.prototype.Process = function () {
                         if (!p.called) {
                             return p
                         }
@@ -2946,11 +2151,11 @@ function loadLatex() {
                 }
                 return j.Push({})
             },
-            needsUpdate: function(h) {
+            needsUpdate: function (h) {
                 var i = h.SourceElement();
-                return (h.originalText !== b.HTML.getScript(i))
+                return (h.originalText !== MathJax.HTML.getScript(i))
             },
-            Register: function(h) {
+            Register: function (h) {
                 if (!c.inputJax) {
                     c.inputJax = {}
                 }
@@ -2962,21 +2167,21 @@ function loadLatex() {
             directory: g.directory + "/input",
             extensionDir: g.extensionDir
         });
-        b.OutputJax = g.Subclass({
+        MathJax.OutputJax = g.Subclass({
             copyTranslate: true,
-            preProcess: function(j) {
+            preProcess: function (j) {
                 var i, h = this.directory + "/" + this.JAXFILE;
-                this.constructor.prototype.preProcess = function(k) {
+                this.constructor.prototype.preProcess = function (k) {
                     if (!i.called) {
                         return i
                     }
                     throw Error(h + " failed to load properly")
                 }
-                ;
+                    ;
                 i = a.Require(h);
                 return i
             },
-            Register: function(i) {
+            Register: function (i) {
                 var h = c.outputJax;
                 if (!h[i]) {
                     h[i] = []
@@ -2989,23 +2194,23 @@ function loadLatex() {
                 if (!this.require) {
                     this.require = []
                 } else {
-                    if (!b.Object.isArray(this.require)) {
+                    if (!MathJax.Object.isArray(this.require)) {
                         this.require = [this.require]
                     }
                 }
-                this.require.push(b.ElementJax.directory + "/" + (i.split(/\//)[1]) + "/" + this.JAXFILE)
+                this.require.push(MathJax.ElementJax.directory + "/" + (i.split(/\//)[1]) + "/" + this.JAXFILE)
             },
-            Remove: function(h) {}
+            Remove: function (h) { }
         }, {
             id: "OutputJax",
             version: "2.7.2",
             directory: g.directory + "/output",
             extensionDir: g.extensionDir,
-            fontDir: e + (b.isPacked ? "" : "/..") + "/fonts",
-            imageDir: e + (b.isPacked ? "" : "/..") + "/images"
+            fontDir: e + (MathJax.isPacked ? "" : "/..") + "/fonts",
+            imageDir: e + (MathJax.isPacked ? "" : "/..") + "/images"
         });
-        b.ElementJax = g.Subclass({
-            Init: function(i, h) {
+        MathJax.ElementJax = g.Subclass({
+            Init: function (i, h) {
                 return this.constructor.Subclass(i, h)
             },
             inputJax: null,
@@ -3014,42 +2219,42 @@ function loadLatex() {
             originalText: "",
             mimeType: "",
             sourceMenuTitle: ["MathMLcode", "MathML Code"],
-            Text: function(i, j) {
+            Text: function (i, j) {
                 var h = this.SourceElement();
-                b.HTML.setScript(h, i);
+                MathJax.HTML.setScript(h, i);
                 h.MathJax.state = this.STATE.UPDATE;
                 return c.Update(h, j)
             },
-            Reprocess: function(i) {
+            Reprocess: function (i) {
                 var h = this.SourceElement();
                 h.MathJax.state = this.STATE.UPDATE;
                 return c.Reprocess(h, i)
             },
-            Update: function(h) {
+            Update: function (h) {
                 return this.Rerender(h)
             },
-            Rerender: function(i) {
+            Rerender: function (i) {
                 var h = this.SourceElement();
                 h.MathJax.state = this.STATE.OUTPUT;
                 return c.Process(h, i)
             },
-            Remove: function(h) {
+            Remove: function (h) {
                 if (this.hover) {
                     this.hover.clear(this)
                 }
-                b.OutputJax[this.outputJax].Remove(this);
+                MathJax.OutputJax[this.outputJax].Remove(this);
                 if (!h) {
                     c.signal.Post(["Remove Math", this.inputID]);
                     this.Detach()
                 }
             },
-            needsUpdate: function() {
-                return b.InputJax[this.inputJax].needsUpdate(this)
+            needsUpdate: function () {
+                return MathJax.InputJax[this.inputJax].needsUpdate(this)
             },
-            SourceElement: function() {
+            SourceElement: function () {
                 return document.getElementById(this.inputID)
             },
-            Attach: function(i, j) {
+            Attach: function (i, j) {
                 var h = i.MathJax.elementJax;
                 if (i.MathJax.state === this.STATE.UPDATE) {
                     h.Clone(this)
@@ -3058,18 +2263,18 @@ function loadLatex() {
                     if (i.id) {
                         this.inputID = i.id
                     } else {
-                        i.id = this.inputID = b.ElementJax.GetID();
+                        i.id = this.inputID = MathJax.ElementJax.GetID();
                         this.newID = 1
                     }
                 }
-                h.originalText = b.HTML.getScript(i);
+                h.originalText = MathJax.HTML.getScript(i);
                 h.inputJax = j;
                 if (h.root) {
                     h.root.inputID = h.inputID
                 }
                 return h
             },
-            Detach: function() {
+            Detach: function () {
                 var h = this.SourceElement();
                 if (!h) {
                     return
@@ -3083,7 +2288,7 @@ function loadLatex() {
                     h.id = ""
                 }
             },
-            Clone: function(h) {
+            Clone: function (h) {
                 var i;
                 for (i in this) {
                     if (!this.hasOwnProperty(i)) {
@@ -3114,32 +2319,32 @@ function loadLatex() {
                 UPDATE: 3,
                 OUTPUT: 4
             },
-            GetID: function() {
+            GetID: function () {
                 this.ID++;
                 return "MathJax-Element-" + this.ID
             },
-            Subclass: function() {
+            Subclass: function () {
                 var h = g.Subclass.apply(this, arguments);
                 h.loadComplete = this.prototype.loadComplete;
                 return h
             }
         });
-        b.ElementJax.prototype.STATE = b.ElementJax.STATE;
-        b.OutputJax.Error = {
+        MathJax.ElementJax.prototype.STATE = MathJax.ElementJax.STATE;
+        MathJax.OutputJax.Error = {
             id: "Error",
             version: "2.7.2",
             config: {},
             errors: 0,
-            ContextMenu: function() {
-                return b.Extension.MathEvents.Event.ContextMenu.apply(b.Extension.MathEvents.Event, arguments)
+            ContextMenu: function () {
+                return MathJax.Extension.MathEvents.Event.ContextMenu.apply(MathJax.Extension.MathEvents.Event, arguments)
             },
-            Mousedown: function() {
-                return b.Extension.MathEvents.Event.AltContextMenu.apply(b.Extension.MathEvents.Event, arguments)
+            Mousedown: function () {
+                return MathJax.Extension.MathEvents.Event.AltContextMenu.apply(MathJax.Extension.MathEvents.Event, arguments)
             },
-            getJaxFromMath: function(h) {
+            getJaxFromMath: function (h) {
                 return (h.nextSibling.MathJax || {}).error
             },
-            Jax: function(j, i) {
+            Jax: function (j, i) {
                 var h = MathJax.Hub.inputJax[i.type.replace(/ *;(.|\s)*/, "")];
                 this.errors++;
                 return {
@@ -3155,137 +2360,981 @@ function loadLatex() {
                 }
             }
         };
-        b.InputJax.Error = {
+        MathJax.InputJax.Error = {
             id: "Error",
             version: "2.7.2",
             config: {},
             sourceMenuTitle: ["Original", "Original Form"]
         }
-    })("MathJax");
+    })();
+}
 
-    (function(o) {
-        var h = window[o];
-        if (!h) {
-            h = window[o] = {}
+function createCallback() {
+    var isArray = MathJax.Object.isArray;
+    var CALLBACK = function (data) {
+        var cb = function () {
+            return arguments.callee.execute.apply(arguments.callee, arguments)
+        };
+        for (var id in CALLBACK.prototype) {
+            if (CALLBACK.prototype.hasOwnProperty(id)) {
+                if (typeof (data[id]) !== "undefined") {
+                    cb[id] = data[id]
+                } else {
+                    cb[id] = CALLBACK.prototype[id]
+                }
+            }
         }
-        var d = h.Hub;
-        var s = d.Startup;
-        var w = d.config;
-        var g = document.head || (document.getElementsByTagName("head")[0]);
-        if (!g) {
-            g = document.childNodes[0]
+        cb.toString = CALLBACK.prototype.toString;
+        return cb
+    };
+    CALLBACK.prototype = {
+        isCallback: true,
+        hook: function () { },
+        data: [],
+        object: window,
+        execute: function () {
+            if (!this.called || this.autoReset) {
+                this.called = !this.autoReset;
+                return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)))
+            }
+        },
+        reset: function () {
+            delete this.called
+        },
+        toString: function () {
+            return this.hook.toString.apply(this.hook, arguments)
         }
-        var b = (document.documentElement || document).getElementsByTagName("script");
-        if (b.length === 0 && g.namespaceURI) {
-            b = document.getElementsByTagNameNS(g.namespaceURI, "script")
+    };
+    var ISCALLBACK = function (f) {
+        return (typeof (f) === "function" && f.isCallback)
+    };
+    var EVAL = function (code) {
+        return eval.call(window, code)
+    };
+    var TESTEVAL = function () {
+        EVAL("var __TeSt_VaR__ = 1");
+        if (window.__TeSt_VaR__) {
+            try {
+                delete window.__TeSt_VaR__
+            } catch (error) {
+                window.__TeSt_VaR__ = null
+            }
+        } else {
+            if (window.execScript) {
+                EVAL = function (code) {
+                    MathJax.__code = code;
+                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
+                    window.execScript(code);
+                    var result = MathJax.__result;
+                    delete MathJax.__result;
+                    delete MathJax.__code;
+                    if (result instanceof Error) {
+                        throw result
+                    }
+                    return result
+                }
+            } else {
+                EVAL = function (code) {
+                    MathJax.__code = code;
+                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
+                    var head = (document.getElementsByTagName("head"))[0];
+                    if (!head) {
+                        head = document.body
+                    }
+                    var script = document.createElement("script");
+                    script.appendChild(document.createTextNode(code));
+                    head.appendChild(script);
+                    head.removeChild(script);
+                    var result = MathJax.__result;
+                    delete MathJax.__result;
+                    delete MathJax.__code;
+                    if (result instanceof Error) {
+                        throw result
+                    }
+                    return result
+                }
+            }
         }
-        var f = new RegExp("(^|/)" + o + "\\.js(\\?.*)?$");
-        for (var q = b.length - 1; q >= 0; q--) {
-            if ((b[q].src || "").match(f)) {
-                s.script = b[q].innerHTML;
-                if (RegExp.$2) {
-                    var t = RegExp.$2.substr(1).split(/\&/);
-                    for (var p = 0, l = t.length; p < l; p++) {
-                        var n = t[p].match(/(.*)=(.*)/);
-                        if (n) {
-                            s.params[unescape(n[1])] = unescape(n[2])
-                        } else {
-                            s.params[t[p]] = true
+        TESTEVAL = null
+    };
+    var USING = function (args, i) {
+        if (arguments.length > 1) {
+            if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0] instanceof Object && typeof arguments[1] === "number") {
+                args = [].slice.call(args, i)
+            } else {
+                args = [].slice.call(arguments, 0)
+            }
+        }
+        if (isArray(args) && args.length === 1 && typeof (args[0]) === "function") {
+            args = args[0]
+        }
+        if (typeof args === "function") {
+            if (args.execute === CALLBACK.prototype.execute) {
+                return args
+            }
+            return CALLBACK({
+                hook: args
+            })
+        } else {
+            if (isArray(args)) {
+                if (typeof (args[0]) === "string" && args[1] instanceof Object && typeof args[1][args[0]] === "function") {
+                    return CALLBACK({
+                        hook: args[1][args[0]],
+                        object: args[1],
+                        data: args.slice(2)
+                    })
+                } else {
+                    if (typeof args[0] === "function") {
+                        return CALLBACK({
+                            hook: args[0],
+                            data: args.slice(1)
+                        })
+                    } else {
+                        if (typeof args[1] === "function") {
+                            return CALLBACK({
+                                hook: args[1],
+                                object: args[0],
+                                data: args.slice(2)
+                            })
                         }
                     }
                 }
-                w.root = b[q].src.replace(/(^|\/)[^\/]*(\?.*)?$/, "");
-                h.Ajax.config.root = w.root;
-                h.Ajax.params = s.params;
+            } else {
+                if (typeof (args) === "string") {
+                    if (TESTEVAL) {
+                        TESTEVAL()
+                    }
+                    return CALLBACK({
+                        hook: EVAL,
+                        data: [args]
+                    })
+                } else {
+                    if (args instanceof Object) {
+                        return CALLBACK(args)
+                    } else {
+                        if (typeof (args) === "undefined") {
+                            return CALLBACK({})
+                        }
+                    }
+                }
+            }
+        }
+        throw Error("Can't make callback from given data")
+    };
+    var DELAY = function (time, callback) {
+        callback = USING(callback);
+        callback.timeout = setTimeout(callback, time);
+        return callback
+    };
+    var WAITFOR = function (callback, signal) {
+        callback = USING(callback);
+        if (!callback.called) {
+            WAITSIGNAL(callback, signal);
+            signal.pending++
+        }
+    };
+    var WAITEXECUTE = function () {
+        var signals = this.signal;
+        delete this.signal;
+        this.execute = this.oldExecute;
+        delete this.oldExecute;
+        var result = this.execute.apply(this, arguments);
+        if (ISCALLBACK(result) && !result.called) {
+            WAITSIGNAL(result, signals)
+        } else {
+            for (var i = 0, m = signals.length; i < m; i++) {
+                signals[i].pending--;
+                if (signals[i].pending <= 0) {
+                    signals[i].call()
+                }
+            }
+        }
+    };
+    var WAITSIGNAL = function (callback, signals) {
+        if (!isArray(signals)) {
+            signals = [signals]
+        }
+        if (!callback.signal) {
+            callback.oldExecute = callback.execute;
+            callback.execute = WAITEXECUTE;
+            callback.signal = signals
+        } else {
+            if (signals.length === 1) {
+                callback.signal.push(signals[0])
+            } else {
+                callback.signal = callback.signal.concat(signals)
+            }
+        }
+    };
+    var AFTER = function (callback) {
+        callback = USING(callback);
+        callback.pending = 0;
+        for (var i = 1, m = arguments.length; i < m; i++) {
+            if (arguments[i]) {
+                WAITFOR(arguments[i], callback)
+            }
+        }
+        if (callback.pending === 0) {
+            var result = callback();
+            if (ISCALLBACK(result)) {
+                callback = result
+            }
+        }
+        return callback
+    };
+    var HOOKS = MathJax.Object.Subclass({
+        Init: function (reset) {
+            this.hooks = [];
+            this.remove = [];
+            this.reset = reset;
+            this.running = false
+        },
+        Add: function (hook, priority) {
+            if (priority == null) {
+                priority = 10
+            }
+            if (!ISCALLBACK(hook)) {
+                hook = USING(hook)
+            }
+            hook.priority = priority;
+            var i = this.hooks.length;
+            while (i > 0 && priority < this.hooks[i - 1].priority) {
+                i--
+            }
+            this.hooks.splice(i, 0, hook);
+            return hook
+        },
+        Remove: function (hook) {
+            for (var i = 0, m = this.hooks.length; i < m; i++) {
+                if (this.hooks[i] === hook) {
+                    if (this.running) {
+                        this.remove.push(i)
+                    } else {
+                        this.hooks.splice(i, 1)
+                    }
+                    return
+                }
+            }
+        },
+        Execute: function () {
+            var callbacks = [{}];
+            this.running = true;
+            for (var i = 0, m = this.hooks.length; i < m; i++) {
+                if (this.reset) {
+                    this.hooks[i].reset()
+                }
+                var result = this.hooks[i].apply(window, arguments);
+                if (ISCALLBACK(result) && !result.called) {
+                    callbacks.push(result)
+                }
+            }
+            this.running = false;
+            if (this.remove.length) {
+                this.RemovePending()
+            }
+            if (callbacks.length === 1) {
+                return null
+            }
+            if (callbacks.length === 2) {
+                return callbacks[1]
+            }
+            return AFTER.apply({}, callbacks)
+        },
+        RemovePending: function () {
+            this.remove = this.remove.sort();
+            for (var i = this.remove.length - 1; i >= 0; i--) {
+                this.hooks.splice(i, 1)
+            }
+            this.remove = []
+        }
+    });
+    var EXECUTEHOOKS = function (hooks, data, reset) {
+        if (!hooks) {
+            return null
+        }
+        if (!isArray(hooks)) {
+            hooks = [hooks]
+        }
+        if (!isArray(data)) {
+            data = (data == null ? [] : [data])
+        }
+        var handler = HOOKS(reset);
+        for (var i = 0, m = hooks.length; i < m; i++) {
+            handler.Add(hooks[i])
+        }
+        return handler.Execute.apply(handler, data)
+    };
+    var QUEUE = MathJax.Object.Subclass({
+        Init: function () {
+            this.pending = this.running = 0;
+            this.queue = [];
+            this.Push.apply(this, arguments)
+        },
+        Push: function () {
+            var callback;
+            for (var i = 0, m = arguments.length; i < m; i++) {
+                callback = USING(arguments[i]);
+                if (callback === arguments[i] && !callback.called) {
+                    callback = USING(["wait", this, callback])
+                }
+                this.queue.push(callback)
+            }
+            if (!this.running && !this.pending) {
+                this.Process()
+            }
+            return callback
+        },
+        Process: function (queue) {
+            while (!this.running && !this.pending && this.queue.length) {
+                var callback = this.queue[0];
+                queue = this.queue.slice(1);
+                this.queue = [];
+                this.Suspend();
+                var result = callback();
+                this.Resume();
+                if (queue.length) {
+                    this.queue = queue.concat(this.queue)
+                }
+                if (ISCALLBACK(result) && !result.called) {
+                    WAITFOR(result, this)
+                }
+            }
+        },
+        Suspend: function () {
+            this.running++
+        },
+        Resume: function () {
+            if (this.running) {
+                this.running--
+            }
+        },
+        call: function () {
+            this.Process.apply(this, arguments)
+        },
+        wait: function (callback) {
+            return callback
+        }
+    });
+    var SIGNAL = QUEUE.Subclass({
+        Init: function (name) {
+            QUEUE.prototype.Init.call(this);
+            this.name = name;
+            this.posted = [];
+            this.listeners = HOOKS(true);
+            this.posting = false;
+            this.callback = null
+        },
+        Post: function (message, callback, forget) {
+            callback = USING(callback);
+            if (this.posting || this.pending) {
+                this.Push(["Post", this, message, callback, forget])
+            } else {
+                this.callback = callback;
+                callback.reset();
+                if (!forget) {
+                    this.posted.push(message)
+                }
+                this.Suspend();
+                this.posting = true;
+                var result = this.listeners.Execute(message);
+                if (ISCALLBACK(result) && !result.called) {
+                    WAITFOR(result, this)
+                }
+                this.Resume();
+                this.posting = false;
+                if (!this.pending) {
+                    this.call()
+                }
+            }
+            return callback
+        },
+        Clear: function (callback) {
+            callback = USING(callback);
+            if (this.posting || this.pending) {
+                callback = this.Push(["Clear", this, callback])
+            } else {
+                this.posted = [];
+                callback()
+            }
+            return callback
+        },
+        call: function () {
+            this.callback(this);
+            this.Process()
+        },
+        Interest: function (callback, ignorePast, priority) {
+            callback = USING(callback);
+            this.listeners.Add(callback, priority);
+            if (!ignorePast) {
+                for (var i = 0, m = this.posted.length; i < m; i++) {
+                    callback.reset();
+                    var result = callback(this.posted[i]);
+                    if (ISCALLBACK(result) && i === this.posted.length - 1) {
+                        WAITFOR(result, this)
+                    }
+                }
+            }
+            return callback
+        },
+        NoInterest: function (callback) {
+            this.listeners.Remove(callback)
+        },
+        MessageHook: function (msg, callback, priority) {
+            callback = USING(callback);
+            if (!this.hooks) {
+                this.hooks = {};
+                this.Interest(["ExecuteHooks", this])
+            }
+            if (!this.hooks[msg]) {
+                this.hooks[msg] = HOOKS(true)
+            }
+            this.hooks[msg].Add(callback, priority);
+            for (var i = 0, m = this.posted.length; i < m; i++) {
+                if (this.posted[i] == msg) {
+                    callback.reset();
+                    callback(this.posted[i])
+                }
+            }
+            callback.msg = msg;
+            return callback
+        },
+        ExecuteHooks: function (msg) {
+            var type = (isArray(msg) ? msg[0] : msg);
+            if (!this.hooks[type]) {
+                return null
+            }
+            return this.hooks[type].Execute(msg)
+        },
+        RemoveHook: function (hook) {
+            this.hooks[hook.msg].Remove(hook)
+        }
+    }, {
+        signals: {},
+        find: function (name) {
+            if (!SIGNAL.signals[name]) {
+                SIGNAL.signals[name] = new SIGNAL(name)
+            }
+            return SIGNAL.signals[name]
+        }
+    });
+    MathJax.Callback = MathJax.CallBack = USING;
+    MathJax.Callback.Delay = DELAY;
+    MathJax.Callback.After = AFTER;
+    MathJax.Callback.Queue = QUEUE;
+    MathJax.Callback.Signal = SIGNAL.find;
+    MathJax.Callback.Hooks = HOOKS;
+    MathJax.Callback.ExecuteHooks = EXECUTEHOOKS
+}
+
+function createAjax() {
+    var d = (navigator.vendor === "Apple Computer, Inc." && typeof navigator.vendorSub === "undefined");
+    var g = 0;
+    var h = function (i) {
+        if (document.styleSheets && document.styleSheets.length > g) {
+            g = document.styleSheets.length
+        }
+        if (!i) {
+            i = document.head || ((document.getElementsByTagName("head"))[0]);
+            if (!i) {
+                i = document.body
+            }
+        }
+        return i
+    };
+    var f = [];
+    var c = function () {
+        for (var k = 0, j = f.length; k < j; k++) {
+            MathJax.Ajax.head.removeChild(f[k])
+        }
+        f = []
+    };
+    var b = {};
+    b[NAME_TAG] = "";
+    b.a11y = "[MathJax]/extensions/a11y";
+    b.Contrib = "https://cdn.mathjax.org/mathjax/contrib";
+    MathJax.Ajax = {
+        loaded: {},
+        loading: {},
+        loadHooks: {},
+        timeout: 15 * 1000,
+        styleDelay: 1,
+        config: {
+            root: "",
+            path: b
+        },
+        params: {},
+        STATUS: {
+            OK: 1,
+            ERROR: -1
+        },
+        fileURL: function (j) {
+            var i;
+            while ((i = j.match(/^\[([-._a-z0-9]+)\]/i)) && b.hasOwnProperty(i[1])) {
+                j = (b[i[1]] || this.config.root) + j.substr(i[1].length + 2)
+            }
+            return j
+        },
+        fileName: function (j) {
+            var i = this.config.root;
+            if (j.substr(0, i.length) === i) {
+                j = "[" + NAME_TAG + "]" + j.substr(i.length)
+            }
+            do {
+                var k = false;
+                for (var l in b) {
+                    if (b.hasOwnProperty(l) && b[l]) {
+                        if (j.substr(0, b[l].length) === b[l]) {
+                            j = "[" + l + "]" + j.substr(b[l].length);
+                            k = true;
+                            break
+                        }
+                    }
+                }
+            } while (k);
+            return j
+        },
+        fileRev: function (j) {
+            var i = MathJax.cdnFileVersions[j] || MathJax.cdnVersion || "";
+            if (i) {
+                i = "?V=" + i
+            }
+            return i
+        },
+        urlRev: function (i) {
+            return this.fileURL(i) + this.fileRev(i)
+        },
+        Require: function (k, n) {
+            n = MathJax.Callback(n);
+            var l;
+            if (k instanceof Object) {
+                for (var j in k) {
+                    if (k.hasOwnProperty(j)) {
+                        l = j.toUpperCase();
+                        k = k[j]
+                    }
+                }
+            } else {
+                l = k.split(/\./).pop().toUpperCase()
+            }
+            if (this.params.noContrib && k.substr(0, 9) === "[Contrib]") {
+                n(this.STATUS.ERROR)
+            } else {
+                k = this.fileURL(k);
+                if (this.loaded[k]) {
+                    n(this.loaded[k])
+                } else {
+                    var m = {};
+                    m[l] = k;
+                    this.Load(m, n)
+                }
+            }
+            return n
+        },
+        Load: function (k, m) {
+            m = MathJax.Callback(m);
+            var l;
+            if (k instanceof Object) {
+                for (var j in k) {
+                    if (k.hasOwnProperty(j)) {
+                        l = j.toUpperCase();
+                        k = k[j]
+                    }
+                }
+            } else {
+                l = k.split(/\./).pop().toUpperCase()
+            }
+            k = this.fileURL(k);
+            if (this.loading[k]) {
+                this.addHook(k, m)
+            } else {
+                this.head = h(this.head);
+                if (this.loader[l]) {
+                    this.loader[l].call(this, k, m)
+                } else {
+                    throw Error("Can't load files of type " + l)
+                }
+            }
+            return m
+        },
+        LoadHook: function (l, m, k) {
+            m = MathJax.Callback(m);
+            if (l instanceof Object) {
+                for (var j in l) {
+                    if (l.hasOwnProperty(j)) {
+                        l = l[j]
+                    }
+                }
+            }
+            l = this.fileURL(l);
+            if (this.loaded[l]) {
+                m(this.loaded[l])
+            } else {
+                this.addHook(l, m, k)
+            }
+            return m
+        },
+        addHook: function (j, k, i) {
+            if (!this.loadHooks[j]) {
+                this.loadHooks[j] = MathJax.Callback.Hooks()
+            }
+            this.loadHooks[j].Add(k, i);
+            k.file = j
+        },
+        removeHook: function (i) {
+            if (this.loadHooks[i.file]) {
+                this.loadHooks[i.file].Remove(i);
+                if (!this.loadHooks[i.file].hooks.length) {
+                    delete this.loadHooks[i.file]
+                }
+            }
+        },
+        Preloading: function () {
+            for (var l = 0, j = arguments.length; l < j; l++) {
+                var k = this.fileURL(arguments[l]);
+                if (!this.loading[k]) {
+                    this.loading[k] = {
+                        preloaded: true
+                    }
+                }
+            }
+        },
+        loader: {
+            JS: function (k, m) {
+                var j = this.fileName(k);
+                var i = document.createElement("script");
+                var l = MathJax.Callback(["loadTimeout", this, k]);
+                this.loading[k] = {
+                    callback: m,
+                    timeout: setTimeout(l, this.timeout),
+                    status: this.STATUS.OK,
+                    script: i
+                };
+                this.loading[k].message = MathJax.Message.File(j);
+                i.onerror = l;
+                i.type = "text/javascript";
+                i.src = k + this.fileRev(j);
+                this.head.appendChild(i)
+            },
+            CSS: function (j, l) {
+                var i = this.fileName(j);
+                var k = document.createElement("link");
+                k.rel = "stylesheet";
+                k.type = "text/css";
+                k.href = j + this.fileRev(i);
+                this.loading[j] = {
+                    callback: l,
+                    message: MathJax.Message.File(i),
+                    status: this.STATUS.OK
+                };
+                this.head.appendChild(k);
+                this.timer.create.call(this, [this.timer.file, j], k)
+            }
+        },
+        timer: {
+            create: function (j, i) {
+                j = MathJax.Callback(j);
+                if (i.nodeName === "STYLE" && i.styleSheet && typeof (i.styleSheet.cssText) !== "undefined") {
+                    j(this.STATUS.OK)
+                } else {
+                    if (window.chrome && i.nodeName === "LINK") {
+                        j(this.STATUS.OK)
+                    } else {
+                        if (d) {
+                            this.timer.start(this, [this.timer.checkSafari2, g++, j], this.styleDelay)
+                        } else {
+                            this.timer.start(this, [this.timer.checkLength, i, j], this.styleDelay)
+                        }
+                    }
+                }
+                return j
+            },
+            start: function (j, i, k, l) {
+                i = MathJax.Callback(i);
+                i.execute = this.execute;
+                i.time = this.time;
+                i.STATUS = j.STATUS;
+                i.timeout = l || j.timeout;
+                i.delay = i.total = k || 0;
+                if (k) {
+                    setTimeout(i, k)
+                } else {
+                    i()
+                }
+            },
+            time: function (i) {
+                this.total += this.delay;
+                this.delay = Math.floor(this.delay * 1.05 + 5);
+                if (this.total >= this.timeout) {
+                    i(this.STATUS.ERROR);
+                    return 1
+                }
+                return 0
+            },
+            file: function (j, i) {
+                if (i < 0) {
+                    MathJax.Ajax.loadTimeout(j)
+                } else {
+                    MathJax.Ajax.loadComplete(j)
+                }
+            },
+            execute: function () {
+                this.hook.call(this.object, this, this.data[0], this.data[1])
+            },
+            checkSafari2: function (i, j, k) {
+                if (i.time(k)) {
+                    return
+                }
+                if (document.styleSheets.length > j && document.styleSheets[j].cssRules && document.styleSheets[j].cssRules.length) {
+                    k(i.STATUS.OK)
+                } else {
+                    setTimeout(i, i.delay)
+                }
+            },
+            checkLength: function (i, l, n) {
+                if (i.time(n)) {
+                    return
+                }
+                var m = 0;
+                var j = (l.sheet || l.styleSheet);
+                try {
+                    if ((j.cssRules || j.rules || []).length > 0) {
+                        m = 1
+                    }
+                } catch (k) {
+                    if (k.message.match(/protected variable|restricted URI/)) {
+                        m = 1
+                    } else {
+                        if (k.message.match(/Security error/)) {
+                            m = 1
+                        }
+                    }
+                }
+                if (m) {
+                    setTimeout(MathJax.Callback([n, i.STATUS.OK]), 0)
+                } else {
+                    setTimeout(i, i.delay)
+                }
+            }
+        },
+        loadComplete: function (i) {
+            i = this.fileURL(i);
+            var j = this.loading[i];
+            if (j && !j.preloaded) {
+                MathJax.Message.Clear(j.message);
+                clearTimeout(j.timeout);
+                if (j.script) {
+                    if (f.length === 0) {
+                        setTimeout(c, 0)
+                    }
+                    f.push(j.script)
+                }
+                this.loaded[i] = j.status;
+                delete this.loading[i];
+                this.addHook(i, j.callback)
+            } else {
+                if (j) {
+                    delete this.loading[i]
+                }
+                this.loaded[i] = this.STATUS.OK;
+                j = {
+                    status: this.STATUS.OK
+                }
+            }
+            if (!this.loadHooks[i]) {
+                return null
+            }
+            return this.loadHooks[i].Execute(j.status)
+        },
+        loadTimeout: function (i) {
+            if (this.loading[i].timeout) {
+                clearTimeout(this.loading[i].timeout)
+            }
+            this.loading[i].status = this.STATUS.ERROR;
+            this.loadError(i);
+            this.loadComplete(i)
+        },
+        loadError: function (i) {
+            MathJax.Message.Set(["LoadFailed", "File failed to load: %1", i], null, 2000);
+            MathJax.Hub.signal.Post(["file load error", i])
+        },
+        Styles: function (k, l) {
+            var i = this.StyleString(k);
+            if (i === "") {
+                l = MathJax.Callback(l);
+                l()
+            } else {
+                var j = document.createElement("style");
+                j.type = "text/css";
+                this.head = h(this.head);
+                this.head.appendChild(j);
+                if (j.styleSheet && typeof (j.styleSheet.cssText) !== "undefined") {
+                    j.styleSheet.cssText = i
+                } else {
+                    j.appendChild(document.createTextNode(i))
+                }
+                l = this.timer.create.call(this, l, j)
+            }
+            return l
+        },
+        StyleString: function (n) {
+            if (typeof (n) === "string") {
+                return n
+            }
+            var k = "", o, m;
+            for (o in n) {
+                if (n.hasOwnProperty(o)) {
+                    if (typeof n[o] === "string") {
+                        k += o + " {" + n[o] + "}\n"
+                    } else {
+                        if (MathJax.Object.isArray(n[o])) {
+                            for (var l = 0; l < n[o].length; l++) {
+                                m = {};
+                                m[o] = n[o][l];
+                                k += this.StyleString(m)
+                            }
+                        } else {
+                            if (o.substr(0, 6) === "@media") {
+                                k += o + " {" + this.StyleString(n[o]) + "}\n"
+                            } else {
+                                if (n[o] != null) {
+                                    m = [];
+                                    for (var j in n[o]) {
+                                        if (n[o].hasOwnProperty(j)) {
+                                            if (n[o][j] != null) {
+                                                m[m.length] = j + ": " + n[o][j]
+                                            }
+                                        }
+                                    }
+                                    k += o + " {" + m.join("; ") + "}\n"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return k
+        }
+    }
+}
+
+function loadScript() {
+    var mathJaxHub = MathJax.Hub;
+    var startup = mathJaxHub.Startup;
+    var config = mathJaxHub.config;
+    var g = document.head || (document.getElementsByTagName("head")[0]);
+    if (!g) {
+        g = document.childNodes[0]
+    }
+    var script = (document.documentElement || document).getElementsByTagName("script");
+    if (script.length === 0 && g.namespaceURI) {
+        script = document.getElementsByTagNameNS(g.namespaceURI, "script")
+    }
+    var f = new RegExp("(^|/)" + NAME_TAG + "\\.js(\\?.*)?$");
+    for (var q = script.length - 1; q >= 0; q--) {
+        if ((script[q].src || "").match(f)) {
+            startup.script = script[q].innerHTML;
+            if (RegExp.$2) {
+                var t = RegExp.$2.substr(1).split(/\&/);
+                for (var p = 0, l = t.length; p < l; p++) {
+                    var n = t[p].match(/(.*)=(.*)/);
+                    if (n) {
+                        startup.params[unescape(n[1])] = unescape(n[2])
+                    } else {
+                        startup.params[t[p]] = true
+                    }
+                }
+            }
+            config.root = script[q].src.replace(/(^|\/)[^\/]*(\?.*)?$/, "");
+            MathJax.Ajax.config.root = config.root;
+            MathJax.Ajax.params = startup.params;
+            break
+        }
+    }
+    var k = navigator.userAgent;
+    var a = {
+        isMac: (navigator.platform.substr(0, 3) === "Mac"),
+        isPC: (navigator.platform.substr(0, 3) === "Win"),
+        isMSIE: ("ActiveXObject" in window && "clipboardData" in window),
+        isEdge: ("MSGestureEvent" in window && "chrome" in window && window.chrome.loadTimes == null),
+        isFirefox: (!!k.match(/Gecko\//) && !k.match(/like Gecko/)),
+        isSafari: (!!k.match(/ (Apple)?WebKit\//) && !k.match(/ like iPhone /) && (!window.chrome || window.chrome.app == null)),
+        isChrome: ("chrome" in window && window.chrome.loadTimes != null),
+        isOpera: ("opera" in window && window.opera.version != null),
+        isKonqueror: ("konqueror" in window && navigator.vendor == "KDE"),
+        versionAtLeast: function (y) {
+            var x = (this.version).split(".");
+            y = (new String(y)).split(".");
+            for (var z = 0, j = y.length; z < j; z++) {
+                if (x[z] != y[z]) {
+                    return parseInt(x[z] || "0") >= parseInt(y[z])
+                }
+            }
+            return true
+        },
+        Select: function (j) {
+            var i = j[mathJaxHub.Browser];
+            if (i) {
+                return i(mathJaxHub.Browser)
+            }
+            return null
+        }
+    };
+    var e = k.replace(/^Mozilla\/(\d+\.)+\d+ /, "").replace(/[a-z][-a-z0-9._: ]+\/\d+[^ ]*-[^ ]*\.([a-z][a-z])?\d+ /i, "").replace(/Gentoo |Ubuntu\/(\d+\.)*\d+ (\([^)]*\) )?/, "");
+    mathJaxHub.Browser = mathJaxHub.Insert(mathJaxHub.Insert(new String("Unknown"), {
+        version: "0.0"
+    }), a);
+    for (var v in a) {
+        if (a.hasOwnProperty(v)) {
+            if (a[v] && v.substr(0, 2) === "is") {
+                v = v.slice(2);
+                if (v === "Mac" || v === "PC") {
+                    continue
+                }
+                mathJaxHub.Browser = mathJaxHub.Insert(new String(v), a);
+                var r = new RegExp(".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|.*(" + v + ")" + (v == "MSIE" ? " " : "/") + "((?:\\d+\\.)*\\d+)|(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");
+                var u = r.exec(e) || ["", "", "", "unknown", "0.0"];
+                mathJaxHub.Browser.name = (u[1] != "" ? v : (u[3] || u[5]));
+                mathJaxHub.Browser.version = u[2] || u[4] || u[6];
                 break
             }
         }
-        var k = navigator.userAgent;
-        var a = {
-            isMac: (navigator.platform.substr(0, 3) === "Mac"),
-            isPC: (navigator.platform.substr(0, 3) === "Win"),
-            isMSIE: ("ActiveXObject"in window && "clipboardData"in window),
-            isEdge: ("MSGestureEvent"in window && "chrome"in window && window.chrome.loadTimes == null),
-            isFirefox: (!!k.match(/Gecko\//) && !k.match(/like Gecko/)),
-            isSafari: (!!k.match(/ (Apple)?WebKit\//) && !k.match(/ like iPhone /) && (!window.chrome || window.chrome.app == null)),
-            isChrome: ("chrome"in window && window.chrome.loadTimes != null),
-            isOpera: ("opera"in window && window.opera.version != null),
-            isKonqueror: ("konqueror"in window && navigator.vendor == "KDE"),
-            versionAtLeast: function(y) {
-                var x = (this.version).split(".");
-                y = (new String(y)).split(".");
-                for (var z = 0, j = y.length; z < j; z++) {
-                    if (x[z] != y[z]) {
-                        return parseInt(x[z] || "0") >= parseInt(y[z])
-                    }
+    }
+    try {
+        mathJaxHub.Browser.Select({
+            Safari: function (j) {
+                var i = parseInt((String(j.version).split("."))[0]);
+                if (i > 85) {
+                    j.webkit = j.version
                 }
-                return true
-            },
-            Select: function(j) {
-                var i = j[d.Browser];
-                if (i) {
-                    return i(d.Browser)
-                }
-                return null
-            }
-        };
-        var e = k.replace(/^Mozilla\/(\d+\.)+\d+ /, "").replace(/[a-z][-a-z0-9._: ]+\/\d+[^ ]*-[^ ]*\.([a-z][a-z])?\d+ /i, "").replace(/Gentoo |Ubuntu\/(\d+\.)*\d+ (\([^)]*\) )?/, "");
-        d.Browser = d.Insert(d.Insert(new String("Unknown"), {
-            version: "0.0"
-        }), a);
-        for (var v in a) {
-            if (a.hasOwnProperty(v)) {
-                if (a[v] && v.substr(0, 2) === "is") {
-                    v = v.slice(2);
-                    if (v === "Mac" || v === "PC") {
-                        continue
-                    }
-                    d.Browser = d.Insert(new String(v), a);
-                    var r = new RegExp(".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|.*(" + v + ")" + (v == "MSIE" ? " " : "/") + "((?:\\d+\\.)*\\d+)|(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");
-                    var u = r.exec(e) || ["", "", "", "unknown", "0.0"];
-                    d.Browser.name = (u[1] != "" ? v : (u[3] || u[5]));
-                    d.Browser.version = u[2] || u[4] || u[6];
-                    break
-                }
-            }
-        }
-        try {
-            d.Browser.Select({
-                Safari: function(j) {
-                    var i = parseInt((String(j.version).split("."))[0]);
-                    if (i > 85) {
-                        j.webkit = j.version
-                    }
-                    if (i >= 538) {
-                        j.version = "8.0"
+                if (i >= 538) {
+                    j.version = "8.0"
+                } else {
+                    if (i >= 537) {
+                        j.version = "7.0"
                     } else {
-                        if (i >= 537) {
-                            j.version = "7.0"
+                        if (i >= 536) {
+                            j.version = "6.0"
                         } else {
-                            if (i >= 536) {
-                                j.version = "6.0"
+                            if (i >= 534) {
+                                j.version = "5.1"
                             } else {
-                                if (i >= 534) {
-                                    j.version = "5.1"
+                                if (i >= 533) {
+                                    j.version = "5.0"
                                 } else {
-                                    if (i >= 533) {
-                                        j.version = "5.0"
+                                    if (i >= 526) {
+                                        j.version = "4.0"
                                     } else {
-                                        if (i >= 526) {
-                                            j.version = "4.0"
+                                        if (i >= 525) {
+                                            j.version = "3.1"
                                         } else {
-                                            if (i >= 525) {
-                                                j.version = "3.1"
+                                            if (i > 500) {
+                                                j.version = "3.0"
                                             } else {
-                                                if (i > 500) {
-                                                    j.version = "3.0"
+                                                if (i > 400) {
+                                                    j.version = "2.0"
                                                 } else {
-                                                    if (i > 400) {
-                                                        j.version = "2.0"
-                                                    } else {
-                                                        if (i > 85) {
-                                                            j.version = "1.0"
-                                                        }
+                                                    if (i > 85) {
+                                                        j.version = "1.0"
                                                     }
                                                 }
                                             }
@@ -3295,47 +3344,47 @@ function loadLatex() {
                             }
                         }
                     }
-                    j.webkit = (navigator.appVersion.match(/WebKit\/(\d+)\./))[1];
-                    j.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
-                    j.noContextMenu = j.isMobile
-                },
-                Firefox: function(j) {
-                    if ((j.version === "0.0" || k.match(/Firefox/) == null) && navigator.product === "Gecko") {
-                        var m = k.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
-                        if (m) {
-                            j.version = m[1]
+                }
+                j.webkit = (navigator.appVersion.match(/WebKit\/(\d+)\./))[1];
+                j.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
+                j.noContextMenu = j.isMobile
+            },
+            Firefox: function (j) {
+                if ((j.version === "0.0" || k.match(/Firefox/) == null) && navigator.product === "Gecko") {
+                    var m = k.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
+                    if (m) {
+                        j.version = m[1]
+                    } else {
+                        var i = (navigator.buildID || navigator.productSub || "0").substr(0, 8);
+                        if (i >= "20111220") {
+                            j.version = "9.0"
                         } else {
-                            var i = (navigator.buildID || navigator.productSub || "0").substr(0, 8);
-                            if (i >= "20111220") {
-                                j.version = "9.0"
+                            if (i >= "20111120") {
+                                j.version = "8.0"
                             } else {
-                                if (i >= "20111120") {
-                                    j.version = "8.0"
+                                if (i >= "20110927") {
+                                    j.version = "7.0"
                                 } else {
-                                    if (i >= "20110927") {
-                                        j.version = "7.0"
+                                    if (i >= "20110816") {
+                                        j.version = "6.0"
                                     } else {
-                                        if (i >= "20110816") {
-                                            j.version = "6.0"
+                                        if (i >= "20110621") {
+                                            j.version = "5.0"
                                         } else {
-                                            if (i >= "20110621") {
-                                                j.version = "5.0"
+                                            if (i >= "20110320") {
+                                                j.version = "4.0"
                                             } else {
-                                                if (i >= "20110320") {
-                                                    j.version = "4.0"
+                                                if (i >= "20100121") {
+                                                    j.version = "3.6"
                                                 } else {
-                                                    if (i >= "20100121") {
-                                                        j.version = "3.6"
+                                                    if (i >= "20090630") {
+                                                        j.version = "3.5"
                                                     } else {
-                                                        if (i >= "20090630") {
-                                                            j.version = "3.5"
+                                                        if (i >= "20080617") {
+                                                            j.version = "3.0"
                                                         } else {
-                                                            if (i >= "20080617") {
-                                                                j.version = "3.0"
-                                                            } else {
-                                                                if (i >= "20061024") {
-                                                                    j.version = "2.0"
-                                                                }
+                                                            if (i >= "20061024") {
+                                                                j.version = "2.0"
                                                             }
                                                         }
                                                     }
@@ -3347,61 +3396,75 @@ function loadLatex() {
                             }
                         }
                     }
-                    j.isMobile = (navigator.appVersion.match(/Android/i) != null || k.match(/ Fennec\//) != null || k.match(/Mobile/) != null)
-                },
-                Chrome: function(i) {
-                    i.noContextMenu = i.isMobile = !!navigator.userAgent.match(/ Mobile[ \/]/)
-                },
-                Opera: function(i) {
-                    i.version = opera.version()
-                },
-                Edge: function(i) {
-                    i.isMobile = !!navigator.userAgent.match(/ Phone/)
-                },
-                MSIE: function(j) {
-                    j.isMobile = !!navigator.userAgent.match(/ Phone/);
-                    j.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
-                    MathJax.HTML.setScriptBug = !j.isIE9 || document.documentMode < 9;
-                    MathJax.Hub.msieHTMLCollectionBug = (document.documentMode < 9);
-                    if (document.documentMode < 10 && !s.params.NoMathPlayer) {
-                        try {
-                            new ActiveXObject("MathPlayer.Factory.1");
-                            j.hasMathPlayer = true
-                        } catch (m) {}
-                        try {
-                            if (j.hasMathPlayer) {
-                                var i = document.createElement("object");
-                                i.id = "mathplayer";
-                                i.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-                                g.appendChild(i);
-                                document.namespaces.add("m", "http://www.w3.org/1998/Math/MathML");
-                                j.mpNamespace = true;
-                                if (document.readyState && (document.readyState === "loading" || document.readyState === "interactive")) {
-                                    document.write('<?import namespace="m" implementation="#MathPlayer">');
-                                    j.mpImported = true
-                                }
-                            } else {
-                                document.namespaces.add("mjx_IE_fix", "http://www.w3.org/1999/xlink")
-                            }
-                        } catch (m) {}
-                    }
                 }
-            })
-        } catch (c) {
-            console.error(c.message)
-        }
-        d.Browser.Select(MathJax.Message.browsers);
-        if (h.AuthorConfig && typeof h.AuthorConfig.AuthorInit === "function") {
-            h.AuthorConfig.AuthorInit()
-        }
-        d.queue = h.Callback.Queue();
-        d.queue.Push(["Post", s.signal, "Begin"], ["Config", s], ["Cookie", s], ["Styles", s], ["Message", s], function() {
-            var i = h.Callback.Queue(s.Jax(), s.Extensions());
-            return i.Push({})
-        }, ["Menu", s], s.onLoad(), function() {
-            MathJax.isReady = true
-        }, ["Typeset", s], ["Hash", s], ["MenuZoom", s], ["Post", s.signal, "End"])
-    })("MathJax");
+                j.isMobile = (navigator.appVersion.match(/Android/i) != null || k.match(/ Fennec\//) != null || k.match(/Mobile/) != null)
+            },
+            Chrome: function (i) {
+                i.noContextMenu = i.isMobile = !!navigator.userAgent.match(/ Mobile[ \/]/)
+            },
+            Opera: function (i) {
+                i.version = opera.version()
+            },
+            Edge: function (i) {
+                i.isMobile = !!navigator.userAgent.match(/ Phone/)
+            },
+            MSIE: function (j) {
+                j.isMobile = !!navigator.userAgent.match(/ Phone/);
+                j.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
+                MathJax.HTML.setScriptBug = !j.isIE9 || document.documentMode < 9;
+                MathJax.Hub.msieHTMLCollectionBug = (document.documentMode < 9);
+                if (document.documentMode < 10 && !startup.params.NoMathPlayer) {
+                    try {
+                        new ActiveXObject("MathPlayer.Factory.1");
+                        j.hasMathPlayer = true
+                    } catch (m) { }
+                    try {
+                        if (j.hasMathPlayer) {
+                            var i = document.createElement("object");
+                            i.id = "mathplayer";
+                            i.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+                            g.appendChild(i);
+                            document.namespaces.add("m", "http://www.w3.org/1998/Math/MathML");
+                            j.mpNamespace = true;
+                            if (document.readyState && (document.readyState === "loading" || document.readyState === "interactive")) {
+                                document.write('<?import namespace="m" implementation="#MathPlayer">');
+                                j.mpImported = true
+                            }
+                        } else {
+                            document.namespaces.add("mjx_IE_fix", "http://www.w3.org/1999/xlink")
+                        }
+                    } catch (m) { }
+                }
+            }
+        })
+    } catch (c) {
+        console.error(c.message)
+    }
+    mathJaxHub.Browser.Select(MathJax.Message.browsers);
+    if (MathJax.AuthorConfig && typeof MathJax.AuthorConfig.AuthorInit === "function") {
+        MathJax.AuthorConfig.AuthorInit()
+    }
+    mathJaxHub.queue = MathJax.Callback.Queue();
+    mathJaxHub.queue.Push(
+        ["Post", startup.signal, "Begin"],
+        ["Config", startup],
+        ["Cookie", startup],
+        ["Styles", startup],
+        ["Message", startup],
+        function () {
+            var i = MathJax.Callback.Queue(startup.Jax(), startup.Extensions());
+            return i.Push({});
+        },
+        ["Menu", startup],
+        startup.onLoad(),
+        function () {
+            MathJax.isReady = true;
+        },
+        ["Typeset", startup],
+        ["Hash", startup],
+        ["MenuZoom", startup],
+        ["Post", startup.signal, "End"]
+    );
 }
 
 if (document.getElementById && document.childNodes && document.createElement) {
@@ -3413,6 +3476,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
         } else {
             window.MathJax = {}
         }
-        loadLatex();
+        createMathJax();
+        loadScript();
     }
 }
