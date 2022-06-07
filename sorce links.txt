@@ -6,6 +6,7 @@ https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/extensions/MathMenu.js?V=2.
 https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/extensions/MathZoom.js?V=2.7.2
 https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/extensions/MathEvents.js?V=2.7.2
 https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/jax/element/mml/jax.js?V=2.7.2
+https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/jax/element/mml/optable/BasicLatin.js?V=2.7.2
 https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/jax/output/CommonHTML/jax.js?V=2.7.2
 https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/jax/output/CommonHTML/autoload/mtable.js?V=2.7.2
 https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/jax/output/CommonHTML/autoload/multiline.js?V=2.7.2
