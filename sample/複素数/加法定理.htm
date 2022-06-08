@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<head>
+    <script type="text/javascript" src="../../script/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+	<div id="disp" style="width: 0px;">
+	\begin{align}
+	&e^{i(\alpha+\beta)}=e^{i\alpha}e^{i\beta} \\
+	&=(\cos\alpha + i\sin\alpha)(\cos\beta + i\sin\beta) \\
+	&=\cos\alpha\cdot\cos\beta
+		+ \cos\alpha\cdot i\sin\beta
+		+ i\sin\alpha\cdot\cos\beta
+		+ i\sin\alpha\cdot i\sin\beta \\
+	&=\cos\alpha\cdot\cos\beta - \sin\alpha\cdot\sin\beta
+		+ i\left(\sin\alpha\cdot\cos\beta + \cos\alpha\cdot\sin\beta\right) \\
+	\end{align}
+
+	\begin{align}
+	&e^{i(\alpha-\beta)}=e^{i\alpha}e^{-i\beta} \\
+	&=(\cos\alpha + i\sin\alpha)(\cos\beta - i\sin\beta) \\
+	&=\cos\alpha\cdot\cos\beta
+		- \cos\alpha\cdot i\sin\beta
+		+ i\sin\alpha\cdot\cos\beta
+		- i\sin\alpha\cdot i\sin\beta \\
+	&=\cos\alpha\cdot\cos\beta + \sin\alpha\cdot\sin\beta
+		+ i\left(\sin\alpha\cdot\cos\beta - \cos\alpha\cdot\sin\beta\right) \\
+	\end{align}
+
+	\begin{align}
+	&e^{-i(\alpha+\beta)}=e^{-i\alpha}e^{-i\beta} \\
+	&=(\cos\alpha - i\sin\alpha)(\cos\beta - i\sin\beta) \\
+	&=\cos\alpha\cdot\cos\beta
+		- \cos\alpha\cdot i\sin\beta
+		- i\sin\alpha\cdot\cos\beta
+		+ i\sin\alpha\cdot i\sin\beta \\
+	&=\cos\alpha\cdot\cos\beta - \sin\alpha\cdot\sin\beta
+		+ i\left(-\sin\alpha\cdot\cos\beta - \cos\alpha\cdot\sin\beta\right) \\
+	\end{align}
+
+	\begin{align}
+	&e^{-i(\alpha-\beta)}=e^{-i\alpha}e^{i\beta} \\
+	&=(\cos\alpha - i\sin\alpha)(\cos\beta + i\sin\beta) \\
+	&=\cos\alpha\cdot\cos\beta
+		+ \cos\alpha\cdot i\sin\beta
+		- i\sin\alpha\cdot\cos\beta
+		- i\sin\alpha\cdot i\sin\beta \\
+	&=\cos\alpha\cdot\cos\beta + \sin\alpha\cdot\sin\beta
+		+ i\left(-\sin\alpha\cdot\cos\beta + \cos\alpha\cdot\sin\beta\right) \\
+	\end{align}
+	</div>
+</body>
+</html>
