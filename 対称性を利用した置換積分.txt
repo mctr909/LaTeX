@@ -1,0 +1,4 @@
+\begin{align}
+    &\int^{b}_{a}f(x)dx = \int^{b}_{a}f(a+b-x)dx \\
+    &\int^{b}_{a}f(x)dx = \frac{1}{2}\int^{b}_{a}f(x)+f(a+b-x)dx
+\end{align}

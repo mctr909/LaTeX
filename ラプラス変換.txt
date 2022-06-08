@@ -1,0 +1,4 @@
+\begin{align}
+    &\mathfrak{L}(s) = \int^{\infty}_{0}f(t)e^{-st}dt \\
+    &s = c + i\omega
+\end{align}
