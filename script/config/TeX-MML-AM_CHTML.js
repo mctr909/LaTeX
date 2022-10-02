@@ -3541,7 +3541,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             s.showContext = s.settings.showContext
         }
         g.getCookie();
-        g.menu = g(c.SUBMENU(["Show", "Show Math As"], c.COMMAND(["MathMLcode", "MathML Code"], g.ShowSource, {
+        g.menu = g(c.SUBMENU(["Show", "Show Math As"],
+        c.COMMAND(["MathMLcode", "MathML Code"], g.ShowSource, {
             nativeTouch: true,
             format: "MathML"
         }), c.COMMAND(["Original", "Original Form"], g.ShowSource, {
