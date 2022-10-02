@@ -7,10 +7,17 @@
 <head>
     <script type="text/javascript" src="script/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <script type="text/javascript">
+        let mChange = true;
         function textarea(obj) {
             document.getElementById("disp").innerHTML = obj.value;
-            loadScript();
+            mChange = true;
         }
+        setInterval(function() {
+            if(mChange) {
+                loadScript();
+                mChange = false;
+            }
+        }, 1000);
     </script>
 </head>
 </html>
