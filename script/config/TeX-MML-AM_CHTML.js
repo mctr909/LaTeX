@@ -15,22 +15,22 @@ MathJax.InputJax.TeX = MathJax.InputJax({
         MultLineWidth: "85%",
         equationNumbers: {
             autoNumber: "none",
-            formatNumber: function(a) {
+            formatNumber: function (a) {
                 return a
             },
-            formatTag: function(a) {
+            formatTag: function (a) {
                 return "(" + a + ")"
             },
-            formatID: function(a) {
+            formatID: function (a) {
                 return "mjx-eqn-" + String(a).replace(/[:"'<>&]/g, "")
             },
-            formatURL: function(b, a) {
+            formatURL: function (b, a) {
                 return a + "#" + escape(b)
             },
             useLabelIds: true
         }
     },
-    resetEquationNumbers: function() {}
+    resetEquationNumbers: function () { }
 });
 MathJax.InputJax.TeX.Register("math/tex");
 MathJax.InputJax.TeX.loadComplete("config.js");
@@ -131,7 +131,7 @@ MathJax.Extension.tex2jax = {
         wbr: "",
         "#comment": ""
     },
-    PreProcess: function(a) {
+    PreProcess: function (a) {
         if (!this.configured) {
             this.config = MathJax.Hub.CombineConfig("tex2jax", this.config);
             if (this.config.Augment) {
@@ -152,11 +152,11 @@ MathJax.Extension.tex2jax = {
             this.scanElement(a, a.nextSibling)
         }
     },
-    createPatterns: function() {
+    createPatterns: function () {
         var d = [], e = [], c, a, b = this.config;
         this.match = {};
         for (c = 0,
-        a = b.inlineMath.length; c < a; c++) {
+            a = b.inlineMath.length; c < a; c++) {
             d.push(this.patternQuote(b.inlineMath[c][0]));
             this.match[b.inlineMath[c][0]] = {
                 mode: "",
@@ -165,7 +165,7 @@ MathJax.Extension.tex2jax = {
             }
         }
         for (c = 0,
-        a = b.displayMath.length; c < a; c++) {
+            a = b.displayMath.length; c < a; c++) {
             d.push(this.patternQuote(b.displayMath[c][0]));
             this.match[b.displayMath[c][0]] = {
                 mode: "; mode=display",
@@ -185,8 +185,8 @@ MathJax.Extension.tex2jax = {
         if (b.processRefs) {
             e.push("\\\\(eq)?ref\\{[^}]*\\}")
         }
-        this.start = new RegExp(e.join("|"),"g");
-        this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$","i");
+        this.start = new RegExp(e.join("|"), "g");
+        this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$", "i");
         var f = [];
         if (MathJax.Hub.config.preRemoveClass) {
             f.push(MathJax.Hub.config.preRemoveClass)
@@ -198,19 +198,19 @@ MathJax.Extension.tex2jax = {
         this.processClass = new RegExp("(^| )(" + b.processClass + ")( |$)");
         return (e.length > 0)
     },
-    patternQuote: function(a) {
+    patternQuote: function (a) {
         return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1")
     },
-    endPattern: function(a) {
-        return new RegExp(this.patternQuote(a) + "|\\\\.|[{}]","g")
+    endPattern: function (a) {
+        return new RegExp(this.patternQuote(a) + "|\\\\.|[{}]", "g")
     },
-    sortLength: function(d, c) {
+    sortLength: function (d, c) {
         if (d.length !== c.length) {
             return c.length - d.length
         }
         return (d == c ? 0 : (d < c ? -1 : 1))
     },
-    scanElement: function(c, b, g) {
+    scanElement: function (c, b, g) {
         var a, e, d, f;
         while (c && c != b) {
             if (c.nodeName.toLowerCase() === "#text") {
@@ -234,7 +234,7 @@ MathJax.Extension.tex2jax = {
             }
         }
     },
-    scanText: function(b) {
+    scanText: function (b) {
         if (b.nodeValue.replace(/\s+/, "") == "") {
             return b
         }
@@ -267,7 +267,7 @@ MathJax.Extension.tex2jax = {
         }
         return b
     },
-    startMatch: function(a, b) {
+    startMatch: function (a, b) {
         var f = this.match[a[0]];
         if (f != null) {
             this.search = {
@@ -322,7 +322,7 @@ MathJax.Extension.tex2jax = {
         }
         return b
     },
-    endMatch: function(a, c) {
+    endMatch: function (a, c) {
         var b = this.search;
         if (a[0] == b.end) {
             if (!b.close || b.pcount === 0) {
@@ -346,18 +346,18 @@ MathJax.Extension.tex2jax = {
         }
         return c
     },
-    prevEndMatch: function() {
+    prevEndMatch: function () {
         this.search.matched = true;
         var a = this.encloseMath(this.search.close);
         this.switchPattern(this.start);
         return a
     },
-    switchPattern: function(a) {
+    switchPattern: function (a) {
         a.lastIndex = this.pattern.lastIndex;
         this.pattern = a;
         this.search.start = (a === this.start)
     },
-    encloseMath: function(b) {
+    encloseMath: function (b) {
         var a = this.search, g = a.close, f, d, c;
         if (a.cpos === g.length) {
             g = g.nextSibling
@@ -395,11 +395,11 @@ MathJax.Extension.tex2jax = {
         }
         return d
     },
-    insertNode: function(b) {
+    insertNode: function (b) {
         var a = this.search;
         a.close.parentNode.insertBefore(b, a.close)
     },
-    createPreview: function(d, a) {
+    createPreview: function (d, a) {
         var b = MathJax.Hub.config.preRemoveClass;
         var c = this.config.preview;
         if (c === "none") {
@@ -418,14 +418,14 @@ MathJax.Extension.tex2jax = {
             this.insertNode(c)
         }
     },
-    createMathTag: function(c, b) {
+    createMathTag: function (c, b) {
         var a = document.createElement("script");
         a.type = "math/tex" + c;
         MathJax.HTML.setScript(a, b);
         this.insertNode(a);
         return a
     },
-    filterPreview: function(a) {
+    filterPreview: function (a) {
         return a
     }
 };
@@ -438,7 +438,7 @@ MathJax.Extension.mml2jax = {
         preview: "mathml"
     },
     MMLnamespace: "http://www.w3.org/1998/Math/MathML",
-    PreProcess: function(e) {
+    PreProcess: function (e) {
         if (!this.configured) {
             this.config = MathJax.Hub.CombineConfig("mml2jax", this.config);
             if (this.config.Augment) {
@@ -460,18 +460,18 @@ MathJax.Extension.mml2jax = {
         if (typeof (document.namespaces) !== "undefined") {
             try {
                 for (d = 0,
-                b = document.namespaces.length; d < b; d++) {
+                    b = document.namespaces.length; d < b; d++) {
                     var f = document.namespaces[d];
                     if (f.urn === this.MMLnamespace) {
                         this.PushMathElements(h, e, f.name + ":math")
                     }
                 }
-            } catch (g) {}
+            } catch (g) { }
         } else {
             var c = document.getElementsByTagName("html")[0];
             if (c) {
                 for (d = 0,
-                b = c.attributes.length; d < b; d++) {
+                    b = c.attributes.length; d < b; d++) {
                     var a = c.attributes[d];
                     if (a.nodeName.substr(0, 6) === "xmlns:" && a.nodeValue === this.MMLnamespace) {
                         this.PushMathElements(h, e, a.nodeName.substr(6) + ":math")
@@ -481,7 +481,7 @@ MathJax.Extension.mml2jax = {
         }
         this.ProcessMathArray(h)
     },
-    PushMathElements: function(f, d, a, c) {
+    PushMathElements: function (f, d, a, c) {
         var h, g = MathJax.Hub.config.preRemoveClass;
         if (c) {
             if (!d.getElementsByTagNameNS) {
@@ -498,7 +498,7 @@ MathJax.Extension.mml2jax = {
             }
         }
     },
-    ProcessMathArray: function(c) {
+    ProcessMathArray: function (c) {
         var b, a = c.length;
         if (a) {
             if (this.MathTagBug) {
@@ -516,7 +516,7 @@ MathJax.Extension.mml2jax = {
             }
         }
     },
-    ProcessMath: function(e) {
+    ProcessMath: function (e) {
         var d = e.parentNode;
         if (!d || d.className === MathJax.Hub.config.preRemoveClass) {
             return
@@ -541,7 +541,7 @@ MathJax.Extension.mml2jax = {
             this.createPreview(e, a)
         }
     },
-    ProcessMathFlattened: function(f) {
+    ProcessMathFlattened: function (f) {
         var d = f.parentNode;
         if (!d || d.className === MathJax.Hub.config.preRemoveClass) {
             return
@@ -564,7 +564,7 @@ MathJax.Extension.mml2jax = {
             this.createPreview(a, b)
         }
     },
-    NodeHTML: function(e) {
+    NodeHTML: function (e) {
         var c, b, a;
         if (e.nodeName === "#text") {
             c = this.quoteHTML(e.nodeValue)
@@ -574,7 +574,7 @@ MathJax.Extension.mml2jax = {
             } else {
                 c = "<" + e.nodeName.toLowerCase();
                 for (b = 0,
-                a = e.attributes.length; b < a; b++) {
+                    a = e.attributes.length; b < a; b++) {
                     var d = e.attributes[b];
                     if (d.specified && d.nodeName.substr(0, 10) !== "_moz-math-") {
                         c += " " + d.nodeName.toLowerCase().replace(/xmlns:xmlns/, "xmlns") + "=";
@@ -588,7 +588,7 @@ MathJax.Extension.mml2jax = {
                 c += ">";
                 if (e.outerHTML != null && e.outerHTML.match(/(.<\/[A-Z]+>|\/>)$/)) {
                     for (b = 0,
-                    a = e.childNodes.length; b < a; b++) {
+                        a = e.childNodes.length; b < a; b++) {
                         c += this.OuterHTML(e.childNodes[b])
                     }
                     c += "</" + e.nodeName.toLowerCase() + ">"
@@ -597,7 +597,7 @@ MathJax.Extension.mml2jax = {
         }
         return c
     },
-    OuterHTML: function(d) {
+    OuterHTML: function (d) {
         if (d.nodeName.charAt(0) === "#") {
             return this.NodeHTML(d)
         }
@@ -611,13 +611,13 @@ MathJax.Extension.mml2jax = {
         c += "</" + d.nodeName.toLowerCase() + ">";
         return c
     },
-    quoteHTML: function(a) {
+    quoteHTML: function (a) {
         if (a == null) {
             a = ""
         }
         return a.replace(/&/g, "&#x26;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;")
     },
-    createPreview: function(g, f) {
+    createPreview: function (g, f) {
         var e = this.config.preview;
         if (e === "none") {
             return
@@ -676,10 +676,10 @@ MathJax.Extension.mml2jax = {
             f.parentNode.insertBefore(h, f)
         }
     },
-    filterPreview: function(a) {
+    filterPreview: function (a) {
         return a
     },
-    InitBrowser: function() {
+    InitBrowser: function () {
         var b = MathJax.HTML.Element("span", {
             id: "<",
             className: "mathjax",
@@ -708,7 +708,7 @@ MathJax.Extension.asciimath2jax = {
         wbr: "",
         "#comment": ""
     },
-    PreProcess: function(a) {
+    PreProcess: function (a) {
         if (!this.configured) {
             this.config = MathJax.Hub.CombineConfig("asciimath2jax", this.config);
             if (this.config.Augment) {
@@ -726,14 +726,14 @@ MathJax.Extension.asciimath2jax = {
             this.scanElement(a, a.nextSibling)
         }
     },
-    createPatterns: function() {
+    createPatterns: function () {
         var d = [], c, a, b = this.config;
         this.match = {};
         if (b.delimiters.length === 0) {
             return false
         }
         for (c = 0,
-        a = b.delimiters.length; c < a; c++) {
+            a = b.delimiters.length; c < a; c++) {
             d.push(this.patternQuote(b.delimiters[c][0]));
             this.match[b.delimiters[c][0]] = {
                 mode: "",
@@ -741,8 +741,8 @@ MathJax.Extension.asciimath2jax = {
                 pattern: this.endPattern(b.delimiters[c][1])
             }
         }
-        this.start = new RegExp(d.sort(this.sortLength).join("|"),"g");
-        this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$","i");
+        this.start = new RegExp(d.sort(this.sortLength).join("|"), "g");
+        this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$", "i");
         var e = [];
         if (MathJax.Hub.config.preRemoveClass) {
             e.push(MathJax.Hub.config.preRemoveClass)
@@ -754,19 +754,19 @@ MathJax.Extension.asciimath2jax = {
         this.processClass = new RegExp("(^| )(" + b.processClass + ")( |$)");
         return true
     },
-    patternQuote: function(a) {
+    patternQuote: function (a) {
         return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1")
     },
-    endPattern: function(a) {
-        return new RegExp(this.patternQuote(a) + "|\\\\.","g")
+    endPattern: function (a) {
+        return new RegExp(this.patternQuote(a) + "|\\\\.", "g")
     },
-    sortLength: function(d, c) {
+    sortLength: function (d, c) {
         if (d.length !== c.length) {
             return c.length - d.length
         }
         return (d == c ? 0 : (d < c ? -1 : 1))
     },
-    scanElement: function(c, b, g) {
+    scanElement: function (c, b, g) {
         var a, e, d, f;
         while (c && c != b) {
             if (c.nodeName.toLowerCase() === "#text") {
@@ -790,7 +790,7 @@ MathJax.Extension.asciimath2jax = {
             }
         }
     },
-    scanText: function(b) {
+    scanText: function (b) {
         if (b.nodeValue.replace(/\s+/, "") == "") {
             return b
         }
@@ -823,7 +823,7 @@ MathJax.Extension.asciimath2jax = {
         }
         return b
     },
-    startMatch: function(a, b) {
+    startMatch: function (a, b) {
         var c = this.match[a[0]];
         if (c != null) {
             this.search = {
@@ -837,7 +837,7 @@ MathJax.Extension.asciimath2jax = {
         }
         return b
     },
-    endMatch: function(a, b) {
+    endMatch: function (a, b) {
         if (a[0] == this.search.end) {
             this.search.close = b;
             this.search.cpos = this.pattern.lastIndex;
@@ -848,12 +848,12 @@ MathJax.Extension.asciimath2jax = {
         }
         return b
     },
-    switchPattern: function(a) {
+    switchPattern: function (a) {
         a.lastIndex = this.pattern.lastIndex;
         this.pattern = a;
         this.search.start = (a === this.start)
     },
-    encloseMath: function(b) {
+    encloseMath: function (b) {
         var a = this.search, g = a.close, f, d, c;
         if (a.cpos === g.length) {
             g = g.nextSibling
@@ -891,11 +891,11 @@ MathJax.Extension.asciimath2jax = {
         }
         return d
     },
-    insertNode: function(b) {
+    insertNode: function (b) {
         var a = this.search;
         a.close.parentNode.insertBefore(b, a.close)
     },
-    createPreview: function(d, a) {
+    createPreview: function (d, a) {
         var b = MathJax.Hub.config.preRemoveClass;
         var c = this.config.preview;
         if (c === "none") {
@@ -914,21 +914,21 @@ MathJax.Extension.asciimath2jax = {
             this.insertNode(c)
         }
     },
-    createMathTag: function(c, a) {
+    createMathTag: function (c, a) {
         var b = document.createElement("script");
         b.type = "math/asciimath" + c;
         MathJax.HTML.setScript(b, a);
         this.insertNode(b);
         return b
     },
-    filterPreview: function(a) {
+    filterPreview: function (a) {
         return a
     }
 };
 MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.asciimath2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 
-(function(d, h, l, g, m, b, j) {
+(function (d, h, l, g, m, b, j) {
     var p = "2.7.2";
     var i = MathJax.Extension;
     var c = i.MathEvents = {
@@ -1012,31 +1012,31 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             RIGHT: 39,
             DOWN: 40
         },
-        Mousedown: function(q) {
+        Mousedown: function (q) {
             return n.Handler(q, "Mousedown", this)
         },
-        Mouseup: function(q) {
+        Mouseup: function (q) {
             return n.Handler(q, "Mouseup", this)
         },
-        Mousemove: function(q) {
+        Mousemove: function (q) {
             return n.Handler(q, "Mousemove", this)
         },
-        Mouseover: function(q) {
+        Mouseover: function (q) {
             return n.Handler(q, "Mouseover", this)
         },
-        Mouseout: function(q) {
+        Mouseout: function (q) {
             return n.Handler(q, "Mouseout", this)
         },
-        Click: function(q) {
+        Click: function (q) {
             return n.Handler(q, "Click", this)
         },
-        DblClick: function(q) {
+        DblClick: function (q) {
             return n.Handler(q, "DblClick", this)
         },
-        Menu: function(q) {
+        Menu: function (q) {
             return n.Handler(q, "ContextMenu", this)
         },
-        Handler: function(t, r, s) {
+        Handler: function (t, r, s) {
             if (l.loadingMathMenu) {
                 return n.False(t)
             }
@@ -1052,7 +1052,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 return i.MathZoom.HandleEvent(t, r, s)
             }
         },
-        False: function(q) {
+        False: function (q) {
             if (!q) {
                 q = window.event
             }
@@ -1069,7 +1069,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return false
         },
-        Keydown: function(r, q) {
+        Keydown: function (r, q) {
             if (!r) {
                 r = window.event
             }
@@ -1077,9 +1077,9 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 n.ContextMenu(r, this)
             }
         },
-        ContextMenu: function(t, E, w) {
+        ContextMenu: function (t, E, w) {
             var B = b[E.jaxID]
-              , v = B.getJaxFromMath(E);
+                , v = B.getJaxFromMath(E);
             var F = (B.config.showMathMenu != null ? B : d).config.showMathMenu;
             if (!F || (k.context !== "MathJax" && !w)) {
                 return
@@ -1128,7 +1128,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                     return u.menu.Post(t)
                 }
                 u.loadingDomain = true;
-                D = function() {
+                D = function () {
                     delete u.loadingDomain
                 }
             } else {
@@ -1137,7 +1137,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
                 l.loadingMathMenu = true;
                 G = l.Require("[MathJax]/extensions/MathMenu.js");
-                D = function() {
+                D = function () {
                     delete l.loadingMathMenu;
                     if (!MathJax.Menu) {
                         MathJax.Menu = {}
@@ -1153,7 +1153,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             g.Queue(G, D, ["ContextMenu", n, C, E, w]);
             return n.False(t)
         },
-        AltContextMenu: function(s, r) {
+        AltContextMenu: function (s, r) {
             var t = b[r.jaxID];
             var q = (t.config.showMathMenu != null ? t : d).config.showMathMenu;
             if (q) {
@@ -1170,7 +1170,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 return t.ContextMenu(s, r, true)
             }
         },
-        ClearSelection: function() {
+        ClearSelection: function () {
             if (c.safariContextMenuBug) {
                 setTimeout("window.getSelection().empty()", 0)
             }
@@ -1178,11 +1178,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 setTimeout("document.selection.empty()", 0)
             }
         },
-        getBBox: function(s) {
+        getBBox: function (s) {
             s.appendChild(c.topImg);
             var r = c.topImg.offsetTop
-              , t = s.offsetHeight - r
-              , q = s.offsetWidth;
+                , t = s.offsetHeight - r
+                , q = s.offsetWidth;
             s.removeChild(c.topImg);
             return {
                 w: q,
@@ -1192,10 +1192,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
     };
     var f = c.Hover = {
-        Mouseover: function(s, r) {
+        Mouseover: function (s, r) {
             if (k.discoverable || k.zoom === "Hover") {
                 var u = s.fromElement || s.relatedTarget
-                  , t = s.toElement || s.target;
+                    , t = s.toElement || s.target;
                 if (u && t && (d.isMathJaxNode(u) !== d.isMathJaxNode(t) || d.getJaxFor(u) !== d.getJaxFor(t))) {
                     var q = this.getJaxFromMath(r);
                     if (q.hover) {
@@ -1207,10 +1207,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             }
         },
-        Mouseout: function(s, r) {
+        Mouseout: function (s, r) {
             if (k.discoverable || k.zoom === "Hover") {
                 var u = s.fromElement || s.relatedTarget
-                  , t = s.toElement || s.target;
+                    , t = s.toElement || s.target;
                 if (u && t && (d.isMathJaxNode(u) !== d.isMathJaxNode(t) || d.getJaxFor(u) !== d.getJaxFor(t))) {
                     var q = this.getJaxFromMath(r);
                     if (q.hover) {
@@ -1222,7 +1222,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             }
         },
-        Mousemove: function(s, r) {
+        Mousemove: function (s, r) {
             if (k.discoverable || k.zoom === "Hover") {
                 var q = this.getJaxFromMath(r);
                 if (q.hover) {
@@ -1237,27 +1237,27 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 return n.False(s)
             }
         },
-        HoverTimer: function(q, r) {
+        HoverTimer: function (q, r) {
             this.ClearHoverTimer();
             this.hoverTimer = setTimeout(g(["Hover", this, q, r]), o.hover)
         },
-        ClearHoverTimer: function() {
+        ClearHoverTimer: function () {
             if (this.hoverTimer) {
                 clearTimeout(this.hoverTimer);
                 delete this.hoverTimer
             }
         },
-        Hover: function(q, u) {
+        Hover: function (q, u) {
             if (i.MathZoom && i.MathZoom.Hover({}, u)) {
                 return
             }
             var t = b[q.outputJax]
-              , v = t.getHoverSpan(q, u)
-              , y = t.getHoverBBox(q, v, u)
-              , w = (t.config.showMathMenu != null ? t : d).config.showMathMenu;
+                , v = t.getHoverSpan(q, u)
+                , y = t.getHoverBBox(q, v, u)
+                , w = (t.config.showMathMenu != null ? t : d).config.showMathMenu;
             var A = o.frame.x
-              , z = o.frame.y
-              , x = o.frame.bwidth;
+                , z = o.frame.y
+                , x = o.frame.bwidth;
             if (c.msieBorderWidthBug) {
                 x = 0
             }
@@ -1330,24 +1330,24 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             this.ReHover(q)
         },
-        ReHover: function(q) {
+        ReHover: function (q) {
             if (q.hover.remove) {
                 clearTimeout(q.hover.remove)
             }
             q.hover.remove = setTimeout(g(["UnHover", this, q]), o.fadeoutDelay);
             this.HoverFadeTimer(q, o.fadeinInc)
         },
-        UnHover: function(q) {
+        UnHover: function (q) {
             if (!q.hover.nofade) {
                 this.HoverFadeTimer(q, -o.fadeoutInc, o.fadeoutStart)
             }
         },
-        HoverFade: function(q) {
+        HoverFade: function (q) {
             delete q.hover.timer;
             q.hover.opacity = Math.max(0, Math.min(1, q.hover.opacity + q.hover.inc));
             q.hover.opacity = Math.floor(1000 * q.hover.opacity) / 1000;
             var s = document.getElementById(q.hover.id)
-              , r = document.getElementById(q.hover.id + "Menu");
+                , r = document.getElementById(q.hover.id + "Menu");
             s.firstChild.style.opacity = q.hover.opacity;
             s.firstChild.style.filter = "alpha(opacity=" + Math.floor(100 * q.hover.opacity) + ")";
             if (r) {
@@ -1370,19 +1370,19 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             delete q.hover
         },
-        HoverFadeTimer: function(q, s, r) {
+        HoverFadeTimer: function (q, s, r) {
             q.hover.inc = s;
             if (!q.hover.timer) {
                 q.hover.timer = setTimeout(g(["HoverFade", this, q]), (r || o.fadeDelay))
             }
         },
-        HoverMenu: function(q) {
+        HoverMenu: function (q) {
             if (!q) {
                 q = window.event
             }
             return b[this.jax].ContextMenu(q, this.math, true)
         },
-        ClearHover: function(q) {
+        ClearHover: function (q) {
             if (q.hover.remove) {
                 clearTimeout(q.hover.remove)
             }
@@ -1392,13 +1392,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             f.ClearHoverTimer();
             delete q.hover
         },
-        Px: function(q) {
+        Px: function (q) {
             if (Math.abs(q) < 0.006) {
                 return "0px"
             }
             return q.toFixed(2).replace(/\.?0+$/, "") + "px"
         },
-        getImages: function() {
+        getImages: function () {
             if (k.discoverable) {
                 var q = new Image();
                 q.src = o.button.src
@@ -1408,7 +1408,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
     var a = c.Touch = {
         last: 0,
         delay: 500,
-        start: function(r) {
+        start: function (r) {
             var q = new Date().getTime();
             var s = (q - a.last < a.delay && a.up);
             a.last = q;
@@ -1418,7 +1418,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 r.preventDefault()
             }
         },
-        end: function(r) {
+        end: function (r) {
             var q = new Date().getTime();
             a.up = (q - a.last < a.delay);
             if (a.timeout) {
@@ -1430,7 +1430,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 return n.Handler((r.touches[0] || r.touch), "DblClick", this)
             }
         },
-        menu: function(r, q) {
+        menu: function (r, q) {
             delete a.timeout;
             a.last = 0;
             a.up = false;
@@ -1438,7 +1438,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
     };
     d.Browser.Select({
-        MSIE: function(q) {
+        MSIE: function (q) {
             var s = (document.documentMode || 0);
             var r = q.versionAtLeast("8.0");
             c.msieBorderWidthBug = (document.compatMode === "BackCompat");
@@ -1448,13 +1448,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 n.LEFTBUTTON = 1
             }
         },
-        Safari: function(q) {
+        Safari: function (q) {
             c.safariContextMenuBug = true
         },
-        Opera: function(q) {
+        Opera: function (q) {
             c.operaPositionBug = true
         },
-        Konqueror: function(q) {
+        Konqueror: function (q) {
             c.noContextMenuBug = true
         }
     });
@@ -1476,7 +1476,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         c.topImg.style.border = "1px solid"
     }
     c.config = o = d.CombineConfig("MathEvents", o);
-    var e = function() {
+    var e = function () {
         var q = o.styles[".MathJax_Hover_Frame"];
         q.border = o.frame.bwidth + "px solid " + o.frame.bcolor + " ! important";
         q["box-shadow"] = q["-webkit-box-shadow"] = q["-moz-box-shadow"] = q["-khtml-box-shadow"] = "0px 0px " + o.frame.hwidth + " " + o.frame.hcolor
@@ -1485,7 +1485,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.Callback, MathJax.Localization, MathJax.OutputJax, MathJax.InputJax);
 
-(function(a, d, f, c, j) {
+(function (a, d, f, c, j) {
     var k = "2.7.2";
     var i = a.CombineConfig("MathZoom", {
         styles: {
@@ -1555,7 +1555,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
     });
     var e, b, g;
-    MathJax.Hub.Register.StartupHook("MathEvents Ready", function() {
+    MathJax.Hub.Register.StartupHook("MathEvents Ready", function () {
         g = MathJax.Extension.MathEvents.Event;
         e = MathJax.Extension.MathEvents.Event.False;
         b = MathJax.Extension.MathEvents.Hover
@@ -1564,7 +1564,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         version: k,
         settings: a.config.menuSettings,
         scrollSize: 18,
-        HandleEvent: function(n, l, m) {
+        HandleEvent: function (n, l, m) {
             if (h.settings.CTRL && !n.ctrlKey) {
                 return true
             }
@@ -1582,24 +1582,24 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return h[l](n, m)
         },
-        Click: function(m, l) {
+        Click: function (m, l) {
             if (this.settings.zoom === "Click") {
                 return this.Zoom(m, l)
             }
         },
-        DblClick: function(m, l) {
+        DblClick: function (m, l) {
             if (this.settings.zoom === "Double-Click" || this.settings.zoom === "DoubleClick") {
                 return this.Zoom(m, l)
             }
         },
-        Hover: function(m, l) {
+        Hover: function (m, l) {
             if (this.settings.zoom === "Hover") {
                 this.Zoom(m, l);
                 return true
             }
             return false
         },
-        Zoom: function(o, u) {
+        Zoom: function (o, u) {
             this.Remove();
             b.ClearHoverTimer();
             g.ClearSelection();
@@ -1610,7 +1610,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             var q = this.findContainer(u);
             var l = Math.floor(0.85 * q.clientWidth)
-              , t = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+                , t = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
             if (this.getOverflow(q) !== "visible") {
                 t = Math.min(q.clientHeight, t)
             }
@@ -1634,8 +1634,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             }]]]]);
             var z = n.lastChild
-              , w = z.firstChild
-              , r = n.firstChild;
+                , w = z.firstChild
+                , r = n.firstChild;
             u.parentNode.insertBefore(n, u);
             u.parentNode.insertBefore(u, n);
             if (w.addEventListener) {
@@ -1714,29 +1714,29 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             a.signal.Post(["math zoomed", p]);
             return e(o)
         },
-        Position: function(p, r) {
+        Position: function (p, r) {
             p.style.display = "none";
             var q = this.Resize()
-              , m = q.x
-              , s = q.y
-              , l = r.mW;
+                , m = q.x
+                , s = q.y
+                , l = r.mW;
             p.style.display = "";
             var o = -l - Math.floor((p.offsetWidth - l) / 2)
-              , n = r.Y;
+                , n = r.Y;
             p.style.left = Math.max(o, 10 - m) + "px";
             p.style.top = Math.max(n, 10 - s) + "px";
             if (!h.msiePositionBug) {
                 h.SetWH()
             }
         },
-        Resize: function(m) {
+        Resize: function (m) {
             if (h.onresize) {
                 h.onresize(m)
             }
             var q = document.getElementById("MathJax_ZoomFrame")
-              , l = document.getElementById("MathJax_ZoomOverlay");
+                , l = document.getElementById("MathJax_ZoomOverlay");
             var o = h.getXY(q)
-              , n = h.findContainer(q);
+                , n = h.findContainer(q);
             if (h.getOverflow(n) !== "visible") {
                 l.scroll_parent = n;
                 var p = h.getXY(n);
@@ -1755,7 +1755,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return o
         },
-        SetWH: function() {
+        SetWH: function () {
             var l = document.getElementById("MathJax_ZoomOverlay");
             if (!l) {
                 return
@@ -1766,23 +1766,23 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             l.style.height = Math.max(m.clientHeight, m.scrollHeight) + "px";
             l.style.display = ""
         },
-        findContainer: function(l) {
+        findContainer: function (l) {
             l = l.parentNode;
             while (l.parentNode && l !== document.body && h.getOverflow(l) === "visible") {
                 l = l.parentNode
             }
             return l
         },
-        getOverflow: (window.getComputedStyle ? function(l) {
+        getOverflow: (window.getComputedStyle ? function (l) {
             return getComputedStyle(l).overflow
         }
-        : function(l) {
-            return (l.currentStyle || {
-                overflow: "visible"
-            }).overflow
-        }
+            : function (l) {
+                return (l.currentStyle || {
+                    overflow: "visible"
+                }).overflow
+            }
         ),
-        getBorder: function(o) {
+        getBorder: function (o) {
             var m = {
                 thin: 1,
                 medium: 2,
@@ -1793,7 +1793,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 borderTopWidth: 0
             }));
             var l = n.borderLeftWidth
-              , p = n.borderTopWidth;
+                , p = n.borderTopWidth;
             if (m[l]) {
                 l = m[l]
             } else {
@@ -1809,7 +1809,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 y: p
             }
         },
-        getXY: function(o) {
+        getXY: function (o) {
             var l = 0, n = 0, m;
             m = o;
             while (m.offsetParent) {
@@ -1832,7 +1832,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 y: n
             }
         },
-        Remove: function(n) {
+        Remove: function (n) {
             var p = document.getElementById("MathJax_ZoomFrame");
             if (p) {
                 var o = MathJax.OutputJax[p.previousSibling.jaxID];
@@ -1873,7 +1873,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
     };
     a.Browser.Select({
-        MSIE: function(l) {
+        MSIE: function (l) {
             var n = (document.documentMode || 0);
             var m = (n >= 9);
             h.msiePositionBug = !m;
@@ -1888,7 +1888,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 delete i.styles["#MathJax_Zoom"].filter
             }
         },
-        Opera: function(l) {
+        Opera: function (l) {
             h.operaPositionBug = true;
             h.operaRefreshBug = true
         }
@@ -1914,20 +1914,20 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.OutputJax["HTML-CSS"], MathJax.OutputJax.NativeMML);
 
-(function(f, o, q, e, r) {
+(function (f, o, q, e, r) {
     var p = "2.7.2";
     var d = MathJax.Callback.Signal("menu");
     MathJax.Extension.MathMenu = {
         version: p,
         signal: d
     };
-    var t = function(u) {
+    var t = function (u) {
         return MathJax.Localization._.apply(MathJax.Localization, [["MathMenu", u]].concat([].slice.call(arguments, 1)))
     };
     var i = MathJax.Object.isArray;
     var a = f.Browser.isPC
-      , l = f.Browser.isMSIE
-      , m = ((document.documentMode || 0) > 8);
+        , l = f.Browser.isMSIE
+        , m = ((document.documentMode || 0) > 8);
     var j = (a ? null : "5px");
     var s = f.CombineConfig("MathMenu", {
         delay: 150,
@@ -2130,45 +2130,45 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
     });
     var n, k, b;
-    f.Register.StartupHook("MathEvents Ready", function() {
+    f.Register.StartupHook("MathEvents Ready", function () {
         n = MathJax.Extension.MathEvents.Event.False;
         k = MathJax.Extension.MathEvents.Hover;
         b = MathJax.Extension.MathEvents.Event.KEY
     });
     var h = MathJax.Object.Subclass({
-        Keydown: function(u, v) {
+        Keydown: function (u, v) {
             switch (u.keyCode) {
-            case b.ESCAPE:
-                this.Remove(u, v);
-                break;
-            case b.RIGHT:
-                this.Right(u, v);
-                break;
-            case b.LEFT:
-                this.Left(u, v);
-                break;
-            case b.UP:
-                this.Up(u, v);
-                break;
-            case b.DOWN:
-                this.Down(u, v);
-                break;
-            case b.RETURN:
-            case b.SPACE:
-                this.Space(u, v);
-                break;
-            default:
-                return;
-                break
+                case b.ESCAPE:
+                    this.Remove(u, v);
+                    break;
+                case b.RIGHT:
+                    this.Right(u, v);
+                    break;
+                case b.LEFT:
+                    this.Left(u, v);
+                    break;
+                case b.UP:
+                    this.Up(u, v);
+                    break;
+                case b.DOWN:
+                    this.Down(u, v);
+                    break;
+                case b.RETURN:
+                case b.SPACE:
+                    this.Space(u, v);
+                    break;
+                default:
+                    return;
+                    break
             }
             return n(u)
         },
-        Escape: function(u, v) {},
-        Right: function(u, v) {},
-        Left: function(u, v) {},
-        Up: function(u, v) {},
-        Down: function(u, v) {},
-        Space: function(u, v) {}
+        Escape: function (u, v) { },
+        Right: function (u, v) { },
+        Left: function (u, v) { },
+        Up: function (u, v) { },
+        Down: function (u, v) { },
+        Space: function (u, v) { }
     }, {});
     var g = MathJax.Menu = h.Subclass({
         version: p,
@@ -2176,16 +2176,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         posted: false,
         title: null,
         margin: 5,
-        Init: function(u) {
+        Init: function (u) {
             this.items = [].slice.call(arguments, 0)
         },
-        With: function(u) {
+        With: function (u) {
             if (u) {
                 f.Insert(this, u)
             }
             return this
         },
-        Post: function(M, E, B) {
+        Post: function (M, E, B) {
             if (!M) {
                 M = window.event || {}
             }
@@ -2234,13 +2234,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 v.style.width = (v.offsetWidth + 2) + "px"
             }
             var H = M.pageX
-              , F = M.pageY;
+                , F = M.pageY;
             var u = document.body.getBoundingClientRect();
             var C = (window.getComputedStyle ? window.getComputedStyle(document.body) : {
                 marginLeft: "0px"
             });
             var A = u.right - Math.min(0, u.left) + parseFloat(C.marginLeft);
-            if (!H && !F && "clientX"in M) {
+            if (!H && !F && "clientX" in M) {
                 H = M.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
                 F = M.clientY + document.body.scrollTop + document.documentElement.scrollTop
             }
@@ -2263,7 +2263,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 g.skipUp = M.isContextMenu
             } else {
                 var z = "left"
-                  , J = E.offsetWidth;
+                    , J = E.offsetWidth;
                 H = (g.isMobile ? 30 : J - 2);
                 F = 0;
                 while (E && E !== I) {
@@ -2294,14 +2294,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             g.Focus(v);
             if (M.type === "keydown") {
                 g.skipMouseoverFromKey = true;
-                setTimeout(function() {
+                setTimeout(function () {
                     delete g.skipMouseoverFromKey
                 }, s.delay)
             }
             window.scrollTo(G, D);
             return n(M)
         },
-        Remove: function(u, v) {
+        Remove: function (u, v) {
             d.Post(["unpost", g.jax]);
             var w = document.getElementById("MathJax_MenuFrame");
             if (w) {
@@ -2320,13 +2320,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return n(u)
         },
-        Find: function(u) {
+        Find: function (u) {
             return this.FindN(1, u, [].slice.call(arguments, 1))
         },
-        FindId: function(u) {
+        FindId: function (u) {
             return this.FindN(0, u, [].slice.call(arguments, 1))
         },
-        FindN: function(y, v, x) {
+        FindN: function (y, v, x) {
             for (var w = 0, u = this.items.length; w < u; w++) {
                 if (this.items[w].name[y] === v) {
                     if (x.length) {
@@ -2340,13 +2340,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return null
         },
-        IndexOf: function(u) {
+        IndexOf: function (u) {
             return this.IndexOfN(1, u)
         },
-        IndexOfId: function(u) {
+        IndexOfId: function (u) {
             return this.IndexOfN(0, u)
         },
-        IndexOfN: function(x, v) {
+        IndexOfN: function (x, v) {
             for (var w = 0, u = this.items.length; w < u; w++) {
                 if (this.items[w].name[x] === v) {
                     return w
@@ -2354,53 +2354,53 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return null
         },
-        Right: function(u, v) {
+        Right: function (u, v) {
             g.Right(u, v)
         },
-        Left: function(u, v) {
+        Left: function (u, v) {
             g.Left(u, v)
         },
-        Up: function(v, w) {
+        Up: function (v, w) {
             var u = w.lastChild;
             u.menuItem.Activate(v, u)
         },
-        Down: function(v, w) {
+        Down: function (v, w) {
             var u = w.firstChild;
             u.menuItem.Activate(v, u)
         },
-        Space: function(u, v) {
+        Space: function (u, v) {
             this.Remove(u, v)
         }
     }, {
         config: s,
-        Remove: function(u) {
+        Remove: function (u) {
             return g.Event(u, this, "Remove")
         },
-        Mouseover: function(u) {
+        Mouseover: function (u) {
             return g.Event(u, this, "Mouseover")
         },
-        Mouseout: function(u) {
+        Mouseout: function (u) {
             return g.Event(u, this, "Mouseout")
         },
-        Mousedown: function(u) {
+        Mousedown: function (u) {
             return g.Event(u, this, "Mousedown")
         },
-        Mouseup: function(u) {
+        Mouseup: function (u) {
             return g.Event(u, this, "Mouseup")
         },
-        Keydown: function(u) {
+        Keydown: function (u) {
             return g.Event(u, this, "Keydown")
         },
-        Touchstart: function(u) {
+        Touchstart: function (u) {
             return g.Event(u, this, "Touchstart")
         },
-        Touchend: function(u) {
+        Touchend: function (u) {
             return g.Event(u, this, "Touchend")
         },
-        Close: function(u) {
+        Close: function (u) {
             return g.Event(u, this.menu || this.parentNode, (this.menu ? "Touchend" : "Remove"))
         },
-        Event: function(w, y, u, x) {
+        Event: function (w, y, u, x) {
             if (g.skipMouseover && u === "Mouseover" && !x) {
                 return n(w)
             }
@@ -2437,7 +2437,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             padding: 0,
             margin: 0
         },
-        Background: function(v) {
+        Background: function (v) {
             var w = o.addElement(document.body, "div", {
                 style: this.BGSTYLE,
                 id: "MathJax_MenuFrame"
@@ -2460,10 +2460,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return w
         },
-        Resize: function() {
+        Resize: function () {
             setTimeout(g.SetWH, 0)
         },
-        SetWH: function() {
+        SetWH: function () {
             var u = document.getElementById("MathJax_MenuFrame");
             if (u) {
                 u = u.firstChild;
@@ -2474,14 +2474,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         },
         posted: false,
         active: null,
-        GetNode: function(u) {
+        GetNode: function (u) {
             var v = document.getElementById(u.inputID + "-Frame");
             return v.isMathJax ? v : v.firstChild
         },
-        CurrentNode: function() {
+        CurrentNode: function () {
             return g.GetNode(g.jax)
         },
-        AllNodes: function() {
+        AllNodes: function () {
             var v = MathJax.Hub.getAllJax();
             var w = [];
             for (var x = 0, u; u = v[x]; x++) {
@@ -2489,29 +2489,29 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return w
         },
-        ActiveNode: function() {
+        ActiveNode: function () {
             return g.active
         },
-        FocusNode: function(u) {
+        FocusNode: function (u) {
             g.active = u;
             u.focus()
         },
-        Focus: function(u) {
+        Focus: function (u) {
             !g.posted ? g.Activate(u) : g.ActiveNode().tabIndex = -1;
             u.tabIndex = 0;
             g.FocusNode(u)
         },
-        Activate: function(u, v) {
+        Activate: function (u, v) {
             g.UnsetTabIndex();
             g.posted = true
         },
-        Unfocus: function() {
+        Unfocus: function () {
             g.ActiveNode().tabIndex = -1;
             g.SetTabIndex();
             g.FocusNode(g.CurrentNode());
             g.posted = false
         },
-        MoveHorizontal: function(y, z, w) {
+        MoveHorizontal: function (y, z, w) {
             if (!y.shiftKey) {
                 return
             }
@@ -2529,17 +2529,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             g.FocusNode(x);
             g.menu.Post(null)
         },
-        Right: function(u, v) {
-            g.MoveHorizontal(u, v, function(w) {
+        Right: function (u, v) {
+            g.MoveHorizontal(u, v, function (w) {
                 return w + 1
             })
         },
-        Left: function(u, v) {
-            g.MoveHorizontal(u, v, function(w) {
+        Left: function (u, v) {
+            g.MoveHorizontal(u, v, function (w) {
                 return w - 1
             })
         },
-        UnsetTabIndex: function() {
+        UnsetTabIndex: function () {
             var v = g.AllNodes();
             for (var w = 0, u; u = v[w]; w++) {
                 if (u.tabIndex > 0) {
@@ -2548,7 +2548,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 u.tabIndex = -1
             }
         },
-        SetTabIndex: function() {
+        SetTabIndex: function () {
             var v = g.AllNodes();
             for (var w = 0, u; u = v[w]; w++) {
                 if (u.oldTabIndex !== undefined) {
@@ -2559,25 +2559,25 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             }
         },
-        Mod: function(u, v) {
+        Mod: function (u, v) {
             return ((u % v) + v) % v
         },
-        IndexOf: (Array.prototype.indexOf ? function(u, v, w) {
+        IndexOf: (Array.prototype.indexOf ? function (u, v, w) {
             return u.indexOf(v, w)
         }
-        : function(u, x, y) {
-            for (var w = (y || 0), v = u.length; w < v; w++) {
-                if (x === u[w]) {
-                    return w
+            : function (u, x, y) {
+                for (var w = (y || 0), v = u.length; w < v; w++) {
+                    if (x === u[w]) {
+                        return w
+                    }
                 }
+                return -1
             }
-            return -1
-        }
         ),
-        saveCookie: function() {
+        saveCookie: function () {
             o.Cookie.Set("menu", this.cookie)
         },
-        getCookie: function() {
+        getCookie: function () {
             this.cookie = o.Cookie.Get("menu")
         }
     });
@@ -2586,7 +2586,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         name: "",
         node: null,
         menu: null,
-        Attributes: function(u) {
+        Attributes: function (u) {
             return f.Insert({
                 onmouseup: g.Mouseup,
                 ondragstart: n,
@@ -2599,31 +2599,31 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 menuItem: this
             }, u)
         },
-        Create: function(w) {
+        Create: function (w) {
             if (!this.hidden) {
                 var v = this.Attributes();
                 var u = this.Label(v, w);
                 o.addElement(w, "div", v, u)
             }
         },
-        Name: function() {
+        Name: function () {
             return t(this.name[0], this.name[1])
         },
-        Mouseover: function(u, v) {
+        Mouseover: function (u, v) {
             if (v.parentNode === g.ActiveNode().parentNode) {
                 this.Deactivate(g.ActiveNode())
             }
             this.Activate(u, v)
         },
-        Mouseout: function(u, v) {
+        Mouseout: function (u, v) {
             this.Deactivate(v)
         },
-        Mouseup: function(u, v) {
+        Mouseup: function (u, v) {
             return this.Remove(u, v)
         },
-        DeactivateSubmenus: function(z) {
+        DeactivateSubmenus: function (z) {
             var y = document.getElementById("MathJax_MenuFrame").childNodes
-              , v = c.GetMenuNode(z).childNodes;
+                , v = c.GetMenuNode(z).childNodes;
             for (var w = 0, u = v.length; w < u; w++) {
                 var x = v[w].menuItem;
                 if (x && x.submenu && x.submenu.posted && x !== z.menuItem) {
@@ -2632,7 +2632,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             this.RemoveSubmenus(z, y)
         },
-        RemoveSubmenus: function(w, v) {
+        RemoveSubmenus: function (w, v) {
             v = v || document.getElementById("MathJax_MenuFrame").childNodes;
             var u = v.length - 1;
             while (u >= 0 && c.GetMenuNode(w).menuItem !== v[u].menuItem) {
@@ -2641,13 +2641,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 u--
             }
         },
-        Touchstart: function(u, v) {
+        Touchstart: function (u, v) {
             return this.TouchEvent(u, v, "Mousedown")
         },
-        Touchend: function(u, v) {
+        Touchend: function (u, v) {
             return this.TouchEvent(u, v, "Mouseup")
         },
-        TouchEvent: function(v, w, u) {
+        TouchEvent: function (v, w, u) {
             if (this !== c.lastItem) {
                 if (c.lastMenu) {
                     g.Event(v, c.lastMenu, "Mouseout")
@@ -2662,30 +2662,30 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             g.Event(v, w, u);
             return false
         },
-        Remove: function(u, v) {
+        Remove: function (u, v) {
             v = v.parentNode.menuItem;
             return v.Remove(u, v)
         },
-        With: function(u) {
+        With: function (u) {
             if (u) {
                 f.Insert(this, u)
             }
             return this
         },
-        isRTL: function() {
+        isRTL: function () {
             return g.isRTL
         },
-        rtlClass: function() {
+        rtlClass: function () {
             return (this.isRTL() ? " RTL" : "")
         }
     }, {
-        GetMenuNode: function(u) {
+        GetMenuNode: function (u) {
             return u.parentNode
         }
     });
     g.ENTRY = g.ITEM.Subclass({
         role: "menuitem",
-        Attributes: function(u) {
+        Attributes: function (u) {
             u = f.Insert({
                 onmouseover: g.Mouseover,
                 onmouseout: g.Mouseout,
@@ -2699,7 +2699,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return u
         },
-        MoveVertical: function(u, E, w) {
+        MoveVertical: function (u, E, w) {
             var x = c.GetMenuNode(E);
             var D = [];
             for (var z = 0, C = x.menuItem.items, y; y = C[z]; z++) {
@@ -2719,23 +2719,23 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             this.Deactivate(E);
             D[B].Activate(u, v[B])
         },
-        Up: function(v, u) {
-            this.MoveVertical(v, u, function(w) {
+        Up: function (v, u) {
+            this.MoveVertical(v, u, function (w) {
                 return w - 1
             })
         },
-        Down: function(v, u) {
-            this.MoveVertical(v, u, function(w) {
+        Down: function (v, u) {
+            this.MoveVertical(v, u, function (w) {
                 return w + 1
             })
         },
-        Right: function(v, u) {
+        Right: function (v, u) {
             this.MoveHorizontal(v, u, g.Right, !this.isRTL())
         },
-        Left: function(v, u) {
+        Left: function (v, u) {
             this.MoveHorizontal(v, u, g.Left, this.isRTL())
         },
-        MoveHorizontal: function(A, z, u, B) {
+        MoveHorizontal: function (A, z, u, B) {
             var x = c.GetMenuNode(z);
             if (x.menuItem === g.menu && A.shiftKey) {
                 u(A, z)
@@ -2757,10 +2757,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             this.RemoveSubmenus(z)
         },
-        Space: function(u, v) {
+        Space: function (u, v) {
             this.Mouseup(u, v)
         },
-        Activate: function(u, v) {
+        Activate: function (u, v) {
             this.Deactivate(v);
             if (!this.disabled) {
                 v.className += " MathJax_MenuActive"
@@ -2768,13 +2768,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             this.DeactivateSubmenus(v);
             g.Focus(v)
         },
-        Deactivate: function(u) {
+        Deactivate: function (u) {
             u.className = u.className.replace(/ MathJax_MenuActive/, "")
         }
     });
     g.ITEM.COMMAND = g.ENTRY.Subclass({
-        action: function() {},
-        Init: function(u, w, v) {
+        action: function () { },
+        Init: function (u, w, v) {
             if (!i(u)) {
                 u = [u, u]
             }
@@ -2782,10 +2782,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             this.action = w;
             this.With(v)
         },
-        Label: function(u, v) {
+        Label: function (u, v) {
             return [this.Name()]
         },
-        Mouseup: function(u, v) {
+        Mouseup: function (u, v) {
             if (!this.disabled) {
                 this.Remove(u, v);
                 d.Post(["command", this]);
@@ -2798,14 +2798,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         submenu: null,
         marker: "\u25BA",
         markerRTL: "\u25C4",
-        Attributes: function(u) {
+        Attributes: function (u) {
             u = f.Insert({
                 "aria-haspopup": "true"
             }, u);
             u = this.SUPER(arguments).Attributes.call(this, u);
             return u
         },
-        Init: function(u, w) {
+        Init: function (u, w) {
             if (!i(u)) {
                 u = [u, u]
             }
@@ -2813,17 +2813,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             var v = 1;
             if (!(w instanceof g.ITEM)) {
                 this.With(w),
-                v++
+                    v++
             }
             this.submenu = g.apply(g, [].slice.call(arguments, v))
         },
-        Label: function(u, v) {
+        Label: function (u, v) {
             this.submenu.posted = false;
             return [this.Name() + " ", ["span", {
                 className: "MathJax_MenuArrow" + this.rtlClass()
             }, [this.isRTL() ? this.markerRTL : this.marker]]]
         },
-        Timer: function(u, v) {
+        Timer: function (u, v) {
             this.ClearTimer();
             u = {
                 type: u.type,
@@ -2832,12 +2832,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             };
             this.timer = setTimeout(e(["Mouseup", this, u, v]), s.delay)
         },
-        ClearTimer: function() {
+        ClearTimer: function () {
             if (this.timer) {
                 clearTimeout(this.timer)
             }
         },
-        Touchend: function(v, x) {
+        Touchend: function (v, x) {
             var w = this.submenu.posted;
             var u = this.SUPER(arguments).Touchend.apply(this, arguments);
             if (w) {
@@ -2847,16 +2847,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return u
         },
-        Mouseout: function(u, v) {
+        Mouseout: function (u, v) {
             if (!this.submenu.posted) {
                 this.Deactivate(v)
             }
             this.ClearTimer()
         },
-        Mouseover: function(u, v) {
+        Mouseover: function (u, v) {
             this.Activate(u, v)
         },
-        Mouseup: function(u, v) {
+        Mouseup: function (u, v) {
             if (!this.disabled) {
                 if (!this.submenu.posted) {
                     this.ClearTimer();
@@ -2868,7 +2868,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return n(u)
         },
-        Activate: function(u, v) {
+        Activate: function (u, v) {
             if (!this.disabled) {
                 this.Deactivate(v);
                 v.className += " MathJax_MenuActive"
@@ -2881,11 +2881,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             g.Focus(v)
         },
-        MoveVertical: function(w, v, u) {
+        MoveVertical: function (w, v, u) {
             this.ClearTimer();
             this.SUPER(arguments).MoveVertical.apply(this, arguments)
         },
-        MoveHorizontal: function(w, y, v, x) {
+        MoveHorizontal: function (w, y, v, x) {
             if (!x) {
                 this.SUPER(arguments).MoveHorizontal.apply(this, arguments);
                 return
@@ -2907,7 +2907,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         variable: null,
         marker: (a ? "\u25CF" : "\u2713"),
         role: "menuitemradio",
-        Attributes: function(v) {
+        Attributes: function (v) {
             var u = s.settings[this.variable] === this.value ? "true" : "false";
             v = f.Insert({
                 "aria-checked": u
@@ -2915,7 +2915,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             v = this.SUPER(arguments).Attributes.call(this, v);
             return v
         },
-        Init: function(v, u, w) {
+        Init: function (v, u, w) {
             if (!i(v)) {
                 v = [v, v]
             }
@@ -2926,7 +2926,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 this.value = this.name[0]
             }
         },
-        Label: function(v, w) {
+        Label: function (v, w) {
             var u = {
                 className: "MathJax_MenuRadioCheck" + this.rtlClass()
             };
@@ -2939,7 +2939,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return [["span", u, [this.marker]], " " + this.Name()]
         },
-        Mouseup: function(x, y) {
+        Mouseup: function (x, y) {
             if (!this.disabled) {
                 var z = y.parentNode.childNodes;
                 for (var v = 0, u = z.length; v < u; v++) {
@@ -2965,7 +2965,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         variable: null,
         marker: "\u2713",
         role: "menuitemcheckbox",
-        Attributes: function(v) {
+        Attributes: function (v) {
             var u = s.settings[this.variable] ? "true" : "false";
             v = f.Insert({
                 "aria-checked": u
@@ -2973,7 +2973,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             v = this.SUPER(arguments).Attributes.call(this, v);
             return v
         },
-        Init: function(v, u, w) {
+        Init: function (v, u, w) {
             if (!i(v)) {
                 v = [v, v]
             }
@@ -2981,7 +2981,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             this.variable = u;
             this.With(w)
         },
-        Label: function(v, w) {
+        Label: function (v, w) {
             var u = {
                 className: "MathJax_MenuCheck" + this.rtlClass()
             };
@@ -2994,7 +2994,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             return [["span", u, [this.marker]], " " + this.Name()]
         },
-        Mouseup: function(u, v) {
+        Mouseup: function (u, v) {
             if (!this.disabled) {
                 v.firstChild.display = (s.settings[this.variable] ? "none" : "");
                 s.settings[this.variable] = !s.settings[this.variable];
@@ -3011,38 +3011,38 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
     });
     g.ITEM.LABEL = g.ENTRY.Subclass({
         role: "menuitem",
-        Init: function(u, v) {
+        Init: function (u, v) {
             if (!i(u)) {
                 u = [u, u]
             }
             this.name = u;
             this.With(v)
         },
-        Label: function(u, v) {
+        Label: function (u, v) {
             u.className += " MathJax_MenuLabel";
             return [this.Name()]
         },
-        Activate: function(u, v) {
+        Activate: function (u, v) {
             this.Deactivate(v);
             g.Focus(v)
         },
-        Mouseup: function(u, v) {}
+        Mouseup: function (u, v) { }
     });
     g.ITEM.RULE = g.ITEM.Subclass({
         role: "separator",
-        Attributes: function(u) {
+        Attributes: function (u) {
             u = f.Insert({
                 "aria-orientation": "vertical"
             }, u);
             u = this.SUPER(arguments).Attributes.call(this, u);
             return u
         },
-        Label: function(u, v) {
+        Label: function (u, v) {
             u.className += " MathJax_MenuRule";
             return null
         }
     });
-    g.About = function(y) {
+    g.About = function (y) {
         var v = g.About.GetFont();
         var A = g.About.GetFormat();
         var u = ["MathJax.js v" + MathJax.fileversion, ["br"]];
@@ -3117,39 +3117,39 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             x.style.top = Math.floor((w - x.offsetHeight) / 3) + "px"
         }
     }
-    ;
-    g.About.Remove = function(u) {
+        ;
+    g.About.Remove = function (u) {
         if (g.About.div) {
             document.body.removeChild(g.About.div);
             delete g.About.div
         }
     }
-    ;
-    g.About.Keydown = function(u) {
+        ;
+    g.About.Keydown = function (u) {
         if (u.keyCode === b.ESCAPE || (this.id === "MathJax_AboutClose" && (u.keyCode === b.SPACE || u.keyCode === b.RETURN))) {
             g.About.Remove(u);
             g.CurrentNode().focus();
             n(u)
         }
     }
-    ,
-    g.About.GetJax = function(v, A, y, x) {
-        var z = [];
-        for (var B in A) {
-            if (A.hasOwnProperty(B) && A[B]) {
-                if ((x && A[B].version) || (A[B].isa && A[B].isa(A))) {
-                    z.push(t(y[0], y[1], (A[B].id || B), A[B].version))
+        ,
+        g.About.GetJax = function (v, A, y, x) {
+            var z = [];
+            for (var B in A) {
+                if (A.hasOwnProperty(B) && A[B]) {
+                    if ((x && A[B].version) || (A[B].isa && A[B].isa(A))) {
+                        z.push(t(y[0], y[1], (A[B].id || B), A[B].version))
+                    }
                 }
             }
+            z.sort();
+            for (var w = 0, u = z.length; w < u; w++) {
+                v.push(z[w], ["br"])
+            }
+            return v
         }
-        z.sort();
-        for (var w = 0, u = z.length; w < u; w++) {
-            v.push(z[w], ["br"])
-        }
-        return v
-    }
-    ;
-    g.About.GetFont = function() {
+        ;
+    g.About.GetFont = function () {
         var u = MathJax.Hub.outputJax["jax/mml"][0] || {};
         var v = {
             SVG: "web SVG",
@@ -3158,24 +3158,24 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }[u.id] || "generic";
         return v + " fonts"
     }
-    ;
-    g.About.GetFormat = function() {
+        ;
+    g.About.GetFormat = function () {
         var u = MathJax.Hub.outputJax["jax/mml"][0] || {};
         if (u.id !== "HTML-CSS" || !u.webFonts || u.imgFonts) {
             return
         }
         return u.allowWebFonts.replace(/otf/, "woff or otf") + " fonts"
     }
-    ;
-    g.Help = function(u) {
-        q.Require("[MathJax]/extensions/HelpDialog.js", function() {
+        ;
+    g.Help = function (u) {
+        q.Require("[MathJax]/extensions/HelpDialog.js", function () {
             MathJax.Extension.Help.Dialog({
                 type: u.type
             })
         })
     }
-    ;
-    g.ShowSource = function(y) {
+        ;
+    g.ShowSource = function (y) {
         if (!y) {
             y = window.event
         }
@@ -3201,10 +3201,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 if (!q.loadingToMathML) {
                     q.loadingToMathML = true;
                     g.ShowSource.Window(y);
-                    e.Queue(q.Require("[MathJax]/extensions/toMathML.js"), function() {
+                    e.Queue(q.Require("[MathJax]/extensions/toMathML.js"), function () {
                         delete q.loadingToMathML;
                         if (!v.mbase.prototype.toMathML) {
-                            v.mbase.prototype.toMathML = function() {}
+                            v.mbase.prototype.toMathML = function () { }
                         }
                     }, [this, g.ShowSource, x]);
                     return
@@ -3229,11 +3229,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
         }
     }
-    ;
-    g.ShowSource.Window = function(v) {
+        ;
+    g.ShowSource.Window = function (v) {
         if (!g.ShowSource.w) {
             var w = []
-              , u = s.windowSettings;
+                , u = s.windowSettings;
             for (var x in u) {
                 if (u.hasOwnProperty(x)) {
                     w.push(x + "=" + u[x])
@@ -3243,8 +3243,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
         return g.ShowSource.w
     }
-    ;
-    g.ShowSource.Text = function(z, x) {
+        ;
+    g.ShowSource.Text = function (z, x) {
         var u = g.ShowSource.Window(x);
         delete g.ShowSource.w;
         z = z.replace(/^\s*/, "").replace(/\s*$/, "");
@@ -3264,7 +3264,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             u.document.write("</body></html>");
             u.document.close();
             var v = u.document.body.firstChild;
-            setTimeout(function() {
+            setTimeout(function () {
                 var B = (u.outerHeight - u.innerHeight) || 30, A = (u.outerWidth - u.innerWidth) || 30, w, E;
                 A = Math.max(140, Math.min(Math.floor(0.5 * screen.width), v.offsetWidth + A + 25));
                 B = Math.max(40, Math.min(Math.floor(0.5 * screen.height), v.offsetHeight + B + 25));
@@ -3275,7 +3275,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 var D;
                 try {
                     D = x.screenX
-                } catch (C) {}
+                } catch (C) { }
                 if (x && D != null) {
                     w = Math.max(0, Math.min(x.screenX - Math.floor(A / 2), screen.width - A - 20));
                     E = Math.max(0, Math.min(x.screenY - Math.floor(B / 2), screen.height - B - 20));
@@ -3284,8 +3284,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }, 50)
         }
     }
-    ;
-    g.Scale = function() {
+        ;
+    g.Scale = function () {
         var z = ["CommonHTML", "HTML-CSS", "SVG", "NativeMML", "PreviewHTML"], u = z.length, y = 100, w, v;
         for (w = 0; w < u; w++) {
             v = r[z[w]];
@@ -3318,49 +3318,49 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
         }
     }
-    ;
-    g.Zoom = function() {
+        ;
+    g.Zoom = function () {
         if (!MathJax.Extension.MathZoom) {
             q.Require("[MathJax]/extensions/MathZoom.js")
         }
     }
-    ;
-    g.Renderer = function() {
+        ;
+    g.Renderer = function () {
         var v = f.outputJax["jax/mml"];
         if (v[0] !== s.settings.renderer) {
             var y = f.Browser, x, u = g.Renderer.Messages, w;
             switch (s.settings.renderer) {
-            case "NativeMML":
-                if (!s.settings.warnedMML) {
-                    if (y.isChrome && y.version.substr(0, 3) !== "24.") {
-                        x = u.MML.WebKit
-                    } else {
-                        if (y.isSafari && !y.versionAtLeast("5.0")) {
+                case "NativeMML":
+                    if (!s.settings.warnedMML) {
+                        if (y.isChrome && y.version.substr(0, 3) !== "24.") {
                             x = u.MML.WebKit
                         } else {
-                            if (y.isMSIE) {
-                                if (!y.hasMathPlayer) {
-                                    x = u.MML.MSIE
-                                }
+                            if (y.isSafari && !y.versionAtLeast("5.0")) {
+                                x = u.MML.WebKit
                             } else {
-                                if (y.isEdge) {
-                                    x = u.MML.WebKit
+                                if (y.isMSIE) {
+                                    if (!y.hasMathPlayer) {
+                                        x = u.MML.MSIE
+                                    }
                                 } else {
-                                    x = u.MML[y]
+                                    if (y.isEdge) {
+                                        x = u.MML.WebKit
+                                    } else {
+                                        x = u.MML[y]
+                                    }
                                 }
                             }
                         }
+                        w = "warnedMML"
                     }
-                    w = "warnedMML"
-                }
-                break;
-            case "SVG":
-                if (!s.settings.warnedSVG) {
-                    if (y.isMSIE && !m) {
-                        x = u.SVG.MSIE
+                    break;
+                case "SVG":
+                    if (!s.settings.warnedSVG) {
+                        if (y.isMSIE && !m) {
+                            x = u.SVG.MSIE
+                        }
                     }
-                }
-                break
+                    break
             }
             if (x) {
                 x = t(x[0], x[1]);
@@ -3382,7 +3382,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             f.Queue(["setRenderer", f, s.settings.renderer, "jax/mml"], ["Rerender", f])
         }
     }
-    ;
+        ;
     g.Renderer.Messages = {
         MML: {
             WebKit: ["WebkitNativeMMLWarning", "Your browser doesn't seem to support MathML natively, so switching to MathML output may cause the mathematics on the page to become unreadable."],
@@ -3395,7 +3395,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             MSIE: ["MSIESVGWarning", "SVG is not implemented in Internet Explorer prior to IE9 or when it is emulating IE8 or below. Switching to SVG output will cause the mathematics to not display properly."]
         }
     };
-    g.AssistiveMML = function(w, u) {
+    g.AssistiveMML = function (w, u) {
         var v = MathJax.Extension.AssistiveMML;
         if (!v) {
             if (!u) {
@@ -3405,37 +3405,37 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
         MathJax.Hub.Queue([(s.settings.assistiveMML ? "Add" : "Remove") + "AssistiveMathML", v])
     }
-    ;
-    g.Font = function() {
+        ;
+    g.Font = function () {
         var u = r["HTML-CSS"];
         if (!u) {
             return
         }
         document.location.reload()
     }
-    ;
-    g.Locale = function() {
+        ;
+    g.Locale = function () {
         MathJax.Localization.setLocale(s.settings.locale);
         MathJax.Hub.Queue(["Reprocess", MathJax.Hub])
     }
-    ;
-    g.LoadLocale = function() {
+        ;
+    g.LoadLocale = function () {
         var u = prompt(t("LoadURL", "Load translation data from this URL:"));
         if (u) {
             if (!u.match(/\.js$/)) {
                 alert(t("BadURL", "The URL should be for a javascript file that defines MathJax translation data.  Javascript file names should end with '.js'"))
             }
-            q.Require(u, function(v) {
+            q.Require(u, function (v) {
                 if (v != q.STATUS.OK) {
                     alert(t("BadData", "Failed to load translation data from %1", u))
                 }
             })
         }
     }
-    ;
-    g.MPEvents = function(w) {
+        ;
+    g.MPEvents = function (w) {
         var v = s.settings.discoverable
-          , u = g.MPEvents.Messages;
+            , u = g.MPEvents.Messages;
         if (!m) {
             if (s.settings.mpMouse && !confirm(t.apply(t, u.IE8warning))) {
                 delete g.cookie.mpContext;
@@ -3455,13 +3455,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
         }
     }
-    ;
+        ;
     g.MPEvents.Messages = {
         IE8warning: ["IE8warning", "This will disable the MathJax menu and zoom features, but you can Alt-Click on an expression to obtain the MathJax menu instead.\n\nReally change the MathPlayer settings?"],
         IE9warning: ["IE9warning", "The MathJax contextual menu will be disabled, but you can Alt-Click on an expression to obtain the MathJax menu instead."]
     };
     f.Browser.Select({
-        MSIE: function(u) {
+        MSIE: function (u) {
             var v = (document.compatMode === "BackCompat");
             var w = u.versionAtLeast("8.0") && document.documentMode > 7;
             g.Augment({
@@ -3476,21 +3476,21 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 delete s.styles[".MathJax_Menu"].filter
             }
         },
-        Firefox: function(u) {
+        Firefox: function (u) {
             g.skipMouseover = u.isMobile && u.versionAtLeast("6.0");
             g.skipMousedown = u.isMobile
         }
     });
     g.isMobile = f.Browser.isMobile;
     g.noContextMenu = f.Browser.noContextMenu;
-    g.CreateLocaleMenu = function() {
+    g.CreateLocaleMenu = function () {
         if (!g.menu) {
             return
         }
         var z = g.menu.Find("Language").submenu
-          , w = z.items;
+            , w = z.items;
         var v = []
-          , B = MathJax.Localization.strings;
+            , B = MathJax.Localization.strings;
         for (var A in B) {
             if (B.hasOwnProperty(A)) {
                 v.push(A)
@@ -3511,8 +3511,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
         z.items.push(w[w.length - 2], w[w.length - 1])
     }
-    ;
-    g.CreateAnnotationMenu = function() {
+        ;
+    g.CreateAnnotationMenu = function () {
         if (!g.menu) {
             return
         }
@@ -3528,8 +3528,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
         }
     }
-    ;
-    f.Register.StartupHook("End Config", function() {
+        ;
+    f.Register.StartupHook("End Config", function () {
         s.settings = f.config.menuSettings;
         if (typeof (s.settings.showRenderer) !== "undefined") {
             s.showRenderer = s.settings.showRenderer
@@ -3542,101 +3542,101 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         }
         g.getCookie();
         g.menu = g(c.SUBMENU(["Show", "Show Math As"],
-        c.COMMAND(["MathMLcode", "MathML Code"], g.ShowSource, {
-            nativeTouch: true,
-            format: "MathML"
-        }), c.COMMAND(["Original", "Original Form"], g.ShowSource, {
-            nativeTouch: true
-        }), c.SUBMENU(["Annotation", "Annotation"], {
-            disabled: true
-        }), c.RULE(), c.CHECKBOX(["texHints", "Show TeX hints in MathML"], "texHints"), c.CHECKBOX(["semantics", "Add original form as annotation"], "semantics")), c.RULE(), c.SUBMENU(["Settings", "Math Settings"], c.SUBMENU(["ZoomTrigger", "Zoom Trigger"], c.RADIO(["Hover", "Hover"], "zoom", {
-            action: g.Zoom
-        }), c.RADIO(["Click", "Click"], "zoom", {
-            action: g.Zoom
-        }), c.RADIO(["DoubleClick", "Double-Click"], "zoom", {
-            action: g.Zoom
-        }), c.RADIO(["NoZoom", "No Zoom"], "zoom", {
-            value: "None"
-        }), c.RULE(), c.LABEL(["TriggerRequires", "Trigger Requires:"]), c.CHECKBOX((f.Browser.isMac ? ["Option", "Option"] : ["Alt", "Alt"]), "ALT"), c.CHECKBOX(["Command", "Command"], "CMD", {
-            hidden: !f.Browser.isMac
-        }), c.CHECKBOX(["Control", "Control"], "CTRL", {
-            hidden: f.Browser.isMac
-        }), c.CHECKBOX(["Shift", "Shift"], "Shift")), c.SUBMENU(["ZoomFactor", "Zoom Factor"], c.RADIO("125%", "zscale"), c.RADIO("133%", "zscale"), c.RADIO("150%", "zscale"), c.RADIO("175%", "zscale"), c.RADIO("200%", "zscale"), c.RADIO("250%", "zscale"), c.RADIO("300%", "zscale"), c.RADIO("400%", "zscale")), c.RULE(), c.SUBMENU(["Renderer", "Math Renderer"], {
-            hidden: !s.showRenderer
-        }, c.RADIO(["HTML-CSS", "HTML-CSS"], "renderer", {
-            action: g.Renderer
-        }), c.RADIO(["CommonHTML", "Common HTML"], "renderer", {
-            action: g.Renderer,
-            value: "CommonHTML"
-        }), c.RADIO(["PreviewHTML", "Preview HTML"], "renderer", {
-            action: g.Renderer,
-            value: "PreviewHTML"
-        }), c.RADIO(["MathML", "MathML"], "renderer", {
-            action: g.Renderer,
-            value: "NativeMML"
-        }), c.RADIO(["SVG", "SVG"], "renderer", {
-            action: g.Renderer
-        }), c.RADIO(["PlainSource", "Plain Source"], "renderer", {
-            action: g.Renderer,
-            value: "PlainSource"
-        }), c.RULE(), c.CHECKBOX(["FastPreview", "Fast Preview"], "FastPreview")), c.SUBMENU("MathPlayer", {
-            hidden: !f.Browser.isMSIE || !s.showMathPlayer,
-            disabled: !f.Browser.hasMathPlayer
-        }, c.LABEL(["MPHandles", "Let MathPlayer Handle:"]), c.CHECKBOX(["MenuEvents", "Menu Events"], "mpContext", {
-            action: g.MPEvents,
-            hidden: !m
-        }), c.CHECKBOX(["MouseEvents", "Mouse Events"], "mpMouse", {
-            action: g.MPEvents,
-            hidden: !m
-        }), c.CHECKBOX(["MenuAndMouse", "Mouse and Menu Events"], "mpMouse", {
-            action: g.MPEvents,
-            hidden: m
-        })), c.SUBMENU(["FontPrefs", "Font Preference"], {
-            hidden: !s.showFontMenu
-        }, c.LABEL(["ForHTMLCSS", "For HTML-CSS:"]), c.RADIO(["Auto", "Auto"], "font", {
-            action: g.Font
-        }), c.RULE(), c.RADIO(["TeXLocal", "TeX (local)"], "font", {
-            action: g.Font
-        }), c.RADIO(["TeXWeb", "TeX (web)"], "font", {
-            action: g.Font
-        }), c.RADIO(["TeXImage", "TeX (image)"], "font", {
-            action: g.Font
-        }), c.RULE(), c.RADIO(["STIXLocal", "STIX (local)"], "font", {
-            action: g.Font
-        }), c.RADIO(["STIXWeb", "STIX (web)"], "font", {
-            action: g.Font
-        }), c.RULE(), c.RADIO(["AsanaMathWeb", "Asana Math (web)"], "font", {
-            action: g.Font
-        }), c.RADIO(["GyrePagellaWeb", "Gyre Pagella (web)"], "font", {
-            action: g.Font
-        }), c.RADIO(["GyreTermesWeb", "Gyre Termes (web)"], "font", {
-            action: g.Font
-        }), c.RADIO(["LatinModernWeb", "Latin Modern (web)"], "font", {
-            action: g.Font
-        }), c.RADIO(["NeoEulerWeb", "Neo Euler (web)"], "font", {
-            action: g.Font
-        })), c.SUBMENU(["ContextMenu", "Contextual Menu"], {
-            hidden: !s.showContext
-        }, c.RADIO(["MathJax", "MathJax"], "context"), c.RADIO(["Browser", "Browser"], "context")), c.COMMAND(["Scale", "Scale All Math ..."], g.Scale), c.RULE().With({
-            hidden: !s.showDiscoverable,
-            name: ["", "discover_rule"]
-        }), c.CHECKBOX(["Discoverable", "Highlight on Hover"], "discoverable", {
-            hidden: !s.showDiscoverable
-        })), c.SUBMENU(["Accessibility", "Accessibility"], c.CHECKBOX(["AssistiveMML", "Assistive MathML"], "assistiveMML", {
-            action: g.AssistiveMML
-        }), c.CHECKBOX(["InTabOrder", "Include in Tab Order"], "inTabOrder")), c.SUBMENU(["Locale", "Language"], {
-            hidden: !s.showLocale,
-            ltr: true
-        }, c.RADIO("en", "locale", {
-            action: g.Locale
-        }), c.RULE().With({
-            hidden: !s.showLocaleURL,
-            name: ["", "localURL_rule"]
-        }), c.COMMAND(["LoadLocale", "Load from URL ..."], g.LoadLocale, {
-            hidden: !s.showLocaleURL
-        })), c.RULE(), c.COMMAND(["About", "About MathJax"], g.About), c.COMMAND(["Help", "MathJax Help"], g.Help));
+            c.COMMAND(["MathMLcode", "MathML Code"], g.ShowSource, {
+                nativeTouch: true,
+                format: "MathML"
+            }), c.COMMAND(["Original", "Original Form"], g.ShowSource, {
+                nativeTouch: true
+            }), c.SUBMENU(["Annotation", "Annotation"], {
+                disabled: true
+            }), c.RULE(), c.CHECKBOX(["texHints", "Show TeX hints in MathML"], "texHints"), c.CHECKBOX(["semantics", "Add original form as annotation"], "semantics")), c.RULE(), c.SUBMENU(["Settings", "Math Settings"], c.SUBMENU(["ZoomTrigger", "Zoom Trigger"], c.RADIO(["Hover", "Hover"], "zoom", {
+                action: g.Zoom
+            }), c.RADIO(["Click", "Click"], "zoom", {
+                action: g.Zoom
+            }), c.RADIO(["DoubleClick", "Double-Click"], "zoom", {
+                action: g.Zoom
+            }), c.RADIO(["NoZoom", "No Zoom"], "zoom", {
+                value: "None"
+            }), c.RULE(), c.LABEL(["TriggerRequires", "Trigger Requires:"]), c.CHECKBOX((f.Browser.isMac ? ["Option", "Option"] : ["Alt", "Alt"]), "ALT"), c.CHECKBOX(["Command", "Command"], "CMD", {
+                hidden: !f.Browser.isMac
+            }), c.CHECKBOX(["Control", "Control"], "CTRL", {
+                hidden: f.Browser.isMac
+            }), c.CHECKBOX(["Shift", "Shift"], "Shift")), c.SUBMENU(["ZoomFactor", "Zoom Factor"], c.RADIO("125%", "zscale"), c.RADIO("133%", "zscale"), c.RADIO("150%", "zscale"), c.RADIO("175%", "zscale"), c.RADIO("200%", "zscale"), c.RADIO("250%", "zscale"), c.RADIO("300%", "zscale"), c.RADIO("400%", "zscale")), c.RULE(), c.SUBMENU(["Renderer", "Math Renderer"], {
+                hidden: !s.showRenderer
+            }, c.RADIO(["HTML-CSS", "HTML-CSS"], "renderer", {
+                action: g.Renderer
+            }), c.RADIO(["CommonHTML", "Common HTML"], "renderer", {
+                action: g.Renderer,
+                value: "CommonHTML"
+            }), c.RADIO(["PreviewHTML", "Preview HTML"], "renderer", {
+                action: g.Renderer,
+                value: "PreviewHTML"
+            }), c.RADIO(["MathML", "MathML"], "renderer", {
+                action: g.Renderer,
+                value: "NativeMML"
+            }), c.RADIO(["SVG", "SVG"], "renderer", {
+                action: g.Renderer
+            }), c.RADIO(["PlainSource", "Plain Source"], "renderer", {
+                action: g.Renderer,
+                value: "PlainSource"
+            }), c.RULE(), c.CHECKBOX(["FastPreview", "Fast Preview"], "FastPreview")), c.SUBMENU("MathPlayer", {
+                hidden: !f.Browser.isMSIE || !s.showMathPlayer,
+                disabled: !f.Browser.hasMathPlayer
+            }, c.LABEL(["MPHandles", "Let MathPlayer Handle:"]), c.CHECKBOX(["MenuEvents", "Menu Events"], "mpContext", {
+                action: g.MPEvents,
+                hidden: !m
+            }), c.CHECKBOX(["MouseEvents", "Mouse Events"], "mpMouse", {
+                action: g.MPEvents,
+                hidden: !m
+            }), c.CHECKBOX(["MenuAndMouse", "Mouse and Menu Events"], "mpMouse", {
+                action: g.MPEvents,
+                hidden: m
+            })), c.SUBMENU(["FontPrefs", "Font Preference"], {
+                hidden: !s.showFontMenu
+            }, c.LABEL(["ForHTMLCSS", "For HTML-CSS:"]), c.RADIO(["Auto", "Auto"], "font", {
+                action: g.Font
+            }), c.RULE(), c.RADIO(["TeXLocal", "TeX (local)"], "font", {
+                action: g.Font
+            }), c.RADIO(["TeXWeb", "TeX (web)"], "font", {
+                action: g.Font
+            }), c.RADIO(["TeXImage", "TeX (image)"], "font", {
+                action: g.Font
+            }), c.RULE(), c.RADIO(["STIXLocal", "STIX (local)"], "font", {
+                action: g.Font
+            }), c.RADIO(["STIXWeb", "STIX (web)"], "font", {
+                action: g.Font
+            }), c.RULE(), c.RADIO(["AsanaMathWeb", "Asana Math (web)"], "font", {
+                action: g.Font
+            }), c.RADIO(["GyrePagellaWeb", "Gyre Pagella (web)"], "font", {
+                action: g.Font
+            }), c.RADIO(["GyreTermesWeb", "Gyre Termes (web)"], "font", {
+                action: g.Font
+            }), c.RADIO(["LatinModernWeb", "Latin Modern (web)"], "font", {
+                action: g.Font
+            }), c.RADIO(["NeoEulerWeb", "Neo Euler (web)"], "font", {
+                action: g.Font
+            })), c.SUBMENU(["ContextMenu", "Contextual Menu"], {
+                hidden: !s.showContext
+            }, c.RADIO(["MathJax", "MathJax"], "context"), c.RADIO(["Browser", "Browser"], "context")), c.COMMAND(["Scale", "Scale All Math ..."], g.Scale), c.RULE().With({
+                hidden: !s.showDiscoverable,
+                name: ["", "discover_rule"]
+            }), c.CHECKBOX(["Discoverable", "Highlight on Hover"], "discoverable", {
+                hidden: !s.showDiscoverable
+            })), c.SUBMENU(["Accessibility", "Accessibility"], c.CHECKBOX(["AssistiveMML", "Assistive MathML"], "assistiveMML", {
+                action: g.AssistiveMML
+            }), c.CHECKBOX(["InTabOrder", "Include in Tab Order"], "inTabOrder")), c.SUBMENU(["Locale", "Language"], {
+                hidden: !s.showLocale,
+                ltr: true
+            }, c.RADIO("en", "locale", {
+                action: g.Locale
+            }), c.RULE().With({
+                hidden: !s.showLocaleURL,
+                name: ["", "localURL_rule"]
+            }), c.COMMAND(["LoadLocale", "Load from URL ..."], g.LoadLocale, {
+                hidden: !s.showLocaleURL
+            })), c.RULE(), c.COMMAND(["About", "About MathJax"], g.About), c.COMMAND(["Help", "MathJax Help"], g.Help));
         if (g.isMobile) {
-            (function() {
+            (function () {
                 var v = s.settings;
                 var u = g.menu.Find("Math Settings", "Zoom Trigger").submenu;
                 u.items[0].disabled = u.items[1].disabled = true;
@@ -3655,44 +3655,44 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         g.CreateLocaleMenu();
         g.CreateAnnotationMenu()
     });
-    g.showRenderer = function(u) {
+    g.showRenderer = function (u) {
         g.cookie.showRenderer = s.showRenderer = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Math Renderer").hidden = !u
     }
-    ;
-    g.showMathPlayer = function(u) {
+        ;
+    g.showMathPlayer = function (u) {
         g.cookie.showMathPlayer = s.showMathPlayer = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "MathPlayer").hidden = !u
     }
-    ;
-    g.showFontMenu = function(u) {
+        ;
+    g.showFontMenu = function (u) {
         g.cookie.showFontMenu = s.showFontMenu = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Font Preference").hidden = !u
     }
-    ;
-    g.showContext = function(u) {
+        ;
+    g.showContext = function (u) {
         g.cookie.showContext = s.showContext = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Contextual Menu").hidden = !u
     }
-    ;
-    g.showDiscoverable = function(u) {
+        ;
+    g.showDiscoverable = function (u) {
         g.cookie.showDiscoverable = s.showDiscoverable = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Highlight on Hover").hidden = !u;
         g.menu.Find("Math Settings", "discover_rule").hidden = !u
     }
-    ;
-    g.showLocale = function(u) {
+        ;
+    g.showLocale = function (u) {
         g.cookie.showLocale = s.showLocale = u;
         g.saveCookie();
         g.menu.Find("Language").hidden = !u
     }
-    ;
-    MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready", function() {
+        ;
+    MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready", function () {
         if (!MathJax.OutputJax["HTML-CSS"].config.imageFont) {
             g.menu.Find("Math Settings", "Font Preference", "TeX (image)").disabled = true
         }
@@ -3711,7 +3711,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
     optableDir: MathJax.ElementJax.directory + "/mml/optable"
 });
 MathJax.ElementJax.mml.Augment({
-    Init: function() {
+    Init: function () {
         if (arguments.length === 1 && arguments[0].type === "math") {
             this.root = arguments[0]
         } else {
@@ -3931,10 +3931,10 @@ MathJax.ElementJax.mml.Augment({
         style: true,
         xmlns: true
     },
-    Error: function(d, e) {
+    Error: function (d, e) {
         var c = this.merror(d)
-          , b = MathJax.Localization.fontDirection()
-          , a = MathJax.Localization.fontFamily();
+            , b = MathJax.Localization.fontDirection()
+            , a = MathJax.Localization.fontFamily();
         if (e) {
             c = c.With(e)
         }
@@ -3950,7 +3950,7 @@ MathJax.ElementJax.mml.Augment({
         return c
     }
 });
-(function(a) {
+(function (a) {
     a.mbase = MathJax.Object.Subclass({
         type: "base",
         isToken: false,
@@ -3965,7 +3965,7 @@ MathJax.ElementJax.mml.Augment({
         },
         getRemoved: {},
         linebreakContainer: false,
-        Init: function() {
+        Init: function () {
             this.data = [];
             if (this.inferRow && !(arguments.length === 1 && arguments[0].inferred)) {
                 this.Append(a.mrow().With({
@@ -3975,7 +3975,7 @@ MathJax.ElementJax.mml.Augment({
             }
             this.Append.apply(this, arguments)
         },
-        With: function(e) {
+        With: function (e) {
             for (var f in e) {
                 if (e.hasOwnProperty(f)) {
                     this[f] = e[f]
@@ -3983,7 +3983,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return this
         },
-        Append: function() {
+        Append: function () {
             if (this.inferRow && this.data.length) {
                 this.data[0].Append.apply(this.data[0], arguments)
             } else {
@@ -3992,7 +3992,7 @@ MathJax.ElementJax.mml.Augment({
                 }
             }
         },
-        SetData: function(e, f) {
+        SetData: function (e, f) {
             if (f != null) {
                 if (!(f instanceof a.mbase)) {
                     f = (this.isToken || this.isChars ? a.chars(f) : a.mtext(f))
@@ -4002,14 +4002,14 @@ MathJax.ElementJax.mml.Augment({
             }
             this.data[e] = f
         },
-        Parent: function() {
+        Parent: function () {
             var e = this.parent;
             while (e && e.notParent) {
                 e = e.parent
             }
             return e
         },
-        Get: function(f, k, l) {
+        Get: function (f, k, l) {
             if (!l) {
                 if (this[f] != null) {
                     return this[f]
@@ -4054,28 +4054,28 @@ MathJax.ElementJax.mml.Augment({
             }
             return null
         },
-        hasValue: function(e) {
+        hasValue: function (e) {
             return (this.Get(e, true) != null)
         },
-        getValues: function() {
+        getValues: function () {
             var f = {};
             for (var g = 0, e = arguments.length; g < e; g++) {
                 f[arguments[g]] = this.Get(arguments[g])
             }
             return f
         },
-        adjustChild_scriptlevel: function(f, e) {
+        adjustChild_scriptlevel: function (f, e) {
             return this.Get("scriptlevel", e)
         },
-        adjustChild_displaystyle: function(f, e) {
+        adjustChild_displaystyle: function (f, e) {
             return this.Get("displaystyle", e)
         },
-        adjustChild_texprimestyle: function(f, e) {
+        adjustChild_texprimestyle: function (f, e) {
             return this.Get("texprimestyle", e)
         },
-        childPosition: function() {
+        childPosition: function () {
             var h = this
-              , g = h.parent;
+                , g = h.parent;
             while (g.notParent) {
                 h = g;
                 g = h.parent
@@ -4087,7 +4087,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return null
         },
-        setInherit: function(g) {
+        setInherit: function (g) {
             if (g !== this.inherit && this.inherit == null) {
                 this.inherit = g;
                 for (var f = 0, e = this.data.length; f < e; f++) {
@@ -4097,17 +4097,17 @@ MathJax.ElementJax.mml.Augment({
                 }
             }
         },
-        setTeXclass: function(e) {
+        setTeXclass: function (e) {
             this.getPrevClass(e);
             return (typeof (this.texClass) !== "undefined" ? this : e)
         },
-        getPrevClass: function(e) {
+        getPrevClass: function (e) {
             if (e) {
                 this.prevClass = e.Get("texClass");
                 this.prevLevel = e.Get("scriptlevel")
             }
         },
-        updateTeXclass: function(e) {
+        updateTeXclass: function (e) {
             if (e) {
                 this.prevClass = e.prevClass;
                 delete e.prevClass;
@@ -4116,7 +4116,7 @@ MathJax.ElementJax.mml.Augment({
                 this.texClass = e.Get("texClass")
             }
         },
-        texSpacing: function() {
+        texSpacing: function () {
             var f = (this.prevClass != null ? this.prevClass : a.TEXCLASS.NONE);
             var e = (this.Get("texClass") || a.TEXCLASS.ORD);
             if (f === a.TEXCLASS.NONE || e === a.TEXCLASS.NONE) {
@@ -4136,22 +4136,22 @@ MathJax.ElementJax.mml.Augment({
         },
         TEXSPACELENGTH: ["", a.LENGTH.THINMATHSPACE, a.LENGTH.MEDIUMMATHSPACE, a.LENGTH.THICKMATHSPACE],
         TEXSPACE: [[0, -1, 2, 3, 0, 0, 0, 1], [-1, -1, 0, 3, 0, 0, 0, 1], [2, 2, 0, 0, 2, 0, 0, 2], [3, 3, 0, 0, 3, 0, 0, 3], [0, 0, 0, 0, 0, 0, 0, 0], [0, -1, 2, 3, 0, 0, 0, 1], [1, 1, 0, 1, 1, 1, 1, 1], [1, -1, 2, 3, 1, 0, 1, 1]],
-        autoDefault: function(e) {
+        autoDefault: function (e) {
             return ""
         },
-        isSpacelike: function() {
+        isSpacelike: function () {
             return false
         },
-        isEmbellished: function() {
+        isEmbellished: function () {
             return false
         },
-        Core: function() {
+        Core: function () {
             return this
         },
-        CoreMO: function() {
+        CoreMO: function () {
             return this
         },
-        childIndex: function(g) {
+        childIndex: function (g) {
             if (g == null) {
                 return
             }
@@ -4161,10 +4161,10 @@ MathJax.ElementJax.mml.Augment({
                 }
             }
         },
-        CoreIndex: function() {
+        CoreIndex: function () {
             return (this.inferRow ? this.data[0] || this : this).childIndex(this.Core())
         },
-        hasNewline: function() {
+        hasNewline: function () {
             if (this.isEmbellished()) {
                 return this.CoreMO().hasNewline()
             }
@@ -4178,21 +4178,21 @@ MathJax.ElementJax.mml.Augment({
             }
             return false
         },
-        array: function() {
+        array: function () {
             if (this.inferred) {
                 return this.data
             } else {
                 return [this]
             }
         },
-        toString: function() {
+        toString: function () {
             return this.type + "(" + this.data.join(",") + ")"
         },
-        getAnnotation: function() {
+        getAnnotation: function () {
             return null
         }
     }, {
-        childrenSpacelike: function() {
+        childrenSpacelike: function () {
             for (var f = 0, e = this.data.length; f < e; f++) {
                 if (!this.data[f].isSpacelike()) {
                     return false
@@ -4200,23 +4200,23 @@ MathJax.ElementJax.mml.Augment({
             }
             return true
         },
-        childEmbellished: function() {
+        childEmbellished: function () {
             return (this.data[0] && this.data[0].isEmbellished())
         },
-        childCore: function() {
+        childCore: function () {
             return (this.inferRow && this.data[0] ? this.data[0].Core() : this.data[0])
         },
-        childCoreMO: function() {
+        childCoreMO: function () {
             return (this.data[0] ? this.data[0].CoreMO() : null)
         },
-        setChildTeXclass: function(e) {
+        setChildTeXclass: function (e) {
             if (this.data[0]) {
                 e = this.data[0].setTeXclass(e);
                 this.updateTeXclass(this.data[0])
             }
             return e
         },
-        setBaseTeXclasses: function(g) {
+        setBaseTeXclasses: function (g) {
             this.getPrevClass(g);
             this.texClass = null;
             if (this.data[0]) {
@@ -4237,7 +4237,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return g
         },
-        setSeparateTeXclasses: function(g) {
+        setSeparateTeXclasses: function (g) {
             this.getPrevClass(g);
             for (var f = 0, e = this.data.length; f < e; f++) {
                 if (this.data[f]) {
@@ -4261,14 +4261,14 @@ MathJax.ElementJax.mml.Augment({
             mathcolor: a.INHERIT,
             dir: a.INHERIT
         },
-        autoDefault: function(f) {
+        autoDefault: function (f) {
             if (f === "mathvariant") {
                 var e = (this.data[0] || "").toString();
                 return (e.length === 1 || (e.length === 2 && e.charCodeAt(0) >= 55296 && e.charCodeAt(0) < 56320) ? a.VARIANT.ITALIC : a.VARIANT.NORMAL)
             }
             return ""
         },
-        setTeXclass: function(f) {
+        setTeXclass: function (f) {
             this.getPrevClass(f);
             var e = this.data.join("");
             if (e.length > 1 && e.match(/^[a-z][a-z0-9]*$/i) && this.texClass === a.TEXCLASS.ORD) {
@@ -4355,7 +4355,7 @@ MathJax.ElementJax.mml.Augment({
             form: 4
         },
         useMMLspacing: 7,
-        autoDefault: function(g, n) {
+        autoDefault: function (g, n) {
             var l = this.def;
             if (!l) {
                 if (g === "form") {
@@ -4398,7 +4398,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return ""
         },
-        CheckRange: function(j) {
+        CheckRange: function (j) {
             var k = j.charCodeAt(0);
             if (k >= 55296 && k < 56320) {
                 k = (((k - 55296) << 10) + (j.charCodeAt(1) - 56320)) + 65536
@@ -4417,7 +4417,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return null
         },
-        makeDef: function(f) {
+        makeDef: function (f) {
             if (f[2] == null) {
                 f[2] = this.defaultDef.texClass
             }
@@ -4433,10 +4433,10 @@ MathJax.ElementJax.mml.Augment({
             }
             return e
         },
-        getForm: function() {
+        getForm: function () {
             var e = this
-              , g = this.parent
-              , f = this.Parent();
+                , g = this.parent
+                , f = this.Parent();
             while (f && f.isEmbellished()) {
                 e = g;
                 g = f.parent;
@@ -4452,20 +4452,20 @@ MathJax.ElementJax.mml.Augment({
             }
             return a.FORM.INFIX
         },
-        isEmbellished: function() {
+        isEmbellished: function () {
             return true
         },
-        hasNewline: function() {
+        hasNewline: function () {
             return (this.Get("linebreak") === a.LINEBREAK.NEWLINE)
         },
-        CoreParent: function() {
+        CoreParent: function () {
             var e = this;
             while (e && e.isEmbellished() && e.CoreMO() === this && !e.isa(a.math)) {
                 e = e.Parent()
             }
             return e
         },
-        CoreText: function(e) {
+        CoreText: function (e) {
             if (!e) {
                 return ""
             }
@@ -4490,7 +4490,7 @@ MathJax.ElementJax.mml.Augment({
             "\u00B4": "\u2032",
             "\u00B9": "1"
         },
-        remap: function(f, e) {
+        remap: function (f, e) {
             f = f.replace(/-/g, "\u2212");
             if (e) {
                 f = f.replace(/'/g, "\u2032").replace(/`/g, "\u2035");
@@ -4500,7 +4500,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return f
         },
-        setTeXclass: function(f) {
+        setTeXclass: function (f) {
             var e = this.getValues("form", "lspace", "rspace", "fence");
             if (this.useMMLspacing) {
                 this.texClass = a.TEXCLASS.NONE;
@@ -4525,7 +4525,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return this.adjustTeXclass(f)
         },
-        adjustTeXclass: function(f) {
+        adjustTeXclass: function (f) {
             if (this.texClass === a.TEXCLASS.NONE) {
                 return f
             }
@@ -4546,7 +4546,7 @@ MathJax.ElementJax.mml.Augment({
                 } else {
                     if (this.texClass === a.TEXCLASS.BIN) {
                         var g = this
-                          , e = this.parent;
+                            , e = this.parent;
                         while (e && e.parent && e.isEmbellished() && (e.data.length === 1 || (e.type !== "mrow" && e.Core() === g))) {
                             g = e;
                             e = e.parent
@@ -4563,7 +4563,7 @@ MathJax.ElementJax.mml.Augment({
     a.mtext = a.mbase.Subclass({
         type: "mtext",
         isToken: true,
-        isSpacelike: function() {
+        isSpacelike: function () {
             return true
         },
         texClass: a.TEXCLASS.ORD,
@@ -4578,7 +4578,7 @@ MathJax.ElementJax.mml.Augment({
     a.mspace = a.mbase.Subclass({
         type: "mspace",
         isToken: true,
-        isSpacelike: function() {
+        isSpacelike: function () {
             return true
         },
         defaults: {
@@ -4589,10 +4589,10 @@ MathJax.ElementJax.mml.Augment({
             depth: "0ex",
             linebreak: a.LINEBREAK.AUTO
         },
-        hasDimAttr: function() {
+        hasDimAttr: function () {
             return (this.hasValue("width") || this.hasValue("height") || this.hasValue("depth"))
         },
-        hasNewline: function() {
+        hasNewline: function () {
             return (!this.hasDimAttr() && this.Get("linebreak") === a.LINEBREAK.NEWLINE)
         }
     });
@@ -4629,7 +4629,7 @@ MathJax.ElementJax.mml.Augment({
         isSpacelike: a.mbase.childrenSpacelike,
         inferred: false,
         notParent: false,
-        isEmbellished: function() {
+        isEmbellished: function () {
             var f = false;
             for (var g = 0, e = this.data.length; g < e; g++) {
                 if (this.data[g] == null) {
@@ -4649,7 +4649,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return f
         },
-        NonSpaceLength: function() {
+        NonSpaceLength: function () {
             var g = 0;
             for (var f = 0, e = this.data.length; f < e; f++) {
                 if (this.data[f] && !this.data[f].isSpacelike()) {
@@ -4658,7 +4658,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return g
         },
-        FirstNonSpace: function() {
+        FirstNonSpace: function () {
             for (var f = 0, e = this.data.length; f < e; f++) {
                 if (this.data[f] && !this.data[f].isSpacelike()) {
                     return this.data[f]
@@ -4666,7 +4666,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return null
         },
-        LastNonSpace: function() {
+        LastNonSpace: function () {
             for (var e = this.data.length - 1; e >= 0; e--) {
                 if (this.data[0] && !this.data[e].isSpacelike()) {
                     return this.data[e]
@@ -4674,25 +4674,25 @@ MathJax.ElementJax.mml.Augment({
             }
             return null
         },
-        Core: function() {
+        Core: function () {
             if (!(this.isEmbellished()) || typeof (this.core) === "undefined") {
                 return this
             }
             return this.data[this.core]
         },
-        CoreMO: function() {
+        CoreMO: function () {
             if (!(this.isEmbellished()) || typeof (this.core) === "undefined") {
                 return this
             }
             return this.data[this.core].CoreMO()
         },
-        toString: function() {
+        toString: function () {
             if (this.inferred) {
                 return "[" + this.data.join(",") + "]"
             }
             return this.SUPER(arguments).toString.call(this)
         },
-        setTeXclass: function(g) {
+        setTeXclass: function (g) {
             var f, e = this.data.length;
             if ((this.open || this.close) && (!g || !g.fnOP)) {
                 this.getPrevClass(g);
@@ -4718,7 +4718,7 @@ MathJax.ElementJax.mml.Augment({
                 return g
             }
         },
-        getAnnotation: function(e) {
+        getAnnotation: function (e) {
             if (this.data.length != 1) {
                 return null
             }
@@ -4741,17 +4741,17 @@ MathJax.ElementJax.mml.Augment({
             denomalign: a.ALIGN.CENTER,
             bevelled: false
         },
-        adjustChild_displaystyle: function(e) {
+        adjustChild_displaystyle: function (e) {
             return false
         },
-        adjustChild_scriptlevel: function(f) {
+        adjustChild_scriptlevel: function (f) {
             var e = this.Get("scriptlevel");
             if (!this.Get("displaystyle") || e > 0) {
                 e++
             }
             return e
         },
-        adjustChild_texprimestyle: function(e) {
+        adjustChild_texprimestyle: function (e) {
             if (e == this.den) {
                 return true
             }
@@ -4765,7 +4765,7 @@ MathJax.ElementJax.mml.Augment({
         linebreakContainer: true,
         texClass: a.TEXCLASS.ORD,
         setTeXclass: a.mbase.setSeparateTeXclasses,
-        adjustChild_texprimestyle: function(e) {
+        adjustChild_texprimestyle: function (e) {
             return true
         }
     });
@@ -4773,20 +4773,20 @@ MathJax.ElementJax.mml.Augment({
         type: "mroot",
         linebreakContainer: true,
         texClass: a.TEXCLASS.ORD,
-        adjustChild_displaystyle: function(e) {
+        adjustChild_displaystyle: function (e) {
             if (e === 1) {
                 return false
             }
             return this.Get("displaystyle")
         },
-        adjustChild_scriptlevel: function(f) {
+        adjustChild_scriptlevel: function (f) {
             var e = this.Get("scriptlevel");
             if (f === 1) {
                 e += 2
             }
             return e
         },
-        adjustChild_texprimestyle: function(e) {
+        adjustChild_texprimestyle: function (e) {
             if (e === 0) {
                 return true
             }
@@ -4812,7 +4812,7 @@ MathJax.ElementJax.mml.Augment({
             infixlinebreakstyle: a.LINEBREAKSTYLE.BEFORE,
             decimalseparator: "."
         },
-        adjustChild_scriptlevel: function(g) {
+        adjustChild_scriptlevel: function (g) {
             var f = this.scriptlevel;
             if (f == null) {
                 f = this.Get("scriptlevel")
@@ -4891,7 +4891,7 @@ MathJax.ElementJax.mml.Augment({
             close: ")",
             separators: ","
         },
-        addFakeNodes: function() {
+        addFakeNodes: function () {
             var f = this.getValues("open", "close", "separators");
             f.open = f.open.replace(/[ \t\n\r]/g, "");
             f.close = f.close.replace(/[ \t\n\r]/g, "");
@@ -4927,7 +4927,7 @@ MathJax.ElementJax.mml.Augment({
             }
         },
         texClass: a.TEXCLASS.OPEN,
-        setTeXclass: function(g) {
+        setTeXclass: function (g) {
             this.addFakeNodes();
             this.getPrevClass(g);
             if (this.data.open) {
@@ -4979,26 +4979,26 @@ MathJax.ElementJax.mml.Augment({
             superscriptshift: "",
             texClass: a.AUTO
         },
-        autoDefault: function(e) {
+        autoDefault: function (e) {
             if (e === "texClass") {
                 return (this.isEmbellished() ? this.CoreMO().Get(e) : a.TEXCLASS.ORD)
             }
             return 0
         },
-        adjustChild_displaystyle: function(e) {
+        adjustChild_displaystyle: function (e) {
             if (e > 0) {
                 return false
             }
             return this.Get("displaystyle")
         },
-        adjustChild_scriptlevel: function(f) {
+        adjustChild_scriptlevel: function (f) {
             var e = this.Get("scriptlevel");
             if (f > 0) {
                 e++
             }
             return e
         },
-        adjustChild_texprimestyle: function(e) {
+        adjustChild_texprimestyle: function (e) {
             if (e === this.sub) {
                 return true
             }
@@ -5016,7 +5016,7 @@ MathJax.ElementJax.mml.Augment({
     });
     a.mmultiscripts = a.msubsup.Subclass({
         type: "mmultiscripts",
-        adjustChild_texprimestyle: function(e) {
+        adjustChild_texprimestyle: function (e) {
             if (e % 2 === 1) {
                 return true
             }
@@ -5051,7 +5051,7 @@ MathJax.ElementJax.mml.Augment({
             subscriptshift: "",
             superscriptshift: ""
         },
-        autoDefault: function(e) {
+        autoDefault: function (e) {
             if (e === "texClass") {
                 return (this.isEmbellished() ? this.CoreMO().Get(e) : a.TEXCLASS.ORD)
             }
@@ -5063,13 +5063,13 @@ MathJax.ElementJax.mml.Augment({
             }
             return false
         },
-        adjustChild_displaystyle: function(e) {
+        adjustChild_displaystyle: function (e) {
             if (e > 0) {
                 return false
             }
             return this.Get("displaystyle")
         },
-        adjustChild_scriptlevel: function(g) {
+        adjustChild_scriptlevel: function (g) {
             var f = this.Get("scriptlevel");
             var e = (this.data[this.base] && !this.Get("displaystyle") && this.data[this.base].CoreMO().Get("movablelimits"));
             if (g == this.under && (e || !this.Get("accentunder"))) {
@@ -5080,7 +5080,7 @@ MathJax.ElementJax.mml.Augment({
             }
             return f
         },
-        adjustChild_texprimestyle: function(e) {
+        adjustChild_texprimestyle: function (e) {
             if (e === this.base && this.data[this.over]) {
                 return true
             }
@@ -5125,7 +5125,7 @@ MathJax.ElementJax.mml.Augment({
             texClass: a.TEXCLASS.ORD,
             useHeight: 1
         },
-        adjustChild_displaystyle: function() {
+        adjustChild_displaystyle: function () {
             return (this.displaystyle != null ? this.displaystyle : this.defaults.displaystyle)
         },
         inheritFromMe: true,
@@ -5163,9 +5163,9 @@ MathJax.ElementJax.mml.Augment({
             }
         },
         linebreakContainer: true,
-        Append: function() {
+        Append: function () {
             for (var f = 0, e = arguments.length; f < e; f++) {
-                if (!((arguments[f]instanceof a.mtr) || (arguments[f]instanceof a.mlabeledtr))) {
+                if (!((arguments[f] instanceof a.mtr) || (arguments[f] instanceof a.mlabeledtr))) {
                     arguments[f] = a.mtr(arguments[f])
                 }
             }
@@ -5196,9 +5196,9 @@ MathJax.ElementJax.mml.Augment({
             }
         },
         linebreakContainer: true,
-        Append: function() {
+        Append: function () {
             for (var f = 0, e = arguments.length; f < e; f++) {
-                if (!(arguments[f]instanceof a.mtd)) {
+                if (!(arguments[f] instanceof a.mtd)) {
                     arguments[f] = a.mtd(arguments[f])
                 }
             }
@@ -5226,7 +5226,7 @@ MathJax.ElementJax.mml.Augment({
     });
     a.maligngroup = a.mbase.Subclass({
         type: "maligngroup",
-        isSpacelike: function() {
+        isSpacelike: function () {
             return true
         },
         defaults: {
@@ -5251,7 +5251,7 @@ MathJax.ElementJax.mml.Augment({
             mathcolor: a.INHERIT,
             edge: a.SIDE.LEFT
         },
-        isSpacelike: function() {
+        isSpacelike: function () {
             return true
         }
     });
@@ -5266,22 +5266,22 @@ MathJax.ElementJax.mml.Augment({
             actiontype: a.ACTIONTYPE.TOGGLE,
             selection: 1
         },
-        selected: function() {
+        selected: function () {
             return this.data[this.Get("selection") - 1] || a.NULL
         },
-        isEmbellished: function() {
+        isEmbellished: function () {
             return this.selected().isEmbellished()
         },
-        isSpacelike: function() {
+        isSpacelike: function () {
             return this.selected().isSpacelike()
         },
-        Core: function() {
+        Core: function () {
             return this.selected().Core()
         },
-        CoreMO: function() {
+        CoreMO: function () {
             return this.selected().CoreMO()
         },
-        setTeXclass: function(f) {
+        setTeXclass: function (f) {
             if (this.Get("actiontype") === a.ACTIONTYPE.TOOLTIP && this.data[1]) {
                 this.data[1].setTeXclass()
             }
@@ -5302,7 +5302,7 @@ MathJax.ElementJax.mml.Augment({
             encoding: null
         },
         setTeXclass: a.mbase.setChildTeXclass,
-        getAnnotation: function(g) {
+        getAnnotation: function (g) {
             var l = MathJax.Hub.config.MathMenu.semanticsAnnotations[g];
             if (l) {
                 for (var h = 0, e = this.data.length; h < e; h++) {
@@ -5374,7 +5374,7 @@ MathJax.ElementJax.mml.Augment({
             decimalseparator: ".",
             texprimestyle: false
         },
-        autoDefault: function(e) {
+        autoDefault: function (e) {
             if (e === "displaystyle") {
                 return this.Get("display") === "block"
             }
@@ -5382,7 +5382,7 @@ MathJax.ElementJax.mml.Augment({
         },
         linebreakContainer: true,
         setTeXclass: a.mbase.setChildTeXclass,
-        getAnnotation: function(e) {
+        getAnnotation: function (e) {
             if (this.data.length != 1) {
                 return null
             }
@@ -5391,22 +5391,22 @@ MathJax.ElementJax.mml.Augment({
     });
     a.chars = a.mbase.Subclass({
         type: "chars",
-        Append: function() {
+        Append: function () {
             this.data.push.apply(this.data, arguments)
         },
-        value: function() {
+        value: function () {
             return this.data.join("")
         },
-        toString: function() {
+        toString: function () {
             return this.data.join("")
         }
     });
     a.entity = a.mbase.Subclass({
         type: "entity",
-        Append: function() {
+        Append: function () {
             this.data.push.apply(this.data, arguments)
         },
-        value: function() {
+        value: function () {
             if (this.data[0].substr(0, 2) === "#x") {
                 return parseInt(this.data[0].substr(2), 16)
             } else {
@@ -5417,7 +5417,7 @@ MathJax.ElementJax.mml.Augment({
                 }
             }
         },
-        toString: function() {
+        toString: function () {
             var e = this.value();
             if (e <= 65535) {
                 return String.fromCharCode(e)
@@ -5428,18 +5428,18 @@ MathJax.ElementJax.mml.Augment({
     });
     a.xml = a.mbase.Subclass({
         type: "xml",
-        Init: function() {
+        Init: function () {
             this.div = document.createElement("div");
             return this.SUPER(arguments).Init.apply(this, arguments)
         },
-        Append: function() {
+        Append: function () {
             for (var f = 0, e = arguments.length; f < e; f++) {
                 var g = this.Import(arguments[f]);
                 this.data.push(g);
                 this.div.appendChild(g)
             }
         },
-        Import: function(j) {
+        Import: function (j) {
             if (document.importNode) {
                 return document.importNode(j, true)
             }
@@ -5447,7 +5447,7 @@ MathJax.ElementJax.mml.Augment({
             if (j.nodeType === 1) {
                 f = document.createElement(j.nodeName);
                 for (g = 0,
-                e = j.attributes.length; g < e; g++) {
+                    e = j.attributes.length; g < e; g++) {
                     var h = j.attributes[g];
                     if (h.specified && h.nodeValue != null && h.nodeValue != "") {
                         f.setAttribute(h.nodeName, h.nodeValue)
@@ -5471,15 +5471,15 @@ MathJax.ElementJax.mml.Augment({
                 }
             }
             for (g = 0,
-            e = j.childNodes.length; g < e; g++) {
+                e = j.childNodes.length; g < e; g++) {
                 f.appendChild(this.Import(j.childNodes[g]))
             }
             return f
         },
-        value: function() {
+        value: function () {
             return this.div
         },
-        toString: function() {
+        toString: function () {
             return this.div.innerHTML
         }
     });
@@ -5492,7 +5492,7 @@ MathJax.ElementJax.mml.Augment({
         Core: a.mbase.childCore,
         CoreMO: a.mbase.childCoreMO,
         isEmbellished: a.mbase.childEmbellished,
-        setTeXclass: function(e) {
+        setTeXclass: function (e) {
             this.data[0].setTeXclass();
             return this.adjustTeXclass(e)
         },
@@ -5859,23 +5859,23 @@ MathJax.ElementJax.mml.Augment({
 )(MathJax.ElementJax.mml);
 MathJax.ElementJax.mml.loadComplete("jax.js");
 
-MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
+MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function () {
     var c = "2.7.2";
     var a = MathJax.ElementJax.mml
-      , b = MathJax.Hub.config.menuSettings;
+        , b = MathJax.Hub.config.menuSettings;
     a.mbase.Augment({
-        toMathML: function(l) {
+        toMathML: function (l) {
             var h = (this.inferred && this.parent.inferRow);
             if (l == null) {
                 l = ""
             }
             var f = this.type
-              , e = this.toMathMLattributes();
+                , e = this.toMathMLattributes();
             if (f === "mspace") {
                 return l + "<" + f + e + " />"
             }
             var k = []
-              , j = (this.isToken ? "" : l + (h ? "" : "  "));
+                , j = (this.isToken ? "" : l + (h ? "" : "  "));
             for (var g = 0, d = this.data.length; g < d; g++) {
                 if (this.data[g]) {
                     k.push(this.data[g].toMathML(j))
@@ -5896,11 +5896,11 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
             }
             return l + "<" + f + e + ">\n" + k.join("\n") + "\n" + l + "</" + f + ">"
         },
-        toMathMLattributes: function() {
+        toMathMLattributes: function () {
             var j = (this.type === "mstyle" ? a.math.prototype.defaults : this.defaults);
             var h = (this.attrNames || a.copyAttributeNames)
-              , g = a.skipAttributes
-              , l = a.copyAttributes;
+                , g = a.skipAttributes
+                , l = a.copyAttributes;
             var e = [];
             if (this.type === "math" && (!this.attr || !this.attr.xmlns)) {
                 e.push('xmlns="http://www.w3.org/1998/Math/MathML"')
@@ -5935,7 +5935,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
                 return ""
             }
         },
-        toMathMLclass: function(d) {
+        toMathMLclass: function (d) {
             var f = [];
             if (this["class"]) {
                 f.push(this["class"])
@@ -5959,7 +5959,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
                 d.unshift('class="' + f.join(" ") + '"')
             }
         },
-        toMathMLattribute: function(d) {
+        toMathMLattribute: function (d) {
             if (typeof (d) === "string" && d.replace(/ /g, "").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
                 return (RegExp.$2 || "") + ((1 / 18) * RegExp.$3).toFixed(3).replace(/\.?0+$/, "") + "em"
             } else {
@@ -5976,7 +5976,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
             "-tex-oldstyle-bold": a.VARIANT.BOLD,
             "-tex-mathit": a.VARIANT.ITALIC
         },
-        toMathMLquote: function(f) {
+        toMathMLquote: function (f) {
             f = String(f).split("");
             for (var g = 0, d = f.length; g < d; g++) {
                 var k = f[g].charCodeAt(0);
@@ -6010,7 +6010,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
         }
     });
     a.math.Augment({
-        toMathML: function(d, e) {
+        toMathML: function (d, e) {
             var g;
             if (d == null) {
                 d = ""
@@ -6020,9 +6020,9 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
             }
             var n = (this.data[0] && this.data[0].data.length > 1);
             var p = this.type
-              , k = this.toMathMLattributes();
+                , k = this.toMathMLattributes();
             var j = []
-              , o = d + (g ? "  " + (n ? "  " : "") : "") + "  ";
+                , o = d + (g ? "  " + (n ? "  " : "") : "") + "  ";
             for (var h = 0, f = this.data.length; h < f; h++) {
                 if (this.data[h]) {
                     j.push(this.data[h].toMathML(o))
@@ -6042,7 +6042,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
                     j.push(d + "    </mrow>")
                 }
                 j.unshift(d + "  <semantics>");
-                var l = e.originalText.replace(/[&<>]/g, function(i) {
+                var l = e.originalText.replace(/[&<>]/g, function (i) {
                     return {
                         ">": "&gt;",
                         "<": "&lt;",
@@ -6056,7 +6056,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
         }
     });
     a.msubsup.Augment({
-        toMathML: function(j) {
+        toMathML: function (j) {
             var f = this.type;
             if (this.data[this.sup] == null) {
                 f = "msub"
@@ -6076,7 +6076,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
         }
     });
     a.munderover.Augment({
-        toMathML: function(k) {
+        toMathML: function (k) {
             var f = this.type;
             var j = this.data[this.base];
             if (j && j.isa(a.TeXAtom) && j.movablelimits && !j.Get("displaystyle")) {
@@ -6107,7 +6107,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
         }
     });
     a.TeXAtom.Augment({
-        toMathML: function(e) {
+        toMathML: function (e) {
             var d = this.toMathMLattributes();
             if (!d && this.data[0].data.length === 1) {
                 return e.substr(2) + this.data[0].toMathML(e)
@@ -6116,23 +6116,23 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
         }
     });
     a.chars.Augment({
-        toMathML: function(d) {
+        toMathML: function (d) {
             return (d || "") + this.toMathMLquote(this.toString())
         }
     });
     a.entity.Augment({
-        toMathML: function(d) {
+        toMathML: function (d) {
             return (d || "") + "&" + this.data[0] + ";<!-- " + this.toString() + " -->"
         }
     });
     a.xml.Augment({
-        toMathML: function(d) {
+        toMathML: function (d) {
             return (d || "") + this.toString()
         }
     });
-    MathJax.Hub.Register.StartupHook("TeX mathchoice Ready", function() {
+    MathJax.Hub.Register.StartupHook("TeX mathchoice Ready", function () {
         a.TeXmathchoice.Augment({
-            toMathML: function(d) {
+            toMathML: function (d) {
                 return this.Core().toMathML(d)
             }
         })
@@ -6141,7 +6141,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js", function() {
 });
 MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
 
-(function(b, e) {
+(function (b, e) {
     var d = "2.7.2";
     var a = b.CombineConfig("TeX.noErrors", {
         disabled: false,
@@ -6160,10 +6160,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
         version: d,
         config: a
     };
-    b.Register.StartupHook("TeX Jax Ready", function() {
+    b.Register.StartupHook("TeX Jax Ready", function () {
         var f = MathJax.InputJax.TeX.formatError;
         MathJax.InputJax.TeX.Augment({
-            formatError: function(j, i, k, g) {
+            formatError: function (j, i, k, g) {
                 if (a.disabled) {
                     return f.apply(this, arguments)
                 }
@@ -6186,7 +6186,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("HTML-CSS Jax Config", function() {
+    b.Register.StartupHook("HTML-CSS Jax Config", function () {
         b.Config({
             "HTML-CSS": {
                 styles: {
@@ -6197,13 +6197,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("HTML-CSS Jax Ready", function() {
+    b.Register.StartupHook("HTML-CSS Jax Ready", function () {
         var g = MathJax.ElementJax.mml;
         var h = MathJax.OutputJax["HTML-CSS"];
         var f = g.math.prototype.toHTML
-          , i = g.merror.prototype.toHTML;
+            , i = g.merror.prototype.toHTML;
         g.math.Augment({
-            toHTML: function(j, k) {
+            toHTML: function (j, k) {
                 var l = this.data[0];
                 if (l && l.data[0] && l.data[0].isError) {
                     j.style.fontSize = "";
@@ -6216,7 +6216,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         });
         g.merror.Augment({
-            toHTML: function(p) {
+            toHTML: function (p) {
                 if (!this.isError) {
                     return i.apply(this, arguments)
                 }
@@ -6235,10 +6235,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
                     }
                 }
                 var q = h.getHD(p.parentNode)
-                  , k = h.getW(p.parentNode);
+                    , k = h.getW(p.parentNode);
                 if (l > 1) {
                     var n = (q.h + q.d) / 2
-                      , j = h.TeX.x_height / 2;
+                        , j = h.TeX.x_height / 2;
                     p.parentNode.style.verticalAlign = h.Em(q.d + (j - n));
                     q.h = j + n;
                     q.d = n - j
@@ -6254,7 +6254,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("SVG Jax Config", function() {
+    b.Register.StartupHook("SVG Jax Config", function () {
         b.Config({
             SVG: {
                 styles: {
@@ -6265,12 +6265,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("SVG Jax Ready", function() {
+    b.Register.StartupHook("SVG Jax Ready", function () {
         var g = MathJax.ElementJax.mml;
         var f = g.math.prototype.toSVG
-          , h = g.merror.prototype.toSVG;
+            , h = g.merror.prototype.toSVG;
         g.math.Augment({
-            toSVG: function(i, j) {
+            toSVG: function (i, j) {
                 var k = this.data[0];
                 if (k && k.data[0] && k.data[0].isError) {
                     i = k.data[0].toSVG(i)
@@ -6281,7 +6281,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         });
         g.merror.Augment({
-            toSVG: function(n) {
+            toSVG: function (n) {
                 if (!this.isError || this.Parent().type !== "math") {
                     return h.apply(this, arguments)
                 }
@@ -6309,13 +6309,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("NativeMML Jax Ready", function() {
+    b.Register.StartupHook("NativeMML Jax Ready", function () {
         var h = MathJax.ElementJax.mml;
         var g = MathJax.Extension["TeX/noErrors"].config;
         var f = h.math.prototype.toNativeMML
-          , i = h.merror.prototype.toNativeMML;
+            , i = h.merror.prototype.toNativeMML;
         h.math.Augment({
-            toNativeMML: function(j) {
+            toNativeMML: function (j) {
                 var k = this.data[0];
                 if (k && k.data[0] && k.data[0].isError) {
                     j = k.data[0].toNativeMML(j)
@@ -6326,7 +6326,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         });
         h.merror.Augment({
-            toNativeMML: function(n) {
+            toNativeMML: function (n) {
                 if (!this.isError) {
                     return i.apply(this, arguments)
                 }
@@ -6346,7 +6346,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
                 }
                 for (var p in g.style) {
                     if (g.style.hasOwnProperty(p)) {
-                        var j = p.replace(/-./g, function(m) {
+                        var j = p.replace(/-./g, function (m) {
                             return m.charAt(1).toUpperCase()
                         });
                         n.style[j] = g.style[p]
@@ -6356,7 +6356,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("PreviewHTML Jax Config", function() {
+    b.Register.StartupHook("PreviewHTML Jax Config", function () {
         b.Config({
             PreviewHTML: {
                 styles: {
@@ -6367,12 +6367,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("PreviewHTML Jax Ready", function() {
+    b.Register.StartupHook("PreviewHTML Jax Ready", function () {
         var f = MathJax.ElementJax.mml;
         var h = MathJax.HTML;
         var g = f.merror.prototype.toPreviewHTML;
         f.merror.Augment({
-            toPreviewHTML: function(l) {
+            toPreviewHTML: function (l) {
                 if (!this.isError) {
                     return g.apply(this, arguments)
                 }
@@ -6394,7 +6394,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("CommonHTML Jax Config", function() {
+    b.Register.StartupHook("CommonHTML Jax Config", function () {
         b.Config({
             CommonHTML: {
                 styles: {
@@ -6406,13 +6406,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/toMathML.js");
             }
         })
     });
-    b.Register.StartupHook("CommonHTML Jax Ready", function() {
+    b.Register.StartupHook("CommonHTML Jax Ready", function () {
         var f = MathJax.ElementJax.mml;
         var g = MathJax.OutputJax.CommonHTML;
         var i = MathJax.HTML;
         var h = f.merror.prototype.toCommonHTML;
         f.merror.Augment({
-            toCommonHTML: function(n) {
+            toCommonHTML: function (n) {
                 if (!this.isError) {
                     return h.apply(this, arguments)
                 }
@@ -6455,12 +6455,12 @@ MathJax.Extension["TeX/noUndefined"] = {
         }
     })
 };
-MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
+MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
     var b = MathJax.Extension["TeX/noUndefined"].config;
     var a = MathJax.ElementJax.mml;
     var c = MathJax.InputJax.TeX.Parse.prototype.csUndefined;
     MathJax.InputJax.TeX.Parse.Augment({
-        csUndefined: function(d) {
+        csUndefined: function (d) {
             if (b.disabled) {
                 return c.apply(this, arguments)
             }
@@ -6472,14 +6472,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
 });
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
 
-(function(d, c, j) {
+(function (d, c, j) {
     var i, h = "\u00A0";
-    var k = function(m) {
+    var k = function (m) {
         return MathJax.Localization._.apply(MathJax.Localization, [["TeX", m]].concat([].slice.call(arguments, 1)))
     };
     var f = MathJax.Object.isArray;
     var e = MathJax.Object.Subclass({
-        Init: function(n, m) {
+        Init: function (n, m) {
             this.global = {
                 isInner: m
             };
@@ -6489,10 +6489,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.env = this.data[0].env
         },
-        Push: function() {
+        Push: function () {
             var o, n, p, q;
             for (o = 0,
-            n = arguments.length; o < n; o++) {
+                n = arguments.length; o < n; o++) {
                 p = arguments[o];
                 if (!p) {
                     continue
@@ -6529,7 +6529,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }
             }
         },
-        Pop: function() {
+        Pop: function () {
             var m = this.data.pop();
             if (!m.isOpen) {
                 delete m.env
@@ -6537,7 +6537,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             this.env = (this.data.length ? this.Top().env : {});
             return m
         },
-        Top: function(m) {
+        Top: function (m) {
             if (m == null) {
                 m = 1
             }
@@ -6546,7 +6546,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return this.data[this.data.length - m]
         },
-        Prev: function(m) {
+        Prev: function (m) {
             var n = this.Top();
             if (m) {
                 return n.data[n.data.length - 1]
@@ -6554,7 +6554,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 return n.Pop()
             }
         },
-        toString: function() {
+        toString: function () {
             return "stack[\n  " + this.data.join("\n  ") + "\n]"
         }
     });
@@ -6563,20 +6563,20 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         endError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
         closeError: ["ExtraCloseMissingOpen", "Extra close brace or missing open brace"],
         rightError: ["MissingLeftExtraRight", "Missing \\left or extra \\right"],
-        Init: function() {
+        Init: function () {
             if (this.isOpen) {
                 this.env = {}
             }
             this.data = [];
             this.Push.apply(this, arguments)
         },
-        Push: function() {
+        Push: function () {
             this.data.push.apply(this.data, arguments)
         },
-        Pop: function() {
+        Pop: function () {
             return this.data.pop()
         },
-        mmlData: function(m, n) {
+        mmlData: function (m, n) {
             if (m == null) {
                 m = true
             }
@@ -6587,7 +6587,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 inferred: true
             } : {}))
         },
-        checkItem: function(m) {
+        checkItem: function (m) {
             if (m.type === "over" && this.isOpen) {
                 m.num = this.mmlData(false);
                 this.data = []
@@ -6607,7 +6607,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             this.Push(m.data[0]);
             return false
         },
-        With: function(m) {
+        With: function (m) {
             for (var n in m) {
                 if (m.hasOwnProperty(n)) {
                     this[n] = m[n]
@@ -6615,18 +6615,18 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return this
         },
-        toString: function() {
+        toString: function () {
             return this.type + "[" + this.data.join("; ") + "]"
         }
     });
     b.start = b.Subclass({
         type: "start",
         isOpen: true,
-        Init: function(m) {
+        Init: function (m) {
             this.SUPER(arguments).Init.call(this);
             this.global = m
         },
-        checkItem: function(m) {
+        checkItem: function (m) {
             if (m.type === "stop") {
                 return b.mml(this.mmlData())
             }
@@ -6641,7 +6641,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         type: "open",
         isOpen: true,
         stopError: ["ExtraOpenMissingClose", "Extra open brace or missing close brace"],
-        checkItem: function(n) {
+        checkItem: function (n) {
             if (n.type === "close") {
                 var m = this.mmlData();
                 return b.mml(i.TeXAtom(m))
@@ -6655,7 +6655,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     });
     b.prime = b.Subclass({
         type: "prime",
-        checkItem: function(m) {
+        checkItem: function (m) {
             if (this.data[0].type !== "msubsup") {
                 return [i.msup(this.data[0], this.data[1]), m]
             }
@@ -6668,7 +6668,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         stopError: ["MissingScript", "Missing superscript or subscript argument"],
         supError: ["MissingOpenForSup", "Missing open brace for superscript"],
         subError: ["MissingOpenForSub", "Missing open brace for subscript"],
-        checkItem: function(m) {
+        checkItem: function (m) {
             if (m.type === "open" || m.type === "left") {
                 return true
             }
@@ -6692,13 +6692,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 d.Error(this[["", "subError", "supError"][this.position]])
             }
         },
-        Pop: function() {}
+        Pop: function () { }
     });
     b.over = b.Subclass({
         type: "over",
         isClose: true,
         name: "\\over",
-        checkItem: function(o, m) {
+        checkItem: function (o, m) {
             if (o.type === "over") {
                 d.Error(["AmbiguousUseOf", "Ambiguous use of %1", o.name])
             }
@@ -6715,7 +6715,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return this.SUPER(arguments).checkItem.call(this, o)
         },
-        toString: function() {
+        toString: function () {
             return "over[" + this.num + " / " + this.data.join("; ") + "]"
         }
     });
@@ -6724,7 +6724,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         isOpen: true,
         delim: "(",
         stopError: ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
-        checkItem: function(m) {
+        checkItem: function (m) {
             if (m.type === "right") {
                 return b.mml(d.fenced(this.delim, this.mmlData(), m.delim))
             }
@@ -6739,7 +6739,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     b.begin = b.Subclass({
         type: "begin",
         isOpen: true,
-        checkItem: function(m) {
+        checkItem: function (m) {
             if (m.type === "end") {
                 if (m.name !== this.name) {
                     d.Error(["EnvBadEnd", "\\begin{%1} ended with \\end{%2}", this.name, m.name])
@@ -6761,7 +6761,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     });
     b.style = b.Subclass({
         type: "style",
-        checkItem: function(n) {
+        checkItem: function (n) {
             if (!n.isClose) {
                 return this.SUPER(arguments).checkItem.call(this, n)
             }
@@ -6771,22 +6771,22 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     });
     b.position = b.Subclass({
         type: "position",
-        checkItem: function(n) {
+        checkItem: function (n) {
             if (n.isClose) {
                 d.Error(["MissingBoxFor", "Missing box for %1", this.name])
             }
             if (n.isNotStack) {
                 var m = n.mmlData();
                 switch (this.move) {
-                case "vertical":
-                    m = i.mpadded(m).With({
-                        height: this.dh,
-                        depth: this.dd,
-                        voffset: this.dh
-                    });
-                    return [b.mml(m)];
-                case "horizontal":
-                    return [b.mml(this.left), n, b.mml(this.right)]
+                    case "vertical":
+                        m = i.mpadded(m).With({
+                            height: this.dh,
+                            depth: this.dd,
+                            voffset: this.dh
+                        });
+                        return [b.mml(m)];
+                    case "horizontal":
+                        return [b.mml(this.left), n, b.mml(this.right)]
                 }
             }
             return this.SUPER(arguments).checkItem.call(this, n)
@@ -6797,14 +6797,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         isOpen: true,
         copyEnv: false,
         arraydef: {},
-        Init: function() {
+        Init: function () {
             this.table = [];
             this.row = [];
             this.frame = [];
             this.hfill = [];
             this.SUPER(arguments).Init.apply(this, arguments)
         },
-        checkItem: function(n) {
+        checkItem: function (n) {
             if (n.isClose && n.type !== "over") {
                 if (n.isEntry) {
                     this.EndEntry();
@@ -6858,7 +6858,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return this.SUPER(arguments).checkItem.call(this, n)
         },
-        EndEntry: function() {
+        EndEntry: function () {
             var m = i.mtd.apply(i, this.data);
             if (this.hfill.length) {
                 if (this.hfill[0] === 0) {
@@ -6872,7 +6872,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             this.data = [];
             this.hfill = []
         },
-        EndRow: function() {
+        EndRow: function () {
             var m = i.mtr;
             if (this.isNumbered && this.row.length === 3) {
                 this.row.unshift(this.row.pop());
@@ -6881,14 +6881,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             this.table.push(m.apply(i, this.row));
             this.row = []
         },
-        EndTable: function() {
+        EndTable: function () {
             if (this.data.length || this.row.length) {
                 this.EndEntry();
                 this.EndRow()
             }
             this.checkLines()
         },
-        checkLines: function() {
+        checkLines: function () {
             if (this.arraydef.rowlines) {
                 var m = this.arraydef.rowlines.split(/ /);
                 if (m.length === this.table.length) {
@@ -6909,7 +6909,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 this.arraydef.rowspacing = n.join(" ")
             }
         },
-        clearEnv: function() {
+        clearEnv: function () {
             for (var m in this.env) {
                 if (this.env.hasOwnProperty(m)) {
                     delete this.env[m]
@@ -6924,14 +6924,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     b.mml = b.Subclass({
         type: "mml",
         isNotStack: true,
-        Add: function() {
+        Add: function () {
             this.data.push.apply(this.data, arguments);
             return this
         }
     });
     b.fn = b.Subclass({
         type: "fn",
-        checkItem: function(n) {
+        checkItem: function (n) {
             if (this.data[0]) {
                 if (n.isOpen) {
                     return true
@@ -6960,14 +6960,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     });
     b.not = b.Subclass({
         type: "not",
-        checkItem: function(n) {
+        checkItem: function (n) {
             var m, o;
             if (n.type === "open" || n.type === "left") {
                 return true
             }
             if (n.type === "mml" && n.data[0].type.match(/^(mo|mi|mtext)$/)) {
                 m = n.data[0],
-                o = m.data.join("");
+                    o = m.data.join("");
                 if (o.length === 1 && !m.movesupsub && m.data.length === 1) {
                     o = b.not.remap[o.charCodeAt(0)];
                     if (o) {
@@ -7036,7 +7036,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
     };
     b.dots = b.Subclass({
         type: "dots",
-        checkItem: function(n) {
+        checkItem: function (n) {
             if (n.type === "open" || n.type === "left") {
                 return true
             }
@@ -7051,7 +7051,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         }
     });
     var g = {
-        Add: function(m, p, o) {
+        Add: function (m, p, o) {
             if (!p) {
                 p = this
             }
@@ -7069,7 +7069,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             return p
         }
     };
-    var l = function() {
+    var l = function () {
         i = MathJax.ElementJax.mml;
         c.Insert(g, {
             letter: /[a-z]/i,
@@ -7770,7 +7770,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         }
     };
     var a = MathJax.Object.Subclass({
-        Init: function(n, o) {
+        Init: function (n, o) {
             this.string = n;
             this.i = 0;
             this.macroCount = 0;
@@ -7787,7 +7787,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             this.Parse();
             this.Push(b.stop())
         },
-        Parse: function() {
+        Parse: function () {
             var o, m;
             while (this.i < this.string.length) {
                 o = this.string.charAt(this.i++);
@@ -7810,21 +7810,21 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }
             }
         },
-        Push: function() {
+        Push: function () {
             this.stack.Push.apply(this.stack, arguments)
         },
-        mml: function() {
+        mml: function () {
             if (this.stack.Top().type !== "mml") {
                 return null
             }
             return this.stack.Top().data[0]
         },
-        mmlToken: function(m) {
+        mmlToken: function (m) {
             return m
         },
-        ControlSequence: function(p) {
+        ControlSequence: function (p) {
             var m = this.GetCS()
-              , o = this.csFindMacro(m);
+                , o = this.csFindMacro(m);
             if (o) {
                 if (!f(o)) {
                     o = [o]
@@ -7854,10 +7854,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }
             }
         },
-        csFindMacro: function(m) {
+        csFindMacro: function (m) {
             return g.macros[m]
         },
-        csMathchar0mi: function(m, o) {
+        csMathchar0mi: function (m, o) {
             var n = {
                 mathvariant: i.VARIANT.ITALIC
             };
@@ -7867,7 +7867,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(this.mmlToken(i.mi(i.entity("#x" + o)).With(n)))
         },
-        csMathchar0mo: function(m, o) {
+        csMathchar0mo: function (m, o) {
             var n = {
                 stretchy: false
             };
@@ -7878,7 +7878,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(this.mmlToken(i.mo(i.entity("#x" + o)).With(n)))
         },
-        csMathchar7: function(m, o) {
+        csMathchar7: function (m, o) {
             var n = {
                 mathvariant: i.VARIANT.NORMAL
             };
@@ -7891,7 +7891,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(this.mmlToken(i.mi(i.entity("#x" + o)).With(n)))
         },
-        csDelimiter: function(m, o) {
+        csDelimiter: function (m, o) {
             var n = {};
             if (f(o)) {
                 n = o[1];
@@ -7907,17 +7907,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 stretchy: false
             }).With(n)))
         },
-        csUndefined: function(m) {
+        csUndefined: function (m) {
             d.Error(["UndefinedControlSequence", "Undefined control sequence %1", m])
         },
-        Variable: function(n) {
+        Variable: function (n) {
             var m = {};
             if (this.stack.env.font) {
                 m.mathvariant = this.stack.env.font
             }
             this.Push(this.mmlToken(i.mi(i.chars(n)).With(m)))
         },
-        Number: function(p) {
+        Number: function (p) {
             var m, o = this.string.slice(this.i - 1).match(g.number);
             if (o) {
                 m = i.mn(o[0].replace(/[{}]/g, ""));
@@ -7930,17 +7930,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(this.mmlToken(m))
         },
-        Open: function(m) {
+        Open: function (m) {
             this.Push(b.open())
         },
-        Close: function(m) {
+        Close: function (m) {
             this.Push(b.close())
         },
-        Tilde: function(m) {
+        Tilde: function (m) {
             this.Push(i.mtext(i.chars(h)))
         },
-        Space: function(m) {},
-        Superscript: function(r) {
+        Space: function (m) { },
+        Superscript: function (r) {
             if (this.GetNext().match(/\d/)) {
                 this.string = this.string.substr(0, this.i + 1) + " " + this.string.substr(this.i + 1)
             }
@@ -7959,7 +7959,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 o = o.data[0].data[0]
             }
             var n = o.movesupsub
-              , m = o.sup;
+                , m = o.sup;
             if ((o.type === "msubsup" && o.data[o.sup]) || (o.type === "munderover" && o.data[o.over] && !o.subsupOK)) {
                 d.Error(["DoubleExponent", "Double exponent: use braces to clarify"])
             }
@@ -7985,7 +7985,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 movesupsub: n
             }))
         },
-        Subscript: function(r) {
+        Subscript: function (r) {
             if (this.GetNext().match(/\d/)) {
                 this.string = this.string.substr(0, this.i + 1) + " " + this.string.substr(this.i + 1)
             }
@@ -8004,7 +8004,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 o = o.data[0].data[0]
             }
             var n = o.movesupsub
-              , m = o.sub;
+                , m = o.sub;
             if ((o.type === "msubsup" && o.data[o.sub]) || (o.type === "munderover" && o.data[o.under] && !o.subsupOK)) {
                 d.Error(["DoubleSubscripts", "Double subscripts: use braces to clarify"])
             }
@@ -8032,7 +8032,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         },
         PRIME: "\u2032",
         SMARTQUOTE: "\u2019",
-        Prime: function(o) {
+        Prime: function (o) {
             var n = this.stack.Prev();
             if (!n) {
                 n = i.mi()
@@ -8045,12 +8045,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             do {
                 m += this.PRIME;
                 this.i++,
-                o = this.GetNext()
+                    o = this.GetNext()
             } while (o === "'" || o === this.SMARTQUOTE);
             m = ["", "\u2032", "\u2033", "\u2034", "\u2057"][m.length] || m;
             this.Push(b.prime(n, this.mmlToken(i.mo(m))))
         },
-        mi2mo: function(m) {
+        mi2mo: function (m) {
             var n = i.mo();
             n.Append.apply(n, m.data);
             var o;
@@ -8068,15 +8068,15 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             n.useMMLspacing &= ~(n.SPACE_ATTR.lspace | n.SPACE_ATTR.rspace);
             return n
         },
-        Comment: function(m) {
+        Comment: function (m) {
             while (this.i < this.string.length && this.string.charAt(this.i) != "\n") {
                 this.i++
             }
         },
-        Hash: function(m) {
+        Hash: function (m) {
             d.Error(["CantUseHash1", "You can't use 'macro parameter character #' in math mode"])
         },
-        Other: function(o) {
+        Other: function (o) {
             var n, m;
             if (this.stack.env.font) {
                 n = {
@@ -8101,10 +8101,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(this.mmlToken(m))
         },
-        SetFont: function(n, m) {
+        SetFont: function (n, m) {
             this.stack.env.font = m
         },
-        SetStyle: function(n, m, o, p) {
+        SetStyle: function (n, m, o, p) {
             this.stack.env.style = m;
             this.stack.env.level = p;
             this.Push(b.style().With({
@@ -8114,7 +8114,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }
             }))
         },
-        SetSize: function(m, n) {
+        SetSize: function (m, n) {
             this.stack.env.size = n;
             this.Push(b.style().With({
                 styles: {
@@ -8122,7 +8122,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }
             }))
         },
-        Color: function(o) {
+        Color: function (o) {
             var n = this.GetArgument(o);
             var m = this.stack.env.color;
             this.stack.env.color = n;
@@ -8136,19 +8136,19 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 mathcolor: n
             }))
         },
-        Spacer: function(m, n) {
+        Spacer: function (m, n) {
             this.Push(i.mspace().With({
                 width: n,
                 mathsize: i.SIZE.NORMAL,
                 scriptlevel: 0
             }))
         },
-        LeftRight: function(m) {
+        LeftRight: function (m) {
             this.Push(b[m.substr(1)]().With({
                 delim: this.GetDelimiter(m)
             }))
         },
-        Middle: function(m) {
+        Middle: function (m) {
             var n = this.GetDelimiter(m);
             this.Push(i.TeXAtom().With({
                 texClass: i.TEXCLASS.CLOSE
@@ -8163,7 +8163,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 texClass: i.TEXCLASS.OPEN
             }))
         },
-        NamedFn: function(n, o) {
+        NamedFn: function (n, o) {
             if (!o) {
                 o = n.substr(1)
             }
@@ -8172,7 +8172,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             });
             this.Push(b.fn(this.mmlToken(m)))
         },
-        NamedOp: function(n, o) {
+        NamedOp: function (n, o) {
             if (!o) {
                 o = n.substr(1)
             }
@@ -8186,7 +8186,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             m.useMMLspacing &= ~m.SPACE_ATTR.form;
             this.Push(this.mmlToken(m))
         },
-        Limits: function(n, m) {
+        Limits: function (n, m) {
             var p = this.stack.Prev("nopop");
             if (!p || (p.Get("texClass") !== i.TEXCLASS.OP && p.movesupsub == null)) {
                 d.Error(["MisplacedLimits", "%1 is allowed only on operators", n])
@@ -8205,7 +8205,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 p.movablelimits = false
             }
         },
-        Over: function(o, n, p) {
+        Over: function (o, n, p) {
             var m = b.over().With({
                 name: o
             });
@@ -8227,14 +8227,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(m)
         },
-        Frac: function(n) {
+        Frac: function (n) {
             var m = this.ParseArg(n);
             var o = this.ParseArg(n);
             this.Push(i.mfrac(m, o))
         },
-        Sqrt: function(p) {
+        Sqrt: function (p) {
             var q = this.GetBrackets(p)
-              , m = this.GetArgument(p);
+                , m = this.GetArgument(p);
             if (m === "\\frac") {
                 m += "{" + this.GetArgument(m) + "}{" + this.GetArgument(m) + "}"
             }
@@ -8246,14 +8246,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(o)
         },
-        Root: function(o) {
+        Root: function (o) {
             var p = this.GetUpTo(o, "\\of");
             var m = this.ParseArg(o);
             this.Push(i.mroot(m, this.parseRoot(p)))
         },
-        parseRoot: function(r) {
+        parseRoot: function (r) {
             var o = this.stack.env
-              , m = o.inRoot;
+                , m = o.inRoot;
             o.inRoot = true;
             var q = d.Parse(r, o);
             r = q.mml();
@@ -8271,7 +8271,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             o.inRoot = m;
             return r
         },
-        MoveRoot: function(m, p) {
+        MoveRoot: function (m, p) {
             if (!this.stack.env.inRoot) {
                 d.Error(["MisplacedMoveRoot", "%1 can appear only within a root", m])
             }
@@ -8288,7 +8288,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.stack.global[p] = o
         },
-        Accent: function(o, m, s) {
+        Accent: function (o, m, s) {
             var r = this.ParseArg(o);
             var q = {
                 accent: true
@@ -8306,7 +8306,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 accent: true
             })))
         },
-        UnderOver: function(o, s, m, q) {
+        UnderOver: function (o, s, m, q) {
             var r = {
                 o: "over",
                 u: "under"
@@ -8339,23 +8339,23 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 subsupOK: true
             }))
         },
-        Overset: function(m) {
+        Overset: function (m) {
             var o = this.ParseArg(m)
-              , n = this.ParseArg(m);
+                , n = this.ParseArg(m);
             if (n.movablelimits) {
                 n.movablelimits = false
             }
             this.Push(i.mover(n, o))
         },
-        Underset: function(m) {
+        Underset: function (m) {
             var o = this.ParseArg(m)
-              , n = this.ParseArg(m);
+                , n = this.ParseArg(m);
             if (n.movablelimits) {
                 n.movablelimits = false
             }
             this.Push(i.munder(n, o))
         },
-        TeXAtom: function(p, r) {
+        TeXAtom: function (p, r) {
             var q = {
                 texClass: r
             }, o;
@@ -8374,7 +8374,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(o)
         },
-        MmlToken: function(o) {
+        MmlToken: function (o) {
             var p = this.GetArgument(o), m = this.GetBrackets(o, "").replace(/^\s+/, ""), s = this.GetArgument(o), r = {
                 attrNames: []
             }, n;
@@ -8405,7 +8405,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(this.mmlToken(i[p](s).With(r)))
         },
-        MmlFilterAttribute: function(m, n) {
+        MmlFilterAttribute: function (m, n) {
             return n
         },
         MmlTokenAllow: {
@@ -8420,14 +8420,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             href: 1,
             style: 1
         },
-        Strut: function(m) {
+        Strut: function (m) {
             this.Push(i.mpadded(i.mrow()).With({
                 height: "8.6pt",
                 depth: "3pt",
                 width: 0
             }))
         },
-        Phantom: function(n, m, o) {
+        Phantom: function (n, m, o) {
             var p = i.mphantom(this.ParseArg(n));
             if (m || o) {
                 p = i.mpadded(p);
@@ -8440,22 +8440,22 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(i.TeXAtom(p))
         },
-        Smash: function(o) {
+        Smash: function (o) {
             var n = this.trimSpaces(this.GetBrackets(o, ""));
             var m = i.mpadded(this.ParseArg(o));
             switch (n) {
-            case "b":
-                m.depth = 0;
-                break;
-            case "t":
-                m.height = 0;
-                break;
-            default:
-                m.height = m.depth = 0
+                case "b":
+                    m.depth = 0;
+                    break;
+                case "t":
+                    m.height = 0;
+                    break;
+                default:
+                    m.height = m.depth = 0
             }
             this.Push(i.TeXAtom(m))
         },
-        Lap: function(n) {
+        Lap: function (n) {
             var m = i.mpadded(this.ParseArg(n)).With({
                 width: 0
             });
@@ -8464,7 +8464,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(i.TeXAtom(m))
         },
-        RaiseLower: function(m) {
+        RaiseLower: function (m) {
             var n = this.GetDimen(m);
             var o = b.position().With({
                 name: m,
@@ -8486,7 +8486,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(o)
         },
-        MoveLeftRight: function(m) {
+        MoveLeftRight: function (m) {
             var p = this.GetDimen(m);
             var o = (p.charAt(0) === "-" ? p.slice(1) : "-" + p);
             if (m === "\\moveleft") {
@@ -8507,16 +8507,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 })
             }))
         },
-        Hskip: function(m) {
+        Hskip: function (m) {
             this.Push(i.mspace().With({
                 width: this.GetDimen(m),
                 mathsize: i.SIZE.NORMAL
             }))
         },
-        Rule: function(n, p) {
+        Rule: function (n, p) {
             var m = this.GetDimen(n)
-              , o = this.GetDimen(n)
-              , r = this.GetDimen(n);
+                , o = this.GetDimen(n)
+                , r = this.GetDimen(n);
             var q = {
                 width: m,
                 height: o,
@@ -8527,10 +8527,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(i.mspace().With(q))
         },
-        rule: function(p) {
+        rule: function (p) {
             var n = this.GetBrackets(p)
-              , m = this.GetDimen(p)
-              , q = this.GetDimen(p);
+                , m = this.GetDimen(p)
+                , q = this.GetDimen(p);
             var o = i.mspace().With({
                 width: m,
                 height: q,
@@ -8549,7 +8549,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(o)
         },
-        MakeBig: function(m, p, n) {
+        MakeBig: function (m, p, n) {
             n *= g.p_height;
             n = String(n).replace(/(\.\d\d\d).+/, "$1") + "em";
             var o = this.GetDelimiter(m, true);
@@ -8563,25 +8563,25 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 texClass: p
             }))
         },
-        BuildRel: function(m) {
+        BuildRel: function (m) {
             var n = this.ParseUpTo(m, "\\over");
             var o = this.ParseArg(m);
             this.Push(i.TeXAtom(i.munderover(o, null, n)).With({
                 texClass: i.TEXCLASS.REL
             }))
         },
-        HBox: function(m, n) {
+        HBox: function (m, n) {
             this.Push.apply(this, this.InternalMath(this.GetArgument(m), n))
         },
-        FBox: function(m) {
+        FBox: function (m) {
             this.Push(i.menclose.apply(i, this.InternalMath(this.GetArgument(m))).With({
                 notation: "box"
             }))
         },
-        Not: function(m) {
+        Not: function (m) {
             this.Push(b.not())
         },
-        Dots: function(m) {
+        Dots: function (m) {
             this.Push(b.dots().With({
                 ldots: this.mmlToken(i.mo(i.entity("#x2026")).With({
                     stretchy: false
@@ -8591,11 +8591,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }))
             }))
         },
-        Require: function(m) {
+        Require: function (m) {
             var n = this.GetArgument(m).replace(/.*\//, "").replace(/[^a-z0-9_.-]/ig, "");
             this.Extension(null, n)
         },
-        Extension: function(m, n, o) {
+        Extension: function (m, n, o) {
             if (m && !typeof (m) === "string") {
                 m = m.name
             }
@@ -8610,7 +8610,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 c.RestartAfter(j.Require(n))
             }
         },
-        Macro: function(o, r, q, s) {
+        Macro: function (o, r, q, s) {
             if (q) {
                 var n = [];
                 if (s != null) {
@@ -8628,7 +8628,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 d.Error(["MaxMacroSub1", "MathJax maximum macro substitution count exceeded; is there a recursive macro call?"])
             }
         },
-        Matrix: function(n, p, v, r, u, o, m, w, t) {
+        Matrix: function (n, p, v, r, u, o, m, w, t) {
             var s = this.GetNext();
             if (s === "") {
                 d.Error(["MissingArgFor", "Missing argument for %1", n])
@@ -8665,7 +8665,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(q)
         },
-        Entry: function(p) {
+        Entry: function (p) {
             this.Push(b.cell().With({
                 isEntry: true,
                 name: p
@@ -8673,9 +8673,9 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             if (this.stack.Top().isCases) {
                 var o = this.string;
                 var t = 0
-                  , s = -1
-                  , q = this.i
-                  , n = o.length;
+                    , s = -1
+                    , q = this.i
+                    , n = o.length;
                 while (q < n) {
                     var u = o.charAt(q);
                     if (u === "{") {
@@ -8716,13 +8716,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 }
             }
         },
-        Cr: function(m) {
+        Cr: function (m) {
             this.Push(b.cell().With({
                 isCR: true,
                 name: m
             }))
         },
-        CrLaTeX: function(m) {
+        CrLaTeX: function (m) {
             var q;
             if (this.string.charAt(this.i) === "[") {
                 q = this.GetBrackets(m, "").replace(/ /g, "").replace(/,/, ".");
@@ -8761,13 +8761,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         },
         emPerInch: 7.2,
         pxPerInch: 72,
-        matchDimen: function(m) {
+        matchDimen: function (m) {
             return m.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/)
         },
-        dimen2em: function(q) {
+        dimen2em: function (q) {
             var o = this.matchDimen(q);
             var n = parseFloat(o[1] || "1")
-              , p = o[2];
+                , p = o[2];
             if (p === "em") {
                 return n
             }
@@ -8797,13 +8797,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return 0
         },
-        Em: function(n) {
+        Em: function (n) {
             if (Math.abs(n) < 0.0006) {
                 return "0em"
             }
             return n.toFixed(3).replace(/\.?0+$/, "") + "em"
         },
-        HLine: function(n, o) {
+        HLine: function (n, o) {
             if (o == null) {
                 o = "solid"
             }
@@ -8822,7 +8822,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 p.arraydef.rowlines = m.join(" ")
             }
         },
-        HFill: function(m) {
+        HFill: function (m) {
             var n = this.stack.Top();
             if (n.isa(b.array)) {
                 n.hfill.push(n.data.length)
@@ -8830,9 +8830,9 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 d.Error(["UnsupportedHFill", "Unsupported use of %1", m])
             }
         },
-        BeginEnd: function(o) {
+        BeginEnd: function (o) {
             var p = this.GetArgument(o)
-              , r = false;
+                , r = false;
             if (p.match(/^\\end\\/)) {
                 r = true;
                 p = p.substr(5)
@@ -8871,16 +8871,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             this.Push(n)
         },
-        envFindName: function(m) {
+        envFindName: function (m) {
             return g.environment[m]
         },
-        Equation: function(m, n) {
+        Equation: function (m, n) {
             return n
         },
-        ExtensionEnv: function(n, m) {
+        ExtensionEnv: function (n, m) {
             this.Extension(n.name, m, "environment")
         },
-        Array: function(n, p, u, s, t, o, m, q) {
+        Array: function (n, p, u, s, t, o, m, q) {
             if (!s) {
                 s = this.GetArgument("\\begin{" + n.name + "}")
             }
@@ -8927,11 +8927,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             this.Push(n);
             return r
         },
-        AlignedArray: function(m) {
+        AlignedArray: function (m) {
             var n = this.GetBrackets("\\begin{" + m.name + "}");
             return this.setArrayAlign(this.Array.apply(this, arguments), n)
         },
-        setArrayAlign: function(n, m) {
+        setArrayAlign: function (n, m) {
             m = this.trimSpaces(m || "");
             if (m === "t") {
                 n.arraydef.align = "baseline 1"
@@ -8950,7 +8950,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return n
         },
-        convertDelimiter: function(m) {
+        convertDelimiter: function (m) {
             if (m) {
                 m = g.delimiter[m]
             }
@@ -8965,7 +8965,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return m
         },
-        trimSpaces: function(n) {
+        trimSpaces: function (n) {
             if (typeof (n) != "string") {
                 return n
             }
@@ -8975,16 +8975,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return m
         },
-        nextIsSpace: function() {
+        nextIsSpace: function () {
             return this.string.charAt(this.i).match(/\s/)
         },
-        GetNext: function() {
+        GetNext: function () {
             while (this.nextIsSpace()) {
                 this.i++
             }
             return this.string.charAt(this.i)
         },
-        GetCS: function() {
+        GetCS: function () {
             var m = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
             if (m) {
                 this.i += m[1].length;
@@ -8994,73 +8994,73 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 return " "
             }
         },
-        GetArgument: function(n, o) {
+        GetArgument: function (n, o) {
             switch (this.GetNext()) {
-            case "":
-                if (!o) {
-                    d.Error(["MissingArgFor", "Missing argument for %1", n])
-                }
-                return null;
-            case "}":
-                if (!o) {
-                    d.Error(["ExtraCloseMissingOpen", "Extra close brace or missing open brace"])
-                }
-                return null;
-            case "\\":
-                this.i++;
-                return "\\" + this.GetCS();
-            case "{":
-                var m = ++this.i
-                  , p = 1;
-                while (this.i < this.string.length) {
-                    switch (this.string.charAt(this.i++)) {
-                    case "\\":
-                        this.i++;
-                        break;
-                    case "{":
-                        p++;
-                        break;
-                    case "}":
-                        if (--p == 0) {
-                            return this.string.slice(m, this.i - 1)
-                        }
-                        break
+                case "":
+                    if (!o) {
+                        d.Error(["MissingArgFor", "Missing argument for %1", n])
                     }
-                }
-                d.Error(["MissingCloseBrace", "Missing close brace"]);
-                break
+                    return null;
+                case "}":
+                    if (!o) {
+                        d.Error(["ExtraCloseMissingOpen", "Extra close brace or missing open brace"])
+                    }
+                    return null;
+                case "\\":
+                    this.i++;
+                    return "\\" + this.GetCS();
+                case "{":
+                    var m = ++this.i
+                        , p = 1;
+                    while (this.i < this.string.length) {
+                        switch (this.string.charAt(this.i++)) {
+                            case "\\":
+                                this.i++;
+                                break;
+                            case "{":
+                                p++;
+                                break;
+                            case "}":
+                                if (--p == 0) {
+                                    return this.string.slice(m, this.i - 1)
+                                }
+                                break
+                        }
+                    }
+                    d.Error(["MissingCloseBrace", "Missing close brace"]);
+                    break
             }
             return this.string.charAt(this.i++)
         },
-        GetBrackets: function(n, p) {
+        GetBrackets: function (n, p) {
             if (this.GetNext() != "[") {
                 return p
             }
             var m = ++this.i
-              , o = 0;
+                , o = 0;
             while (this.i < this.string.length) {
                 switch (this.string.charAt(this.i++)) {
-                case "{":
-                    o++;
-                    break;
-                case "\\":
-                    this.i++;
-                    break;
-                case "}":
-                    if (o-- <= 0) {
-                        d.Error(["ExtraCloseLooking", "Extra close brace while looking for %1", "']'"])
-                    }
-                    break;
-                case "]":
-                    if (o == 0) {
-                        return this.string.slice(m, this.i - 1)
-                    }
-                    break
+                    case "{":
+                        o++;
+                        break;
+                    case "\\":
+                        this.i++;
+                        break;
+                    case "}":
+                        if (o-- <= 0) {
+                            d.Error(["ExtraCloseLooking", "Extra close brace while looking for %1", "']'"])
+                        }
+                        break;
+                    case "]":
+                        if (o == 0) {
+                            return this.string.slice(m, this.i - 1)
+                        }
+                        break
                 }
             }
             d.Error(["MissingCloseBracket", "Couldn't find closing ']' for argument to %1", n])
         },
-        GetDelimiter: function(m, n) {
+        GetDelimiter: function (m, n) {
             while (this.nextIsSpace()) {
                 this.i++
             }
@@ -9081,7 +9081,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             d.Error(["MissingOrUnrecognizedDelim", "Missing or unrecognized delimiter for %1", m])
         },
-        GetDimen: function(n) {
+        GetDimen: function (n) {
             var o;
             if (this.nextIsSpace()) {
                 this.i++
@@ -9101,7 +9101,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             d.Error(["MissingDimOrUnits", "Missing dimension or its units for %1", n])
         },
-        GetUpTo: function(o, p) {
+        GetUpTo: function (o, p) {
             while (this.nextIsSpace()) {
                 this.i++
             }
@@ -9110,18 +9110,18 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 m = this.i;
                 r = this.string.charAt(this.i++);
                 switch (r) {
-                case "\\":
-                    r += this.GetCS();
-                    break;
-                case "{":
-                    q++;
-                    break;
-                case "}":
-                    if (q == 0) {
-                        d.Error(["ExtraCloseLooking", "Extra close brace while looking for %1", p])
-                    }
-                    q--;
-                    break
+                    case "\\":
+                        r += this.GetCS();
+                        break;
+                    case "{":
+                        q++;
+                        break;
+                    case "}":
+                        if (q == 0) {
+                            d.Error(["ExtraCloseLooking", "Extra close brace while looking for %1", p])
+                        }
+                        q--;
+                        break
                 }
                 if (q == 0 && r == p) {
                     return this.string.slice(n, m)
@@ -9129,13 +9129,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             d.Error(["TokenNotFoundForCommand", "Couldn't find %1 for %2", p, o])
         },
-        ParseArg: function(m) {
+        ParseArg: function (m) {
             return d.Parse(this.GetArgument(m), this.stack.env).mml()
         },
-        ParseUpTo: function(m, n) {
+        ParseUpTo: function (m, n) {
             return d.Parse(this.GetUpTo(m, n), this.stack.env).mml()
         },
-        InternalMath: function(v, m) {
+        InternalMath: function (v, m) {
             var o = (this.stack.env.font ? {
                 mathvariant: this.stack.env.font
             } : {});
@@ -9228,11 +9228,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return n
         },
-        InternalText: function(n, m) {
+        InternalText: function (n, m) {
             n = n.replace(/^\s+/, h).replace(/\s+$/, h);
             return i.mtext(i.chars(n)).With(m)
         },
-        SubstituteArgs: function(n, m) {
+        SubstituteArgs: function (n, m) {
             var q = "";
             var p = "";
             var r;
@@ -9260,7 +9260,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return this.AddArgs(p, q)
         },
-        AddArgs: function(n, m) {
+        AddArgs: function (n, m) {
             if (m.match(/^[a-z]/i) && n.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
                 n += " "
             }
@@ -9283,7 +9283,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         annotationEncoding: "application/x-tex",
         prefilterHooks: MathJax.Callback.Hooks(true),
         postfilterHooks: MathJax.Callback.Hooks(true),
-        Config: function() {
+        Config: function () {
             this.SUPER(arguments).Config.apply(this, arguments);
             if (this.config.equationNumbers.autoNumber !== "none") {
                 if (!this.config.extensions) {
@@ -9292,7 +9292,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 this.config.extensions.push("AMSmath.js")
             }
         },
-        Translate: function(m) {
+        Translate: function (m) {
             var n, o = false, q = MathJax.HTML.getScript(m);
             var s = (m.type.replace(/\n/g, " ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
             var r = {
@@ -9331,19 +9331,19 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             r.math = n;
             return this.postfilterHooks.Execute(r) || r.math
         },
-        prefilterMath: function(n, o, m) {
+        prefilterMath: function (n, o, m) {
             return n
         },
-        postfilterMath: function(n, o, m) {
+        postfilterMath: function (n, o, m) {
             this.combineRelations(n.root);
             return n
         },
-        formatError: function(p, o, q, m) {
+        formatError: function (p, o, q, m) {
             var n = p.message.replace(/\n.*/, "");
             c.signal.Post(["TeX Jax - parse error", n, o, q, m]);
             return i.Error(n)
         },
-        Error: function(m) {
+        Error: function (m) {
             if (f(m)) {
                 m = k.apply(k, m)
             }
@@ -9351,11 +9351,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
                 texError: true
             })
         },
-        Macro: function(m, n, o) {
+        Macro: function (m, n, o) {
             g.macros[m] = ["Macro"].concat([].slice.call(arguments, 1));
             g.macros[m].isUser = true
         },
-        fenced: function(o, n, p) {
+        fenced: function (o, n, p) {
             var m = i.mrow().With({
                 open: o,
                 close: p,
@@ -9374,7 +9374,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }));
             return m
         },
-        fixedFence: function(o, n, p) {
+        fixedFence: function (o, n, p) {
             var m = i.mrow().With({
                 open: o,
                 close: p,
@@ -9393,18 +9393,18 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
             return m
         },
-        mathPalette: function(p, n) {
+        mathPalette: function (p, n) {
             if (p === "{" || p === "}") {
                 p = "\\" + p
             }
             var o = "{\\bigg" + n + " " + p + "}"
-              , m = "{\\big" + n + " " + p + "}";
+                , m = "{\\big" + n + " " + p + "}";
             return d.Parse("\\mathchoice" + o + m + m + m, {}).mml()
         },
-        combineRelations: function(q) {
+        combineRelations: function (q) {
             var r, n, p, o;
             for (r = 0,
-            n = q.data.length; r < n; r++) {
+                n = q.data.length; r < n; r++) {
                 if (q.data[r]) {
                     if (q.isa(i.mrow)) {
                         while (r + 1 < n && (p = q.data[r]) && (o = q.data[r + 1]) && p.isa(i.mo) && o.isa(i.mo) && p.Get("texClass") === i.TEXCLASS.REL && o.Get("texClass") === i.TEXCLASS.REL) {
@@ -9425,10 +9425,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
             }
         }
     });
-    d.prefilterHooks.Add(function(m) {
+    d.prefilterHooks.Add(function (m) {
         m.math = d.prefilterMath(m.math, m.display, m.script)
     });
-    d.postfilterHooks.Add(function(m) {
+    d.postfilterHooks.Add(function (m) {
         m.math = d.postfilterMath(m.math, m.display, m.script)
     });
     d.loadComplete("jax.js")
@@ -9445,14 +9445,14 @@ MathJax.Extension["TeX/AMSmath"] = {
     eqlabels: {},
     refs: []
 };
-MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
+MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
     var b = MathJax.ElementJax.mml
-      , h = MathJax.InputJax.TeX
-      , g = MathJax.Extension["TeX/AMSmath"];
+        , h = MathJax.InputJax.TeX
+        , g = MathJax.Extension["TeX/AMSmath"];
     var d = h.Definitions
-      , f = h.Stack.Item
-      , a = h.config.equationNumbers;
-    var c = function(k) {
+        , f = h.Stack.Item
+        , a = h.config.equationNumbers;
+    var c = function (k) {
         var n = [];
         for (var l = 0, j = k.length; l < j; l++) {
             n[l] = h.Parse.prototype.Em(k[l])
@@ -9540,10 +9540,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
         }
     }, null, true);
     h.Parse.Augment({
-        HandleTag: function(k) {
+        HandleTag: function (k) {
             var m = this.GetStar();
             var j = this.trimSpaces(this.GetArgument(k))
-              , i = j;
+                , i = j;
             if (!m) {
                 j = a.formatTag(j)
             }
@@ -9559,15 +9559,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 id: a.formatID(i)
             })
         },
-        HandleNoTag: function(i) {
+        HandleNoTag: function (i) {
             if (this.stack.global.tag) {
                 delete this.stack.global.tag
             }
             this.stack.global.notag = true
         },
-        HandleLabel: function(j) {
+        HandleLabel: function (j) {
             var k = this.stack.global
-              , i = this.GetArgument(j);
+                , i = this.GetArgument(j);
             if (i === "") {
                 return
             }
@@ -9585,7 +9585,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 }
             }
         },
-        HandleRef: function(k, m) {
+        HandleRef: function (k, m) {
             var j = this.GetArgument(k);
             var l = g.labels[j] || g.eqlabels[j];
             if (!l) {
@@ -9604,7 +9604,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 "class": "MathJax_ref"
             }))
         },
-        HandleDeclareOp: function(j) {
+        HandleDeclareOp: function (j) {
             var i = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
             var k = this.trimSpaces(this.GetArgument(j));
             if (k.charAt(0) == "\\") {
@@ -9614,21 +9614,21 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             l = l.replace(/\*/g, "\\text{*}").replace(/-/g, "\\text{-}");
             h.Definitions.macros[k] = ["Macro", "\\mathop{\\rm " + l + "}" + i]
         },
-        HandleOperatorName: function(j) {
+        HandleOperatorName: function (j) {
             var i = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
             var k = this.trimSpaces(this.GetArgument(j));
             k = k.replace(/\*/g, "\\text{*}").replace(/-/g, "\\text{-}");
             this.string = "\\mathop{\\rm " + k + "}" + i + " " + this.string.slice(this.i);
             this.i = 0
         },
-        SkipLimits: function(j) {
+        SkipLimits: function (j) {
             var l = this.GetNext()
-              , k = this.i;
+                , k = this.i;
             if (l === "\\" && ++this.i && this.GetCS() !== "limits") {
                 this.i = k
             }
         },
-        HandleShove: function(j, i) {
+        HandleShove: function (j, i) {
             var k = this.stack.Top();
             if (k.type !== "multline") {
                 h.Error(["CommandInMultline", "%1 can only appear within the multline environment", j])
@@ -9638,10 +9638,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             }
             k.data.shove = i
         },
-        CFrac: function(l) {
+        CFrac: function (l) {
             var i = this.trimSpaces(this.GetBrackets(l, ""))
-              , k = this.GetArgument(l)
-              , m = this.GetArgument(l);
+                , k = this.GetArgument(l)
+                , m = this.GetArgument(l);
             var j = b.mfrac(h.Parse("\\strut\\textstyle{" + k + "}", this.stack.env).mml(), h.Parse("\\strut\\textstyle{" + m + "}", this.stack.env).mml());
             i = ({
                 l: b.ALIGN.LEFT,
@@ -9656,7 +9656,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             }
             this.Push(j)
         },
-        Genfrac: function(j, l, q, n, i) {
+        Genfrac: function (j, l, q, n, i) {
             if (l == null) {
                 l = this.GetDelimiterArg(j)
             }
@@ -9696,7 +9696,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             }
             this.Push(k)
         },
-        Multline: function(j, i) {
+        Multline: function (j, i) {
             this.Push(j);
             this.checkEqnEnv();
             return f.multline(i, this.stack).With({
@@ -9710,7 +9710,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 }
             })
         },
-        AMSarray: function(k, j, i, m, l) {
+        AMSarray: function (k, j, i, m, l) {
             this.Push(k);
             if (i) {
                 this.checkEqnEnv()
@@ -9729,11 +9729,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 }
             })
         },
-        AlignedAMSArray: function(i) {
+        AlignedAMSArray: function (i) {
             var j = this.GetBrackets("\\begin{" + i.name + "}");
             return this.setArrayAlign(this.AMSarray.apply(this, arguments), j)
         },
-        AlignAt: function(l, j, i) {
+        AlignAt: function (l, j, i) {
             var q, k, p = "", o = [];
             if (!i) {
                 k = this.GetBrackets("\\begin{" + l.name + "}")
@@ -9754,22 +9754,22 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             var m = this.AMSarray(l, j, i, p, o);
             return this.setArrayAlign(m, k)
         },
-        EquationBegin: function(i, j) {
+        EquationBegin: function (i, j) {
             this.checkEqnEnv();
             this.stack.global.forcetag = (j && a.autoNumber !== "none");
             return i
         },
-        EquationStar: function(i, j) {
+        EquationStar: function (i, j) {
             this.stack.global.tagged = true;
             return j
         },
-        checkEqnEnv: function() {
+        checkEqnEnv: function () {
             if (this.stack.global.eqnenv) {
                 h.Error(["ErroneousNestingEq", "Erroneous nesting of equation structures"])
             }
             this.stack.global.eqnenv = true
         },
-        MultiIntegral: function(j, m) {
+        MultiIntegral: function (j, m) {
             var l = this.GetNext();
             if (l === "\\") {
                 var k = this.i;
@@ -9786,13 +9786,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             this.string = m + " " + this.string.slice(this.i);
             this.i = 0
         },
-        xArrow: function(k, o, n, i) {
+        xArrow: function (k, o, n, i) {
             var m = {
                 width: "+" + (n + i) + "mu",
                 lspace: n + "mu"
             };
             var p = this.GetBrackets(k)
-              , q = this.ParseArg(k);
+                , q = this.ParseArg(k);
             var s = b.mo(b.chars(String.fromCharCode(o))).With({
                 stretchy: true,
                 texClass: b.TEXCLASS.REL
@@ -9811,7 +9811,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 subsupOK: true
             }))
         },
-        GetDelimiterArg: function(i) {
+        GetDelimiterArg: function (i) {
             var j = this.trimSpaces(this.GetArgument(i));
             if (j == "") {
                 return null
@@ -9821,7 +9821,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             }
             h.Error(["MissingOrUnrecognizedDelim", "Missing or unrecognized delimiter for %1", i])
         },
-        GetStar: function() {
+        GetStar: function () {
             var i = (this.GetNext() === "*");
             if (i) {
                 this.i++
@@ -9830,7 +9830,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
         }
     });
     f.Augment({
-        autoTag: function() {
+        autoTag: function () {
             var j = this.global;
             if (!j.notag) {
                 g.number++;
@@ -9841,9 +9841,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                 })
             }
         },
-        getTag: function() {
+        getTag: function () {
             var m = this.global
-              , k = m.tag;
+                , k = m.tag;
             m.tagged = true;
             if (m.label) {
                 if (a.useLabelIds) {
@@ -9869,13 +9869,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             this.clearTag();
             return k
         },
-        clearTag: function() {
+        clearTag: function () {
             var i = this.global;
             delete i.tag;
             delete i.tagID;
             delete i.label
         },
-        fixInitialMO: function(l) {
+        fixInitialMO: function (l) {
             for (var k = 0, j = l.length; k < j; k++) {
                 if (l[k] && (l[k].type !== "mspace" && (l[k].type !== "texatom" || (l[k].data[0] && l[k].data[0].data.length)))) {
                     if (l[k].isEmbellished()) {
@@ -9888,7 +9888,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
     });
     f.multline = f.array.Subclass({
         type: "multline",
-        Init: function(j, i) {
+        Init: function (j, i) {
             this.SUPER(arguments).Init.apply(this);
             this.numbered = (j && a.autoNumber !== "none");
             this.save = {
@@ -9896,7 +9896,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             };
             i.global.tagged = !j && !i.global.forcetag
         },
-        EndEntry: function() {
+        EndEntry: function () {
             if (this.table.length) {
                 this.fixInitialMO(this.data)
             }
@@ -9907,14 +9907,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             this.row.push(i);
             this.data = []
         },
-        EndRow: function() {
+        EndRow: function () {
             if (this.row.length != 1) {
                 h.Error(["MultlineRowsOneCol", "The rows within the %1 environment must have exactly one column", "multline"])
             }
             this.table.push(this.row);
             this.row = []
         },
-        EndTable: function() {
+        EndTable: function () {
             this.SUPER(arguments).EndTable.call(this);
             if (this.table.length) {
                 var k = this.table.length - 1, n, l = -1;
@@ -9932,7 +9932,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
                     this.table[l] = [this.getTag()].concat(this.table[l])
                 }
                 for (n = 0,
-                k = this.table.length; n < k; n++) {
+                    k = this.table.length; n < k; n++) {
                     var j = (n === l ? b.mlabeledtr : b.mtr);
                     this.table[n] = j.apply(b, this.table[n])
                 }
@@ -9942,7 +9942,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
     });
     f.AMSarray = f.array.Subclass({
         type: "AMSarray",
-        Init: function(l, k, j, i) {
+        Init: function (l, k, j, i) {
             this.SUPER(arguments).Init.apply(this);
             this.numbered = (k && a.autoNumber !== "none");
             this.save = {
@@ -9952,14 +9952,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             i.global.notags = (j ? null : l);
             i.global.tagged = !k && !i.global.forcetag
         },
-        EndEntry: function() {
+        EndEntry: function () {
             if (this.row.length % 2 === 1) {
                 this.fixInitialMO(this.data)
             }
             this.row.push(b.mtd.apply(b, this.data));
             this.data = []
         },
-        EndRow: function() {
+        EndRow: function () {
             var i = b.mtr;
             if (!this.global.tag && this.numbered) {
                 this.autoTag()
@@ -9976,7 +9976,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             this.table.push(i.apply(b, this.row));
             this.row = []
         },
-        EndTable: function() {
+        EndTable: function () {
             this.SUPER(arguments).EndTable.call(this);
             this.global.notags = this.save.notags;
             this.global.notag = this.save.notag
@@ -9984,10 +9984,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
     });
     f.start.Augment({
         oldCheckItem: f.start.prototype.checkItem,
-        checkItem: function(k) {
+        checkItem: function (k) {
             if (k.type === "stop") {
                 var i = this.mmlData()
-                  , j = this.global;
+                    , j = this.global;
                 if (g.display && !j.tag && !j.tagged && !j.isInner && (a.autoNumber === "all" || j.forcetag)) {
                     this.autoTag()
                 }
@@ -10005,7 +10005,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             return this.oldCheckItem.call(this, k)
         }
     });
-    h.prefilterHooks.Add(function(i) {
+    h.prefilterHooks.Add(function (i) {
         g.display = i.display;
         g.number = g.startNumber;
         g.eqlabels = {};
@@ -10015,7 +10015,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             g.number = i.script.MathJax.startNumber
         }
     });
-    h.postfilterHooks.Add(function(i) {
+    h.postfilterHooks.Add(function (i) {
         i.script.MathJax.startNumber = g.startNumber;
         g.startNumber = g.number;
         MathJax.Hub.Insert(g.IDs, g.eqIDs);
@@ -10024,11 +10024,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
             g.refs.push(i.script)
         }
     }, 100);
-    MathJax.Hub.Register.MessageHook("Begin Math Input", function() {
+    MathJax.Hub.Register.MessageHook("Begin Math Input", function () {
         g.refs = [];
         g.refUpdate = false
     });
-    MathJax.Hub.Register.MessageHook("End Math Input", function(l) {
+    MathJax.Hub.Register.MessageHook("End Math Input", function (l) {
         if (g.refs.length) {
             g.refUpdate = true;
             for (var k = 0, j = g.refs.length; k < j; k++) {
@@ -10045,23 +10045,23 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
         }
         return null
     });
-    h.resetEquationNumbers = function(j, i) {
+    h.resetEquationNumbers = function (j, i) {
         g.startNumber = (j || 0);
         if (!i) {
             g.labels = {};
             g.IDs = {}
         }
     }
-    ;
+        ;
     MathJax.Hub.Startup.signal.Post("TeX AMSmath Ready")
 });
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSmath.js");
 MathJax.Extension["TeX/AMSsymbols"] = {
     version: "2.7.2"
 };
-MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
+MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
     var a = MathJax.ElementJax.mml
-      , b = MathJax.InputJax.TeX.Definitions;
+        , b = MathJax.InputJax.TeX.Definitions;
     b.Add({
         mathchar0mi: {
             digamma: "03DD",
@@ -10431,16 +10431,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
 });
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 
-(function(c, d) {
+(function (c, d) {
     var a;
-    var b = function(e) {
+    var b = function (e) {
         return MathJax.Localization._.apply(MathJax.Localization, [["MathML", e]].concat([].slice.call(arguments, 1)))
     };
     c.Parse = MathJax.Object.Subclass({
-        Init: function(f, e) {
+        Init: function (f, e) {
             this.Parse(f, e)
         },
-        Parse: function(h, e) {
+        Parse: function (h, e) {
             var j;
             if (typeof h !== "string") {
                 j = h.parentNode
@@ -10473,7 +10473,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             c.DOMfilterHooks.Execute(i);
             this.mml = this.MakeMML(i.math)
         },
-        MakeMML: function(h) {
+        MakeMML: function (h) {
             var i = String(h.getAttribute("class") || "");
             var f, g = h.nodeName.toLowerCase().replace(/^[a-z]+:/, "");
             var e = (i.match(/(^| )MJX-TeXAtom-([^ ]*)/));
@@ -10495,7 +10495,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             return f
         },
-        TeXAtom: function(g, f) {
+        TeXAtom: function (g, f) {
             var e = a.TeXAtom().With({
                 texClass: a.TEXCLASS[g]
             });
@@ -10504,7 +10504,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             return e
         },
-        CheckClass: function(f, h) {
+        CheckClass: function (f, h) {
             h = (h || "").split(/ /);
             var j = [];
             for (var g = 0, e = h.length; g < e; g++) {
@@ -10540,7 +10540,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 delete f["class"]
             }
         },
-        AddAttributes: function(g, j) {
+        AddAttributes: function (g, j) {
             g.attr = {};
             g.attrNames = [];
             for (var h = 0, e = j.attributes.length; h < e; h++) {
@@ -10573,10 +10573,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
             }
         },
-        filterAttribute: function(e, f) {
+        filterAttribute: function (e, f) {
             return f
         },
-        AddChildren: function(e, g) {
+        AddChildren: function (e, g) {
             for (var k = 0, j = g.childNodes.length; k < j; k++) {
                 var f = g.childNodes[k];
                 if (f.nodeName === "#comment") {
@@ -10610,7 +10610,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             if (e.type === "mrow" && e.data.length >= 2) {
                 var l = e.data[0]
-                  , n = e.data[e.data.length - 1];
+                    , n = e.data[e.data.length - 1];
                 if (l.type === "mo" && l.Get("fence") && n.type === "mo" && n.Get("fence")) {
                     if (l.data[0]) {
                         e.open = l.data.join("")
@@ -10621,7 +10621,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
             }
         },
-        preProcessMath: function(f) {
+        preProcessMath: function (f) {
             if (f.match(/^<[a-z]+:/i) && !f.match(/^<[^<>]* xmlns:/)) {
                 f = f.replace(/^<([a-z]+)(:math)/i, '<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')
             }
@@ -10635,10 +10635,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             f = f.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/, "$2");
             return f.replace(/&([a-z][a-z0-9]*);/ig, this.replaceEntity)
         },
-        trimSpace: function(e) {
+        trimSpace: function (e) {
             return e.replace(/[\t\n\r]/g, " ").replace(/^ +/, "").replace(/ +$/, "").replace(/  +/g, " ")
         },
-        replaceEntity: function(g, f) {
+        replaceEntity: function (g, f) {
             if (f.match(/^(lt|amp|quot)$/)) {
                 return g
             }
@@ -10664,7 +10664,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
         prefilterHooks: MathJax.Callback.Hooks(true),
         DOMfilterHooks: MathJax.Callback.Hooks(true),
         postfilterHooks: MathJax.Callback.Hooks(true),
-        Translate: function(e) {
+        Translate: function (e) {
             if (!this.ParseXML) {
                 this.ParseXML = this.createParser()
             }
@@ -10696,18 +10696,18 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             i.math = a(f);
             return this.postfilterHooks.Execute(i) || i.math
         },
-        prefilterMath: function(f, e) {
+        prefilterMath: function (f, e) {
             return f
         },
-        prefilterMathML: function(f, e) {
+        prefilterMathML: function (f, e) {
             return f
         },
-        formatError: function(h, g, e) {
+        formatError: function (h, g, e) {
             var f = h.message.replace(/\n.*/, "");
             MathJax.Hub.signal.Post(["MathML Jax - parse error", f, g, e]);
             return a.Error(f)
         },
-        Error: function(e) {
+        Error: function (e) {
             if (MathJax.Object.isArray(e)) {
                 e = b.apply(b, e)
             }
@@ -10715,32 +10715,32 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 mathmlError: true
             })
         },
-        parseDOM: function(e) {
+        parseDOM: function (e) {
             return this.parser.parseFromString(e, "text/xml")
         },
-        parseMS: function(e) {
+        parseMS: function (e) {
             return (this.parser.loadXML(e) ? this.parser : null)
         },
-        parseDIV: function(e) {
+        parseDIV: function (e) {
             this.div.innerHTML = "<div>" + e.replace(/<([a-z]+)([^>]*)\/>/g, "<$1$2></$1>") + "</div>";
             var f = this.div.firstChild;
             this.div.innerHTML = "";
             return f
         },
-        parseError: function(e) {
+        parseError: function (e) {
             return null
         },
-        createMSParser: function() {
+        createMSParser: function () {
             var j = null;
             var f = ["MSXML2.DOMDocument.6.0", "MSXML2.DOMDocument.5.0", "MSXML2.DOMDocument.4.0", "MSXML2.DOMDocument.3.0", "MSXML2.DOMDocument.2.0", "Microsoft.XMLDOM"];
             for (var g = 0, e = f.length; g < e && !j; g++) {
                 try {
                     j = new ActiveXObject(f[g])
-                } catch (h) {}
+                } catch (h) { }
             }
             return j
         },
-        createParser: function() {
+        createParser: function () {
             if (window.DOMParser) {
                 this.parser = new DOMParser();
                 return (this.parseDOM)
@@ -10771,10 +10771,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             return (this.parseDIV)
         },
-        parserCreationError: function() {
+        parserCreationError: function () {
             alert(b("CantCreateXMLParser", "MathJax can't create an XML parser for MathML.  Check that\nthe 'Script ActiveX controls marked safe for scripting' security\nsetting is enabled (use the Internet Options item in the Tools\nmenu, and select the Security panel, then press the Custom Level\nbutton to check this).\n\nMathML equations will not be able to be processed by MathJax."))
         },
-        Startup: function() {
+        Startup: function () {
             a = MathJax.ElementJax.mml;
             a.mspace.Augment({
                 mmlSelfClosing: true
@@ -10793,7 +10793,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             })
         }
     });
-    c.prefilterHooks.Add(function(e) {
+    c.prefilterHooks.Add(function (e) {
         e.math = (typeof (e.math) === "string" ? c.prefilterMath(e.math, e.script) : c.prefilterMathML(e.math, e.script))
     });
     c.Parse.Entity = {
@@ -11203,15 +11203,15 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 }
 )(MathJax.InputJax.MathML, MathJax.Hub.Browser);
 
-(function(ab) {
+(function (ab) {
     var g;
     var X = MathJax.Object.Subclass({
         firstChild: null,
         lastChild: null,
-        Init: function() {
+        Init: function () {
             this.childNodes = []
         },
-        appendChild: function(ac) {
+        appendChild: function (ac) {
             if (ac.parent) {
                 ac.parent.removeChild(ac)
             }
@@ -11226,7 +11226,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             this.lastChild = ac;
             return ac
         },
-        removeChild: function(ae) {
+        removeChild: function (ae) {
             for (var ad = 0, ac = this.childNodes.length; ad < ac; ad++) {
                 if (this.childNodes[ad] === ae) {
                     break
@@ -11252,7 +11252,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             ae.nextSibling = ae.parent = null;
             return ae
         },
-        replaceChild: function(af, ad) {
+        replaceChild: function (af, ad) {
             for (var ae = 0, ac = this.childNodes.length; ae < ac; ae++) {
                 if (this.childNodes[ae] === ad) {
                     break
@@ -11271,14 +11271,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             ad.nextSibling = ad.parent = null;
             return ad
         },
-        hasChildNodes: function(ac) {
+        hasChildNodes: function (ac) {
             return (this.childNodes.length > 0)
         },
-        toString: function() {
+        toString: function () {
             return "{" + this.childNodes.join("") + "}"
         }
     });
-    var x = function() {
+    var x = function () {
         g = MathJax.ElementJax.mml;
         var ac = g.mbase.prototype.Init;
         g.mbase.Augment({
@@ -11286,13 +11286,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             lastChild: null,
             nodeValue: null,
             nextSibling: null,
-            Init: function() {
+            Init: function () {
                 var ad = ac.apply(this, arguments) || this;
                 ad.childNodes = ad.data;
                 ad.nodeName = ad.type;
                 return ad
             },
-            appendChild: function(ag) {
+            appendChild: function (ag) {
                 if (ag.parent) {
                     ag.parent.removeChild(ag)
                 }
@@ -11315,7 +11315,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 return ag
             },
-            removeChild: function(af) {
+            removeChild: function (af) {
                 for (var ae = 0, ad = this.childNodes.length; ae < ad; ae++) {
                     if (this.childNodes[ae] === af) {
                         break
@@ -11341,7 +11341,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 af.nextSibling = af.parent = null;
                 return af
             },
-            replaceChild: function(ag, ae) {
+            replaceChild: function (ag, ae) {
                 for (var af = 0, ad = this.childNodes.length; af < ad; af++) {
                     if (this.childNodes[af] === ae) {
                         break
@@ -11360,10 +11360,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 ae.nextSibling = ae.parent = null;
                 return ae
             },
-            hasChildNodes: function(ad) {
+            hasChildNodes: function (ad) {
                 return (this.childNodes.length > 0)
             },
-            setAttribute: function(ad, ae) {
+            setAttribute: function (ad, ae) {
                 this[ad] = ae
             }
         })
@@ -11371,19 +11371,19 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     var Q = {};
     var e = {
         getElementById: true,
-        createElementNS: function(ad, ac) {
+        createElementNS: function (ad, ac) {
             var ae = g[ac]();
             if (ac === "mo" && ab.config.useMathMLspacing) {
                 ae.useMMLspacing = 128
             }
             return ae
         },
-        createTextNode: function(ac) {
+        createTextNode: function (ac) {
             return g.chars(ac).With({
                 nodeValue: ac
             })
         },
-        createDocumentFragment: function() {
+        createDocumentFragment: function () {
             return X()
         }
     };
@@ -11442,17 +11442,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     var H = ["\uD835\uDD04", "\uD835\uDD05", "\u212D", "\uD835\uDD07", "\uD835\uDD08", "\uD835\uDD09", "\uD835\uDD0A", "\u210C", "\u2111", "\uD835\uDD0D", "\uD835\uDD0E", "\uD835\uDD0F", "\uD835\uDD10", "\uD835\uDD11", "\uD835\uDD12", "\uD835\uDD13", "\uD835\uDD14", "\u211C", "\uD835\uDD16", "\uD835\uDD17", "\uD835\uDD18", "\uD835\uDD19", "\uD835\uDD1A", "\uD835\uDD1B", "\uD835\uDD1C", "\u2128", "\uD835\uDD1E", "\uD835\uDD1F", "\uD835\uDD20", "\uD835\uDD21", "\uD835\uDD22", "\uD835\uDD23", "\uD835\uDD24", "\uD835\uDD25", "\uD835\uDD26", "\uD835\uDD27", "\uD835\uDD28", "\uD835\uDD29", "\uD835\uDD2A", "\uD835\uDD2B", "\uD835\uDD2C", "\uD835\uDD2D", "\uD835\uDD2E", "\uD835\uDD2F", "\uD835\uDD30", "\uD835\uDD31", "\uD835\uDD32", "\uD835\uDD33", "\uD835\uDD34", "\uD835\uDD35", "\uD835\uDD36", "\uD835\uDD37"];
     var w = ["\uD835\uDD38", "\uD835\uDD39", "\u2102", "\uD835\uDD3B", "\uD835\uDD3C", "\uD835\uDD3D", "\uD835\uDD3E", "\u210D", "\uD835\uDD40", "\uD835\uDD41", "\uD835\uDD42", "\uD835\uDD43", "\uD835\uDD44", "\u2115", "\uD835\uDD46", "\u2119", "\u211A", "\u211D", "\uD835\uDD4A", "\uD835\uDD4B", "\uD835\uDD4C", "\uD835\uDD4D", "\uD835\uDD4E", "\uD835\uDD4F", "\uD835\uDD50", "\u2124", "\uD835\uDD52", "\uD835\uDD53", "\uD835\uDD54", "\uD835\uDD55", "\uD835\uDD56", "\uD835\uDD57", "\uD835\uDD58", "\uD835\uDD59", "\uD835\uDD5A", "\uD835\uDD5B", "\uD835\uDD5C", "\uD835\uDD5D", "\uD835\uDD5E", "\uD835\uDD5F", "\uD835\uDD60", "\uD835\uDD61", "\uD835\uDD62", "\uD835\uDD63", "\uD835\uDD64", "\uD835\uDD65", "\uD835\uDD66", "\uD835\uDD67", "\uD835\uDD68", "\uD835\uDD69", "\uD835\uDD6A", "\uD835\uDD6B"];
     var c = 0
-      , A = 1
-      , U = 2
-      , i = 3
-      , b = 4
-      , h = 5
-      , a = 6
-      , L = 7
-      , V = 8
-      , m = 9
-      , Y = 10
-      , K = 15;
+        , A = 1
+        , U = 2
+        , i = 3
+        , b = 4
+        , h = 5
+        , a = 6
+        , L = 7
+        , V = 8
+        , m = 9
+        , Y = 10
+        , K = 15;
     var k = {
         input: '"',
         tag: "mtext",
@@ -12955,7 +12955,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
         } else {
             ac = ae.slice(af)
         }
-        for (var ad = 0; ad < ac.length && ac.charCodeAt(ad) <= 32; ad = ad + 1) {}
+        for (var ad = 0; ad < ac.length && ac.charCodeAt(ad) <= 32; ad = ad + 1) { }
         return ac.slice(ad)
     }
     function N(ad, ag, ah) {
@@ -12973,7 +12973,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             return af
         } else {
-            for (var ae = ah; ae < ad.length && ad[ae] < ag; ae++) {}
+            for (var ae = ah; ae < ad.length && ad[ae] < ag; ae++) { }
         }
         return ae
     }
@@ -13076,142 +13076,27 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             ae = j(ai)
         }
         switch (ae.ttype) {
-        case L:
-        case c:
-            ai = p(ai, ae.input.length);
-            return [O(ae.tag, e.createTextNode(ae.output)), ai];
-        case b:
-            F++;
-            ai = p(ai, ae.input.length);
-            al = q(ai, true);
-            F--;
-            if (typeof ae.invisible == "boolean" && ae.invisible) {
-                ad = O("mrow", al[0])
-            } else {
-                ad = O("mo", e.createTextNode(ae.output));
-                ad = O("mrow", ad);
-                ad.appendChild(al[0])
-            }
-            return [ad, al[1]];
-        case Y:
-            if (ae != k) {
-                ai = p(ai, ae.input.length)
-            }
-            if (ai.charAt(0) == "{") {
-                ag = ai.indexOf("}")
-            } else {
-                if (ai.charAt(0) == "(") {
-                    ag = ai.indexOf(")")
+            case L:
+            case c:
+                ai = p(ai, ae.input.length);
+                return [O(ae.tag, e.createTextNode(ae.output)), ai];
+            case b:
+                F++;
+                ai = p(ai, ae.input.length);
+                al = q(ai, true);
+                F--;
+                if (typeof ae.invisible == "boolean" && ae.invisible) {
+                    ad = O("mrow", al[0])
                 } else {
-                    if (ai.charAt(0) == "[") {
-                        ag = ai.indexOf("]")
-                    } else {
-                        if (ae == k) {
-                            ag = ai.slice(1).indexOf('"') + 1
-                        } else {
-                            ag = 0
-                        }
-                    }
+                    ad = O("mo", e.createTextNode(ae.output));
+                    ad = O("mrow", ad);
+                    ad.appendChild(al[0])
                 }
-            }
-            if (ag == -1) {
-                ag = ai.length
-            }
-            ak = ai.slice(1, ag);
-            if (ak.charAt(0) == " ") {
-                ad = O("mspace");
-                ad.setAttribute("width", "1ex");
-                ah.appendChild(ad)
-            }
-            ah.appendChild(O(ae.tag, e.createTextNode(ak)));
-            if (ak.charAt(ak.length - 1) == " ") {
-                ad = O("mspace");
-                ad.setAttribute("width", "1ex");
-                ah.appendChild(ad)
-            }
-            ai = p(ai, ag + 1);
-            return [O("mrow", ah), ai];
-        case K:
-        case A:
-            ai = p(ai, ae.input.length);
-            al = G(ai);
-            if (al[0] == null) {
-                return [O(ae.tag, e.createTextNode(ae.output)), ai]
-            }
-            if (typeof ae.func == "boolean" && ae.func) {
-                ak = ai.charAt(0);
-                if (ak == "^" || ak == "_" || ak == "/" || ak == "|" || ak == "," || (ae.input.length == 1 && ae.input.match(/\w/) && ak != "(")) {
-                    return [O(ae.tag, e.createTextNode(ae.output)), ai]
-                } else {
-                    ad = O("mrow", O(ae.tag, e.createTextNode(ae.output)));
-                    ad.appendChild(al[0]);
-                    return [ad, al[1]]
+                return [ad, al[1]];
+            case Y:
+                if (ae != k) {
+                    ai = p(ai, ae.input.length)
                 }
-            }
-            R(al[0]);
-            if (ae.input == "sqrt") {
-                return [O(ae.tag, al[0]), al[1]]
-            } else {
-                if (typeof ae.rewriteleftright != "undefined") {
-                    ad = O("mrow", O("mo", e.createTextNode(ae.rewriteleftright[0])));
-                    ad.appendChild(al[0]);
-                    ad.appendChild(O("mo", e.createTextNode(ae.rewriteleftright[1])));
-                    return [ad, al[1]]
-                } else {
-                    if (ae.input == "cancel") {
-                        ad = O(ae.tag, al[0]);
-                        ad.setAttribute("notation", "updiagonalstrike");
-                        return [ad, al[1]]
-                    } else {
-                        if (typeof ae.acc == "boolean" && ae.acc) {
-                            ad = O(ae.tag, al[0]);
-                            ad.appendChild(O("mo", e.createTextNode(ae.output)));
-                            return [ad, al[1]]
-                        } else {
-                            if (!l && typeof ae.codes != "undefined") {
-                                for (ag = 0; ag < al[0].childNodes.length; ag++) {
-                                    if (al[0].childNodes[ag].nodeName == "mi" || al[0].nodeName == "mi") {
-                                        ak = (al[0].nodeName == "mi" ? al[0].firstChild.nodeValue : al[0].childNodes[ag].firstChild.nodeValue);
-                                        var aj = [];
-                                        for (var af = 0; af < ak.length; af++) {
-                                            if (ak.charCodeAt(af) > 64 && ak.charCodeAt(af) < 91) {
-                                                aj = aj + ae.codes[ak.charCodeAt(af) - 65]
-                                            } else {
-                                                if (ak.charCodeAt(af) > 96 && ak.charCodeAt(af) < 123) {
-                                                    aj = aj + ae.codes[ak.charCodeAt(af) - 71]
-                                                } else {
-                                                    aj = aj + ak.charAt(af)
-                                                }
-                                            }
-                                        }
-                                        if (al[0].nodeName == "mi") {
-                                            al[0] = O("mo").appendChild(e.createTextNode(aj))
-                                        } else {
-                                            al[0].replaceChild(O("mo").appendChild(e.createTextNode(aj)), al[0].childNodes[ag])
-                                        }
-                                    }
-                                }
-                            }
-                            ad = O(ae.tag, al[0]);
-                            ad.setAttribute(ae.atname, ae.atval);
-                            return [ad, al[1]]
-                        }
-                    }
-                }
-            }
-        case U:
-            ai = p(ai, ae.input.length);
-            al = G(ai);
-            if (al[0] == null) {
-                return [O("mo", e.createTextNode(ae.input)), ai]
-            }
-            R(al[0]);
-            var ac = G(al[1]);
-            if (ac[0] == null) {
-                return [O("mo", e.createTextNode(ae.input)), ai]
-            }
-            R(ac[0]);
-            if (ae.input == "color") {
                 if (ai.charAt(0) == "{") {
                     ag = ai.indexOf("}")
                 } else {
@@ -13220,57 +13105,172 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     } else {
                         if (ai.charAt(0) == "[") {
                             ag = ai.indexOf("]")
+                        } else {
+                            if (ae == k) {
+                                ag = ai.slice(1).indexOf('"') + 1
+                            } else {
+                                ag = 0
+                            }
                         }
                     }
                 }
+                if (ag == -1) {
+                    ag = ai.length
+                }
                 ak = ai.slice(1, ag);
-                ad = O(ae.tag, ac[0]);
-                ad.setAttribute("mathcolor", ak);
-                return [ad, ac[1]]
-            }
-            if (ae.input == "root" || ae.output == "stackrel") {
-                ah.appendChild(ac[0])
-            }
-            ah.appendChild(al[0]);
-            if (ae.input == "frac") {
-                ah.appendChild(ac[0])
-            }
-            return [O(ae.tag, ah), ac[1]];
-        case i:
-            ai = p(ai, ae.input.length);
-            return [O("mo", e.createTextNode(ae.output)), ai];
-        case a:
-            ai = p(ai, ae.input.length);
-            ad = O("mspace");
-            ad.setAttribute("width", "1ex");
-            ah.appendChild(ad);
-            ah.appendChild(O(ae.tag, e.createTextNode(ae.output)));
-            ad = O("mspace");
-            ad.setAttribute("width", "1ex");
-            ah.appendChild(ad);
-            return [O("mrow", ah), ai];
-        case m:
-            F++;
-            ai = p(ai, ae.input.length);
-            al = q(ai, false);
-            F--;
-            ak = "";
-            if (al[0].lastChild != null) {
-                ak = al[0].lastChild.firstChild.nodeValue
-            }
-            if (ak == "|") {
-                ad = O("mo", e.createTextNode(ae.output));
-                ad = O("mrow", ad);
-                ad.appendChild(al[0]);
-                return [ad, al[1]]
-            } else {
-                ad = O("mo", e.createTextNode("\u2223"));
-                ad = O("mrow", ad);
-                return [ad, ai]
-            }
-        default:
-            ai = p(ai, ae.input.length);
-            return [O(ae.tag, e.createTextNode(ae.output)), ai]
+                if (ak.charAt(0) == " ") {
+                    ad = O("mspace");
+                    ad.setAttribute("width", "1ex");
+                    ah.appendChild(ad)
+                }
+                ah.appendChild(O(ae.tag, e.createTextNode(ak)));
+                if (ak.charAt(ak.length - 1) == " ") {
+                    ad = O("mspace");
+                    ad.setAttribute("width", "1ex");
+                    ah.appendChild(ad)
+                }
+                ai = p(ai, ag + 1);
+                return [O("mrow", ah), ai];
+            case K:
+            case A:
+                ai = p(ai, ae.input.length);
+                al = G(ai);
+                if (al[0] == null) {
+                    return [O(ae.tag, e.createTextNode(ae.output)), ai]
+                }
+                if (typeof ae.func == "boolean" && ae.func) {
+                    ak = ai.charAt(0);
+                    if (ak == "^" || ak == "_" || ak == "/" || ak == "|" || ak == "," || (ae.input.length == 1 && ae.input.match(/\w/) && ak != "(")) {
+                        return [O(ae.tag, e.createTextNode(ae.output)), ai]
+                    } else {
+                        ad = O("mrow", O(ae.tag, e.createTextNode(ae.output)));
+                        ad.appendChild(al[0]);
+                        return [ad, al[1]]
+                    }
+                }
+                R(al[0]);
+                if (ae.input == "sqrt") {
+                    return [O(ae.tag, al[0]), al[1]]
+                } else {
+                    if (typeof ae.rewriteleftright != "undefined") {
+                        ad = O("mrow", O("mo", e.createTextNode(ae.rewriteleftright[0])));
+                        ad.appendChild(al[0]);
+                        ad.appendChild(O("mo", e.createTextNode(ae.rewriteleftright[1])));
+                        return [ad, al[1]]
+                    } else {
+                        if (ae.input == "cancel") {
+                            ad = O(ae.tag, al[0]);
+                            ad.setAttribute("notation", "updiagonalstrike");
+                            return [ad, al[1]]
+                        } else {
+                            if (typeof ae.acc == "boolean" && ae.acc) {
+                                ad = O(ae.tag, al[0]);
+                                ad.appendChild(O("mo", e.createTextNode(ae.output)));
+                                return [ad, al[1]]
+                            } else {
+                                if (!l && typeof ae.codes != "undefined") {
+                                    for (ag = 0; ag < al[0].childNodes.length; ag++) {
+                                        if (al[0].childNodes[ag].nodeName == "mi" || al[0].nodeName == "mi") {
+                                            ak = (al[0].nodeName == "mi" ? al[0].firstChild.nodeValue : al[0].childNodes[ag].firstChild.nodeValue);
+                                            var aj = [];
+                                            for (var af = 0; af < ak.length; af++) {
+                                                if (ak.charCodeAt(af) > 64 && ak.charCodeAt(af) < 91) {
+                                                    aj = aj + ae.codes[ak.charCodeAt(af) - 65]
+                                                } else {
+                                                    if (ak.charCodeAt(af) > 96 && ak.charCodeAt(af) < 123) {
+                                                        aj = aj + ae.codes[ak.charCodeAt(af) - 71]
+                                                    } else {
+                                                        aj = aj + ak.charAt(af)
+                                                    }
+                                                }
+                                            }
+                                            if (al[0].nodeName == "mi") {
+                                                al[0] = O("mo").appendChild(e.createTextNode(aj))
+                                            } else {
+                                                al[0].replaceChild(O("mo").appendChild(e.createTextNode(aj)), al[0].childNodes[ag])
+                                            }
+                                        }
+                                    }
+                                }
+                                ad = O(ae.tag, al[0]);
+                                ad.setAttribute(ae.atname, ae.atval);
+                                return [ad, al[1]]
+                            }
+                        }
+                    }
+                }
+            case U:
+                ai = p(ai, ae.input.length);
+                al = G(ai);
+                if (al[0] == null) {
+                    return [O("mo", e.createTextNode(ae.input)), ai]
+                }
+                R(al[0]);
+                var ac = G(al[1]);
+                if (ac[0] == null) {
+                    return [O("mo", e.createTextNode(ae.input)), ai]
+                }
+                R(ac[0]);
+                if (ae.input == "color") {
+                    if (ai.charAt(0) == "{") {
+                        ag = ai.indexOf("}")
+                    } else {
+                        if (ai.charAt(0) == "(") {
+                            ag = ai.indexOf(")")
+                        } else {
+                            if (ai.charAt(0) == "[") {
+                                ag = ai.indexOf("]")
+                            }
+                        }
+                    }
+                    ak = ai.slice(1, ag);
+                    ad = O(ae.tag, ac[0]);
+                    ad.setAttribute("mathcolor", ak);
+                    return [ad, ac[1]]
+                }
+                if (ae.input == "root" || ae.output == "stackrel") {
+                    ah.appendChild(ac[0])
+                }
+                ah.appendChild(al[0]);
+                if (ae.input == "frac") {
+                    ah.appendChild(ac[0])
+                }
+                return [O(ae.tag, ah), ac[1]];
+            case i:
+                ai = p(ai, ae.input.length);
+                return [O("mo", e.createTextNode(ae.output)), ai];
+            case a:
+                ai = p(ai, ae.input.length);
+                ad = O("mspace");
+                ad.setAttribute("width", "1ex");
+                ah.appendChild(ad);
+                ah.appendChild(O(ae.tag, e.createTextNode(ae.output)));
+                ad = O("mspace");
+                ad.setAttribute("width", "1ex");
+                ah.appendChild(ad);
+                return [O("mrow", ah), ai];
+            case m:
+                F++;
+                ai = p(ai, ae.input.length);
+                al = q(ai, false);
+                F--;
+                ak = "";
+                if (al[0].lastChild != null) {
+                    ak = al[0].lastChild.firstChild.nodeValue
+                }
+                if (ak == "|") {
+                    ad = O("mo", e.createTextNode(ae.output));
+                    ad = O("mrow", ad);
+                    ad.appendChild(al[0]);
+                    return [ad, al[1]]
+                } else {
+                    ad = O("mo", e.createTextNode("\u2223"));
+                    ad = O("mrow", ad);
+                    return [ad, ai]
+                }
+            default:
+                ai = p(ai, ae.input.length);
+                return [O(ae.tag, e.createTextNode(ae.output)), ai]
         }
     }
     function t(ai) {
@@ -13431,7 +13431,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
         ae = ae.replace(/&nbsp;/g, "");
         ae = ae.replace(/&gt;/g, ">");
         ae = ae.replace(/&lt;/g, "<");
-        ae = ae.replace(/(Sin|Cos|Tan|Arcsin|Arccos|Arctan|Sinh|Cosh|Tanh|Cot|Sec|Csc|Log|Ln|Abs)/g, function(ag) {
+        ae = ae.replace(/(Sin|Cos|Tan|Arcsin|Arccos|Arctan|Sinh|Cosh|Tanh|Cot|Sec|Csc|Log|Ln|Abs)/g, function (ag) {
             return ag.toLowerCase()
         });
         af = q(ae.replace(/^\s+/g, ""), false)[0];
@@ -13454,7 +13454,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     v = false;
     Z = "";
     C = "";
-    (function() {
+    (function () {
         for (var ad = 0, ac = z.length; ad < ac; ad++) {
             if (z[ad].codes) {
                 delete z[ad].codes
@@ -13467,7 +13467,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     )();
     ab.Augment({
         AM: {
-            Init: function() {
+            Init: function () {
                 o = ab.config.displaystyle;
                 d = (ab.config.decimal || ab.config.decimalsign);
                 if (!ab.config.fixphi) {
@@ -13484,58 +13484,58 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 x();
                 n()
             },
-            Augment: function(ac) {
+            Augment: function (ac) {
                 for (var ad in ac) {
                     if (ac.hasOwnProperty(ad)) {
                         switch (ad) {
-                        case "displaystyle":
-                            o = ac[ad];
-                            break;
-                        case "decimal":
-                            decimal = ac[ad];
-                            break;
-                        case "parseMath":
-                            M = ac[ad];
-                            break;
-                        case "parseExpr":
-                            q = ac[ad];
-                            break;
-                        case "parseIexpr":
-                            t = ac[ad];
-                            break;
-                        case "parseSexpr":
-                            G = ac[ad];
-                            break;
-                        case "removeBrackets":
-                            R = ac[ad];
-                            break;
-                        case "getSymbol":
-                            j = ac[ad];
-                            break;
-                        case "position":
-                            N = ac[ad];
-                            break;
-                        case "removeCharsAndBlanks":
-                            p = ac[ad];
-                            break;
-                        case "createMmlNode":
-                            O = ac[ad];
-                            break;
-                        case "createElementMathML":
-                            P = ac[ad];
-                            break;
-                        case "createElementXHTML":
-                            E = ac[ad];
-                            break;
-                        case "initSymbols":
-                            n = ac[ad];
-                            break;
-                        case "refreshSymbols":
-                            B = ac[ad];
-                            break;
-                        case "compareNames":
-                            T = ac[ad];
-                            break
+                            case "displaystyle":
+                                o = ac[ad];
+                                break;
+                            case "decimal":
+                                decimal = ac[ad];
+                                break;
+                            case "parseMath":
+                                M = ac[ad];
+                                break;
+                            case "parseExpr":
+                                q = ac[ad];
+                                break;
+                            case "parseIexpr":
+                                t = ac[ad];
+                                break;
+                            case "parseSexpr":
+                                G = ac[ad];
+                                break;
+                            case "removeBrackets":
+                                R = ac[ad];
+                                break;
+                            case "getSymbol":
+                                j = ac[ad];
+                                break;
+                            case "position":
+                                N = ac[ad];
+                                break;
+                            case "removeCharsAndBlanks":
+                                p = ac[ad];
+                                break;
+                            case "createMmlNode":
+                                O = ac[ad];
+                                break;
+                            case "createElementMathML":
+                                P = ac[ad];
+                                break;
+                            case "createElementXHTML":
+                                E = ac[ad];
+                                break;
+                            case "initSymbols":
+                                n = ac[ad];
+                                break;
+                            case "refreshSymbols":
+                                B = ac[ad];
+                                break;
+                            case "compareNames":
+                                T = ac[ad];
+                                break
                         }
                         this[ad] = ac[ad]
                     }
@@ -13583,14 +13583,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 }
 )(MathJax.InputJax.AsciiMath);
 
-(function(b) {
+(function (b) {
     var a;
     b.Augment({
         sourceMenuTitle: ["AsciiMathInput", "AsciiMath Input"],
         annotationEncoding: "text/x-asciimath",
         prefilterHooks: MathJax.Callback.Hooks(true),
         postfilterHooks: MathJax.Callback.Hooks(true),
-        Translate: function(c) {
+        Translate: function (c) {
             var d, f = MathJax.HTML.getScript(c);
             var g = {
                 math: f,
@@ -13613,17 +13613,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             this.postfilterHooks.Execute(g);
             return this.postfilterHooks.Execute(g) || g.math
         },
-        formatError: function(f, e, c) {
+        formatError: function (f, e, c) {
             var d = f.message.replace(/\n.*/, "");
             MathJax.Hub.signal.Post(["AsciiMath Jax - parse error", d, e, c]);
             return a.Error(d)
         },
-        Error: function(c) {
+        Error: function (c) {
             throw MathJax.Hub.Insert(Error(c), {
                 asciimathError: true
             })
         },
-        Startup: function() {
+        Startup: function () {
             a = MathJax.ElementJax.mml;
             this.AM.Init()
         }
@@ -13632,7 +13632,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 }
 )(MathJax.InputJax.AsciiMath);
 
-(function(i, b, e, g) {
+(function (i, b, e, g) {
     var h;
     var j, a, d;
     var f = "'Times New Roman',Times,STIXGeneral,serif";
@@ -13794,7 +13794,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             "font-size": "90%"
         }
     };
-    (function() {
+    (function () {
         for (var n = 0; n < 10; n++) {
             var o = "scaleX(." + n + ")";
             m[".MJXp-scale" + n] = {
@@ -13809,7 +13809,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     )();
     var k = 1000000;
     var c = "V"
-      , l = "H";
+        , l = "H";
     g.Augment({
         settings: b.config.menuSettings,
         config: {
@@ -13817,7 +13817,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
         },
         hideProcessedMath: false,
         maxStretchyParts: 1000,
-        Config: function() {
+        Config: function () {
             if (!this.require) {
                 this.require = []
             }
@@ -13828,7 +13828,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             this.require.push(MathJax.OutputJax.extensionDir + "/MathEvents.js")
         },
-        Startup: function() {
+        Startup: function () {
             j = MathJax.Extension.MathEvents.Event;
             a = MathJax.Extension.MathEvents.Touch;
             d = MathJax.Extension.MathEvents.Hover;
@@ -13846,8 +13846,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             n.parentNode.removeChild(n);
             return i.Styles(this.config.styles, ["InitializePHTML", this])
         },
-        InitializePHTML: function() {},
-        preTranslate: function(p) {
+        InitializePHTML: function () { },
+        preTranslate: function (p) {
             var s = p.jax[this.id], t, q = s.length, u, r, v, o, n;
             for (t = 0; t < q; t++) {
                 u = s[t];
@@ -13894,14 +13894,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 u.parentNode.insertBefore(o, u)
             }
         },
-        Translate: function(o, s) {
+        Translate: function (o, s) {
             if (!o.parentNode) {
                 return
             }
             var n = o.MathJax.elementJax
-              , r = n.root
-              , p = document.getElementById(n.inputID + "-Frame")
-              , t = (n.PHTML.display ? p.parentNode : p);
+                , r = n.root
+                , p = document.getElementById(n.inputID + "-Frame")
+                , t = (n.PHTML.display ? p.parentNode : p);
             this.initPHTML(r, p);
             try {
                 r.toPreviewHTML(p)
@@ -13922,7 +13922,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
             }
         },
-        postTranslate: function(s) {
+        postTranslate: function (s) {
             var o = s.jax[this.id];
             if (!this.hideProcessedMath) {
                 return
@@ -13941,7 +13941,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
             }
         },
-        getJaxFromMath: function(n) {
+        getJaxFromMath: function (n) {
             if (n.parentNode.className.match(/MathJax_PHTML_Display/)) {
                 n = n.parentNode
             }
@@ -13950,12 +13950,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             } while (n && n.nodeName.toLowerCase() !== "script");
             return b.getJaxFor(n)
         },
-        getHoverSpan: function(n, o) {
+        getHoverSpan: function (n, o) {
             return n.root.PHTMLspanElement()
         },
-        getHoverBBox: function(n, q, r) {
+        getHoverBBox: function (n, q, r) {
             var s = n.root.PHTML
-              , p = n.PHTML.outerEm;
+                , p = n.PHTML.outerEm;
             var o = {
                 w: s.w * p,
                 h: s.h * p,
@@ -13966,7 +13966,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             return o
         },
-        Zoom: function(o, u, s, n, r) {
+        Zoom: function (o, u, s, n, r) {
             u.className = "MathJax";
             this.idPostfix = "-zoom";
             o.root.toPHTML(u, u);
@@ -13976,9 +13976,9 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 s.style.position = "absolute"
             }
             var t = u.offsetWidth
-              , q = u.offsetHeight
-              , v = s.offsetHeight
-              , p = s.offsetWidth;
+                , q = u.offsetHeight
+                , v = s.offsetHeight
+                , p = s.offsetWidth;
             if (p === 0) {
                 p = s.parentNode.offsetWidth
             }
@@ -13991,8 +13991,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 zH: q
             }
         },
-        initPHTML: function(o, n) {},
-        Remove: function(n) {
+        initPHTML: function (o, n) { },
+        Remove: function (n) {
             var o = document.getElementById(n.inputID + "-Frame");
             if (o) {
                 if (n.PHTML.display) {
@@ -14004,7 +14004,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
         },
         ID: 0,
         idPostfix: "",
-        GetID: function() {
+        GetID: function () {
             this.ID++;
             return this.ID
         },
@@ -14172,7 +14172,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             "\u030C": "\u02C7"
         },
         REMAPACCENTUNDER: {},
-        length2em: function(r, p) {
+        length2em: function (r, p) {
             if (typeof (r) !== "string") {
                 r = r.toString()
             }
@@ -14193,7 +14193,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             var o = r.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
             var n = parseFloat(o[1] || "1")
-              , q = o[2];
+                , q = o[2];
             if (p == null) {
                 p = 1
             }
@@ -14229,23 +14229,23 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             return n * p
         },
-        Em: function(n) {
+        Em: function (n) {
             if (Math.abs(n) < 0.001) {
                 return "0em"
             }
             return (n.toFixed(3).replace(/\.?0+$/, "")) + "em"
         },
-        arrayEntry: function(n, o) {
+        arrayEntry: function (n, o) {
             return n[Math.max(0, Math.min(o, n.length - 1))]
         }
     });
-    MathJax.Hub.Register.StartupHook("mml Jax Ready", function() {
+    MathJax.Hub.Register.StartupHook("mml Jax Ready", function () {
         h = MathJax.ElementJax.mml;
         h.mbase.Augment({
-            toPreviewHTML: function(o, n) {
+            toPreviewHTML: function (o, n) {
                 return this.PHTMLdefaultSpan(o, n)
             },
-            PHTMLdefaultSpan: function(q, o) {
+            PHTMLdefaultSpan: function (q, o) {
                 if (!o) {
                     o = {}
                 }
@@ -14260,7 +14260,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 return q
             },
-            PHTMLaddChild: function(p, o, n) {
+            PHTMLaddChild: function (p, o, n) {
                 var q = this.data[o];
                 if (q) {
                     if (n.childSpans) {
@@ -14290,12 +14290,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     }
                 }
             },
-            PHTMLstretchChild: function(q, p, s) {
+            PHTMLstretchChild: function (q, p, s) {
                 var r = this.data[q];
                 if (r && r.PHTMLcanStretch("Vertical", p, s)) {
                     var t = this.PHTML
-                      , o = r.PHTML
-                      , n = o.w;
+                        , o = r.PHTML
+                        , n = o.w;
                     r.PHTMLstretchV(p, s);
                     t.w += o.w - n;
                     if (o.h > t.h) {
@@ -14306,7 +14306,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     }
                 }
             },
-            PHTMLcreateSpan: function(n) {
+            PHTMLcreateSpan: function (n) {
                 if (!this.PHTML) {
                     this.PHTML = {}
                 }
@@ -14338,24 +14338,24 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     id: o
                 })
             },
-            PHTMLspanElement: function() {
+            PHTMLspanElement: function () {
                 if (!this.PHTMLspanID) {
                     return null
                 }
                 return document.getElementById(this.id || "MJXp-Span-" + this.PHTMLspanID)
             },
-            PHTMLhandleToken: function(o) {
+            PHTMLhandleToken: function (o) {
                 var n = this.getValues("mathvariant");
                 if (n.mathvariant !== h.VARIANT.NORMAL) {
                     o.className += " " + g.VARIANT[n.mathvariant]
                 }
             },
-            PHTMLhandleStyle: function(n) {
+            PHTMLhandleStyle: function (n) {
                 if (this.style) {
                     n.style.cssText = this.style
                 }
             },
-            PHTMLhandleColor: function(n) {
+            PHTMLhandleColor: function (n) {
                 if (this.mathcolor) {
                     n.style.color = this.mathcolor
                 }
@@ -14363,17 +14363,17 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     n.style.backgroundColor = this.mathbackground
                 }
             },
-            PHTMLhandleScriptlevel: function(n) {
+            PHTMLhandleScriptlevel: function (n) {
                 var o = this.Get("scriptlevel");
                 if (o) {
                     n.className += " MJXp-script"
                 }
             },
-            PHTMLhandleText: function(y, A) {
+            PHTMLhandleText: function (y, A) {
                 var v, p;
                 var z = 0
-                  , o = 0
-                  , q = 0;
+                    , o = 0
+                    , q = 0;
                 for (var s = 0, r = A.length; s < r; s++) {
                     p = A.charCodeAt(s);
                     v = A.charAt(s);
@@ -14382,8 +14382,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                         p = (((p - 55296) << 10) + (A.charCodeAt(s) - 56320)) + 65536
                     }
                     var t = 0.7
-                      , u = 0.22
-                      , x = 0.5;
+                        , u = 0.22
+                        , x = 0.5;
                     if (p < 127) {
                         if (v.match(/[A-Za-ehik-or-xz0-9]/)) {
                             u = 0
@@ -14431,7 +14431,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 };
                 e.addText(y, A)
             },
-            PHTMLbboxFor: function(o) {
+            PHTMLbboxFor: function (o) {
                 if (this.data[o] && this.data[o].PHTML) {
                     return this.data[o].PHTML
                 }
@@ -14445,7 +14445,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     b: 0
                 }
             },
-            PHTMLcanStretch: function(q, o, p) {
+            PHTMLcanStretch: function (q, o, p) {
                 if (this.isEmbellished()) {
                     var n = this.Core();
                     if (n && n !== this) {
@@ -14454,16 +14454,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 return false
             },
-            PHTMLstretchV: function(n, o) {},
-            PHTMLstretchH: function(n) {},
-            CoreParent: function() {
+            PHTMLstretchV: function (n, o) { },
+            PHTMLstretchH: function (n) { },
+            CoreParent: function () {
                 var n = this;
                 while (n && n.isEmbellished() && n.CoreMO() === this && !n.isa(h.math)) {
                     n = n.Parent()
                 }
                 return n
             },
-            CoreText: function(n) {
+            CoreText: function (n) {
                 if (!n) {
                     return ""
                 }
@@ -14481,19 +14481,19 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.chars.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 var o = this.toString().replace(/[\u2061-\u2064]/g, "");
                 this.PHTMLhandleText(n, o)
             }
         });
         h.entity.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 var o = this.toString().replace(/[\u2061-\u2064]/g, "");
                 this.PHTMLhandleText(n, o)
             }
         });
         h.math.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 n = this.PHTMLdefaultSpan(n);
                 if (this.Get("display") === "block") {
                     n.className += " MJXp-display"
@@ -14502,7 +14502,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mo.Augment({
-            toPreviewHTML: function(o) {
+            toPreviewHTML: function (o) {
                 o = this.PHTMLdefaultSpan(o);
                 this.PHTMLadjustAccent(o);
                 var n = this.getValues("lspace", "rspace", "scriptlevel", "displaystyle", "largeop");
@@ -14529,11 +14529,11 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 return o
             },
-            PHTMLadjustAccent: function(p) {
+            PHTMLadjustAccent: function (p) {
                 var o = this.CoreParent();
                 if (o && o.isa(h.munderover) && this.CoreText(o.data[o.base]).length === 1) {
                     var q = o.data[o.over]
-                      , n = o.data[o.under];
+                        , n = o.data[o.under];
                     var s = this.data.join(""), r;
                     if (q && this === q.CoreMO() && o.Get("accent")) {
                         r = g.REMAPACCENT[s]
@@ -14555,7 +14555,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     }
                 }
             },
-            PHTMLcanStretch: function(q, o, p) {
+            PHTMLcanStretch: function (q, o, p) {
                 if (!this.Get("stretchy")) {
                     return false
                 }
@@ -14570,9 +14570,9 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 return n
             },
-            PHTMLstretchV: function(p, u) {
+            PHTMLstretchV: function (p, u) {
                 var o = this.PHTMLspanElement()
-                  , t = this.PHTML;
+                    , t = this.PHTML;
                 var n = this.getValues("symmetric", "maxsize", "minsize");
                 if (n.symmetric) {
                     l = 2 * Math.max(p - 0.25, u + 0.25)
@@ -14602,12 +14602,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mspace.Augment({
-            toPreviewHTML: function(q) {
+            toPreviewHTML: function (q) {
                 q = this.PHTMLdefaultSpan(q);
                 var o = this.getValues("height", "depth", "width");
                 var n = g.length2em(o.width)
-                  , p = g.length2em(o.height)
-                  , s = g.length2em(o.depth);
+                    , p = g.length2em(o.height)
+                    , s = g.length2em(o.depth);
                 var r = this.PHTML;
                 r.w = n;
                 r.h = p;
@@ -14627,7 +14627,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mpadded.Augment({
-            toPreviewHTML: function(u) {
+            toPreviewHTML: function (u) {
                 u = this.PHTMLdefaultSpan(u, {
                     childSpans: true,
                     className: "MJXp-box",
@@ -14637,10 +14637,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 var v = this.getValues("width", "height", "depth", "lspace", "voffset");
                 var s = this.PHTMLdimen(v.lspace);
                 var q = 0
-                  , n = 0
-                  , t = s.len
-                  , r = -s.len
-                  , p = 0;
+                    , n = 0
+                    , t = s.len
+                    , r = -s.len
+                    , p = 0;
                 if (v.width !== "") {
                     s = this.PHTMLdimen(v.width, "w", 0);
                     if (s.pm) {
@@ -14687,7 +14687,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 return u
             },
-            PHTMLdimen: function(q, r, n) {
+            PHTMLdimen: function (q, r, n) {
                 if (n == null) {
                     n = -k
                 }
@@ -14701,7 +14701,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.munderover.Augment({
-            toPreviewHTML: function(r) {
+            toPreviewHTML: function (r) {
                 var t = this.getValues("displaystyle", "accent", "accentunder", "align");
                 var n = this.data[this.base];
                 if (!t.displaystyle && n != null && (n.movablelimits || n.CoreMO().Get("movablelimits"))) {
@@ -14715,10 +14715,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     noBBox: true
                 });
                 var p = this.PHTMLbboxFor(this.over)
-                  , v = this.PHTMLbboxFor(this.under)
-                  , u = this.PHTMLbboxFor(this.base)
-                  , s = this.PHTML
-                  , o = p.acc;
+                    , v = this.PHTMLbboxFor(this.under)
+                    , u = this.PHTMLbboxFor(this.base)
+                    , s = this.PHTML
+                    , o = p.acc;
                 if (this.data[this.over]) {
                     if (r.lastChild.firstChild) {
                         r.lastChild.firstChild.style.marginLeft = p.l = r.lastChild.firstChild.style.marginRight = p.r = 0
@@ -14763,7 +14763,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.msubsup.Augment({
-            toPreviewHTML: function(q) {
+            toPreviewHTML: function (q) {
                 q = this.PHTMLdefaultSpan(q, {
                     noBBox: true
                 });
@@ -14775,8 +14775,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     }
                 }
                 var s = this.data[this.base]
-                  , p = this.data[this.sub]
-                  , n = this.data[this.sup];
+                    , p = this.data[this.sub]
+                    , n = this.data[this.sup];
                 if (!s) {
                     s = {
                         bbox: {
@@ -14787,7 +14787,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 q.firstChild.style.marginRight = ".05em";
                 var o = Math.max(0.4, s.PHTML.h - 0.4)
-                  , u = Math.max(0.2, s.PHTML.d + 0.1);
+                    , u = Math.max(0.2, s.PHTML.d + 0.1);
                 var t = this.PHTML;
                 if (n && p) {
                     var r = e.Element("span", {
@@ -14834,7 +14834,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mfrac.Augment({
-            toPreviewHTML: function(r) {
+            toPreviewHTML: function (r) {
                 r = this.PHTMLdefaultSpan(r, {
                     childSpans: true,
                     className: "MJXp-box",
@@ -14863,8 +14863,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 n.firstChild.lastChild.appendChild(r.lastChild);
                 r.appendChild(n);
                 var s = this.PHTMLbboxFor(0)
-                  , p = this.PHTMLbboxFor(1)
-                  , v = this.PHTML;
+                    , p = this.PHTMLbboxFor(1)
+                    , v = this.PHTML;
                 v.w = Math.max(s.w, p.w) * 0.8;
                 v.h = s.h + s.d + 0.1 + 0.25;
                 v.d = p.h + p.d - 0.25;
@@ -14888,7 +14888,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.msqrt.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 n = this.PHTMLdefaultSpan(n, {
                     childSpans: true,
                     className: "MJXp-box",
@@ -14898,10 +14898,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 this.PHTMLlayoutRoot(n, n.firstChild);
                 return n
             },
-            PHTMLlayoutRoot: function(u, n) {
+            PHTMLlayoutRoot: function (u, n) {
                 var v = this.PHTMLbboxFor(0);
                 var q = Math.ceil((v.h + v.d + 0.14) * 100)
-                  , w = g.Em(14 / q);
+                    , w = g.Em(14 / q);
                 var r = e.Element("span", {
                     className: "MJXp-surd"
                 }, [["span", {
@@ -14936,7 +14936,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mroot.Augment({
-            toPreviewHTML: function(q) {
+            toPreviewHTML: function (q) {
                 q = this.PHTMLdefaultSpan(q, {
                     childSpans: true,
                     className: "MJXp-box",
@@ -14944,12 +14944,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     noBBox: true
                 });
                 var p = this.PHTMLbboxFor(1)
-                  , n = q.removeChild(q.lastChild);
+                    , n = q.removeChild(q.lastChild);
                 var t = this.PHTMLlayoutRoot(e.Element("span"), q.firstChild);
                 n.className = "MJXp-script";
                 var u = parseInt(t.firstChild.firstChild.style.fontSize);
                 var o = 0.55 * (u / 120) + p.d * 0.8
-                  , s = -0.6 * (u / 120);
+                    , s = -0.6 * (u / 120);
                 if (u > 150) {
                     s *= 0.95 * Math.ceil(150 / u * 10) / 10
                 }
@@ -14967,7 +14967,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             PHTMLlayoutRoot: h.msqrt.prototype.PHTMLlayoutRoot
         });
         h.mfenced.Augment({
-            toPreviewHTML: function(q) {
+            toPreviewHTML: function (q) {
                 q = this.PHTMLcreateSpan(q);
                 this.PHTMLhandleStyle(q);
                 this.PHTMLhandleColor(q);
@@ -14979,10 +14979,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 this.PHTMLaddChild(q, "close", {});
                 var o = this.PHTML.h
-                  , r = this.PHTML.d;
+                    , r = this.PHTML.d;
                 this.PHTMLstretchChild("open", o, r);
                 for (p = 0,
-                n = this.data.length; p < n; p++) {
+                    n = this.data.length; p < n; p++) {
                     this.PHTMLstretchChild("sep" + p, o, r);
                     this.PHTMLstretchChild(p, o, r)
                 }
@@ -14991,10 +14991,10 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mrow.Augment({
-            toPreviewHTML: function(q) {
+            toPreviewHTML: function (q) {
                 q = this.PHTMLdefaultSpan(q);
                 var p = this.PHTML.h
-                  , r = this.PHTML.d;
+                    , r = this.PHTML.d;
                 for (var o = 0, n = this.data.length; o < n; o++) {
                     this.PHTMLstretchChild(o, p, r)
                 }
@@ -15002,36 +15002,36 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mstyle.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 n = this.PHTMLdefaultSpan(n);
                 this.PHTMLhandleScriptlevel(n);
                 return n
             }
         });
         h.TeXAtom.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 n = this.PHTMLdefaultSpan(n);
                 n.className = "MJXp-mrow";
                 return n
             }
         });
         h.mtable.Augment({
-            toPreviewHTML: function(E) {
+            toPreviewHTML: function (E) {
                 E = this.PHTMLdefaultSpan(E, {
                     noBBox: true
                 });
                 var r = this.getValues("columnalign", "rowalign", "columnspacing", "rowspacing", "columnwidth", "equalcolumns", "equalrows", "columnlines", "rowlines", "frame", "framespacing", "align", "width");
                 var u = MathJax.Hub.SplitList, F, A, D, z;
                 var N = u(r.columnspacing)
-                  , w = u(r.rowspacing)
-                  , L = u(r.columnalign)
-                  , t = u(r.rowalign);
+                    , w = u(r.rowspacing)
+                    , L = u(r.columnalign)
+                    , t = u(r.rowalign);
                 for (F = 0,
-                A = N.length; F < A; F++) {
+                    A = N.length; F < A; F++) {
                     N[F] = g.length2em(N[F])
                 }
                 for (F = 0,
-                A = w.length; F < A; F++) {
+                    A = w.length; F < A; F++) {
                     w[F] = g.length2em(w[F])
                 }
                 var K = e.Element("span");
@@ -15040,23 +15040,23 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
                 E.appendChild(K);
                 var y = 0
-                  , s = 0;
+                    , s = 0;
                 for (F = 0,
-                A = this.data.length; F < A; F++) {
+                    A = this.data.length; F < A; F++) {
                     var v = this.data[F];
                     if (v) {
                         var J = g.arrayEntry(w, F - 1)
-                          , C = g.arrayEntry(t, F);
+                            , C = g.arrayEntry(t, F);
                         var x = v.PHTML
-                          , q = v.PHTMLspanElement();
+                            , q = v.PHTMLspanElement();
                         q.style.verticalAlign = C;
                         var B = (v.type === "mlabeledtr" ? 1 : 0);
                         for (D = 0,
-                        z = v.data.length; D < z - B; D++) {
+                            z = v.data.length; D < z - B; D++) {
                             var p = v.data[D + B];
                             if (p) {
                                 var M = g.arrayEntry(N, D - 1)
-                                  , G = g.arrayEntry(L, D);
+                                    , G = g.arrayEntry(L, D);
                                 var I = p.PHTMLspanElement();
                                 if (D) {
                                     x.w += M;
@@ -15086,7 +15086,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.mlabeledtr.Augment({
-            PHTMLdefaultSpan: function(q, o) {
+            PHTMLdefaultSpan: function (q, o) {
                 if (!o) {
                     o = {}
                 }
@@ -15103,7 +15103,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.semantics.Augment({
-            toPreviewHTML: function(n) {
+            toPreviewHTML: function (n) {
                 n = this.PHTMLcreateSpan(n);
                 if (this.data[0]) {
                     this.data[0].toPreviewHTML(n);
@@ -15113,16 +15113,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
         });
         h.annotation.Augment({
-            toPreviewHTML: function(n) {}
+            toPreviewHTML: function (n) { }
         });
         h["annotation-xml"].Augment({
-            toPreviewHTML: function(n) {}
+            toPreviewHTML: function (n) { }
         });
-        MathJax.Hub.Register.StartupHook("onLoad", function() {
+        MathJax.Hub.Register.StartupHook("onLoad", function () {
             setTimeout(MathJax.Callback(["loadComplete", g, "jax.js"]), 0)
         })
     });
-    MathJax.Hub.Register.StartupHook("End Cookie", function() {
+    MathJax.Hub.Register.StartupHook("End Cookie", function () {
         if (b.config.menuSettings.zoom !== "None") {
             i.Require("[MathJax]/extensions/MathZoom.js")
         }
@@ -15130,7 +15130,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 }
 )(MathJax.Ajax, MathJax.Hub, MathJax.HTML, MathJax.OutputJax.PreviewHTML);
 
-(function(b, g, f) {
+(function (b, g, f) {
     var c = b.config.menuSettings;
     var e = MathJax.OutputJax;
     var a = f.isMSIE && (document.documentMode || 0) < 8;
@@ -15149,7 +15149,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             messageStyle: "none",
             disabled: f.isMSIE && !f.versionAtLeast("8.0")
         }),
-        Config: function() {
+        Config: function () {
             if (b.config["CHTML-preview"]) {
                 MathJax.Hub.Config({
                     "fast-preview": b.config["CHTML-preview"]
@@ -15176,7 +15176,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     SVG: i.Chunks
                 })
             }
-            b.Register.MessageHook("Begin Math Output", function() {
+            b.Register.MessageHook("Begin Math Output", function () {
                 if (!h && d.Active()) {
                     m = b.processUpdateTime;
                     j = b.processUpdateDelay;
@@ -15190,7 +15190,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                     l = true
                 }
             });
-            b.Register.MessageHook("End Math Output", function() {
+            b.Register.MessageHook("End Math Output", function () {
                 if (!h && l) {
                     b.processUpdateTime = m;
                     b.processUpdateDelay = j;
@@ -15201,16 +15201,16 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
                 }
             })
         },
-        Disable: function() {
+        Disable: function () {
             this.enabled = false
         },
-        Enable: function() {
+        Enable: function () {
             this.enabled = true
         },
-        Active: function() {
+        Active: function () {
             return c.FastPreview && this.enabled && !(e[c.renderer] || {}).noFastPreview
         },
-        Preview: function(h) {
+        Preview: function (h) {
             if (!this.Active() || !h.script.parentNode) {
                 return
             }
@@ -15226,7 +15226,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             i.style.color = (a ? "black" : "inherit");
             return this.postFilter(i, h)
         },
-        postFilter: function(j, i) {
+        postFilter: function (j, i) {
             if (!i.math.root.toPreviewHTML) {
                 var h = MathJax.Callback.Queue();
                 h.Push(["Require", MathJax.Ajax, "[MathJax]/jax/output/PreviewHTML/config.js"], ["Require", MathJax.Ajax, "[MathJax]/jax/output/PreviewHTML/jax.js"]);
@@ -15234,8 +15234,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             }
             i.math.root.toPreviewHTML(j)
         },
-        Register: function(h) {
-            b.Register.StartupHook(h + " Jax Require", function() {
+        Register: function (h) {
+            b.Register.StartupHook(h + " Jax Require", function () {
                 var i = MathJax.InputJax[h];
                 i.postfilterHooks.Add(["Preview", MathJax.Extension["fast-preview"]], 50)
             })
@@ -15250,7 +15250,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
 )(MathJax.Hub, MathJax.HTML, MathJax.Hub.Browser);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
 
-(function(a, e, b, f) {
+(function (a, e, b, f) {
     var c = b.config.menuSettings;
     var d = MathJax.Extension.AssistiveMML = {
         version: "2.7.2",
@@ -15280,7 +15280,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
                 }
             }
         }),
-        Config: function() {
+        Config: function () {
             if (!this.config.disabled && c.assistiveMML == null) {
                 b.Config({
                     menuSettings: {
@@ -15289,13 +15289,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
                 })
             }
             a.Styles(this.config.styles);
-            b.Register.MessageHook("End Math", function(g) {
+            b.Register.MessageHook("End Math", function (g) {
                 if (c.assistiveMML) {
                     return d.AddAssistiveMathML(g[1])
                 }
             })
         },
-        AddAssistiveMathML: function(g) {
+        AddAssistiveMathML: function (g) {
             var h = {
                 jax: b.getAllJax(g),
                 i: 0,
@@ -15304,7 +15304,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
             this.HandleMML(h);
             return h.callback
         },
-        RemoveAssistiveMathML: function(k) {
+        RemoveAssistiveMathML: function (k) {
             var h = b.getAllJax(k), l;
             for (var j = 0, g = h.length; j < g; j++) {
                 l = document.getElementById(h[j].inputID + "-Frame");
@@ -15316,7 +15316,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
                 }
             }
         },
-        HandleMML: function(l) {
+        HandleMML: function (l) {
             var g = l.jax.length, h, i, n, j;
             while (l.i < g) {
                 h = l.jax[l.i];
@@ -15338,7 +15338,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
                     });
                     try {
                         j.innerHTML = i
-                    } catch (k) {}
+                    } catch (k) { }
                     n.style.position = "relative";
                     n.setAttribute("role", "presentation");
                     n.firstChild.setAttribute("aria-hidden", "true");
@@ -15352,124 +15352,124 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
     b.Startup.signal.Post("AssistiveMML Ready")
 }
 )(MathJax.Ajax, MathJax.Callback, MathJax.Hub, MathJax.HTML);
-MathJax.Callback.Queue(["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.js"], ["loadComplete", MathJax.Ajax, "[MathJax]/extensions/AssistiveMML.js"], function() {
+MathJax.Callback.Queue(["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.js"], ["loadComplete", MathJax.Ajax, "[MathJax]/extensions/AssistiveMML.js"], function () {
     MathJax.Hub.Register.StartupHook("End Config", ["Config", MathJax.Extension.AssistiveMML])
 });
 
-!function(a, b) {
-    var c, d, e = a.config.menuSettings, f = Function.prototype.bind ? function(a, b) {
+!function (a, b) {
+    var c, d, e = a.config.menuSettings, f = Function.prototype.bind ? function (a, b) {
         return a.bind(b)
     }
-    : function(a, b) {
-        return function() {
-            a.apply(b, arguments)
+        : function (a, b) {
+            return function () {
+                a.apply(b, arguments)
+            }
         }
-    }
-    , g = Object.keys || function(a) {
-        var b = [];
-        for (var c in a)
-            a.hasOwnProperty(c) && b.push(c);
-        return b
-    }
-    , h = MathJax.Ajax.config.path;
+        , g = Object.keys || function (a) {
+            var b = [];
+            for (var c in a)
+                a.hasOwnProperty(c) && b.push(c);
+            return b
+        }
+        , h = MathJax.Ajax.config.path;
     h.a11y || (h.a11y = a.config.root + "/extensions/a11y");
     var i = b["accessibility-menu"] = {
         version: "1.2.3",
         prefix: "",
         defaults: {},
         modules: [],
-        MakeOption: function(a) {
+        MakeOption: function (a) {
             return i.prefix + a
         },
-        GetOption: function(a) {
+        GetOption: function (a) {
             return e[i.MakeOption(a)]
         },
-        AddDefaults: function() {
+        AddDefaults: function () {
             for (var a, b = g(i.defaults), c = 0; a = b[c]; c++) {
                 var d = i.MakeOption(a);
                 void 0 === e[d] && (e[d] = i.defaults[a])
             }
         },
-        AddMenu: function() {
+        AddMenu: function () {
             for (var a, b = Array(this.modules.length), e = 0; a = this.modules[e]; e++)
                 b[e] = a.placeHolder;
             var f = d.FindId("Accessibility");
             if (f)
                 b.unshift(c.RULE()),
-                f.submenu.items.push.apply(f.submenu.items, b);
+                    f.submenu.items.push.apply(f.submenu.items, b);
             else {
                 var g = (d.FindId("Settings", "Renderer") || {}).submenu;
                 g && (b.unshift(c.RULE()),
-                b.unshift(g.items.pop()),
-                b.unshift(g.items.pop())),
-                b.unshift("Accessibility");
+                    b.unshift(g.items.pop()),
+                    b.unshift(g.items.pop())),
+                    b.unshift("Accessibility");
                 var f = c.SUBMENU.apply(c.SUBMENU, b)
-                  , h = d.IndexOfId("Locale");
+                    , h = d.IndexOfId("Locale");
                 h ? d.items.splice(h, 0, f) : d.items.push(c.RULE(), f)
             }
         },
-        Register: function(a) {
+        Register: function (a) {
             i.defaults[a.option] = !1,
-            i.modules.push(a)
+                i.modules.push(a)
         },
-        Startup: function() {
+        Startup: function () {
             c = MathJax.Menu.ITEM,
-            d = MathJax.Menu.menu;
+                d = MathJax.Menu.menu;
             for (var a, b = 0; a = this.modules[b]; b++)
                 a.CreateMenu();
             this.AddMenu()
         },
-        LoadExtensions: function() {
+        LoadExtensions: function () {
             for (var b, c = [], d = 0; b = this.modules[d]; d++)
                 e[b.option] && c.push(b.module);
             return c.length ? a.Startup.loadArray(c) : null
         }
     }
-      , j = MathJax.Extension.ModuleLoader = MathJax.Object.Subclass({
-        option: "",
-        name: ["", ""],
-        module: "",
-        placeHolder: null,
-        submenu: !1,
-        extension: null,
-        Init: function(a, b, c, d, e) {
-            this.option = a,
-            this.name = [b.replace(/ /g, ""), b],
-            this.module = c,
-            this.extension = d,
-            this.submenu = e || !1
-        },
-        CreateMenu: function() {
-            var a = f(this.Load, this);
-            this.submenu ? this.placeHolder = c.SUBMENU(this.name, c.CHECKBOX(["Activate", "Activate"], i.MakeOption(this.option), {
-                action: a
-            }), c.RULE(), c.COMMAND(["OptionsWhenActive", "(Options when Active)"], null, {
-                disabled: !0
-            })) : this.placeHolder = c.CHECKBOX(this.name, i.MakeOption(this.option), {
-                action: a
-            })
-        },
-        Load: function() {
-            a.Queue(["Require", MathJax.Ajax, this.module, ["Enable", this]])
-        },
-        Enable: function(a) {
-            var b = MathJax.Extension[this.extension];
-            b && (b.Enable(!0, !0),
-            MathJax.Menu.saveCookie())
-        }
-    });
+        , j = MathJax.Extension.ModuleLoader = MathJax.Object.Subclass({
+            option: "",
+            name: ["", ""],
+            module: "",
+            placeHolder: null,
+            submenu: !1,
+            extension: null,
+            Init: function (a, b, c, d, e) {
+                this.option = a,
+                    this.name = [b.replace(/ /g, ""), b],
+                    this.module = c,
+                    this.extension = d,
+                    this.submenu = e || !1
+            },
+            CreateMenu: function () {
+                var a = f(this.Load, this);
+                this.submenu ? this.placeHolder = c.SUBMENU(this.name, c.CHECKBOX(["Activate", "Activate"], i.MakeOption(this.option), {
+                    action: a
+                }), c.RULE(), c.COMMAND(["OptionsWhenActive", "(Options when Active)"], null, {
+                    disabled: !0
+                })) : this.placeHolder = c.CHECKBOX(this.name, i.MakeOption(this.option), {
+                    action: a
+                })
+            },
+            Load: function () {
+                a.Queue(["Require", MathJax.Ajax, this.module, ["Enable", this]])
+            },
+            Enable: function (a) {
+                var b = MathJax.Extension[this.extension];
+                b && (b.Enable(!0, !0),
+                    MathJax.Menu.saveCookie())
+            }
+        });
     i.Register(j("collapsible", "Collapsible Math", "[a11y]/collapsible.js", "collapsible")),
-    i.Register(j("autocollapse", "Auto Collapse", "[a11y]/auto-collapse.js", "auto-collapse")),
-    i.Register(j("explorer", "Explorer", "[a11y]/explorer.js", "explorer", !0)),
-    i.AddDefaults(),
-    a.Register.StartupHook("End Extensions", function() {
-        a.Register.StartupHook("MathMenu Ready", function() {
-            i.Startup(),
-            a.Startup.signal.Post("Accessibility Menu Ready")
-        }, 5)
-    }, 5),
-    MathJax.Hub.Register.StartupHook("End Cookie", function() {
-        MathJax.Callback.Queue(["LoadExtensions", i], ["loadComplete", MathJax.Ajax, "[a11y]/accessibility-menu.js"])
-    })
+        i.Register(j("autocollapse", "Auto Collapse", "[a11y]/auto-collapse.js", "auto-collapse")),
+        i.Register(j("explorer", "Explorer", "[a11y]/explorer.js", "explorer", !0)),
+        i.AddDefaults(),
+        a.Register.StartupHook("End Extensions", function () {
+            a.Register.StartupHook("MathMenu Ready", function () {
+                i.Startup(),
+                    a.Startup.signal.Post("Accessibility Menu Ready")
+            }, 5)
+        }, 5),
+        MathJax.Hub.Register.StartupHook("End Cookie", function () {
+            MathJax.Callback.Queue(["LoadExtensions", i], ["loadComplete", MathJax.Ajax, "[a11y]/accessibility-menu.js"])
+        })
 }(MathJax.Hub, MathJax.Extension);
 MathJax.Ajax.loadComplete("[MathJax]/config/TeX-MML-AM_CHTML.js");
