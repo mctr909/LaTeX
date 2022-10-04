@@ -1204,7 +1204,6 @@ function createCallback() {
     MathJax.Callback.Queue = __queue;
     MathJax.Callback.Signal = __signal.find;
 }
-
 function createMathJax() {
     MathJax.isPacked = true;
     MathJax.version = "2.7.2";
@@ -1220,26 +1219,23 @@ function createMathJax() {
         if (!MathJax) {
             MathJax = window[NAME_TAG] = {};
         }
-        var __EMPTY = [];
-        var __CREATE_CLS = function(cls) {
-            var new_class = cls.constructor;
+        var EMPTY = [];
+        var CREATE_CLS = function(cls) {
+            var new_class = cls.constr;
             if (!new_class) {
                 new_class = function () { };
             }
             for (var func in cls) {
-                if (func !== "constructor" && cls.hasOwnProperty(func)) {
+                if (func !== "constr" && cls.hasOwnProperty(func)) {
                     new_class[func] = cls[func];
                 }
             }
             return new_class;
         }
-        var __INIT_CLS = function() {
-            return function () { return arguments.callee.Init.call(this, arguments); }
-        }
-        MathJax.Object = __CREATE_CLS({
-            constructor: __INIT_CLS(),
+        MathJax.Object = CREATE_CLS({
             prototype: {
-                Init: function () { },
+                Init: function () {
+                },
                 SUPER: function (f) {
                     return f.callee.SUPER;
                 },
@@ -1253,8 +1249,13 @@ function createMathJax() {
                     return (f instanceof Object) && (this instanceof f);
                 }
             },
+            constr: function () {
+                return arguments.callee.Init.call(this, arguments);
+            },
             Subclass: function (f, h) {
-                var g = __INIT_CLS();
+                var g = function () {
+                    return arguments.callee.Init.call(this, arguments);
+                };
                 g.SUPER = this;
                 g.Init = this.Init;
                 g.Subclass = this.Subclass;
@@ -1263,18 +1264,18 @@ function createMathJax() {
                 g.can = this.can;
                 g.has = this.has;
                 g.isa = this.isa;
-                g.prototype = new this(__EMPTY);
-                g.prototype.constructor = g;
+                g.prototype = new this(EMPTY);
+                g.prototype.constr = g;
                 g.Augment(f, h);
                 return g;
             },
             Init: function (f) {
                 var g = this;
-                if (f.length === 1 && f[0] === __EMPTY) {
+                if (f.length === 1 && f[0] === EMPTY) {
                     return g;
                 }
                 if (!(g instanceof f.callee)) {
-                    g = new f.callee(__EMPTY);
+                    g = new f.callee(EMPTY);
                 }
                 return g.Init.apply(g, f) || g;
             },
@@ -2320,10 +2321,10 @@ function createMathJax() {
                 if (arguments.length === 0) {
                     return this;
                 }
-                return (this.constructor.Subclass(i, h))();
+                return (this.constr.Subclass(i, h))();
             },
             Augment: function (k, j) {
-                var i = this.constructor, h = {};
+                var i = this.constr, h = {};
                 if (k != null) {
                     for (var l in k) {
                         if (k.hasOwnProperty(l)) {
@@ -2377,7 +2378,7 @@ function createMathJax() {
                             j.preProcess = j.preTranslate;
                             j.Process = j.Translate;
                             j.postProcess = j.postTranslate;
-                        }, this.constructor.prototype]);
+                        }, this.constr.prototype]);
                     }
                     return h.Push(["loadComplete", a, this.directory + "/" + i]);
                 }
@@ -2414,7 +2415,7 @@ function createMathJax() {
                 o = this.directory + "/" + this.JAXFILE;
                 var p = j.Push(a.Require(o));
                 if (!p.called) {
-                    this.constructor.prototype.Process = function () {
+                    this.constr.prototype.Process = function () {
                         if (!p.called) {
                             return p;
                         }
@@ -2448,7 +2449,7 @@ function createMathJax() {
             copyTranslate: true,
             preProcess: function (j) {
                 var i, h = this.directory + "/" + this.JAXFILE;
-                this.constructor.prototype.preProcess = function (k) {
+                this.constr.prototype.preProcess = function (k) {
                     if (!i.called) {
                         return i;
                     }
@@ -2488,7 +2489,7 @@ function createMathJax() {
 
         MathJax.ElementJax = g.Subclass({
             Init: function (i, h) {
-                return this.constructor.Subclass(i, h);
+                return this.constr.Subclass(i, h);
             },
             inputJax: null,
             outputJax: null,
