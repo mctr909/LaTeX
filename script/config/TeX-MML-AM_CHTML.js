@@ -1150,7 +1150,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 clientX: t.clientX,
                 clientY: t.clientY
             };
-            g.Queue(G, D, ["ContextMenu", n, C, E, w]);
+            CallbackUtil.Queue(G, D, ["ContextMenu", n, C, E, w]);
             return n.False(t)
         },
         AltContextMenu: function (s, r) {
@@ -1481,7 +1481,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         q.border = o.frame.bwidth + "px solid " + o.frame.bcolor + " ! important";
         q["box-shadow"] = q["-webkit-box-shadow"] = q["-moz-box-shadow"] = q["-khtml-box-shadow"] = "0px 0px " + o.frame.hwidth + " " + o.frame.hcolor
     };
-    g.Queue(d.Register.StartupHook("End Config", {}), [e], ["getImages", f], ["Styles", l, o.styles], ["Post", d.Startup.signal, "MathEvents Ready"], ["loadComplete", l, "[MathJax]/extensions/MathEvents.js"])
+    CallbackUtil.Queue(d.Register.StartupHook("End Config", {}), [e], ["getImages", f], ["Styles", l, o.styles], ["Post", d.Startup.signal, "MathEvents Ready"], ["loadComplete", l, "[MathJax]/extensions/MathEvents.js"])
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.Callback, MathJax.Localization, MathJax.OutputJax, MathJax.InputJax);
 
@@ -1910,13 +1910,13 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
     if (h.operaPositionBug || h.msieTopBug) {
         h.topImg.style.border = "1px solid"
     }
-    MathJax.Callback.Queue(["StartupHook", MathJax.Hub.Register, "Begin Styles", {}], ["Styles", f, i.styles], ["Post", a.Startup.signal, "MathZoom Ready"], ["loadComplete", f, "[MathJax]/extensions/MathZoom.js"])
+    CallbackUtil.Queue(["StartupHook", MathJax.Hub.Register, "Begin Styles", {}], ["Styles", f, i.styles], ["Post", a.Startup.signal, "MathZoom Ready"], ["loadComplete", f, "[MathJax]/extensions/MathZoom.js"])
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.OutputJax["HTML-CSS"], MathJax.OutputJax.NativeMML);
 
 (function (f, o, q, e, r) {
     var p = "2.7.2";
-    var d = MathJax.Callback.Signal("menu");
+    var d = CallbackUtil.Signal("menu");
     MathJax.Extension.MathMenu = {
         version: p,
         signal: d
@@ -3201,7 +3201,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 if (!q.loadingToMathML) {
                     q.loadingToMathML = true;
                     g.ShowSource.Window(y);
-                    e.Queue(q.Require("[MathJax]/extensions/toMathML.js"), function () {
+                    CallbackUtil.Queue(q.Require("[MathJax]/extensions/toMathML.js"), function () {
                         delete q.loadingToMathML;
                         if (!v.mbase.prototype.toMathML) {
                             v.mbase.prototype.toMathML = function () { }
@@ -3308,7 +3308,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                         }
                         g.cookie.scale = f.config.scale = x;
                         g.saveCookie();
-                        f.Queue(["Rerender", f])
+                        CallbackUtil.Queue(["Rerender", f])
                     }
                 } else {
                     alert(t("NonZeroScale", "The scale should not be zero"))
@@ -3379,7 +3379,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 g.cookie.renderer = s.settings.renderer;
                 g.saveCookie()
             }
-            f.Queue(["setRenderer", f, s.settings.renderer, "jax/mml"], ["Rerender", f])
+            CallbackUtil.Queue(["setRenderer", f, s.settings.renderer, "jax/mml"], ["Rerender", f])
         }
     }
         ;
@@ -3697,7 +3697,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             g.menu.Find("Math Settings", "Font Preference", "TeX (image)").disabled = true
         }
     });
-    e.Queue(f.Register.StartupHook("End Config", {}), ["Styles", q, s.styles], ["Post", f.Startup.signal, "MathMenu Ready"], ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"])
+    CallbackUtil.Queue(f.Register.StartupHook("End Config", {}), ["Styles", q, s.styles], ["Post", f.Startup.signal, "MathMenu Ready"], ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"])
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, CallbackUtil.Create, MathJax.OutputJax);
 
@@ -15228,7 +15228,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
         },
         postFilter: function (j, i) {
             if (!i.math.root.toPreviewHTML) {
-                var h = MathJax.Callback.Queue();
+                var h = CallbackUtil.Queue();
                 h.Push(["Require", MathJax.Ajax, "[MathJax]/jax/output/PreviewHTML/config.js"], ["Require", MathJax.Ajax, "[MathJax]/jax/output/PreviewHTML/jax.js"]);
                 b.RestartAfter(h.Push({}))
             }
@@ -15352,7 +15352,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
     b.Startup.signal.Post("AssistiveMML Ready")
 }
 )(MathJax.Ajax, MathJax.Callback, MathJax.Hub, MathJax.HTML);
-MathJax.Callback.Queue(["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.js"], ["loadComplete", MathJax.Ajax, "[MathJax]/extensions/AssistiveMML.js"], function () {
+CallbackUtil.Queue(["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.js"], ["loadComplete", MathJax.Ajax, "[MathJax]/extensions/AssistiveMML.js"], function () {
     MathJax.Hub.Register.StartupHook("End Config", ["Config", MathJax.Extension.AssistiveMML])
 });
 
@@ -15469,7 +15469,7 @@ MathJax.Callback.Queue(["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.
             }, 5)
         }, 5),
         MathJax.Hub.Register.StartupHook("End Cookie", function () {
-            MathJax.Callback.Queue(["LoadExtensions", i], ["loadComplete", MathJax.Ajax, "[a11y]/accessibility-menu.js"])
+            CallbackUtil.Queue(["LoadExtensions", i], ["loadComplete", MathJax.Ajax, "[a11y]/accessibility-menu.js"])
         })
 }(MathJax.Hub, MathJax.Extension);
 MathJax.Ajax.loadComplete("[MathJax]/config/TeX-MML-AM_CHTML.js");

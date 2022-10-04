@@ -1,6 +1,6 @@
 (function (f, o, q, e, r) {
     var p = "2.7.2";
-    var d = MathJax.Callback.Signal("menu");
+    var d = CallbackUtil.Signal("menu");
     MathJax.Extension.MathMenu = { version: p, signal: d };
     var t = function (u) {
         return MathJax.Localization._.apply(
@@ -1110,7 +1110,7 @@
                 if (!q.loadingToMathML) {
                     q.loadingToMathML = true;
                     g.ShowSource.Window(y);
-                    e.Queue(
+                    CallbackUtil.Queue(
                         q.Require("[MathJax]/extensions/toMathML.js"),
                         function () {
                             delete q.loadingToMathML;
@@ -1215,7 +1215,7 @@
                         }
                         g.cookie.scale = f.config.scale = x;
                         g.saveCookie();
-                        f.Queue(["Rerender", f]);
+                        CallbackUtil.Queue(["Rerender", f]);
                     }
                 } else {
                     alert(t("NonZeroScale", "The scale should not be zero"));
@@ -1282,7 +1282,7 @@
                 g.cookie.renderer = s.settings.renderer;
                 g.saveCookie();
             }
-            f.Queue(["setRenderer", f, s.settings.renderer, "jax/mml"], ["Rerender", f]);
+            CallbackUtil.Queue(["setRenderer", f, s.settings.renderer, "jax/mml"], ["Rerender", f]);
         }
     };
     g.Renderer.Messages = {
@@ -1601,7 +1601,7 @@
             g.menu.Find("Math Settings", "Font Preference", "TeX (image)").disabled = true;
         }
     });
-    e.Queue(f.Register.StartupHook("End Config", {}),
+    CallbackUtil.Queue(f.Register.StartupHook("End Config", {}),
         ["Styles", q, s.styles],
         ["Post", f.Startup.signal, "MathMenu Ready"],
         ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"]

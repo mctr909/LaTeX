@@ -363,7 +363,7 @@ class Localization {
             if (!a.isLoaded) {
                 b = this.loadFile(this.locale, a);
                 if (b) {
-                    return MathJax.Callback.Queue(b, ["loadDomain", this, c]).Push(e || {});
+                    return CallbackUtil.Queue(b, ["loadDomain", this, c]).Push(e || {});
                 }
             }
             if (a.domains && c in a.domains) {
@@ -371,7 +371,7 @@ class Localization {
                 if (!d.isLoaded) {
                     b = this.loadFile(c, d);
                     if (b) {
-                        return MathJax.Callback.Queue(b).Push(e);
+                        return CallbackUtil.Queue(b).Push(e);
                     }
                 }
             }
@@ -751,6 +751,8 @@ class Message {
     }
 }
 class CallbackUtil {
+    static Queue = null;
+    static Signal = null;
     static Create(args, i) {
         if (arguments.length > 1) {
             if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0] instanceof Object && typeof arguments[1] === "number") {
@@ -1043,8 +1045,9 @@ __CALLBACK.prototype = {
         return this.hook.toString.apply(this.hook, arguments);
     }
 };
+
 function createCallback() {
-    var __queue = MathJax.Object.Subclass({
+    CallbackUtil.Queue = MathJax.Object.Subclass({
         Init: function () {
             this.pending = this.running = 0;
             this.queue = [];
@@ -1095,9 +1098,9 @@ function createCallback() {
             return callback;
         }
     });
-    var __signal = __queue.Subclass({
+    CallbackUtil.Signal = CallbackUtil.Queue.Subclass({
         Init: function (name) {
-            __queue.prototype.Init.call(this);
+            CallbackUtil.Queue.prototype.Init.call(this);
             this.name = name;
             this.posted = [];
             this.listeners = new Hooks(true);
@@ -1191,19 +1194,16 @@ function createCallback() {
     }, {
         signals: {},
         find: function (name) {
-            if (!__signal.signals[name]) {
-                __signal.signals[name] = new __signal(name);
+            if (!CallbackUtil.Signal.signals[name]) {
+                CallbackUtil.Signal.signals[name] = new CallbackUtil.Signal(name);
             }
-            return __signal.signals[name];
+            return CallbackUtil.Signal.signals[name];
         }
     });
     MathJax.Callback = CallbackUtil.Create;
     MathJax.Callback.Delay = CallbackUtil.Delay;
-    MathJax.Callback.After = CallbackUtil.After;
-    MathJax.Callback.ExecuteHooks = CallbackUtil.ExecuteHooks;
-    MathJax.Callback.Queue = __queue;
-    MathJax.Callback.Signal = __signal.find;
 }
+
 function createMathJax() {
     MathJax.isPacked = true;
     MathJax.version = "2.7.2";
@@ -1399,7 +1399,7 @@ function createMathJax() {
         processUpdateDelay: 10,
         preProcessors: CallbackUtil.Hooks(true),
         postInputHooks: CallbackUtil.Hooks(true),
-        signal: MathJax.Callback.Signal("Hub"),
+        signal: CallbackUtil.Signal("Hub"),
         inputJax: {},
         outputJax: { order: {} },
         Register: {
@@ -1576,13 +1576,13 @@ function createMathJax() {
             }
             var b = this.elementCallback(c, d);
             if (b.count) {
-                var a = MathJax.Callback.Queue(["PreProcess", this, b.elements], ["Process", this, b.elements]);
+                var a = CallbackUtil.Queue(["PreProcess", this, b.elements], ["Process", this, b.elements]);
             }
             return a.Push(b.callback);
         },
         PreProcess: function (e, g) {
             var c = this.elementCallback(e, g);
-            var b = MathJax.Callback.Queue();
+            var b = CallbackUtil.Queue();
             if (c.count) {
                 var f = (c.count === 1 ? [c.elements] : c.elements);
                 b.Push(["Post", this.signal, ["Begin PreProcess", c.elements]]);
@@ -1610,7 +1610,7 @@ function createMathJax() {
         takeAction: function (g, d, h) {
             var c = this.elementCallback(d, h);
             var f = c.elements;
-            var a = MathJax.Callback.Queue(["Clear", this.signal]);
+            var a = CallbackUtil.Queue(["Clear", this.signal]);
             var e = {
                 scripts: [],
                 start: new Date().getTime(),
@@ -2039,8 +2039,8 @@ function createMathJax() {
     MathJax.Hub.Configured = CallbackUtil.Create({});
     MathJax.Hub.Startup = {
         script: "",
-        queue: MathJax.Callback.Queue(),
-        signal: MathJax.Callback.Signal("Startup"),
+        queue: CallbackUtil.Queue(),
+        signal: CallbackUtil.Signal("Startup"),
         params: {},
         Config: function () {
             this.queue.Push(["Post", this.signal, "Begin Config"]);
@@ -2080,7 +2080,7 @@ function createMathJax() {
         },
         ConfigBlocks: function () {
             var c = document.getElementsByTagName("script");
-            var b = MathJax.Callback.Queue();
+            var b = CallbackUtil.Queue();
             for (var d = 0, a = c.length; d < a; d++) {
                 var e = String(c[d].type).replace(/ /g, "");
                 if (e.match(/^text\/x-mathjax-config(;.*)?$/) && !e.match(/;executed=true/)) {
@@ -2156,7 +2156,7 @@ function createMathJax() {
                     d++;
                 }
             }
-            var a = MathJax.Callback.Queue();
+            var a = CallbackUtil.Queue();
             return a.Push(
                 ["Post", this.signal, "Begin Jax"],
                 ["loadArray", this, f.jax, "jax", "config.js"],
@@ -2164,7 +2164,7 @@ function createMathJax() {
             );
         },
         Extensions: function () {
-            var a = MathJax.Callback.Queue();
+            var a = CallbackUtil.Queue();
             return a.Push(
                 ["Post", this.signal, "Begin Extensions"],
                 ["loadArray", this, MathJax.Hub.config.extensions, "extensions"],
@@ -2226,7 +2226,7 @@ function createMathJax() {
             if (MathJax.Hub.config.showMathMenu) {
                 if (!MathJax.Extension.MathMenu) {
                     setTimeout(function () {
-                        MathJax.Callback.Queue(
+                        CallbackUtil.Queue(
                             ["Require", MathJax.Ajax, "[MathJax]/extensions/MathMenu.js", {}],
                             ["loadDomain", MathJax.Localization, "MathMenu"]
                         );
@@ -2290,7 +2290,7 @@ function createMathJax() {
                     b = [b];
                 }
                 if (b.length) {
-                    var h = MathJax.Callback.Queue(), j = {}, e;
+                    var h = CallbackUtil.Queue(), j = {}, e;
                     for (var g = 0, d = b.length; g < d; g++) {
                         e = this.URL(f, b[g]);
                         if (c) {
@@ -2358,7 +2358,7 @@ function createMathJax() {
                 if (i === "config.js") {
                     return a.loadComplete(this.directory + "/" + i);
                 } else {
-                    var h = f.Queue();
+                    var h = CallbackUtil.Queue();
                     h.Push(c.Register.StartupHook("End Config", {}),
                         ["Post", c.Startup.signal, this.id + " Jax Config"],
                         ["Config", this],
@@ -2395,7 +2395,7 @@ function createMathJax() {
             sourceMenuTitle: ["Original", "Original Form"],
             copyTranslate: true,
             Process: function (l, q) {
-                var j = f.Queue(), o;
+                var j = CallbackUtil.Queue(), o;
                 var k = this.elementJax;
                 if (!MathJax.Object.isArray(k)) {
                     k = [k];
@@ -3271,7 +3271,7 @@ function loadScript() {
         }
     }
 
-    mathJaxHub.queue = MathJax.Callback.Queue();
+    mathJaxHub.queue = CallbackUtil.Queue();
     mathJaxHub.queue.Push(
         ["Post", startup.signal, "Begin"],
         ["Config", startup],
@@ -3279,7 +3279,7 @@ function loadScript() {
         ["Styles", startup],
         ["Message", startup],
         function () {
-            var i = MathJax.Callback.Queue(startup.Jax(), startup.Extensions());
+            var i = CallbackUtil.Queue(startup.Jax(), startup.Extensions());
             return i.Push({});
         },
         ["Menu", startup],

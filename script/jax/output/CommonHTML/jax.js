@@ -384,7 +384,7 @@
             if (!s.match(/\.js$/)) {
                 s += ".js"
             }
-            MathJax.Callback.Queue(["Post", f.Startup.signal, ["CommonHTML - font data loaded", s]], ["loadComplete", o, this.fontDir + "/" + s])
+            CallbackUtil.Queue(["Post", f.Startup.signal, ["CommonHTML - font data loaded", s]], ["loadComplete", o, this.fontDir + "/" + s])
         },
         Element: function(s, u, t) {
             if (s.substr(0, 4) === "mjx-") {

@@ -151,7 +151,7 @@
                 clientX: t.clientX,
                 clientY: t.clientY
             };
-            g.Queue(G, D, ["ContextMenu", n, C, E, w]);
+            CallbackUtil.Queue(G, D, ["ContextMenu", n, C, E, w]);
             return n.False(t);
         },
         AltContextMenu: function (s, r) {
@@ -441,7 +441,7 @@
             = q["-khtml-box-shadow"]
             = "0px 0px " + o.frame.hwidth + " " + o.frame.hcolor;
     };
-    g.Queue(
+    CallbackUtil.Queue(
         d.Register.StartupHook("End Config", {}),
         [e],
         ["getImages", f],
