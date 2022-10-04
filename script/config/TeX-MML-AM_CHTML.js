@@ -3699,7 +3699,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
     });
     e.Queue(f.Register.StartupHook("End Config", {}), ["Styles", q, s.styles], ["Post", f.Startup.signal, "MathMenu Ready"], ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"])
 }
-)(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.CallBack, MathJax.OutputJax);
+)(MathJax.Hub, MathJax.HTML, MathJax.Ajax, CallbackUtil.Create, MathJax.OutputJax);
 
 MathJax.ElementJax.mml = MathJax.ElementJax({
     mimeType: "jax/mml"
@@ -9281,8 +9281,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
         },
         sourceMenuTitle: ["TeXCommands", "TeX Commands"],
         annotationEncoding: "application/x-tex",
-        prefilterHooks: MathJax.Callback.Hooks(true),
-        postfilterHooks: MathJax.Callback.Hooks(true),
+        prefilterHooks: CallbackUtil.Hooks(true),
+        postfilterHooks: CallbackUtil.Hooks(true),
         Config: function () {
             this.SUPER(arguments).Config.apply(this, arguments);
             if (this.config.equationNumbers.autoNumber !== "none") {
@@ -10661,9 +10661,9 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     });
     c.Augment({
         sourceMenuTitle: ["OriginalMathML", "Original MathML"],
-        prefilterHooks: MathJax.Callback.Hooks(true),
-        DOMfilterHooks: MathJax.Callback.Hooks(true),
-        postfilterHooks: MathJax.Callback.Hooks(true),
+        prefilterHooks: CallbackUtil.Hooks(true),
+        DOMfilterHooks: CallbackUtil.Hooks(true),
+        postfilterHooks: CallbackUtil.Hooks(true),
         Translate: function (e) {
             if (!this.ParseXML) {
                 this.ParseXML = this.createParser()
@@ -13588,8 +13588,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
     b.Augment({
         sourceMenuTitle: ["AsciiMathInput", "AsciiMath Input"],
         annotationEncoding: "text/x-asciimath",
-        prefilterHooks: MathJax.Callback.Hooks(true),
-        postfilterHooks: MathJax.Callback.Hooks(true),
+        prefilterHooks: CallbackUtil.Hooks(true),
+        postfilterHooks: CallbackUtil.Hooks(true),
         Translate: function (c) {
             var d, f = MathJax.HTML.getScript(c);
             var g = {
@@ -15119,7 +15119,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
             toPreviewHTML: function (n) { }
         });
         MathJax.Hub.Register.StartupHook("onLoad", function () {
-            setTimeout(MathJax.Callback(["loadComplete", g, "jax.js"]), 0)
+            setTimeout(CallbackUtil.Create(["loadComplete", g, "jax.js"]), 0)
         })
     });
     MathJax.Hub.Register.StartupHook("End Cookie", function () {
@@ -15299,7 +15299,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
             var h = {
                 jax: b.getAllJax(g),
                 i: 0,
-                callback: MathJax.Callback({})
+                callback: CallbackUtil.Create({})
             };
             this.HandleMML(h);
             return h.callback
@@ -15328,7 +15328,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
                         if (!k.restart) {
                             throw k
                         }
-                        return MathJax.Callback.After(["HandleMML", this, l], k.restart)
+                        return CallbackUtil.After(["HandleMML", this, l], k.restart)
                     }
                     n.setAttribute("data-mathml", i);
                     j = f.addElement(n, "span", {

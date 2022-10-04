@@ -69,7 +69,6 @@ class HTML {
         return b.replace(/^\s+/, "").replace(/\s+$/, "");
     }
 }
-
 class Cookie {
     constructor() {
         this.prefix = "mjx";
@@ -125,7 +124,6 @@ class Cookie {
         return d;
     }
 }
-
 class Localization {
     constructor() {
         this.locale = "en";
@@ -344,7 +342,7 @@ class Localization {
         return a;
     }
     loadFile(b, d, e) {
-        e = MathJax.Callback(e);
+        e = CallbackUtil.Create(e);
         b = (d.file || b);
         if (!b.match(/\.js$/)) {
             b += ".js";
@@ -378,10 +376,10 @@ class Localization {
                 }
             }
         }
-        return MathJax.Callback(e)();
+        return CallbackUtil.Create(e)();
     }
     Try(a) {
-        a = MathJax.Callback(a);
+        a = CallbackUtil.Create(a);
         a.autoReset = true;
         try {
             a();
@@ -389,7 +387,7 @@ class Localization {
             if (!b.restart) {
                 throw b;
             }
-            MathJax.Callback.After(["Try", this, a], b.restart);
+            CallbackUtil.After(["Try", this, a], b.restart);
         }
     }
     resetLocale(a) {
@@ -474,7 +472,6 @@ class Localization {
         return b;
     }
 }
-
 class Message {
     constructor() {
         this.ready = false;
@@ -634,7 +631,7 @@ class Message {
                     }
                     this.log[e].restarted++;
                     delete this.log[e].cleared;
-                    MathJax.Callback.After(["Set", this, c, e, b], a.restart);
+                    CallbackUtil.After(["Set", this, c, e, b], a.restart);
                     return e;
                 }
             }
@@ -678,7 +675,7 @@ class Message {
             }
         }
         if (b) {
-            setTimeout(MathJax.Callback(["Clear", this, e]), b);
+            setTimeout(CallbackUtil.Create(["Clear", this, e]), b);
         } else {
             if (b == 0) {
                 this.Clear(e, 0);
@@ -710,7 +707,7 @@ class Message {
                     if (a === 0) {
                         this.Remove();
                     } else {
-                        this.timer = setTimeout(MathJax.Callback(["Remove", this]), a);
+                        this.timer = setTimeout(CallbackUtil.Create(["Remove", this]), a);
                     }
                 } else {
                     if (MathJax.Hub.config.messageStyle !== "none") {
@@ -753,6 +750,460 @@ class Message {
         return b.join("\n");
     }
 }
+class CallbackUtil {
+    static Create(args, i) {
+        if (arguments.length > 1) {
+            if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0] instanceof Object && typeof arguments[1] === "number") {
+                args = [].slice.call(args, i);
+            } else {
+                args = [].slice.call(arguments, 0);
+            }
+        }
+        if (MathJax.Object.isArray(args) && args.length === 1 && typeof (args[0]) === "function") {
+            args = args[0];
+        }
+        if (typeof args === "function") {
+            if (args.execute === __CALLBACK.prototype.execute) {
+                return args;
+            }
+            return __CALLBACK({ hook: args });
+        } else {
+            if (MathJax.Object.isArray(args)) {
+                if (typeof (args[0]) === "string" && args[1] instanceof Object && typeof args[1][args[0]] === "function") {
+                    return __CALLBACK({
+                        hook: args[1][args[0]],
+                        object: args[1],
+                        data: args.slice(2)
+                    });
+                } else {
+                    if (typeof args[0] === "function") {
+                        return __CALLBACK({
+                            hook: args[0],
+                            data: args.slice(1)
+                        });
+                    } else {
+                        if (typeof args[1] === "function") {
+                            return __CALLBACK({
+                                hook: args[1],
+                                object: args[0],
+                                data: args.slice(2)
+                            });
+                        }
+                    }
+                }
+            } else {
+                if (typeof (args) === "string") {
+                    if (CallbackUtil.TestEval) {
+                        CallbackUtil.TestEval();
+                    }
+                    return __CALLBACK({ hook: CallbackUtil.Eval, data: [args] });
+                } else {
+                    if (args instanceof Object) {
+                        return __CALLBACK(args);
+                    } else {
+                        if (typeof (args) === "undefined") {
+                            return __CALLBACK({});
+                        }
+                    }
+                }
+            }
+        }
+        throw Error("Can't make callback from given data");
+    }
+    static Eval(code) {
+        return eval.call(window, code);
+    }
+    static TestEval() {
+        CallbackUtil.Eval("var __TeSt_VaR__ = 1");
+        if (window.__TeSt_VaR__) {
+            try {
+                delete window.__TeSt_VaR__;
+            } catch (error) {
+                window.__TeSt_VaR__ = null;
+            }
+        } else {
+            if (window.execScript) {
+                CallbackUtil.Eval = function (code) {
+                    MathJax.__code = code;
+                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
+                    window.execScript(code);
+                    var result = MathJax.__result;
+                    delete MathJax.__result;
+                    delete MathJax.__code;
+                    if (result instanceof Error) {
+                        throw result;
+                    }
+                    return result;
+                }
+            } else {
+                CallbackUtil.Eval = function (code) {
+                    MathJax.__code = code;
+                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
+                    var head = (document.getElementsByTagName("head"))[0];
+                    if (!head) {
+                        head = document.body;
+                    }
+                    var script = document.createElement("script");
+                    script.appendChild(document.createTextNode(code));
+                    head.appendChild(script);
+                    head.removeChild(script);
+                    var result = MathJax.__result;
+                    delete MathJax.__result;
+                    delete MathJax.__code;
+                    if (result instanceof Error) {
+                        throw result;
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+    static IsCallback(f) {
+        return (typeof (f) === "function" && f.isCallback);
+    }
+    static WaitSignal(callback, signals) {
+        if (!MathJax.Object.isArray(signals)) {
+            signals = [signals];
+        }
+        if (!callback.signal) {
+            callback.oldExecute = callback.execute;
+            callback.execute = CallbackUtil.WaitExecute;
+            callback.signal = signals;
+        } else {
+            if (signals.length === 1) {
+                callback.signal.push(signals[0]);
+            } else {
+                callback.signal = callback.signal.concat(signals);
+            }
+        }
+    }
+    static WaitExecute() {
+        var signals = this.signal;
+        delete this.signal;
+        this.execute = this.oldExecute;
+        delete this.oldExecute;
+        var result = this.execute.apply(this, arguments);
+        if (CallbackUtil.IsCallback(result) && !result.called) {
+            CallbackUtil.WaitSignal(result, signals);
+        } else {
+            for (var i = 0, m = signals.length; i < m; i++) {
+                signals[i].pending--;
+                if (signals[i].pending <= 0) {
+                    signals[i].call();
+                }
+            }
+        }
+    }
+    static Delay(time, callback) {
+        callback = CallbackUtil.Create(callback);
+        callback.timeout = setTimeout(callback, time);
+        return callback;
+    }
+    static WaitFor(callback, signal) {
+        callback = CallbackUtil.Create(callback);
+        if (!callback.called) {
+            CallbackUtil.WaitSignal(callback, signal);
+            signal.pending++;
+        }
+    }
+    static After(callback) {
+        callback = CallbackUtil.Create(callback);
+        callback.pending = 0;
+        for (var i = 1, m = arguments.length; i < m; i++) {
+            if (arguments[i]) {
+                CallbackUtil.WaitFor(arguments[i], callback);
+            }
+        }
+        if (callback.pending === 0) {
+            var result = callback();
+            if (CallbackUtil.IsCallback(result)) {
+                callback = result;
+            }
+        }
+        return callback;
+    }
+    static ExecuteHooks(hooks, data, reset) {
+        if (!hooks) {
+            return null;
+        }
+        if (!MathJax.Object.isArray(hooks)) {
+            hooks = [hooks];
+        }
+        if (!MathJax.Object.isArray(data)) {
+            data = (data == null ? [] : [data]);
+        }
+        var handler = new Hooks(reset);
+        for (var i = 0, m = hooks.length; i < m; i++) {
+            handler.Add(hooks[i]);
+        }
+        return handler.Execute.apply(handler, data);
+    }
+    static Hooks(reset) {
+        return new Hooks(reset);
+    }
+}
+class Hooks {
+    constructor(reset) {
+        this.hooks = [];
+        this.remove = [];
+        this.reset = reset;
+        this.running = false;
+    }
+    Add(hook, priority) {
+        if (priority == null) {
+            priority = 10;
+        }
+        if (!CallbackUtil.IsCallback(hook)) {
+            hook = CallbackUtil.Create(hook);
+        }
+        hook.priority = priority;
+        var i = this.hooks.length;
+        while (i > 0 && priority < this.hooks[i - 1].priority) {
+            i--;
+        }
+        this.hooks.splice(i, 0, hook);
+        return hook;
+    }
+    Remove(hook) {
+        for (var i = 0, m = this.hooks.length; i < m; i++) {
+            if (this.hooks[i] === hook) {
+                if (this.running) {
+                    this.remove.push(i);
+                } else {
+                    this.hooks.splice(i, 1);
+                }
+                return;
+            }
+        }
+    }
+    Execute() {
+        var callbacks = [{}];
+        this.running = true;
+        for (var i = 0, m = this.hooks.length; i < m; i++) {
+            if (this.reset) {
+                this.hooks[i].reset();
+            }
+            var result = this.hooks[i].apply(window, arguments);
+            if (CallbackUtil.IsCallback(result) && !result.called) {
+                callbacks.push(result);
+            }
+        }
+        this.running = false;
+        if (this.remove.length) {
+            this.RemovePending();
+        }
+        if (callbacks.length === 1) {
+            return null;
+        }
+        if (callbacks.length === 2) {
+            return callbacks[1];
+        }
+        return CallbackUtil.After.apply({}, callbacks);
+    }
+    RemovePending() {
+        this.remove = this.remove.sort();
+        for (var i = this.remove.length - 1; i >= 0; i--) {
+            this.hooks.splice(i, 1);
+        }
+        this.remove = [];
+    }
+}
+
+var __CALLBACK = function(data) {
+    var cb = function () {
+        return arguments.callee.execute.apply(arguments.callee, arguments);
+    };
+    for (var id in __CALLBACK.prototype) {
+        if (__CALLBACK.prototype.hasOwnProperty(id)) {
+            if (typeof (data[id]) !== "undefined") {
+                cb[id] = data[id];
+            } else {
+                cb[id] = __CALLBACK.prototype[id];
+            }
+        }
+    }
+    cb.toString = __CALLBACK.prototype.toString;
+    return cb;
+};
+__CALLBACK.prototype = {
+    isCallback: true,
+    hook: function () { },
+    data: [],
+    object: window,
+    execute: function () {
+        if (!this.called || this.autoReset) {
+            this.called = !this.autoReset;
+            return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
+        }
+    },
+    reset: function () {
+        delete this.called;
+    },
+    toString: function () {
+        return this.hook.toString.apply(this.hook, arguments);
+    }
+};
+function createCallback() {
+    var __queue = MathJax.Object.Subclass({
+        Init: function () {
+            this.pending = this.running = 0;
+            this.queue = [];
+            this.Push.apply(this, arguments);
+        },
+        Push: function () {
+            var callback;
+            for (var i = 0, m = arguments.length; i < m; i++) {
+                callback = CallbackUtil.Create(arguments[i]);
+                if (callback === arguments[i] && !callback.called) {
+                    callback = CallbackUtil.Create(["wait", this, callback]);
+                }
+                this.queue.push(callback);
+            }
+            if (!this.running && !this.pending) {
+                this.Process();
+            }
+            return callback;
+        },
+        Process: function (queue) {
+            while (!this.running && !this.pending && this.queue.length) {
+                var callback = this.queue[0];
+                queue = this.queue.slice(1);
+                this.queue = [];
+                this.Suspend();
+                var result = callback();
+                this.Resume();
+                if (queue.length) {
+                    this.queue = queue.concat(this.queue);
+                }
+                if (CallbackUtil.IsCallback(result) && !result.called) {
+                    CallbackUtil.WaitFor(result, this);
+                }
+            }
+        },
+        Suspend: function () {
+            this.running++;
+        },
+        Resume: function () {
+            if (this.running) {
+                this.running--;
+            }
+        },
+        call: function () {
+            this.Process.apply(this, arguments);
+        },
+        wait: function (callback) {
+            return callback;
+        }
+    });
+    var __signal = __queue.Subclass({
+        Init: function (name) {
+            __queue.prototype.Init.call(this);
+            this.name = name;
+            this.posted = [];
+            this.listeners = new Hooks(true);
+            this.posting = false;
+            this.callback = null;
+        },
+        Post: function (message, callback, forget) {
+            callback = CallbackUtil.Create(callback);
+            if (this.posting || this.pending) {
+                this.Push(["Post", this, message, callback, forget]);
+            } else {
+                this.callback = callback;
+                callback.reset();
+                if (!forget) {
+                    this.posted.push(message);
+                }
+                this.Suspend();
+                this.posting = true;
+                var result = this.listeners.Execute(message);
+                if (CallbackUtil.IsCallback(result) && !result.called) {
+                    CallbackUtil.WaitFor(result, this);
+                }
+                this.Resume();
+                this.posting = false;
+                if (!this.pending) {
+                    this.call();
+                }
+            }
+            return callback;
+        },
+        Clear: function (callback) {
+            callback = CallbackUtil.Create(callback);
+            if (this.posting || this.pending) {
+                callback = this.Push(["Clear", this, callback]);
+            } else {
+                this.posted = [];
+                callback();
+            }
+            return callback;
+        },
+        call: function () {
+            this.callback(this);
+            this.Process();
+        },
+        Interest: function (callback, ignorePast, priority) {
+            callback = CallbackUtil.Create(callback);
+            this.listeners.Add(callback, priority);
+            if (!ignorePast) {
+                for (var i = 0, m = this.posted.length; i < m; i++) {
+                    callback.reset();
+                    var result = callback(this.posted[i]);
+                    if (CallbackUtil.IsCallback(result) && i === this.posted.length - 1) {
+                        CallbackUtil.WaitFor(result, this);
+                    }
+                }
+            }
+            return callback;
+        },
+        NoInterest: function (callback) {
+            this.listeners.Remove(callback);
+        },
+        MessageHook: function (msg, callback, priority) {
+            callback = CallbackUtil.Create(callback);
+            if (!this.hooks) {
+                this.hooks = {};
+                this.Interest(["ExecuteHooks", this]);
+            }
+            if (!this.hooks[msg]) {
+                this.hooks[msg] = new Hooks(true);
+            }
+            this.hooks[msg].Add(callback, priority);
+            for (var i = 0, m = this.posted.length; i < m; i++) {
+                if (this.posted[i] == msg) {
+                    callback.reset();
+                    callback(this.posted[i]);
+                }
+            }
+            callback.msg = msg;
+            return callback;
+        },
+        ExecuteHooks: function (msg) {
+            var type = (MathJax.Object.isArray(msg) ? msg[0] : msg);
+            if (!this.hooks[type]) {
+                return null;
+            }
+            return this.hooks[type].Execute(msg);
+        },
+        RemoveHook: function (hook) {
+            this.hooks[hook.msg].Remove(hook);
+        }
+    }, {
+        signals: {},
+        find: function (name) {
+            if (!__signal.signals[name]) {
+                __signal.signals[name] = new __signal(name);
+            }
+            return __signal.signals[name];
+        }
+    });
+    MathJax.Callback = CallbackUtil.Create;
+    MathJax.Callback.Delay = CallbackUtil.Delay;
+    MathJax.Callback.After = CallbackUtil.After;
+    MathJax.Callback.ExecuteHooks = CallbackUtil.ExecuteHooks;
+    MathJax.Callback.Queue = __queue;
+    MathJax.Callback.Signal = __signal.find;
+}
 
 function createMathJax() {
     MathJax.isPacked = true;
@@ -765,8 +1216,12 @@ function createMathJax() {
         if (MathJax.Object) {
             return;
         }
-        var EMPTY = [];
-        var CREATE = function (cls) {
+        MathJax = window[NAME_TAG];
+        if (!MathJax) {
+            MathJax = window[NAME_TAG] = {};
+        }
+        var __EMPTY = [];
+        var __CREATE_CLS = function(cls) {
             var new_class = cls.constructor;
             if (!new_class) {
                 new_class = function () { };
@@ -777,19 +1232,29 @@ function createMathJax() {
                 }
             }
             return new_class;
-        };
-        var INIT = function () {
-            return function () { return arguments.callee.Init.call(this, arguments); }
-        };
-
-        MathJax = window[NAME_TAG];
-        if (!MathJax) {
-            MathJax = window[NAME_TAG] = {};
         }
-        MathJax.Object = CREATE({
-            constructor: INIT(),
+        var __INIT_CLS = function() {
+            return function () { return arguments.callee.Init.call(this, arguments); }
+        }
+        MathJax.Object = __CREATE_CLS({
+            constructor: __INIT_CLS(),
+            prototype: {
+                Init: function () { },
+                SUPER: function (f) {
+                    return f.callee.SUPER;
+                },
+                can: function (f) {
+                    return typeof (this[f]) === "function";
+                },
+                has: function (f) {
+                    return typeof (this[f]) !== "undefined";
+                },
+                isa: function (f) {
+                    return (f instanceof Object) && (this instanceof f);
+                }
+            },
             Subclass: function (f, h) {
-                var g = INIT();
+                var g = __INIT_CLS();
                 g.SUPER = this;
                 g.Init = this.Init;
                 g.Subclass = this.Subclass;
@@ -798,18 +1263,18 @@ function createMathJax() {
                 g.can = this.can;
                 g.has = this.has;
                 g.isa = this.isa;
-                g.prototype = new this(EMPTY);
+                g.prototype = new this(__EMPTY);
                 g.prototype.constructor = g;
                 g.Augment(f, h);
                 return g;
             },
             Init: function (f) {
                 var g = this;
-                if (f.length === 1 && f[0] === EMPTY) {
+                if (f.length === 1 && f[0] === __EMPTY) {
                     return g;
                 }
                 if (!(g instanceof f.callee)) {
-                    g = new f.callee(EMPTY);
+                    g = new f.callee(__EMPTY);
                 }
                 return g.Init.apply(g, f) || g;
             },
@@ -838,21 +1303,6 @@ function createMathJax() {
                 this.prototype[g] = f;
                 if (typeof f === "function") {
                     f.SUPER = this.SUPER.prototype;
-                }
-            },
-            prototype: {
-                Init: function () { },
-                SUPER: function (f) {
-                    return f.callee.SUPER;
-                },
-                can: function (f) {
-                    return typeof (this[f]) === "function";
-                },
-                has: function (f) {
-                    return typeof (this[f]) !== "undefined";
-                },
-                isa: function (f) {
-                    return (f instanceof Object) && (this instanceof f);
                 }
             },
             can: function (f) {
@@ -946,8 +1396,8 @@ function createMathJax() {
         processSectionDelay: 50,
         processUpdateTime: 250,
         processUpdateDelay: 10,
-        preProcessors: MathJax.Callback.Hooks(true),
-        postInputHooks: MathJax.Callback.Hooks(true),
+        preProcessors: CallbackUtil.Hooks(true),
+        postInputHooks: CallbackUtil.Hooks(true),
         signal: MathJax.Callback.Signal("Hub"),
         inputJax: {},
         outputJax: { order: {} },
@@ -1307,7 +1757,7 @@ function createMathJax() {
                     var c = new Date().getTime();
                     if (c - a.start > this.processUpdateTime && a.i < a.scripts.length) {
                         a.start = c;
-                        this.RestartAfter(MathJax.Callback.Delay(1));
+                        this.RestartAfter(CallbackUtil.Delay(1));
                     }
                 }
             } catch (f) {
@@ -1360,7 +1810,7 @@ function createMathJax() {
                             MathJax.Hub.lastPrepError = b;
                             c.j++;
                         }
-                        return MathJax.Callback.After(["prepareOutput", this, c, f], b.restart);
+                        return CallbackUtil.After(["prepareOutput", this, c, f], b.restart);
                     }
                 }
                 c.j++;
@@ -1394,7 +1844,7 @@ function createMathJax() {
                     var e = new Date().getTime();
                     if (e - h.start > this.processUpdateTime && h.i < h.scripts.length) {
                         h.start = e;
-                        this.RestartAfter(MathJax.Callback.Delay(this.processUpdateDelay));
+                        this.RestartAfter(CallbackUtil.Delay(this.processUpdateDelay));
                     }
                 }
             } catch (f) {
@@ -1423,7 +1873,7 @@ function createMathJax() {
                 c.i++;
             }
             this.processMessage(c, a);
-            return MathJax.Callback.After(["process" + a, this, c], b.restart);
+            return CallbackUtil.After(["process" + a, this, c], b.restart);
         },
         formatError: function (b, f) {
             var h = function (l, k, j, i) {
@@ -1472,13 +1922,13 @@ function createMathJax() {
         },
         RestartAfter: function (a) {
             throw this.Insert(Error("restart"), {
-                restart: MathJax.Callback(a)
+                restart: CallbackUtil.Create(a)
             });
         },
         elementCallback: function (c, f) {
             if (f == null && (MathJax.Object.isArray(c) || typeof c === "function")) {
                 try {
-                    MathJax.Callback(c);
+                    CallbackUtil.Create(c);
                     f = c;
                     c = null;
                 } catch (d) { }
@@ -1585,7 +2035,7 @@ function createMathJax() {
     MathJax.Hub.Insert(MathJax.Hub.config.styles, {
         ".MathJax_Error": MathJax.Hub.config.errorSettings.style
     });
-    MathJax.Hub.Configured = MathJax.Callback({});
+    MathJax.Hub.Configured = CallbackUtil.Create({});
     MathJax.Hub.Startup = {
         script: "",
         queue: MathJax.Callback.Queue(),
@@ -1781,15 +2231,15 @@ function createMathJax() {
                         );
                     }, 1000);
                 } else {
-                    setTimeout(MathJax.Callback(["loadDomain", MathJax.Localization, "MathMenu"]), 1000);
+                    setTimeout(CallbackUtil.Create(["loadDomain", MathJax.Localization, "MathMenu"]), 1000);
                 }
                 if (!MathJax.Extension.MathZoom) {
-                    setTimeout(MathJax.Callback(["Require", MathJax.Ajax, "[MathJax]/extensions/MathZoom.js", {}]), 2000);
+                    setTimeout(CallbackUtil.Create(["Require", MathJax.Ajax, "[MathJax]/extensions/MathZoom.js", {}]), 2000);
                 }
             }
         },
         onLoad: function () {
-            var a = this.onload = MathJax.Callback(function () {
+            var a = this.onload = CallbackUtil.Create(function () {
                 MathJax.Hub.Startup.signal.Post("onLoad");
             });
             if (document.body && document.readyState) {
@@ -2201,461 +2651,6 @@ function createMathJax() {
     checkBrowser();
 }
 
-function createCallback() {
-    var isArray = MathJax.Object.isArray;
-    var CALLBACK = function (data) {
-        var cb = function () {
-            return arguments.callee.execute.apply(arguments.callee, arguments);
-        };
-        for (var id in CALLBACK.prototype) {
-            if (CALLBACK.prototype.hasOwnProperty(id)) {
-                if (typeof (data[id]) !== "undefined") {
-                    cb[id] = data[id];
-                } else {
-                    cb[id] = CALLBACK.prototype[id];
-                }
-            }
-        }
-        cb.toString = CALLBACK.prototype.toString;
-        return cb;
-    };
-
-    CALLBACK.prototype = {
-        isCallback: true,
-        hook: function () { },
-        data: [],
-        object: window,
-        execute: function () {
-            if (!this.called || this.autoReset) {
-                this.called = !this.autoReset;
-                return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
-            }
-        },
-        reset: function () {
-            delete this.called;
-        },
-        toString: function () {
-            return this.hook.toString.apply(this.hook, arguments);
-        }
-    };
-
-    var ISCALLBACK = function (f) {
-        return (typeof (f) === "function" && f.isCallback);
-    };
-    var EVAL = function (code) {
-        return eval.call(window, code);
-    };
-    var TESTEVAL = function () {
-        EVAL("var __TeSt_VaR__ = 1");
-        if (window.__TeSt_VaR__) {
-            try {
-                delete window.__TeSt_VaR__;
-            } catch (error) {
-                window.__TeSt_VaR__ = null;
-            }
-        } else {
-            if (window.execScript) {
-                EVAL = function (code) {
-                    MathJax.__code = code;
-                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
-                    window.execScript(code);
-                    var result = MathJax.__result;
-                    delete MathJax.__result;
-                    delete MathJax.__code;
-                    if (result instanceof Error) {
-                        throw result;
-                    }
-                    return result;
-                }
-            } else {
-                EVAL = function (code) {
-                    MathJax.__code = code;
-                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
-                    var head = (document.getElementsByTagName("head"))[0];
-                    if (!head) {
-                        head = document.body;
-                    }
-                    var script = document.createElement("script");
-                    script.appendChild(document.createTextNode(code));
-                    head.appendChild(script);
-                    head.removeChild(script);
-                    var result = MathJax.__result;
-                    delete MathJax.__result;
-                    delete MathJax.__code;
-                    if (result instanceof Error) {
-                        throw result;
-                    }
-                    return result;
-                }
-            }
-        }
-        TESTEVAL = null;
-    };
-    var USING = function (args, i) {
-        if (arguments.length > 1) {
-            if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0] instanceof Object && typeof arguments[1] === "number") {
-                args = [].slice.call(args, i);
-            } else {
-                args = [].slice.call(arguments, 0);
-            }
-        }
-        if (isArray(args) && args.length === 1 && typeof (args[0]) === "function") {
-            args = args[0];
-        }
-        if (typeof args === "function") {
-            if (args.execute === CALLBACK.prototype.execute) {
-                return args;
-            }
-            return CALLBACK({ hook: args });
-        } else {
-            if (isArray(args)) {
-                if (typeof (args[0]) === "string" && args[1] instanceof Object && typeof args[1][args[0]] === "function") {
-                    return CALLBACK({
-                        hook: args[1][args[0]],
-                        object: args[1],
-                        data: args.slice(2)
-                    });
-                } else {
-                    if (typeof args[0] === "function") {
-                        return CALLBACK({
-                            hook: args[0],
-                            data: args.slice(1)
-                        });
-                    } else {
-                        if (typeof args[1] === "function") {
-                            return CALLBACK({
-                                hook: args[1],
-                                object: args[0],
-                                data: args.slice(2)
-                            });
-                        }
-                    }
-                }
-            } else {
-                if (typeof (args) === "string") {
-                    if (TESTEVAL) {
-                        TESTEVAL();
-                    }
-                    return CALLBACK({ hook: EVAL, data: [args] });
-                } else {
-                    if (args instanceof Object) {
-                        return CALLBACK(args);
-                    } else {
-                        if (typeof (args) === "undefined") {
-                            return CALLBACK({});
-                        }
-                    }
-                }
-            }
-        }
-        throw Error("Can't make callback from given data");
-    };
-    var DELAY = function (time, callback) {
-        callback = USING(callback);
-        callback.timeout = setTimeout(callback, time);
-        return callback;
-    };
-    var WAITFOR = function (callback, signal) {
-        callback = USING(callback);
-        if (!callback.called) {
-            WAITSIGNAL(callback, signal);
-            signal.pending++;
-        }
-    };
-    var WAITEXECUTE = function () {
-        var signals = this.signal;
-        delete this.signal;
-        this.execute = this.oldExecute;
-        delete this.oldExecute;
-        var result = this.execute.apply(this, arguments);
-        if (ISCALLBACK(result) && !result.called) {
-            WAITSIGNAL(result, signals);
-        } else {
-            for (var i = 0, m = signals.length; i < m; i++) {
-                signals[i].pending--;
-                if (signals[i].pending <= 0) {
-                    signals[i].call();
-                }
-            }
-        }
-    };
-    var WAITSIGNAL = function (callback, signals) {
-        if (!isArray(signals)) {
-            signals = [signals];
-        }
-        if (!callback.signal) {
-            callback.oldExecute = callback.execute;
-            callback.execute = WAITEXECUTE;
-            callback.signal = signals;
-        } else {
-            if (signals.length === 1) {
-                callback.signal.push(signals[0]);
-            } else {
-                callback.signal = callback.signal.concat(signals);
-            }
-        }
-    };
-    var AFTER = function (callback) {
-        callback = USING(callback);
-        callback.pending = 0;
-        for (var i = 1, m = arguments.length; i < m; i++) {
-            if (arguments[i]) {
-                WAITFOR(arguments[i], callback);
-            }
-        }
-        if (callback.pending === 0) {
-            var result = callback();
-            if (ISCALLBACK(result)) {
-                callback = result;
-            }
-        }
-        return callback;
-    };
-    var HOOKS = MathJax.Object.Subclass({
-        Init: function (reset) {
-            this.hooks = [];
-            this.remove = [];
-            this.reset = reset;
-            this.running = false;
-        },
-        Add: function (hook, priority) {
-            if (priority == null) {
-                priority = 10;
-            }
-            if (!ISCALLBACK(hook)) {
-                hook = USING(hook);
-            }
-            hook.priority = priority;
-            var i = this.hooks.length;
-            while (i > 0 && priority < this.hooks[i - 1].priority) {
-                i--;
-            }
-            this.hooks.splice(i, 0, hook);
-            return hook;
-        },
-        Remove: function (hook) {
-            for (var i = 0, m = this.hooks.length; i < m; i++) {
-                if (this.hooks[i] === hook) {
-                    if (this.running) {
-                        this.remove.push(i);
-                    } else {
-                        this.hooks.splice(i, 1);
-                    }
-                    return;
-                }
-            }
-        },
-        Execute: function () {
-            var callbacks = [{}];
-            this.running = true;
-            for (var i = 0, m = this.hooks.length; i < m; i++) {
-                if (this.reset) {
-                    this.hooks[i].reset();
-                }
-                var result = this.hooks[i].apply(window, arguments);
-                if (ISCALLBACK(result) && !result.called) {
-                    callbacks.push(result);
-                }
-            }
-            this.running = false;
-            if (this.remove.length) {
-                this.RemovePending();
-            }
-            if (callbacks.length === 1) {
-                return null;
-            }
-            if (callbacks.length === 2) {
-                return callbacks[1];
-            }
-            return AFTER.apply({}, callbacks);
-        },
-        RemovePending: function () {
-            this.remove = this.remove.sort();
-            for (var i = this.remove.length - 1; i >= 0; i--) {
-                this.hooks.splice(i, 1);
-            }
-            this.remove = [];
-        }
-    });
-    var EXECUTEHOOKS = function (hooks, data, reset) {
-        if (!hooks) {
-            return null;
-        }
-        if (!isArray(hooks)) {
-            hooks = [hooks];
-        }
-        if (!isArray(data)) {
-            data = (data == null ? [] : [data]);
-        }
-        var handler = HOOKS(reset);
-        for (var i = 0, m = hooks.length; i < m; i++) {
-            handler.Add(hooks[i]);
-        }
-        return handler.Execute.apply(handler, data);
-    };
-    var QUEUE = MathJax.Object.Subclass({
-        Init: function () {
-            this.pending = this.running = 0;
-            this.queue = [];
-            this.Push.apply(this, arguments);
-        },
-        Push: function () {
-            var callback;
-            for (var i = 0, m = arguments.length; i < m; i++) {
-                callback = USING(arguments[i]);
-                if (callback === arguments[i] && !callback.called) {
-                    callback = USING(["wait", this, callback]);
-                }
-                this.queue.push(callback);
-            }
-            if (!this.running && !this.pending) {
-                this.Process();
-            }
-            return callback;
-        },
-        Process: function (queue) {
-            while (!this.running && !this.pending && this.queue.length) {
-                var callback = this.queue[0];
-                queue = this.queue.slice(1);
-                this.queue = [];
-                this.Suspend();
-                var result = callback();
-                this.Resume();
-                if (queue.length) {
-                    this.queue = queue.concat(this.queue);
-                }
-                if (ISCALLBACK(result) && !result.called) {
-                    WAITFOR(result, this);
-                }
-            }
-        },
-        Suspend: function () {
-            this.running++;
-        },
-        Resume: function () {
-            if (this.running) {
-                this.running--;
-            }
-        },
-        call: function () {
-            this.Process.apply(this, arguments);
-        },
-        wait: function (callback) {
-            return callback;
-        }
-    });
-    var SIGNAL = QUEUE.Subclass({
-        Init: function (name) {
-            QUEUE.prototype.Init.call(this);
-            this.name = name;
-            this.posted = [];
-            this.listeners = HOOKS(true);
-            this.posting = false;
-            this.callback = null;
-        },
-        Post: function (message, callback, forget) {
-            callback = USING(callback);
-            if (this.posting || this.pending) {
-                this.Push(["Post", this, message, callback, forget]);
-            } else {
-                this.callback = callback;
-                callback.reset();
-                if (!forget) {
-                    this.posted.push(message);
-                }
-                this.Suspend();
-                this.posting = true;
-                var result = this.listeners.Execute(message);
-                if (ISCALLBACK(result) && !result.called) {
-                    WAITFOR(result, this);
-                }
-                this.Resume();
-                this.posting = false;
-                if (!this.pending) {
-                    this.call();
-                }
-            }
-            return callback;
-        },
-        Clear: function (callback) {
-            callback = USING(callback);
-            if (this.posting || this.pending) {
-                callback = this.Push(["Clear", this, callback]);
-            } else {
-                this.posted = [];
-                callback();
-            }
-            return callback;
-        },
-        call: function () {
-            this.callback(this);
-            this.Process();
-        },
-        Interest: function (callback, ignorePast, priority) {
-            callback = USING(callback);
-            this.listeners.Add(callback, priority);
-            if (!ignorePast) {
-                for (var i = 0, m = this.posted.length; i < m; i++) {
-                    callback.reset();
-                    var result = callback(this.posted[i]);
-                    if (ISCALLBACK(result) && i === this.posted.length - 1) {
-                        WAITFOR(result, this);
-                    }
-                }
-            }
-            return callback;
-        },
-        NoInterest: function (callback) {
-            this.listeners.Remove(callback);
-        },
-        MessageHook: function (msg, callback, priority) {
-            callback = USING(callback);
-            if (!this.hooks) {
-                this.hooks = {};
-                this.Interest(["ExecuteHooks", this]);
-            }
-            if (!this.hooks[msg]) {
-                this.hooks[msg] = HOOKS(true);
-            }
-            this.hooks[msg].Add(callback, priority);
-            for (var i = 0, m = this.posted.length; i < m; i++) {
-                if (this.posted[i] == msg) {
-                    callback.reset();
-                    callback(this.posted[i]);
-                }
-            }
-            callback.msg = msg;
-            return callback;
-        },
-        ExecuteHooks: function (msg) {
-            var type = (isArray(msg) ? msg[0] : msg);
-            if (!this.hooks[type]) {
-                return null;
-            }
-            return this.hooks[type].Execute(msg);
-        },
-        RemoveHook: function (hook) {
-            this.hooks[hook.msg].Remove(hook);
-        }
-    }, {
-        signals: {},
-        find: function (name) {
-            if (!SIGNAL.signals[name]) {
-                SIGNAL.signals[name] = new SIGNAL(name);
-            }
-            return SIGNAL.signals[name];
-        }
-    });
-
-    MathJax.Callback = MathJax.CallBack = USING;
-    MathJax.Callback.Delay = DELAY;
-    MathJax.Callback.After = AFTER;
-    MathJax.Callback.Queue = QUEUE;
-    MathJax.Callback.Signal = SIGNAL.find;
-    MathJax.Callback.Hooks = HOOKS;
-    MathJax.Callback.ExecuteHooks = EXECUTEHOOKS
-}
-
 function createAjax() {
     var d = (navigator.vendor === "Apple Computer, Inc." && typeof navigator.vendorSub === "undefined");
     var g = 0;
@@ -2734,7 +2729,7 @@ function createAjax() {
             return this.fileURL(i) + this.fileRev(i);
         },
         Require: function (k, n) {
-            n = MathJax.Callback(n);
+            n = CallbackUtil.Create(n);
             var l;
             if (k instanceof Object) {
                 for (var j in k) {
@@ -2761,7 +2756,7 @@ function createAjax() {
             return n;
         },
         Load: function (k, m) {
-            m = MathJax.Callback(m);
+            m = CallbackUtil.Create(m);
             var l;
             if (k instanceof Object) {
                 for (var j in k) {
@@ -2787,7 +2782,7 @@ function createAjax() {
             return m;
         },
         LoadHook: function (l, m, k) {
-            m = MathJax.Callback(m);
+            m = CallbackUtil.Create(m);
             if (l instanceof Object) {
                 for (var j in l) {
                     if (l.hasOwnProperty(j)) {
@@ -2805,7 +2800,7 @@ function createAjax() {
         },
         addHook: function (j, k, i) {
             if (!this.loadHooks[j]) {
-                this.loadHooks[j] = MathJax.Callback.Hooks();
+                this.loadHooks[j] = CallbackUtil.Hooks();
             }
             this.loadHooks[j].Add(k, i);
             k.file = j;
@@ -2830,7 +2825,7 @@ function createAjax() {
             JS: function (k, m) {
                 var j = this.fileName(k);
                 var i = document.createElement("script");
-                var l = MathJax.Callback(["loadTimeout", this, k]);
+                var l = CallbackUtil.Create(["loadTimeout", this, k]);
                 this.loading[k] = {
                     callback: m,
                     timeout: setTimeout(l, this.timeout),
@@ -2860,7 +2855,7 @@ function createAjax() {
         },
         timer: {
             create: function (j, i) {
-                j = MathJax.Callback(j);
+                j = CallbackUtil.Create(j);
                 if (i.nodeName === "STYLE" && i.styleSheet && typeof (i.styleSheet.cssText) !== "undefined") {
                     j(this.STATUS.OK);
                 } else {
@@ -2877,7 +2872,7 @@ function createAjax() {
                 return j;
             },
             start: function (j, i, k, l) {
-                i = MathJax.Callback(i);
+                i = CallbackUtil.Create(i);
                 i.execute = this.execute;
                 i.time = this.time;
                 i.STATUS = j.STATUS;
@@ -2938,7 +2933,7 @@ function createAjax() {
                     }
                 }
                 if (m) {
-                    setTimeout(MathJax.Callback([n, i.STATUS.OK]), 0);
+                    setTimeout(CallbackUtil.Create([n, i.STATUS.OK]), 0);
                 } else {
                     setTimeout(i, i.delay);
                 }
@@ -2986,7 +2981,7 @@ function createAjax() {
         Styles: function (k, l) {
             var i = this.StyleString(k);
             if (i === "") {
-                l = MathJax.Callback(l);
+                l = CallbackUtil.Create(l);
                 l();
             } else {
                 var j = document.createElement("style");

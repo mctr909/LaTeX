@@ -1606,4 +1606,4 @@
         ["Post", f.Startup.signal, "MathMenu Ready"],
         ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"]
     );
-})(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.CallBack, MathJax.OutputJax);
+})(MathJax.Hub, MathJax.HTML, MathJax.Ajax, CallbackUtil.Create, MathJax.OutputJax);

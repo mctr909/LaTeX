@@ -318,7 +318,7 @@
             if (this.defaultEm) {
                 return
             }
-            var s = MathJax.Callback();
+            var s = CallbackUtil.Create();
             o.timer.start(o, function(t) {
                 if (t.time(s)) {
                     f.signal.Post(["CommonHTML Jax - no default em size"]);
@@ -556,7 +556,7 @@
             }
             if (x.CHTMLdelay) {
                 x.CHTMLdelay = false;
-                f.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay))
+                f.RestartAfter(CallbackUtil.Delay(this.config.EqnChunkDelay))
             }
             var s = t.MathJax.elementJax
               , w = s.root
@@ -3463,7 +3463,7 @@
             toCommonHTML: d.mbase.CHTMLautoload
         });
         MathJax.Hub.Register.StartupHook("onLoad", function() {
-            setTimeout(MathJax.Callback(["loadComplete", a, "jax.js"]), 0)
+            setTimeout(CallbackUtil.Create(["loadComplete", a, "jax.js"]), 0)
         })
     });
     MathJax.Hub.Register.StartupHook("End Cookie", function() {
