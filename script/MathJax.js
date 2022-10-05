@@ -8,7 +8,7 @@ var MathJax = {
     Localization: null,
     /** @type{Message} */
     Message: null,
-    /** @type{Message} */
+    /** @type{Hub} */
     Hub: null,
     Extension: {},
     InputJax: null,
@@ -963,6 +963,9 @@ class Hub {
         this.UnRegister = new HubUnRegister();
         /** @type{HubScriptAction} */
         this.scriptAction = new HubScriptAction();
+        /** @type{HubStartUp} */
+        this.Startup = new HubStartUp();
+        this.Configured = CallbackUtil.Create({});
     }
     Config(a) {
         this.Insert(this.config, a);
@@ -2726,11 +2729,7 @@ function createMathJax() {
     MathJax.Extension = {};
     MathJax.Hub = new Hub();
     MathJax.Hub.Insert(MathJax.Hub.config.styles, MathJax.Message.styles);
-    MathJax.Hub.Insert(MathJax.Hub.config.styles, {
-        ".MathJax_Error": MathJax.Hub.config.errorSettings.style
-    });
-    MathJax.Hub.Configured = CallbackUtil.Create({});
-    MathJax.Hub.Startup = new HubStartUp();
+    MathJax.Hub.Insert(MathJax.Hub.config.styles, { ".MathJax_Error": MathJax.Hub.config.errorSettings.style });
 
     (function () {
         var e = "[" + NAME_TAG + "]";
