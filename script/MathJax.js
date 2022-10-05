@@ -11,15 +11,48 @@ class MATHJAX {
         this.Message = null;
         /** @type{Hub} */
         this.Hub = null;
-        this.Extension = {};
+        /** @type{Extension} */
+        this.Extension = null;
+        /** @type{ElementJax} */
+        this.ElementJax = null;
         this.InputJax = null;
         this.OutputJax = null;
-        this.ElementJax = null;
         this.Object = null;
         this.Menu = null;
     }
 }
 var MathJax = new MATHJAX();
+
+class Extension {
+    constructor() {
+        /** @type{Tex2Jax} */
+        this.tex2jax = null;
+        /** @type{Mml2Jax} */
+        this.mml2jax = null;
+        /** @type{Asciimath2Jax} */
+        this.asciimath2jax = null;
+        /** @type{MathZoom} */
+        this.MathZoom = null;
+    }
+}
+class ElementJax {
+    static STATE = {
+        PENDING: 1,
+        PROCESSED: 2,
+        UPDATE: 3,
+        OUTPUT: 4
+    };
+    static ID = 0;
+    static GetID() {
+        ElementJax.ID++;
+        return "MathJax-Element-" + ElementJax.ID;
+    }
+    constructor() {
+        this.mml = null;
+        this.directory = "";
+        this.extensionDir = "";
+    }
+}
 
 class HTML {
     constructor() {
@@ -925,23 +958,23 @@ class HubScriptAction {
         var a = b.MathJax.elementJax;
         if (a && a.needsUpdate()) {
             a.Remove(true);
-            b.MathJax.state = a.STATE.UPDATE;
+            b.MathJax.state = ElementJax.STATE.UPDATE;
         } else {
-            b.MathJax.state = a.STATE.PROCESSED;
+            b.MathJax.state = ElementJax.STATE.PROCESSED;
         }
     }
     Reprocess(b) {
         var a = b.MathJax.elementJax;
         if (a) {
             a.Remove(true);
-            b.MathJax.state = a.STATE.UPDATE;
+            b.MathJax.state = ElementJax.STATE.UPDATE;
         }
     }
     Rerender(b) {
         var a = b.MathJax.elementJax;
         if (a) {
             a.Remove(true);
-            b.MathJax.state = a.STATE.OUTPUT;
+            b.MathJax.state = ElementJax.STATE.OUTPUT;
         }
     }
 }
@@ -1048,7 +1081,7 @@ class Hub {
         }
         if (a && (a.tagName || "").toLowerCase() === "script") {
             if (a.MathJax) {
-                return (a.MathJax.state === MathJax.ElementJax.STATE.PROCESSED ? 1 : -1);
+                return (a.MathJax.state === ElementJax.STATE.PROCESSED ? 1 : -1);
             }
             if (a.type && this.inputJax[a.type.replace(/ *;(.|\s)*/, "")]) {
                 return -1;
@@ -1165,7 +1198,7 @@ class Hub {
     }
     prepareScripts(h, e, g) {
         var b = this.elementScripts(e);
-        var f = MathJax.ElementJax.STATE;
+        var f = ElementJax.STATE;
         for (var d = 0, a = b.length; d < a; d++) {
             var c = b[d];
             if (c.type && this.inputJax[c.type.replace(/ *;(.|\n)*/, "")]) {
@@ -1230,7 +1263,7 @@ class Hub {
         a.MathJax.checked = 1;
     }
     processInput(a) {
-        var b, i = MathJax.ElementJax.STATE;
+        var b, i = ElementJax.STATE;
         var h, e, d = a.scripts.length;
         try {
             while (a.i < d) {
@@ -1331,7 +1364,7 @@ class Hub {
         return null;
     }
     processOutput(h) {
-        var b, g = MathJax.ElementJax.STATE, d, a = h.scripts.length;
+        var b, g = ElementJax.STATE, d, a = h.scripts.length;
         try {
             while (h.i < a) {
                 d = h.scripts[h.i];
@@ -1983,6 +2016,7 @@ class Ajax {
         this.loader = new AjaxLoader();
         /** @type{AjaxTimer} */
         this.timer = new AjaxTimer();
+        this.loadingMathMenu = false;
     }
     fileURL(j) {
         var i;
@@ -2816,7 +2850,6 @@ function createMathJax() {
             directory: e + "/jax",
             extensionDir: e + "/extensions"
         });
-
         MathJax.InputJax = g.Subclass({
             elementJax: "mml",
             sourceMenuTitle: ["Original", "Original Form"],
@@ -2925,12 +2958,12 @@ function createMathJax() {
             Text: function (i, j) {
                 var h = this.SourceElement();
                 MathJax.HTML.setScript(h, i);
-                h.MathJax.state = this.STATE.UPDATE;
+                h.MathJax.state = ElementJax.STATE.UPDATE;
                 return c.Update(h, j);
             },
             Reprocess: function (i) {
                 var h = this.SourceElement();
-                h.MathJax.state = this.STATE.UPDATE;
+                h.MathJax.state = ElementJax.STATE.UPDATE;
                 return c.Reprocess(h, i);
             },
             Update: function (h) {
@@ -2938,7 +2971,7 @@ function createMathJax() {
             },
             Rerender: function (i) {
                 var h = this.SourceElement();
-                h.MathJax.state = this.STATE.OUTPUT;
+                h.MathJax.state = ElementJax.STATE.OUTPUT;
                 return c.Process(h, i);
             },
             Remove: function (h) {
@@ -2959,14 +2992,14 @@ function createMathJax() {
             },
             Attach: function (i, j) {
                 var h = i.MathJax.elementJax;
-                if (i.MathJax.state === this.STATE.UPDATE) {
+                if (i.MathJax.state === ElementJax.STATE.UPDATE) {
                     h.Clone(this);
                 } else {
                     h = i.MathJax.elementJax = this;
                     if (i.id) {
                         this.inputID = i.id;
                     } else {
-                        i.id = this.inputID = MathJax.ElementJax.GetID();
+                        i.id = this.inputID = ElementJax.GetID();
                         this.newID = 1;
                     }
                 }
@@ -3015,17 +3048,6 @@ function createMathJax() {
             version: "2.7.2",
             directory: g.directory + "/element",
             extensionDir: g.extensionDir,
-            ID: 0,
-            STATE: {
-                PENDING: 1,
-                PROCESSED: 2,
-                UPDATE: 3,
-                OUTPUT: 4
-            },
-            GetID: function () {
-                this.ID++;
-                return "MathJax-Element-" + this.ID;
-            },
             Subclass: function () {
                 var h = g.Subclass.apply(this, arguments);
                 h.loadComplete = this.prototype.loadComplete;
@@ -3033,7 +3055,7 @@ function createMathJax() {
             }
         });
 
-        MathJax.ElementJax.prototype.STATE = MathJax.ElementJax.STATE;
+        MathJax.ElementJax.prototype.STATE = ElementJax.STATE;
         MathJax.OutputJax.Error = {
             id: "Error",
             version: "2.7.2",

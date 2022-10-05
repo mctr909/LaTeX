@@ -93,7 +93,6 @@
             var B = b[E.jaxID], v = B.getJaxFromMath(E);
             var F = (B.config.showMathMenu != null ? B : d).config.showMathMenu;
             if (!F || (k.context !== "MathJax" && !w)) { return }
-            if (c.msieEventBug) { t = window.event || t }
             n.ClearSelection();
             f.ClearHoverTimer();
             if (v.hover) {
@@ -160,7 +159,7 @@
             if (q) {
                 q = (t.config.showMathMenuMSIE != null ? t : d).config.showMathMenuMSIE;
                 if (k.context === "MathJax" && !k.mpContext && q) {
-                    if (!c.noContextMenuBug || s.button !== n.RIGHTBUTTON) { return }
+                    if (s.button !== n.RIGHTBUTTON) { return }
                 } else {
                     if (!s[n.MENUKEY] || s.button !== n.LEFTBUTTON) { return }
                 }
@@ -241,7 +240,6 @@
             var A = o.frame.x,
                 z = o.frame.y,
                 x = o.frame.bwidth;
-            if (c.msieBorderWidthBug) { x = 0 }
             q.hover = {
                 opacity: 0,
                 id: q.inputID + "-Hover"
@@ -400,32 +398,14 @@
         }
     };
     d.Browser.Select({
-        MSIE: function (q) {
-            var s = (document.documentMode || 0);
-            var r = q.versionAtLeast("8.0");
-            c.msieBorderWidthBug = (document.compatMode === "BackCompat");
-            c.msieEventBug = q.isIE9;
-            c.msieAlignBug = (!r || s < 8);
-            if (s < 9) { n.LEFTBUTTON = 1 }
-        },
         Safari: function (q) {
             c.safariContextMenuBug = true;
         },
         Opera: function (q) {
             c.operaPositionBug = true;
-        },
-        Konqueror: function (q) {
-            c.noContextMenuBug = true;
         }
     });
-    c.topImg = (c.msieAlignBug ? h.Element("img", {
-        style: {
-            width: 0,
-            height: 0,
-            position: "relative"
-        },
-        src: "about:blank"
-    }) : h.Element("span", {
+    c.topImg = (h.Element("span", {
         style: { width: 0, height: 0, display: "inline-block" }
     }));
     if (c.operaPositionBug) {

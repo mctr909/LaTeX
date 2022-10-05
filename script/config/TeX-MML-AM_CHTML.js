@@ -1,3 +1,5 @@
+///<reference path="../MathJax.js"/>
+
 MathJax.Ajax.Preloading("[MathJax]/jax/input/TeX/config.js", "[MathJax]/jax/input/MathML/config.js", "[MathJax]/jax/input/AsciiMath/config.js", "[MathJax]/jax/output/CommonHTML/config.js", "[MathJax]/jax/output/PreviewHTML/config.js", "[MathJax]/extensions/tex2jax.js", "[MathJax]/extensions/mml2jax.js", "[MathJax]/extensions/asciimath2jax.js", "[MathJax]/extensions/MathEvents.js", "[MathJax]/extensions/MathZoom.js", "[MathJax]/extensions/MathMenu.js", "[MathJax]/jax/element/mml/jax.js", "[MathJax]/extensions/toMathML.js", "[MathJax]/extensions/TeX/noErrors.js", "[MathJax]/extensions/TeX/noUndefined.js", "[MathJax]/jax/input/TeX/jax.js", "[MathJax]/extensions/TeX/AMSmath.js", "[MathJax]/extensions/TeX/AMSsymbols.js", "[MathJax]/jax/input/MathML/jax.js", "[MathJax]/jax/input/AsciiMath/jax.js", "[MathJax]/jax/output/PreviewHTML/jax.js", "[MathJax]/extensions/fast-preview.js", "[MathJax]/extensions/AssistiveMML.js", "[MathJax]/extensions/a11y/accessibility-menu.js");
 
 MathJax.Hub.Config({
@@ -112,47 +114,49 @@ if (!MathJax.Hub.config.delayJaxRegistration) {
 }
 MathJax.OutputJax.PreviewHTML.loadComplete("config.js");
 
-MathJax.Extension.tex2jax = {
-    version: "2.7.2",
-    config: {
-        inlineMath: [["\\(", "\\)"]],
-        displayMath: [["$$", "$$"], ["\\[", "\\]"]],
-        balanceBraces: true,
-        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "annotation", "annotation-xml"],
-        ignoreClass: "tex2jax_ignore",
-        processClass: "tex2jax_process",
-        processEscapes: false,
-        processEnvironments: true,
-        processRefs: true,
-        preview: "TeX"
-    },
-    ignoreTags: {
-        br: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9 ? "\n" : " "),
-        wbr: "",
-        "#comment": ""
-    },
-    PreProcess: function (a) {
+class Tex2Jax {
+    constructor() {
+        this.version = "2.7.2";
+        this.config = {
+            inlineMath: [["\\(", "\\)"]],
+            displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+            balanceBraces: true,
+            skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "annotation", "annotation-xml"],
+            ignoreClass: "tex2jax_ignore",
+            processClass: "tex2jax_process",
+            processEscapes: false,
+            processEnvironments: true,
+            processRefs: true,
+            preview: "TeX"
+        };
+        this.ignoreTags = {
+            br: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9 ? "\n" : " "),
+            wbr: "",
+            "#comment": ""
+        };
+    }
+    PreProcess(a) {
         if (!this.configured) {
             this.config = MathJax.Hub.CombineConfig("tex2jax", this.config);
             if (this.config.Augment) {
-                MathJax.Hub.Insert(this, this.config.Augment)
+                MathJax.Hub.Insert(this, this.config.Augment);
             }
             if (typeof (this.config.previewTeX) !== "undefined" && !this.config.previewTeX) {
-                this.config.preview = "none"
+                this.config.preview = "none";
             }
-            this.configured = true
+            this.configured = true;
         }
         if (typeof (a) === "string") {
-            a = document.getElementById(a)
+            a = document.getElementById(a);
         }
         if (!a) {
-            a = document.body
+            a = document.body;
         }
         if (this.createPatterns()) {
-            this.scanElement(a, a.nextSibling)
+            this.scanElement(a, a.nextSibling);
         }
-    },
-    createPatterns: function () {
+    }
+    createPatterns() {
         var d = [], e = [], c, a, b = this.config;
         this.match = {};
         for (c = 0,
@@ -174,69 +178,69 @@ MathJax.Extension.tex2jax = {
             }
         }
         if (d.length) {
-            e.push(d.sort(this.sortLength).join("|"))
+            e.push(d.sort(this.sortLength).join("|"));
         }
         if (b.processEnvironments) {
-            e.push("\\\\begin\\{([^}]*)\\}")
+            e.push("\\\\begin\\{([^}]*)\\}");
         }
         if (b.processEscapes) {
-            e.push("\\\\*\\\\\\$")
+            e.push("\\\\*\\\\\\$");
         }
         if (b.processRefs) {
-            e.push("\\\\(eq)?ref\\{[^}]*\\}")
+            e.push("\\\\(eq)?ref\\{[^}]*\\}");
         }
         this.start = new RegExp(e.join("|"), "g");
         this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$", "i");
         var f = [];
         if (MathJax.Hub.config.preRemoveClass) {
-            f.push(MathJax.Hub.config.preRemoveClass)
+            f.push(MathJax.Hub.config.preRemoveClass);
         }
         if (b.ignoreClass) {
-            f.push(b.ignoreClass)
+            f.push(b.ignoreClass);
         }
         this.ignoreClass = (f.length ? new RegExp("(^| )(" + f.join("|") + ")( |$)") : /^$/);
         this.processClass = new RegExp("(^| )(" + b.processClass + ")( |$)");
-        return (e.length > 0)
-    },
-    patternQuote: function (a) {
-        return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1")
-    },
-    endPattern: function (a) {
-        return new RegExp(this.patternQuote(a) + "|\\\\.|[{}]", "g")
-    },
-    sortLength: function (d, c) {
+        return (e.length > 0);
+    }
+    patternQuote(a) {
+        return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1");
+    }
+    endPattern(a) {
+        return new RegExp(this.patternQuote(a) + "|\\\\.|[{}]", "g");
+    }
+    sortLength(d, c) {
         if (d.length !== c.length) {
-            return c.length - d.length
+            return c.length - d.length;
         }
-        return (d == c ? 0 : (d < c ? -1 : 1))
-    },
-    scanElement: function (c, b, g) {
+        return (d == c ? 0 : (d < c ? -1 : 1));
+    }
+    scanElement(c, b, g) {
         var a, e, d, f;
         while (c && c != b) {
             if (c.nodeName.toLowerCase() === "#text") {
                 if (!g) {
-                    c = this.scanText(c)
+                    c = this.scanText(c);
                 }
             } else {
                 a = (typeof (c.className) === "undefined" ? "" : c.className);
                 e = (typeof (c.tagName) === "undefined" ? "" : c.tagName);
                 if (typeof (a) !== "string") {
-                    a = String(a)
+                    a = String(a);
                 }
                 f = this.processClass.exec(a);
                 if (c.firstChild && !a.match(/(^| )MathJax/) && (f || !this.skipTags.exec(e))) {
                     d = (g || this.ignoreClass.exec(a)) && !f;
-                    this.scanElement(c.firstChild, b, d)
+                    this.scanElement(c.firstChild, b, d);
                 }
             }
             if (c) {
-                c = c.nextSibling
+                c = c.nextSibling;
             }
         }
-    },
-    scanText: function (b) {
+    }
+    scanText(b) {
         if (b.nodeValue.replace(/\s+/, "") == "") {
-            return b
+            return b;
         }
         var a, c;
         this.search = {
@@ -247,27 +251,27 @@ MathJax.Extension.tex2jax = {
             this.pattern.lastIndex = 0;
             while (b && b.nodeName.toLowerCase() === "#text" && (a = this.pattern.exec(b.nodeValue))) {
                 if (this.search.start) {
-                    b = this.startMatch(a, b)
+                    b = this.startMatch(a, b);
                 } else {
-                    b = this.endMatch(a, b)
+                    b = this.endMatch(a, b);
                 }
             }
             if (this.search.matched) {
-                b = this.encloseMath(b)
+                b = this.encloseMath(b);
             }
             if (b) {
                 do {
                     c = b;
-                    b = b.nextSibling
+                    b = b.nextSibling;
                 } while (b && this.ignoreTags[b.nodeName.toLowerCase()] != null);
                 if (!b || b.nodeName !== "#text") {
-                    return (this.search.close ? this.prevEndMatch() : c)
+                    return (this.search.close ? this.prevEndMatch() : c);
                 }
             }
         }
-        return b
-    },
-    startMatch: function (a, b) {
+        return b;
+    }
+    startMatch(a, b) {
         var f = this.match[a[0]];
         if (f != null) {
             this.search = {
@@ -278,7 +282,7 @@ MathJax.Extension.tex2jax = {
                 olen: a[0].length,
                 opos: this.pattern.lastIndex - a[0].length
             };
-            this.switchPattern(f.pattern)
+            this.switchPattern(f.pattern);
         } else {
             if (a[0].substr(0, 6) === "\\begin") {
                 this.search = {
@@ -290,7 +294,7 @@ MathJax.Extension.tex2jax = {
                     opos: this.pattern.lastIndex - a[0].length,
                     isBeginEnd: true
                 };
-                this.switchPattern(this.endPattern(this.search.end))
+                this.switchPattern(this.endPattern(this.search.end));
             } else {
                 if (a[0].substr(0, 4) === "\\ref" || a[0].substr(0, 6) === "\\eqref") {
                     this.search = {
@@ -301,157 +305,156 @@ MathJax.Extension.tex2jax = {
                         olen: 0,
                         opos: this.pattern.lastIndex - a[0].length
                     };
-                    return this.endMatch([""], b)
+                    return this.endMatch([""], b);
                 } else {
                     var d = a[0].substr(0, a[0].length - 1), g, c;
                     if (d.length % 2 === 0) {
                         c = [d.replace(/\\\\/g, "\\")];
-                        g = 1
+                        g = 1;
                     } else {
                         c = [d.substr(1).replace(/\\\\/g, "\\"), "$"];
-                        g = 0
+                        g = 0;
                     }
                     c = MathJax.HTML.Element("span", null, c);
                     var e = MathJax.HTML.TextNode(b.nodeValue.substr(0, a.index));
                     b.nodeValue = b.nodeValue.substr(a.index + a[0].length - g);
                     b.parentNode.insertBefore(c, b);
                     b.parentNode.insertBefore(e, c);
-                    this.pattern.lastIndex = g
+                    this.pattern.lastIndex = g;
                 }
             }
         }
-        return b
-    },
-    endMatch: function (a, c) {
+        return b;
+    }
+    endMatch(a, c) {
         var b = this.search;
         if (a[0] == b.end) {
             if (!b.close || b.pcount === 0) {
                 b.close = c;
                 b.cpos = this.pattern.lastIndex;
-                b.clen = (b.isBeginEnd ? 0 : a[0].length)
+                b.clen = (b.isBeginEnd ? 0 : a[0].length);
             }
             if (b.pcount === 0) {
                 b.matched = true;
                 c = this.encloseMath(c);
-                this.switchPattern(this.start)
+                this.switchPattern(this.start);
             }
         } else {
             if (a[0] === "{") {
-                b.pcount++
+                b.pcount++;
             } else {
                 if (a[0] === "}" && b.pcount) {
-                    b.pcount--
+                    b.pcount--;
                 }
             }
         }
-        return c
-    },
-    prevEndMatch: function () {
+        return c;
+    }
+    prevEndMatch() {
         this.search.matched = true;
         var a = this.encloseMath(this.search.close);
         this.switchPattern(this.start);
-        return a
-    },
-    switchPattern: function (a) {
+        return a;
+    }
+    switchPattern(a) {
         a.lastIndex = this.pattern.lastIndex;
         this.pattern = a;
-        this.search.start = (a === this.start)
-    },
-    encloseMath: function (b) {
+        this.search.start = (a === this.start);
+    }
+    encloseMath(b) {
         var a = this.search, g = a.close, f, d, c;
         if (a.cpos === g.length) {
-            g = g.nextSibling
+            g = g.nextSibling;
         } else {
-            g = g.splitText(a.cpos)
+            g = g.splitText(a.cpos);
         }
         if (!g) {
-            f = g = MathJax.HTML.addText(a.close.parentNode, "")
+            f = g = MathJax.HTML.addText(a.close.parentNode, "");
         }
         a.close = g;
         d = (a.opos ? a.open.splitText(a.opos) : a.open);
         while ((c = d.nextSibling) && c !== g) {
             if (c.nodeValue !== null) {
                 if (c.nodeName === "#comment") {
-                    d.nodeValue += c.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/, "$1")
+                    d.nodeValue += c.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/, "$1");
                 } else {
-                    d.nodeValue += c.nodeValue
+                    d.nodeValue += c.nodeValue;
                 }
             } else {
                 var h = this.ignoreTags[c.nodeName.toLowerCase()];
-                d.nodeValue += (h == null ? " " : h)
+                d.nodeValue += (h == null ? " " : h);
             }
-            d.parentNode.removeChild(c)
+            d.parentNode.removeChild(c);
         }
         var e = d.nodeValue.substr(a.olen, d.nodeValue.length - a.olen - a.clen);
         d.parentNode.removeChild(d);
         if (this.config.preview !== "none") {
-            this.createPreview(a.mode, e)
+            this.createPreview(a.mode, e);
         }
         d = this.createMathTag(a.mode, e);
         this.search = {};
         this.pattern.lastIndex = 0;
         if (f) {
-            f.parentNode.removeChild(f)
+            f.parentNode.removeChild(f);
         }
-        return d
-    },
-    insertNode: function (b) {
+        return d;
+    }
+    insertNode(b) {
         var a = this.search;
-        a.close.parentNode.insertBefore(b, a.close)
-    },
-    createPreview: function (d, a) {
+        a.close.parentNode.insertBefore(b, a.close);
+    }
+    createPreview(d, a) {
         var b = MathJax.Hub.config.preRemoveClass;
         var c = this.config.preview;
         if (c === "none") {
-            return
+            return;
         }
         if ((this.search.close.previousSibling || {}).className === b) {
-            return
+            return;
         }
         if (c === "TeX") {
-            c = [this.filterPreview(a)]
+            c = [this.filterPreview(a)];
         }
         if (c) {
             c = MathJax.HTML.Element("span", {
                 className: b
             }, c);
-            this.insertNode(c)
+            this.insertNode(c);
         }
-    },
-    createMathTag: function (c, b) {
+    }
+    createMathTag(c, b) {
         var a = document.createElement("script");
         a.type = "math/tex" + c;
         MathJax.HTML.setScript(a, b);
         this.insertNode(a);
-        return a
-    },
-    filterPreview: function (a) {
-        return a
+        return a;
     }
-};
-MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.tex2jax]);
-MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");
-
-MathJax.Extension.mml2jax = {
-    version: "2.7.2",
-    config: {
-        preview: "mathml"
-    },
-    MMLnamespace: "http://www.w3.org/1998/Math/MathML",
-    PreProcess: function (e) {
+    filterPreview(a) {
+        return a;
+    }
+}
+class Mml2Jax {
+    constructor() {
+        this.version = "2.7.2";
+        this.config = {
+            preview: "mathml"
+        };
+        this.MMLnamespace = "http://www.w3.org/1998/Math/MathML";
+    }
+    PreProcess(e) {
         if (!this.configured) {
             this.config = MathJax.Hub.CombineConfig("mml2jax", this.config);
             if (this.config.Augment) {
-                MathJax.Hub.Insert(this, this.config.Augment)
+                MathJax.Hub.Insert(this, this.config.Augment);
             }
             this.InitBrowser();
-            this.configured = true
+            this.configured = true;
         }
         if (typeof (e) === "string") {
-            e = document.getElementById(e)
+            e = document.getElementById(e);
         }
         if (!e) {
-            e = document.body
+            e = document.body;
         }
         var h = [];
         this.PushMathElements(h, e, "math");
@@ -463,7 +466,7 @@ MathJax.Extension.mml2jax = {
                     b = document.namespaces.length; d < b; d++) {
                     var f = document.namespaces[d];
                     if (f.urn === this.MMLnamespace) {
-                        this.PushMathElements(h, e, f.name + ":math")
+                        this.PushMathElements(h, e, f.name + ":math");
                     }
                 }
             } catch (g) { }
@@ -474,52 +477,52 @@ MathJax.Extension.mml2jax = {
                     b = c.attributes.length; d < b; d++) {
                     var a = c.attributes[d];
                     if (a.nodeName.substr(0, 6) === "xmlns:" && a.nodeValue === this.MMLnamespace) {
-                        this.PushMathElements(h, e, a.nodeName.substr(6) + ":math")
+                        this.PushMathElements(h, e, a.nodeName.substr(6) + ":math");
                     }
                 }
             }
         }
-        this.ProcessMathArray(h)
-    },
-    PushMathElements: function (f, d, a, c) {
+        this.ProcessMathArray(h);
+    }
+    PushMathElements(f, d, a, c) {
         var h, g = MathJax.Hub.config.preRemoveClass;
         if (c) {
             if (!d.getElementsByTagNameNS) {
-                return
+                return;
             }
-            h = d.getElementsByTagNameNS(c, a)
+            h = d.getElementsByTagNameNS(c, a);
         } else {
-            h = d.getElementsByTagName(a)
+            h = d.getElementsByTagName(a);
         }
         for (var e = 0, b = h.length; e < b; e++) {
             var j = h[e].parentNode;
             if (j && j.className !== g && !j.isMathJax && !h[e].prefix === !c) {
-                f.push(h[e])
+                f.push(h[e]);
             }
         }
-    },
-    ProcessMathArray: function (c) {
+    }
+    ProcessMathArray(c) {
         var b, a = c.length;
         if (a) {
             if (this.MathTagBug) {
                 for (b = 0; b < a; b++) {
                     if (c[b].nodeName === "MATH") {
-                        this.ProcessMathFlattened(c[b])
+                        this.ProcessMathFlattened(c[b]);
                     } else {
-                        this.ProcessMath(c[b])
+                        this.ProcessMath(c[b]);
                     }
                 }
             } else {
                 for (b = 0; b < a; b++) {
-                    this.ProcessMath(c[b])
+                    this.ProcessMath(c[b]);
                 }
             }
         }
-    },
-    ProcessMath: function (e) {
+    }
+    ProcessMath(e) {
         var d = e.parentNode;
         if (!d || d.className === MathJax.Hub.config.preRemoveClass) {
-            return
+            return;
         }
         var a = document.createElement("script");
         a.type = "math/mml";
@@ -528,23 +531,23 @@ MathJax.Extension.mml2jax = {
             var b = this.OuterHTML(e);
             if (this.CleanupHTML) {
                 b = b.replace(/<\?import .*?>/i, "").replace(/<\?xml:namespace .*?\/>/i, "");
-                b = b.replace(/&nbsp;/g, "&#xA0;")
+                b = b.replace(/&nbsp;/g, "&#xA0;");
             }
             MathJax.HTML.setScript(a, b);
-            d.removeChild(e)
+            d.removeChild(e);
         } else {
             var c = MathJax.HTML.Element("span");
             c.appendChild(e);
-            MathJax.HTML.setScript(a, c.innerHTML)
+            MathJax.HTML.setScript(a, c.innerHTML);
         }
         if (this.config.preview !== "none") {
-            this.createPreview(e, a)
+            this.createPreview(e, a);
         }
-    },
-    ProcessMathFlattened: function (f) {
+    }
+    ProcessMathFlattened(f) {
         var d = f.parentNode;
         if (!d || d.className === MathJax.Hub.config.preRemoveClass) {
-            return
+            return;
         }
         var b = document.createElement("script");
         b.type = "math/mml";
@@ -554,23 +557,23 @@ MathJax.Extension.mml2jax = {
             e = f;
             f = f.nextSibling;
             c += this.NodeHTML(e);
-            e.parentNode.removeChild(e)
+            e.parentNode.removeChild(e);
         }
         if (f && f.nodeName === "/MATH") {
-            f.parentNode.removeChild(f)
+            f.parentNode.removeChild(f);
         }
         b.text = c + "</math>";
         if (this.config.preview !== "none") {
-            this.createPreview(a, b)
+            this.createPreview(a, b);
         }
-    },
-    NodeHTML: function (e) {
+    }
+    NodeHTML(e) {
         var c, b, a;
         if (e.nodeName === "#text") {
-            c = this.quoteHTML(e.nodeValue)
+            c = this.quoteHTML(e.nodeValue);
         } else {
             if (e.nodeName === "#comment") {
-                c = "<!--" + e.nodeValue + "-->"
+                c = "<!--" + e.nodeValue + "-->";
             } else {
                 c = "<" + e.nodeName.toLowerCase();
                 for (b = 0,
@@ -580,59 +583,59 @@ MathJax.Extension.mml2jax = {
                         c += " " + d.nodeName.toLowerCase().replace(/xmlns:xmlns/, "xmlns") + "=";
                         var f = d.nodeValue;
                         if (f == null && d.nodeName === "style" && e.style) {
-                            f = e.style.cssText
+                            f = e.style.cssText;
                         }
-                        c += '"' + this.quoteHTML(f) + '"'
+                        c += '"' + this.quoteHTML(f) + '"';
                     }
                 }
                 c += ">";
                 if (e.outerHTML != null && e.outerHTML.match(/(.<\/[A-Z]+>|\/>)$/)) {
                     for (b = 0,
                         a = e.childNodes.length; b < a; b++) {
-                        c += this.OuterHTML(e.childNodes[b])
+                        c += this.OuterHTML(e.childNodes[b]);
                     }
-                    c += "</" + e.nodeName.toLowerCase() + ">"
+                    c += "</" + e.nodeName.toLowerCase() + ">";
                 }
             }
         }
-        return c
-    },
-    OuterHTML: function (d) {
+        return c;
+    }
+    OuterHTML(d) {
         if (d.nodeName.charAt(0) === "#") {
-            return this.NodeHTML(d)
+            return this.NodeHTML(d);
         }
         if (!this.AttributeBug) {
-            return d.outerHTML
+            return d.outerHTML;
         }
         var c = this.NodeHTML(d);
         for (var b = 0, a = d.childNodes.length; b < a; b++) {
-            c += this.OuterHTML(d.childNodes[b])
+            c += this.OuterHTML(d.childNodes[b]);
         }
         c += "</" + d.nodeName.toLowerCase() + ">";
-        return c
-    },
-    quoteHTML: function (a) {
+        return c;
+    }
+    quoteHTML(a) {
         if (a == null) {
-            a = ""
+            a = "";
         }
-        return a.replace(/&/g, "&#x26;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;")
-    },
-    createPreview: function (g, f) {
+        return a.replace(/&/g, "&#x26;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
+    }
+    createPreview(g, f) {
         var e = this.config.preview;
         if (e === "none") {
-            return
+            return;
         }
         var i = false;
         var c = MathJax.Hub.config.preRemoveClass;
         if ((f.previousSibling || {}).className === c) {
-            return
+            return;
         }
         if (e === "mathml") {
             i = true;
             if (this.MathTagBug) {
-                e = "alttext"
+                e = "alttext";
             } else {
-                e = g.cloneNode(true)
+                e = g.cloneNode(true);
             }
         }
         if (e === "alttext" || e === "altimg") {
@@ -640,9 +643,9 @@ MathJax.Extension.mml2jax = {
             var d = this.filterPreview(g.getAttribute("alttext"));
             if (e === "alttext") {
                 if (d != null) {
-                    e = MathJax.HTML.TextNode(d)
+                    e = MathJax.HTML.TextNode(d);
                 } else {
-                    e = null
+                    e = null;
                 }
             } else {
                 var a = g.getAttribute("altimg");
@@ -655,9 +658,9 @@ MathJax.Extension.mml2jax = {
                         src: a,
                         alt: d,
                         style: b
-                    })
+                    });
                 } else {
-                    e = null
+                    e = null;
                 }
             }
         }
@@ -667,19 +670,19 @@ MathJax.Extension.mml2jax = {
                 h = MathJax.HTML.Element("span", {
                     className: c
                 });
-                h.appendChild(e)
+                h.appendChild(e);
             } else {
                 h = MathJax.HTML.Element("span", {
                     className: c
-                }, e)
+                }, e);
             }
-            f.parentNode.insertBefore(h, f)
+            f.parentNode.insertBefore(h, f);
         }
-    },
-    filterPreview: function (a) {
-        return a
-    },
-    InitBrowser: function () {
+    }
+    filterPreview(a) {
+        return a;
+    }
+    InitBrowser() {
         var b = MathJax.HTML.Element("span", {
             id: "<",
             className: "mathjax",
@@ -688,49 +691,48 @@ MathJax.Extension.mml2jax = {
         var a = b.outerHTML || "";
         this.AttributeBug = a !== "" && !(a.match(/id="&lt;"/) && a.match(/class="mathjax"/) && a.match(/<\/math>/));
         this.MathTagBug = b.childNodes.length > 1;
-        this.CleanupHTML = MathJax.Hub.Browser.isMSIE
+        this.CleanupHTML = MathJax.Hub.Browser.isMSIE;
     }
-};
-MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.mml2jax], 5);
-MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
-
-MathJax.Extension.asciimath2jax = {
-    version: "2.7.2",
-    config: {
-        delimiters: [["`", "`"]],
-        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "annotation", "annotation-xml"],
-        ignoreClass: "asciimath2jax_ignore",
-        processClass: "asciimath2jax_process",
-        preview: "AsciiMath"
-    },
-    ignoreTags: {
-        br: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9 ? "\n" : " "),
-        wbr: "",
-        "#comment": ""
-    },
-    PreProcess: function (a) {
+}
+class Asciimath2Jax {
+    constructor() {
+        this.version = "2.7.2";
+        this.config = {
+            delimiters: [["`", "`"]],
+            skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "annotation", "annotation-xml"],
+            ignoreClass: "asciimath2jax_ignore",
+            processClass: "asciimath2jax_process",
+            preview: "AsciiMath"
+        };
+        this.ignoreTags = {
+            br: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9 ? "\n" : " "),
+            wbr: "",
+            "#comment": ""
+        };
+    }
+    PreProcess(a) {
         if (!this.configured) {
             this.config = MathJax.Hub.CombineConfig("asciimath2jax", this.config);
             if (this.config.Augment) {
-                MathJax.Hub.Insert(this, this.config.Augment)
+                MathJax.Hub.Insert(this, this.config.Augment);
             }
-            this.configured = true
+            this.configured = true;
         }
         if (typeof (a) === "string") {
-            a = document.getElementById(a)
+            a = document.getElementById(a);
         }
         if (!a) {
-            a = document.body
+            a = document.body;
         }
         if (this.createPatterns()) {
-            this.scanElement(a, a.nextSibling)
+            this.scanElement(a, a.nextSibling);
         }
-    },
-    createPatterns: function () {
+    }
+    createPatterns() {
         var d = [], c, a, b = this.config;
         this.match = {};
         if (b.delimiters.length === 0) {
-            return false
+            return false;
         }
         for (c = 0,
             a = b.delimiters.length; c < a; c++) {
@@ -739,60 +741,60 @@ MathJax.Extension.asciimath2jax = {
                 mode: "",
                 end: b.delimiters[c][1],
                 pattern: this.endPattern(b.delimiters[c][1])
-            }
+            };
         }
         this.start = new RegExp(d.sort(this.sortLength).join("|"), "g");
         this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$", "i");
         var e = [];
         if (MathJax.Hub.config.preRemoveClass) {
-            e.push(MathJax.Hub.config.preRemoveClass)
+            e.push(MathJax.Hub.config.preRemoveClass);
         }
         if (b.ignoreClass) {
-            e.push(b.ignoreClass)
+            e.push(b.ignoreClass);
         }
         this.ignoreClass = (e.length ? new RegExp("(^| )(" + e.join("|") + ")( |$)") : /^$/);
         this.processClass = new RegExp("(^| )(" + b.processClass + ")( |$)");
-        return true
-    },
-    patternQuote: function (a) {
-        return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1")
-    },
-    endPattern: function (a) {
-        return new RegExp(this.patternQuote(a) + "|\\\\.", "g")
-    },
-    sortLength: function (d, c) {
+        return true;
+    }
+    patternQuote(a) {
+        return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1");
+    }
+    endPattern(a) {
+        return new RegExp(this.patternQuote(a) + "|\\\\.", "g");
+    }
+    sortLength(d, c) {
         if (d.length !== c.length) {
-            return c.length - d.length
+            return c.length - d.length;
         }
-        return (d == c ? 0 : (d < c ? -1 : 1))
-    },
-    scanElement: function (c, b, g) {
+        return (d == c ? 0 : (d < c ? -1 : 1));
+    }
+    scanElement(c, b, g) {
         var a, e, d, f;
         while (c && c != b) {
             if (c.nodeName.toLowerCase() === "#text") {
                 if (!g) {
-                    c = this.scanText(c)
+                    c = this.scanText(c);
                 }
             } else {
                 a = (typeof (c.className) === "undefined" ? "" : c.className);
                 e = (typeof (c.tagName) === "undefined" ? "" : c.tagName);
                 if (typeof (a) !== "string") {
-                    a = String(a)
+                    a = String(a);
                 }
                 f = this.processClass.exec(a);
                 if (c.firstChild && !a.match(/(^| )MathJax/) && (f || !this.skipTags.exec(e))) {
                     d = (g || this.ignoreClass.exec(a)) && !f;
-                    this.scanElement(c.firstChild, b, d)
+                    this.scanElement(c.firstChild, b, d);
                 }
             }
             if (c) {
-                c = c.nextSibling
+                c = c.nextSibling;
             }
         }
-    },
-    scanText: function (b) {
+    }
+    scanText(b) {
         if (b.nodeValue.replace(/\s+/, "") == "") {
-            return b
+            return b;
         }
         var a, c;
         this.search = {
@@ -803,27 +805,27 @@ MathJax.Extension.asciimath2jax = {
             this.pattern.lastIndex = 0;
             while (b && b.nodeName.toLowerCase() === "#text" && (a = this.pattern.exec(b.nodeValue))) {
                 if (this.search.start) {
-                    b = this.startMatch(a, b)
+                    b = this.startMatch(a, b);
                 } else {
-                    b = this.endMatch(a, b)
+                    b = this.endMatch(a, b);
                 }
             }
             if (this.search.matched) {
-                b = this.encloseMath(b)
+                b = this.encloseMath(b);
             }
             if (b) {
                 do {
                     c = b;
-                    b = b.nextSibling
+                    b = b.nextSibling;
                 } while (b && this.ignoreTags[b.nodeName.toLowerCase()] != null);
                 if (!b || b.nodeName !== "#text") {
-                    return c
+                    return c;
                 }
             }
         }
-        return b
-    },
-    startMatch: function (a, b) {
+        return b;
+    }
+    startMatch(a, b) {
         var c = this.match[a[0]];
         if (c != null) {
             this.search = {
@@ -833,661 +835,715 @@ MathJax.Extension.asciimath2jax = {
                 olen: a[0].length,
                 opos: this.pattern.lastIndex - a[0].length
             };
-            this.switchPattern(c.pattern)
+            this.switchPattern(c.pattern);
         }
-        return b
-    },
-    endMatch: function (a, b) {
+        return b;
+    }
+    endMatch(a, b) {
         if (a[0] == this.search.end) {
             this.search.close = b;
             this.search.cpos = this.pattern.lastIndex;
             this.search.clen = (this.search.isBeginEnd ? 0 : a[0].length);
             this.search.matched = true;
             b = this.encloseMath(b);
-            this.switchPattern(this.start)
+            this.switchPattern(this.start);
         }
-        return b
-    },
-    switchPattern: function (a) {
+        return b;
+    }
+    switchPattern(a) {
         a.lastIndex = this.pattern.lastIndex;
         this.pattern = a;
-        this.search.start = (a === this.start)
-    },
-    encloseMath: function (b) {
+        this.search.start = (a === this.start);
+    }
+    encloseMath(b) {
         var a = this.search, g = a.close, f, d, c;
         if (a.cpos === g.length) {
-            g = g.nextSibling
+            g = g.nextSibling;
         } else {
-            g = g.splitText(a.cpos)
+            g = g.splitText(a.cpos);
         }
         if (!g) {
-            f = g = MathJax.HTML.addText(a.close.parentNode, "")
+            f = g = MathJax.HTML.addText(a.close.parentNode, "");
         }
         a.close = g;
         d = (a.opos ? a.open.splitText(a.opos) : a.open);
         while ((c = d.nextSibling) && c !== g) {
             if (c.nodeValue !== null) {
                 if (c.nodeName === "#comment") {
-                    d.nodeValue += c.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/, "$1")
+                    d.nodeValue += c.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/, "$1");
                 } else {
-                    d.nodeValue += d.nextSibling.nodeValue
+                    d.nodeValue += d.nextSibling.nodeValue;
                 }
             } else {
                 var h = this.ignoreTags[c.nodeName.toLowerCase()];
-                d.nodeValue += (h == null ? " " : h)
+                d.nodeValue += (h == null ? " " : h);
             }
-            d.parentNode.removeChild(c)
+            d.parentNode.removeChild(c);
         }
         var e = d.nodeValue.substr(a.olen, d.nodeValue.length - a.olen - a.clen);
         d.parentNode.removeChild(d);
         if (this.config.preview !== "none") {
-            this.createPreview(a.mode, e)
+            this.createPreview(a.mode, e);
         }
         d = this.createMathTag(a.mode, e);
         this.search = {};
         this.pattern.lastIndex = 0;
         if (f) {
-            f.parentNode.removeChild(f)
+            f.parentNode.removeChild(f);
         }
-        return d
-    },
-    insertNode: function (b) {
+        return d;
+    }
+    insertNode(b) {
         var a = this.search;
-        a.close.parentNode.insertBefore(b, a.close)
-    },
-    createPreview: function (d, a) {
+        a.close.parentNode.insertBefore(b, a.close);
+    }
+    createPreview(d, a) {
         var b = MathJax.Hub.config.preRemoveClass;
         var c = this.config.preview;
         if (c === "none") {
-            return
+            return;
         }
         if ((this.search.close.previousSibling || {}).className === b) {
-            return
+            return;
         }
         if (c === "AsciiMath") {
-            c = [this.filterPreview(a)]
+            c = [this.filterPreview(a)];
         }
         if (c) {
             c = MathJax.HTML.Element("span", {
                 className: b
             }, c);
-            this.insertNode(c)
+            this.insertNode(c);
         }
-    },
-    createMathTag: function (c, a) {
+    }
+    createMathTag(c, a) {
         var b = document.createElement("script");
         b.type = "math/asciimath" + c;
         MathJax.HTML.setScript(b, a);
         this.insertNode(b);
-        return b
-    },
-    filterPreview: function (a) {
-        return a
+        return b;
     }
-};
+    filterPreview(a) {
+        return a;
+    }
+}
+MathJax.Extension.tex2jax = new Tex2Jax();
+MathJax.Extension.mml2jax = new Mml2Jax();
+MathJax.Extension.asciimath2jax = new Asciimath2Jax();
+MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.tex2jax]);
+MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");
+MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.mml2jax], 5);
+MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
 MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.asciimath2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 
-(function (d, h, l, g, m, b, j) {
-    var p = "2.7.2";
-    var i = MathJax.Extension;
-    var c = i.MathEvents = {
-        version: p
+var __version = "2.7.2";
+var __extension = MathJax.Extension;
+var __eventHandle = __extension.MathEvents = {
+    version: __version,
+    safariContextMenuBug: false,
+    operaPositionBug: false,
+    /** @type{HTMLSpanElement} */
+    topImg: null,
+    /** @type{Events} */
+    Event: null,
+    /** @type{Hover} */
+    Hover: null,
+    /** @type{Touch} */
+    Touch: null
+};
+var __menuSettings = MathJax.Hub.config.menuSettings;
+var __menuStyle = {
+    hover: 500,
+    frame: {
+        x: 3.5,
+        y: 5,
+        bwidth: 1,
+        bcolor: "#A6D",
+        hwidth: "15px",
+        hcolor: "#83A"
+    },
+    button: {
+        x: -6,
+        y: -3,
+        wx: -2
+    },
+    fadeinInc: 0.2,
+    fadeoutInc: 0.05,
+    fadeDelay: 50,
+    fadeoutStart: 400,
+    fadeoutDelay: 15 * 1000,
+    styles: {
+        ".MathJax_Hover_Frame": {
+            "border-radius": ".25em",
+            "-webkit-border-radius": ".25em",
+            "-moz-border-radius": ".25em",
+            "-khtml-border-radius": ".25em",
+            "box-shadow": "0px 0px 15px #83A",
+            "-webkit-box-shadow": "0px 0px 15px #83A",
+            "-moz-box-shadow": "0px 0px 15px #83A",
+            "-khtml-box-shadow": "0px 0px 15px #83A",
+            border: "1px solid #A6D ! important",
+            display: "inline-block",
+            position: "absolute"
+        },
+        ".MathJax_Menu_Button .MathJax_Hover_Arrow": {
+            position: "absolute",
+            cursor: "pointer",
+            display: "inline-block",
+            border: "2px solid #AAA",
+            "border-radius": "4px",
+            "-webkit-border-radius": "4px",
+            "-moz-border-radius": "4px",
+            "-khtml-border-radius": "4px",
+            "font-family": "'Courier New',Courier",
+            "font-size": "9px",
+            color: "#F0F0F0"
+        },
+        ".MathJax_Menu_Button .MathJax_Hover_Arrow span": {
+            display: "block",
+            "background-color": "#AAA",
+            border: "1px solid",
+            "border-radius": "3px",
+            "line-height": 0,
+            padding: "4px"
+        },
+        ".MathJax_Hover_Arrow:hover": {
+            color: "white!important",
+            border: "2px solid #CCC!important"
+        },
+        ".MathJax_Hover_Arrow:hover span": {
+            "background-color": "#CCC!important"
+        }
+    }
+};
+class Events {
+    /** @type{Events} */
+    static INSTANCE = null;
+    static LEFTBUTTON = 0;
+    static RIGHTBUTTON = 2;
+    static MENUKEY = "altKey";
+    static KEY = {
+        RETURN: 13,
+        ESCAPE: 27,
+        SPACE: 32,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40
     };
-    var k = d.config.menuSettings;
-    var o = {
-        hover: 500,
-        frame: {
-            x: 3.5,
-            y: 5,
-            bwidth: 1,
-            bcolor: "#A6D",
-            hwidth: "15px",
-            hcolor: "#83A"
-        },
-        button: {
-            x: -6,
-            y: -3,
-            wx: -2
-        },
-        fadeinInc: 0.2,
-        fadeoutInc: 0.05,
-        fadeDelay: 50,
-        fadeoutStart: 400,
-        fadeoutDelay: 15 * 1000,
-        styles: {
-            ".MathJax_Hover_Frame": {
-                "border-radius": ".25em",
-                "-webkit-border-radius": ".25em",
-                "-moz-border-radius": ".25em",
-                "-khtml-border-radius": ".25em",
-                "box-shadow": "0px 0px 15px #83A",
-                "-webkit-box-shadow": "0px 0px 15px #83A",
-                "-moz-box-shadow": "0px 0px 15px #83A",
-                "-khtml-box-shadow": "0px 0px 15px #83A",
-                border: "1px solid #A6D ! important",
-                display: "inline-block",
-                position: "absolute"
-            },
-            ".MathJax_Menu_Button .MathJax_Hover_Arrow": {
-                position: "absolute",
-                cursor: "pointer",
-                display: "inline-block",
-                border: "2px solid #AAA",
-                "border-radius": "4px",
-                "-webkit-border-radius": "4px",
-                "-moz-border-radius": "4px",
-                "-khtml-border-radius": "4px",
-                "font-family": "'Courier New',Courier",
-                "font-size": "9px",
-                color: "#F0F0F0"
-            },
-            ".MathJax_Menu_Button .MathJax_Hover_Arrow span": {
-                display: "block",
-                "background-color": "#AAA",
-                border: "1px solid",
-                "border-radius": "3px",
-                "line-height": 0,
-                padding: "4px"
-            },
-            ".MathJax_Hover_Arrow:hover": {
-                color: "white!important",
-                border: "2px solid #CCC!important"
-            },
-            ".MathJax_Hover_Arrow:hover span": {
-                "background-color": "#CCC!important"
+    static GetInstance(pHub, pLocal, pAjax, pInJax, pOutJax) {
+        if (null == Events.INSTANCE) {
+            Events.INSTANCE = new Events(pHub, pLocal, pAjax, pInJax, pOutJax);
+        }
+        return Events.INSTANCE;
+    }
+    constructor(pHub, pLocal, pAjax, pInJax, pOutJax) {
+        /** @type{Hub} */
+        this.hub = pHub;
+        /** @type{Localization} */
+        this.local = pLocal;
+        /** @type{Ajax} */
+        this.ajax = pAjax;
+        /** @type{InputJax} */
+        this.inJax = pInJax;
+        /** @type{OutputJax} */
+        this.outJax = pOutJax;
+    }
+    Mousedown(q) {
+        return Events.INSTANCE.Handler(q, "Mousedown", this);
+    }
+    Mouseup(q) {
+        return Events.INSTANCE.Handler(q, "Mouseup", this);
+    }
+    Mousemove(q) {
+        return Events.INSTANCE.Handler(q, "Mousemove", this);
+    }
+    Mouseover(q) {
+        return Events.INSTANCE.Handler(q, "Mouseover", this);
+    }
+    Mouseout(q) {
+        return Events.INSTANCE.Handler(q, "Mouseout", this);
+    }
+    Click(q) {
+        return Events.INSTANCE.Handler(q, "Click", this);
+    }
+    DblClick(q) {
+        return Events.INSTANCE.Handler(q, "DblClick", this);
+    }
+    Menu(q) {
+        return Events.INSTANCE.Handler(q, "ContextMenu", this);
+    }
+    Handler(t, r, s) {
+        if (this.ajax.loadingMathMenu) {
+            return Events.INSTANCE.False(t);
+        }
+        var q = this.outJax[s.jaxID];
+        if (!t) {
+            t = window.event;
+        }
+        t.isContextMenu = (r === "ContextMenu");
+        if (q[r]) {
+            return q[r](t, s);
+        }
+        if (__extension.MathZoom) {
+            return __extension.MathZoom.HandleEvent(t, r, s);
+        }
+    }
+    False(q) {
+        if (!q) {
+            q = window.event;
+        }
+        if (q) {
+            if (q.preventDefault) {
+                q.preventDefault();
+            } else {
+                q.returnValue = false;
+            }
+            if (q.stopPropagation) {
+                q.stopPropagation();
+            }
+            q.cancelBubble = true;
+        }
+        return false;
+    }
+    Keydown(r, q) {
+        if (!r) {
+            r = window.event;
+        }
+        if (r.keyCode === Event.KEY.SPACE) {
+            Events.INSTANCE.ContextMenu(r, this);
+        }
+    }
+    ContextMenu(t, E, w) {
+        var B = Events.INSTANCE.outJax[E.jaxID], v = B.getJaxFromMath(E);
+        var F = (B.config.showMathMenu != null ? B : Events.INSTANCE.hub).config.showMathMenu;
+        if (!F || (__menuSettings.context !== "MathJax" && !w)) {
+            return;
+        }
+        Events.INSTANCE.ClearSelection();
+        Hover.INSTANCE.ClearHoverTimer();
+        if (v.hover) {
+            if (v.hover.remove) {
+                clearTimeout(v.hover.remove);
+                delete v.hover.remove;
+            }
+            v.hover.nofade = true;
+        }
+        var u = MathJax.Menu;
+        var G, D;
+        if (u) {
+            if (u.loadingDomain) {
+                return Events.INSTANCE.False(t);
+            }
+            G = Events.INSTANCE.local.loadDomain("MathMenu");
+            if (!G) {
+                u.jax = v;
+                var r = u.menu.Find("Show Math As").submenu;
+                r.items[0].name = v.sourceMenuTitle;
+                r.items[0].format = (v.sourceMenuFormat || "MathML");
+                r.items[1].name = Events.INSTANCE.inJax[v.inputJax].sourceMenuTitle;
+                r.items[5].disabled = !Events.INSTANCE.inJax[v.inputJax].annotationEncoding;
+                var A = r.items[2];
+                A.disabled = true;
+                var q = A.submenu.items;
+                for (var z = 0, y = q.length; z < y; z++) {
+                    var s = q[z].name[1];
+                    if (v.root && v.root.getAnnotation(s) !== null) {
+                        A.disabled = false;
+                        q[z].hidden = false;
+                    } else {
+                        q[z].hidden = true;
+                    }
+                }
+                var x = u.menu.Find("Math Settings", "MathPlayer");
+                x.hidden = !(v.outputJax === "NativeMML" && this.hub.Browser.hasMathPlayer);
+                return u.menu.Post(t);
+            }
+            u.loadingDomain = true;
+            D = function () {
+                delete u.loadingDomain;
+            }
+        } else {
+            if (this.ajax.loadingMathMenu) {
+                return Events.INSTANCE.False(t);
+            }
+            this.ajax.loadingMathMenu = true;
+            G = this.ajax.Require("[MathJax]/extensions/MathMenu.js");
+            D = function () {
+                delete this.ajax.loadingMathMenu;
+                if (!MathJax.Menu) {
+                    MathJax.Menu = {};
+                }
             }
         }
-    };
-    var n = c.Event = {
-        LEFTBUTTON: 0,
-        RIGHTBUTTON: 2,
-        MENUKEY: "altKey",
-        KEY: {
-            RETURN: 13,
-            ESCAPE: 27,
-            SPACE: 32,
-            LEFT: 37,
-            UP: 38,
-            RIGHT: 39,
-            DOWN: 40
-        },
-        Mousedown: function (q) {
-            return n.Handler(q, "Mousedown", this)
-        },
-        Mouseup: function (q) {
-            return n.Handler(q, "Mouseup", this)
-        },
-        Mousemove: function (q) {
-            return n.Handler(q, "Mousemove", this)
-        },
-        Mouseover: function (q) {
-            return n.Handler(q, "Mouseover", this)
-        },
-        Mouseout: function (q) {
-            return n.Handler(q, "Mouseout", this)
-        },
-        Click: function (q) {
-            return n.Handler(q, "Click", this)
-        },
-        DblClick: function (q) {
-            return n.Handler(q, "DblClick", this)
-        },
-        Menu: function (q) {
-            return n.Handler(q, "ContextMenu", this)
-        },
-        Handler: function (t, r, s) {
-            if (l.loadingMathMenu) {
-                return n.False(t)
-            }
-            var q = b[s.jaxID];
-            if (!t) {
-                t = window.event
-            }
-            t.isContextMenu = (r === "ContextMenu");
-            if (q[r]) {
-                return q[r](t, s)
-            }
-            if (i.MathZoom) {
-                return i.MathZoom.HandleEvent(t, r, s)
-            }
-        },
-        False: function (q) {
-            if (!q) {
-                q = window.event
-            }
-            if (q) {
-                if (q.preventDefault) {
-                    q.preventDefault()
-                } else {
-                    q.returnValue = false
-                }
-                if (q.stopPropagation) {
-                    q.stopPropagation()
-                }
-                q.cancelBubble = true
-            }
-            return false
-        },
-        Keydown: function (r, q) {
-            if (!r) {
-                r = window.event
-            }
-            if (r.keyCode === n.KEY.SPACE) {
-                n.ContextMenu(r, this)
-            }
-        },
-        ContextMenu: function (t, E, w) {
-            var B = b[E.jaxID]
-                , v = B.getJaxFromMath(E);
-            var F = (B.config.showMathMenu != null ? B : d).config.showMathMenu;
-            if (!F || (k.context !== "MathJax" && !w)) {
-                return
-            }
-            if (c.msieEventBug) {
-                t = window.event || t
-            }
-            n.ClearSelection();
-            f.ClearHoverTimer();
-            if (v.hover) {
-                if (v.hover.remove) {
-                    clearTimeout(v.hover.remove);
-                    delete v.hover.remove
-                }
-                v.hover.nofade = true
-            }
-            var u = MathJax.Menu;
-            var G, D;
-            if (u) {
-                if (u.loadingDomain) {
-                    return n.False(t)
-                }
-                G = m.loadDomain("MathMenu");
-                if (!G) {
-                    u.jax = v;
-                    var r = u.menu.Find("Show Math As").submenu;
-                    r.items[0].name = v.sourceMenuTitle;
-                    r.items[0].format = (v.sourceMenuFormat || "MathML");
-                    r.items[1].name = j[v.inputJax].sourceMenuTitle;
-                    r.items[5].disabled = !j[v.inputJax].annotationEncoding;
-                    var A = r.items[2];
-                    A.disabled = true;
-                    var q = A.submenu.items;
-                    annotationList = MathJax.Hub.Config.semanticsAnnotations;
-                    for (var z = 0, y = q.length; z < y; z++) {
-                        var s = q[z].name[1];
-                        if (v.root && v.root.getAnnotation(s) !== null) {
-                            A.disabled = false;
-                            q[z].hidden = false
-                        } else {
-                            q[z].hidden = true
-                        }
-                    }
-                    var x = u.menu.Find("Math Settings", "MathPlayer");
-                    x.hidden = !(v.outputJax === "NativeMML" && d.Browser.hasMathPlayer);
-                    return u.menu.Post(t)
-                }
-                u.loadingDomain = true;
-                D = function () {
-                    delete u.loadingDomain
+        var C = {
+            pageX: t.pageX,
+            pageY: t.pageY,
+            clientX: t.clientX,
+            clientY: t.clientY
+        };
+        CallbackUtil.Queue(G, D, ["ContextMenu", Events.INSTANCE, C, E, w]);
+        return Events.INSTANCE.False(t);
+    }
+    AltContextMenu(s, r) {
+        var t = Events.INSTANCE.outJax[r.jaxID];
+        var q = (t.config.showMathMenu != null ? t : Events.INSTANCE.hub).config.showMathMenu;
+        if (q) {
+            q = (t.config.showMathMenuMSIE != null ? t : Events.INSTANCE.hub).config.showMathMenuMSIE;
+            if (__menuSettings.context === "MathJax" && !__menuSettings.mpContext && q) {
+                if (s.button !== Event.RIGHTBUTTON) {
+                    return;
                 }
             } else {
-                if (l.loadingMathMenu) {
-                    return n.False(t)
-                }
-                l.loadingMathMenu = true;
-                G = l.Require("[MathJax]/extensions/MathMenu.js");
-                D = function () {
-                    delete l.loadingMathMenu;
-                    if (!MathJax.Menu) {
-                        MathJax.Menu = {}
-                    }
+                if (!s[Event.MENUKEY] || s.button !== Event.LEFTBUTTON) {
+                    return;
                 }
             }
-            var C = {
-                pageX: t.pageX,
-                pageY: t.pageY,
-                clientX: t.clientX,
-                clientY: t.clientY
-            };
-            CallbackUtil.Queue(G, D, ["ContextMenu", n, C, E, w]);
-            return n.False(t)
-        },
-        AltContextMenu: function (s, r) {
-            var t = b[r.jaxID];
-            var q = (t.config.showMathMenu != null ? t : d).config.showMathMenu;
-            if (q) {
-                q = (t.config.showMathMenuMSIE != null ? t : d).config.showMathMenuMSIE;
-                if (k.context === "MathJax" && !k.mpContext && q) {
-                    if (!c.noContextMenuBug || s.button !== n.RIGHTBUTTON) {
-                        return
-                    }
-                } else {
-                    if (!s[n.MENUKEY] || s.button !== n.LEFTBUTTON) {
-                        return
-                    }
-                }
-                return t.ContextMenu(s, r, true)
-            }
-        },
-        ClearSelection: function () {
-            if (c.safariContextMenuBug) {
-                setTimeout("window.getSelection().empty()", 0)
-            }
-            if (document.selection) {
-                setTimeout("document.selection.empty()", 0)
-            }
-        },
-        getBBox: function (s) {
-            s.appendChild(c.topImg);
-            var r = c.topImg.offsetTop
-                , t = s.offsetHeight - r
-                , q = s.offsetWidth;
-            s.removeChild(c.topImg);
-            return {
-                w: q,
-                h: r,
-                d: t
-            }
+            return t.ContextMenu(s, r, true);
         }
-    };
-    var f = c.Hover = {
-        Mouseover: function (s, r) {
-            if (k.discoverable || k.zoom === "Hover") {
-                var u = s.fromElement || s.relatedTarget
-                    , t = s.toElement || s.target;
-                if (u && t && (d.isMathJaxNode(u) !== d.isMathJaxNode(t) || d.getJaxFor(u) !== d.getJaxFor(t))) {
-                    var q = this.getJaxFromMath(r);
-                    if (q.hover) {
-                        f.ReHover(q)
-                    } else {
-                        f.HoverTimer(q, r)
-                    }
-                    return n.False(s)
-                }
-            }
-        },
-        Mouseout: function (s, r) {
-            if (k.discoverable || k.zoom === "Hover") {
-                var u = s.fromElement || s.relatedTarget
-                    , t = s.toElement || s.target;
-                if (u && t && (d.isMathJaxNode(u) !== d.isMathJaxNode(t) || d.getJaxFor(u) !== d.getJaxFor(t))) {
-                    var q = this.getJaxFromMath(r);
-                    if (q.hover) {
-                        f.UnHover(q)
-                    } else {
-                        f.ClearHoverTimer()
-                    }
-                    return n.False(s)
-                }
-            }
-        },
-        Mousemove: function (s, r) {
-            if (k.discoverable || k.zoom === "Hover") {
+    }
+    ClearSelection() {
+        if (__eventHandle.safariContextMenuBug) {
+            setTimeout("window.getSelection().empty()", 0);
+        }
+        if (document.selection) {
+            setTimeout("document.selection.empty()", 0);
+        }
+    }
+    getBBox(s) {
+        s.appendChild(__eventHandle.topImg);
+        var r = __eventHandle.topImg.offsetTop
+            , t = s.offsetHeight - r
+            , q = s.offsetWidth;
+        s.removeChild(__eventHandle.topImg);
+        return {
+            w: q,
+            h: r,
+            d: t
+        };
+    }
+}
+class Hover {
+    /** @type{Hover} */
+    static INSTANCE = null;
+    static GetInstance(pHub, pOutJax, pHtml, pCallback) {
+        if (null == Hover.INSTANCE) {
+            Hover.INSTANCE = new Hover(pHub, pOutJax, pHtml, pCallback);
+        }
+        return Hover.INSTANCE;
+    }
+    constructor(pHub, pOutJax, pHtml, pCallback) {
+        /** @type{Hub} */
+        this.hub = pHub;
+        /** @type{OutputJax} */
+        this.outJax = pOutJax;
+        /** @type{HTML} */
+        this.html = pHtml;
+        this.callback = pCallback;
+    }
+    Mouseover(s, r) {
+        if (__menuSettings.discoverable || __menuSettings.zoom === "Hover") {
+            var u = s.fromElement || s.relatedTarget
+                , t = s.toElement || s.target;
+            if (u && t && (
+                Hover.INSTANCE.hub.isMathJaxNode(u) !== Hover.INSTANCE.hub.isMathJaxNode(t) ||
+                Hover.INSTANCE.hub.getJaxFor(u) !== Hover.INSTANCE.hub.getJaxFor(t)
+            )) {
                 var q = this.getJaxFromMath(r);
                 if (q.hover) {
-                    return
+                    Hover.INSTANCE.ReHover(q)
+                } else {
+                    Hover.INSTANCE.HoverTimer(q, r)
                 }
-                if (f.lastX == s.clientX && f.lastY == s.clientY) {
-                    return
+                return Events.INSTANCE.False(s)
+            }
+        }
+    }
+    Mouseout(s, r) {
+        if (__menuSettings.discoverable || __menuSettings.zoom === "Hover") {
+            var u = s.fromElement || s.relatedTarget
+                , t = s.toElement || s.target;
+            if (u && t && (
+                Hover.INSTANCE.hub.isMathJaxNode(u) !== Hover.INSTANCE.hub.isMathJaxNode(t) ||
+                Hover.INSTANCE.hub.getJaxFor(u) !== Hover.INSTANCE.hub.getJaxFor(t)
+            )) {
+                var q = this.getJaxFromMath(r);
+                if (q.hover) {
+                    Hover.INSTANCE.UnHover(q)
+                } else {
+                    Hover.INSTANCE.ClearHoverTimer()
                 }
-                f.lastX = s.clientX;
-                f.lastY = s.clientY;
-                f.HoverTimer(q, r);
-                return n.False(s)
+                return Events.INSTANCE.False(s)
             }
-        },
-        HoverTimer: function (q, r) {
-            this.ClearHoverTimer();
-            this.hoverTimer = setTimeout(g(["Hover", this, q, r]), o.hover)
-        },
-        ClearHoverTimer: function () {
-            if (this.hoverTimer) {
-                clearTimeout(this.hoverTimer);
-                delete this.hoverTimer
-            }
-        },
-        Hover: function (q, u) {
-            if (i.MathZoom && i.MathZoom.Hover({}, u)) {
+        }
+    }
+    Mousemove(s, r) {
+        if (__menuSettings.discoverable || __menuSettings.zoom === "Hover") {
+            var q = this.getJaxFromMath(r);
+            if (q.hover) {
                 return
             }
-            var t = b[q.outputJax]
-                , v = t.getHoverSpan(q, u)
-                , y = t.getHoverBBox(q, v, u)
-                , w = (t.config.showMathMenu != null ? t : d).config.showMathMenu;
-            var A = o.frame.x
-                , z = o.frame.y
-                , x = o.frame.bwidth;
-            if (c.msieBorderWidthBug) {
-                x = 0
+            if (Hover.INSTANCE.lastX == s.clientX && Hover.INSTANCE.lastY == s.clientY) {
+                return
             }
-            q.hover = {
+            Hover.INSTANCE.lastX = s.clientX;
+            Hover.INSTANCE.lastY = s.clientY;
+            Hover.INSTANCE.HoverTimer(q, r);
+            return Events.INSTANCE.False(s)
+        }
+    }
+    HoverTimer(q, r) {
+        this.ClearHoverTimer();
+        this.hoverTimer = setTimeout(Hover.INSTANCE.callback(["Hover", this, q, r]), __menuStyle.hover)
+    }
+    ClearHoverTimer() {
+        if (this.hoverTimer) {
+            clearTimeout(this.hoverTimer);
+            delete this.hoverTimer
+        }
+    }
+    Hover(q, u) {
+        if (__extension.MathZoom && __extension.MathZoom.Hover({}, u)) {
+            return
+        }
+        var t = Hover.INSTANCE.outJax[q.outputJax]
+            , v = t.getHoverSpan(q, u)
+            , y = t.getHoverBBox(q, v, u)
+            , w = (t.config.showMathMenu != null ? t : Hover.INSTANCE.hub).config.showMathMenu;
+        var A = __menuStyle.frame.x
+            , z = __menuStyle.frame.y
+            , x = __menuStyle.frame.bwidth;
+        q.hover = {
+            opacity: 0,
+            id: q.inputID + "-Hover"
+        };
+        var r = Hover.INSTANCE.html.Element("span", {
+            id: q.hover.id,
+            isMathJax: true,
+            style: {
+                display: "inline-block",
+                width: 0,
+                height: 0,
+                position: "relative"
+            }
+        }, [["span", {
+            className: "MathJax_Hover_Frame",
+            isMathJax: true,
+            style: {
+                display: "inline-block",
+                position: "absolute",
+                top: this.Px(-y.h - z - x - (y.y || 0)),
+                left: this.Px(-A - x + (y.x || 0)),
+                width: this.Px(y.w + 2 * A),
+                height: this.Px(y.h + y.d + 2 * z),
                 opacity: 0,
-                id: q.inputID + "-Hover"
-            };
-            var r = h.Element("span", {
-                id: q.hover.id,
-                isMathJax: true,
-                style: {
-                    display: "inline-block",
-                    width: 0,
-                    height: 0,
-                    position: "relative"
-                }
-            }, [["span", {
-                className: "MathJax_Hover_Frame",
-                isMathJax: true,
-                style: {
-                    display: "inline-block",
-                    position: "absolute",
-                    top: this.Px(-y.h - z - x - (y.y || 0)),
-                    left: this.Px(-A - x + (y.x || 0)),
-                    width: this.Px(y.w + 2 * A),
-                    height: this.Px(y.h + y.d + 2 * z),
-                    opacity: 0,
-                    filter: "alpha(opacity=0)"
-                }
-            }]]);
-            var s = h.Element("span", {
-                isMathJax: true,
-                id: q.hover.id + "Menu",
-                className: "MathJax_Menu_Button",
-                style: {
-                    display: "inline-block",
-                    "z-index": 1,
-                    width: 0,
-                    height: 0,
-                    position: "relative"
-                }
-            }, [["span", {
-                className: "MathJax_Hover_Arrow",
-                isMathJax: true,
-                math: u,
-                onclick: this.HoverMenu,
-                jax: t.id,
-                style: {
-                    left: this.Px(y.w + A + x + (y.x || 0) + o.button.x),
-                    top: this.Px(-y.h - z - x - (y.y || 0) - o.button.y),
-                    opacity: 0,
-                    filter: "alpha(opacity=0)"
-                }
-            }, [["span", {
-                isMathJax: true
-            }, "\u25BC"]]]]);
-            if (y.width) {
-                r.style.width = s.style.width = y.width;
-                r.style.marginRight = s.style.marginRight = "-" + y.width;
-                r.firstChild.style.width = y.width;
-                s.firstChild.style.left = "";
-                s.firstChild.style.right = this.Px(o.button.wx)
+                filter: "alpha(opacity=0)"
             }
-            v.parentNode.insertBefore(r, v);
-            if (w) {
-                v.parentNode.insertBefore(s, v)
+        }]]);
+        var s = Hover.INSTANCE.html.Element("span", {
+            isMathJax: true,
+            id: q.hover.id + "Menu",
+            className: "MathJax_Menu_Button",
+            style: {
+                display: "inline-block",
+                "z-index": 1,
+                width: 0,
+                height: 0,
+                position: "relative"
             }
-            if (v.style) {
-                v.style.position = "relative"
+        }, [["span", {
+            className: "MathJax_Hover_Arrow",
+            isMathJax: true,
+            math: u,
+            onclick: this.HoverMenu,
+            jax: t.id,
+            style: {
+                left: this.Px(y.w + A + x + (y.x || 0) + __menuStyle.button.x),
+                top: this.Px(-y.h - z - x - (y.y || 0) - __menuStyle.button.y),
+                opacity: 0,
+                filter: "alpha(opacity=0)"
             }
-            this.ReHover(q)
-        },
-        ReHover: function (q) {
-            if (q.hover.remove) {
-                clearTimeout(q.hover.remove)
-            }
-            q.hover.remove = setTimeout(g(["UnHover", this, q]), o.fadeoutDelay);
-            this.HoverFadeTimer(q, o.fadeinInc)
-        },
-        UnHover: function (q) {
-            if (!q.hover.nofade) {
-                this.HoverFadeTimer(q, -o.fadeoutInc, o.fadeoutStart)
-            }
-        },
-        HoverFade: function (q) {
-            delete q.hover.timer;
-            q.hover.opacity = Math.max(0, Math.min(1, q.hover.opacity + q.hover.inc));
-            q.hover.opacity = Math.floor(1000 * q.hover.opacity) / 1000;
-            var s = document.getElementById(q.hover.id)
-                , r = document.getElementById(q.hover.id + "Menu");
-            s.firstChild.style.opacity = q.hover.opacity;
-            s.firstChild.style.filter = "alpha(opacity=" + Math.floor(100 * q.hover.opacity) + ")";
-            if (r) {
-                r.firstChild.style.opacity = q.hover.opacity;
-                r.firstChild.style.filter = s.style.filter
-            }
-            if (q.hover.opacity === 1) {
-                return
-            }
-            if (q.hover.opacity > 0) {
-                this.HoverFadeTimer(q, q.hover.inc);
-                return
-            }
-            s.parentNode.removeChild(s);
-            if (r) {
-                r.parentNode.removeChild(r)
-            }
-            if (q.hover.remove) {
-                clearTimeout(q.hover.remove)
-            }
-            delete q.hover
-        },
-        HoverFadeTimer: function (q, s, r) {
-            q.hover.inc = s;
-            if (!q.hover.timer) {
-                q.hover.timer = setTimeout(g(["HoverFade", this, q]), (r || o.fadeDelay))
-            }
-        },
-        HoverMenu: function (q) {
-            if (!q) {
-                q = window.event
-            }
-            return b[this.jax].ContextMenu(q, this.math, true)
-        },
-        ClearHover: function (q) {
-            if (q.hover.remove) {
-                clearTimeout(q.hover.remove)
-            }
-            if (q.hover.timer) {
-                clearTimeout(q.hover.timer)
-            }
-            f.ClearHoverTimer();
-            delete q.hover
-        },
-        Px: function (q) {
-            if (Math.abs(q) < 0.006) {
-                return "0px"
-            }
-            return q.toFixed(2).replace(/\.?0+$/, "") + "px"
-        },
-        getImages: function () {
-            if (k.discoverable) {
-                var q = new Image();
-                q.src = o.button.src
-            }
+        }, [["span", {
+            isMathJax: true
+        }, "\u25BC"]]]]);
+        if (y.width) {
+            r.style.width = s.style.width = y.width;
+            r.style.marginRight = s.style.marginRight = "-" + y.width;
+            r.firstChild.style.width = y.width;
+            s.firstChild.style.left = "";
+            s.firstChild.style.right = this.Px(__menuStyle.button.wx)
         }
-    };
-    var a = c.Touch = {
-        last: 0,
-        delay: 500,
-        start: function (r) {
-            var q = new Date().getTime();
-            var s = (q - a.last < a.delay && a.up);
-            a.last = q;
-            a.up = false;
-            if (s) {
-                a.timeout = setTimeout(a.menu, a.delay, r, this);
-                r.preventDefault()
-            }
-        },
-        end: function (r) {
-            var q = new Date().getTime();
-            a.up = (q - a.last < a.delay);
-            if (a.timeout) {
-                clearTimeout(a.timeout);
-                delete a.timeout;
-                a.last = 0;
-                a.up = false;
-                r.preventDefault();
-                return n.Handler((r.touches[0] || r.touch), "DblClick", this)
-            }
-        },
-        menu: function (r, q) {
-            delete a.timeout;
-            a.last = 0;
-            a.up = false;
-            return n.Handler((r.touches[0] || r.touch), "ContextMenu", q)
+        v.parentNode.insertBefore(r, v);
+        if (w) {
+            v.parentNode.insertBefore(s, v)
         }
-    };
-    d.Browser.Select({
-        MSIE: function (q) {
-            var s = (document.documentMode || 0);
-            var r = q.versionAtLeast("8.0");
-            c.msieBorderWidthBug = (document.compatMode === "BackCompat");
-            c.msieEventBug = q.isIE9;
-            c.msieAlignBug = (!r || s < 8);
-            if (s < 9) {
-                n.LEFTBUTTON = 1
-            }
-        },
+        if (v.style) {
+            v.style.position = "relative"
+        }
+        this.ReHover(q)
+    }
+    ReHover(q) {
+        if (q.hover.remove) {
+            clearTimeout(q.hover.remove);
+        }
+        q.hover.remove = setTimeout(Hover.INSTANCE.callback(["UnHover", this, q]), __menuStyle.fadeoutDelay);
+        this.HoverFadeTimer(q, __menuStyle.fadeinInc);
+    }
+    UnHover(q) {
+        if (!q.hover.nofade) {
+            this.HoverFadeTimer(q, -__menuStyle.fadeoutInc, __menuStyle.fadeoutStart);
+        }
+    }
+    HoverFade(q) {
+        delete q.hover.timer;
+        q.hover.opacity = Math.max(0, Math.min(1, q.hover.opacity + q.hover.inc));
+        q.hover.opacity = Math.floor(1000 * q.hover.opacity) / 1000;
+        var s = document.getElementById(q.hover.id)
+            , r = document.getElementById(q.hover.id + "Menu");
+        s.firstChild.style.opacity = q.hover.opacity;
+        s.firstChild.style.filter = "alpha(opacity=" + Math.floor(100 * q.hover.opacity) + ")";
+        if (r) {
+            r.firstChild.style.opacity = q.hover.opacity;
+            r.firstChild.style.filter = s.style.filter;
+        }
+        if (q.hover.opacity === 1) {
+            return;
+        }
+        if (q.hover.opacity > 0) {
+            this.HoverFadeTimer(q, q.hover.inc);
+            return;
+        }
+        s.parentNode.removeChild(s);
+        if (r) {
+            r.parentNode.removeChild(r);
+        }
+        if (q.hover.remove) {
+            clearTimeout(q.hover.remove);
+        }
+        delete q.hover;
+    }
+    HoverFadeTimer(q, s, r) {
+        q.hover.inc = s;
+        if (!q.hover.timer) {
+            q.hover.timer = setTimeout(Hover.INSTANCE.callback(["HoverFade", this, q]), (r || __menuStyle.fadeDelay));
+        }
+    }
+    HoverMenu(q) {
+        if (!q) {
+            q = window.event;
+        }
+        return Hover.INSTANCE.outJax[this.jax].ContextMenu(q, this.math, true);
+    }
+    ClearHover(q) {
+        if (q.hover.remove) {
+            clearTimeout(q.hover.remove);
+        }
+        if (q.hover.timer) {
+            clearTimeout(q.hover.timer);
+        }
+        Hover.INSTANCE.ClearHoverTimer();
+        delete q.hover;
+    }
+    Px(q) {
+        if (Math.abs(q) < 0.006) {
+            return "0px";
+        }
+        return q.toFixed(2).replace(/\.?0+$/, "") + "px";
+    }
+    getImages() {
+        if (__menuSettings.discoverable) {
+            var q = new Image();
+            q.src = __menuStyle.button.src;
+        }
+    }
+}
+class Touch {
+    /** @type{Touch} */
+    static INSTANCE = null;
+    static last = 0;
+    static delay = 500;
+    static GetInstance() {
+        if (null == Hover.INSTANCE) {
+            Touch.INSTANCE = new Touch();
+        }
+        return Touch.INSTANCE;
+    }
+    constructor() {
+        this.timeout = 0;
+        this.up = false;
+    }
+    start(r) {
+        var q = new Date().getTime();
+        var s = (q - Touch.last < Touch.delay && Touch.INSTANCE.up);
+        Touch.last = q;
+        Touch.INSTANCE.up = false;
+        if (s) {
+            Touch.INSTANCE.timeout = setTimeout(Touch.INSTANCE.menu, Touch.delay, r, this);
+            r.preventDefault()
+        }
+    }
+    end(r) {
+        var q = new Date().getTime();
+        Touch.INSTANCE.up = (q - Touch.last < Touch.delay);
+        if (INSTANCE.timeout) {
+            clearTimeout(Touch.INSTANCE.timeout);
+            delete Touch.INSTANCE.timeout;
+            Touch.last = 0;
+            Touch.INSTANCE.up = false;
+            r.preventDefault();
+            return Events.INSTANCE.Handler((r.touches[0] || r.touch), "DblClick", this)
+        }
+    }
+    menu(r, q) {
+        delete Touch.INSTANCE.timeout;
+        Touch.last = 0;
+        Touch.INSTANCE.up = false;
+        return Events.INSTANCE.Handler((r.touches[0] || r.touch), "ContextMenu", q)
+    }
+}
+(function (pHub, pHtml, pAjax, pCallback, pLoc, pOutJax, pInJax) {
+    __eventHandle.Event = Events.GetInstance(pHub, pLoc, pAjax, pInJax, pOutJax);
+    __eventHandle.Hover = Hover.GetInstance(pHub, pOutJax, pHtml, pCallback);
+    __eventHandle.Touch = Touch.GetInstance();
+    pHub.Browser.Select({
         Safari: function (q) {
-            c.safariContextMenuBug = true
+            __eventHandle.safariContextMenuBug = true;
         },
         Opera: function (q) {
-            c.operaPositionBug = true
-        },
-        Konqueror: function (q) {
-            c.noContextMenuBug = true
+            __eventHandle.operaPositionBug = true;
         }
     });
-    c.topImg = (c.msieAlignBug ? h.Element("img", {
-        style: {
-            width: 0,
-            height: 0,
-            position: "relative"
-        },
-        src: "about:blank"
-    }) : h.Element("span", {
-        style: {
-            width: 0,
-            height: 0,
-            display: "inline-block"
-        }
+    __eventHandle.topImg = (pHtml.Element("span", {
+        style: { width: 0, height: 0, display: "inline-block" }
     }));
-    if (c.operaPositionBug) {
-        c.topImg.style.border = "1px solid"
+    if (__eventHandle.operaPositionBug) {
+        __eventHandle.topImg.style.border = "1px solid";
     }
-    c.config = o = d.CombineConfig("MathEvents", o);
-    var e = function () {
-        var q = o.styles[".MathJax_Hover_Frame"];
-        q.border = o.frame.bwidth + "px solid " + o.frame.bcolor + " ! important";
-        q["box-shadow"] = q["-webkit-box-shadow"] = q["-moz-box-shadow"] = q["-khtml-box-shadow"] = "0px 0px " + o.frame.hwidth + " " + o.frame.hcolor
+    __menuStyle = pHub.CombineConfig("MathEvents", __menuStyle);
+    var funcStyle = function () {
+        var q = __menuStyle.styles[".MathJax_Hover_Frame"];
+        q.border = __menuStyle.frame.bwidth + "px solid " + __menuStyle.frame.bcolor + " ! important";
+        q["box-shadow"]
+            = q["-webkit-box-shadow"]
+            = q["-moz-box-shadow"]
+            = q["-khtml-box-shadow"]
+            = "0px 0px " + __menuStyle.frame.hwidth + " " + __menuStyle.frame.hcolor;
     };
-    CallbackUtil.Queue(d.Register.StartupHook("End Config", {}), [e], ["getImages", f], ["Styles", l, o.styles], ["Post", d.Startup.signal, "MathEvents Ready"], ["loadComplete", l, "[MathJax]/extensions/MathEvents.js"])
+    CallbackUtil.Queue(
+        pHub.Register.StartupHook("End Config", {}),
+        [funcStyle],
+        ["getImages", Hover.INSTANCE],
+        ["Styles", pAjax, __menuStyle.styles],
+        ["Post", pHub.Startup.signal, "MathEvents Ready"],
+        ["loadComplete", pAjax, "[MathJax]/extensions/MathEvents.js"]
+    );
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.Callback, MathJax.Localization, MathJax.OutputJax, MathJax.InputJax);
 
-(function (a, d, f, c, j) {
-    var k = "2.7.2";
-    var i = a.CombineConfig("MathZoom", {
+(function (pHub, pHtml, pAjax, c, j) {
+    var version = "2.7.2";
+    var zoomMenuConfig = pHub.CombineConfig("MathZoom", {
         styles: {
             "#MathJax_Zoom": {
                 position: "absolute",
@@ -1554,68 +1610,70 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
         }
     });
-    var e, b, g;
+    /** @type{Hover} */
+    var __hover = null;
+    /** @type{Events} */
+    var __event = null;
     MathJax.Hub.Register.StartupHook("MathEvents Ready", function () {
-        g = MathJax.Extension.MathEvents.Event;
-        e = MathJax.Extension.MathEvents.Event.False;
-        b = MathJax.Extension.MathEvents.Hover
+        __event = MathJax.Extension.MathEvents.Event;
+        __hover = MathJax.Extension.MathEvents.Hover;
     });
-    var h = MathJax.Extension.MathZoom = {
-        version: k,
-        settings: a.config.menuSettings,
+    var __mathZoom = MathJax.Extension.MathZoom = {
+        version: version,
+        settings: pHub.config.menuSettings,
         scrollSize: 18,
         HandleEvent: function (n, l, m) {
-            if (h.settings.CTRL && !n.ctrlKey) {
-                return true
+            if (__mathZoom.settings.CTRL && !n.ctrlKey) {
+                return true;
             }
-            if (h.settings.ALT && !n.altKey) {
-                return true
+            if (__mathZoom.settings.ALT && !n.altKey) {
+                return true;
             }
-            if (h.settings.CMD && !n.metaKey) {
-                return true
+            if (__mathZoom.settings.CMD && !n.metaKey) {
+                return true;
             }
-            if (h.settings.Shift && !n.shiftKey) {
-                return true
+            if (__mathZoom.settings.Shift && !n.shiftKey) {
+                return true;
             }
-            if (!h[l]) {
-                return true
+            if (!__mathZoom[l]) {
+                return true;
             }
-            return h[l](n, m)
+            return __mathZoom[l](n, m);
         },
         Click: function (m, l) {
             if (this.settings.zoom === "Click") {
-                return this.Zoom(m, l)
+                return this.Zoom(m, l);
             }
         },
         DblClick: function (m, l) {
             if (this.settings.zoom === "Double-Click" || this.settings.zoom === "DoubleClick") {
-                return this.Zoom(m, l)
+                return this.Zoom(m, l);
             }
         },
         Hover: function (m, l) {
             if (this.settings.zoom === "Hover") {
                 this.Zoom(m, l);
-                return true
+                return true;
             }
-            return false
+            return false;
         },
         Zoom: function (o, u) {
             this.Remove();
-            b.ClearHoverTimer();
-            g.ClearSelection();
+            __hover.ClearHoverTimer();
+            __event.ClearSelection();
             var s = MathJax.OutputJax[u.jaxID];
             var p = s.getJaxFromMath(u);
             if (p.hover) {
-                b.UnHover(p)
+                __hover.UnHover(p);
             }
             var q = this.findContainer(u);
             var l = Math.floor(0.85 * q.clientWidth)
                 , t = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
             if (this.getOverflow(q) !== "visible") {
-                t = Math.min(q.clientHeight, t)
+                t = Math.min(q.clientHeight, t);
             }
             t = Math.floor(0.85 * t);
-            var n = d.Element("span", {
+            var n = pHtml.Element("span", {
                 id: "MathJax_ZoomFrame"
             }, [["span", {
                 id: "MathJax_ZoomOverlay",
@@ -1639,7 +1697,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             u.parentNode.insertBefore(n, u);
             u.parentNode.insertBefore(u, n);
             if (w.addEventListener) {
-                w.addEventListener("mousedown", this.Remove, true)
+                w.addEventListener("mousedown", this.Remove, true);
             }
             var m = z.offsetWidth || z.clientWidth;
             l -= m;
@@ -1647,14 +1705,14 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             z.style.maxWidth = l + "px";
             z.style.maxHeight = t + "px";
             if (this.msieTrapEventBug) {
-                var y = d.Element("span", {
+                var y = pHtml.Element("span", {
                     id: "MathJax_ZoomEventTrap",
                     onmousedown: this.Remove
                 });
-                n.insertBefore(y, z)
+                n.insertBefore(y, z);
             }
             if (this.msieZIndexBug) {
-                var v = d.addElement(document.body, "img", {
+                var v = pHtml.addElement(document.body, "img", {
                     src: "about:blank",
                     id: "MathJax_ZoomTracker",
                     width: 0,
@@ -1666,53 +1724,53 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                     }
                 });
                 n.style.position = "relative";
-                n.style.zIndex = i.styles["#MathJax_ZoomOverlay"]["z-index"];
-                n = v
+                n.style.zIndex = zoomMenuConfig.styles["#MathJax_ZoomOverlay"]["z-index"];
+                n = v;
             }
             var x = s.Zoom(p, w, u, l, t);
             if (this.msiePositionBug) {
                 if (this.msieSizeBug) {
                     z.style.height = x.zH + "px";
-                    z.style.width = x.zW + "px"
+                    z.style.width = x.zW + "px";
                 }
                 if (z.offsetHeight > t) {
                     z.style.height = t + "px";
-                    z.style.width = (x.zW + this.scrollSize) + "px"
+                    z.style.width = (x.zW + this.scrollSize) + "px";
                 }
                 if (z.offsetWidth > l) {
                     z.style.width = l + "px";
-                    z.style.height = (x.zH + this.scrollSize) + "px"
+                    z.style.height = (x.zH + this.scrollSize) + "px";
                 }
             }
             if (this.operaPositionBug) {
-                z.style.width = Math.min(l, x.zW) + "px"
+                z.style.width = Math.min(l, x.zW) + "px";
             }
             if (z.offsetWidth > m && z.offsetWidth - m < l && z.offsetHeight - m < t) {
-                z.style.overflow = "visible"
+                z.style.overflow = "visible";
             }
             this.Position(z, x);
             if (this.msieTrapEventBug) {
                 y.style.height = z.clientHeight + "px";
                 y.style.width = z.clientWidth + "px";
                 y.style.left = (parseFloat(z.style.left) + z.clientLeft) + "px";
-                y.style.top = (parseFloat(z.style.top) + z.clientTop) + "px"
+                y.style.top = (parseFloat(z.style.top) + z.clientTop) + "px";
             }
             z.style.visibility = "";
             if (this.settings.zoom === "Hover") {
-                r.onmouseover = this.Remove
+                r.onmouseover = this.Remove;
             }
             if (window.addEventListener) {
-                addEventListener("resize", this.Resize, false)
+                addEventListener("resize", this.Resize, false);
             } else {
                 if (window.attachEvent) {
-                    attachEvent("onresize", this.Resize)
+                    attachEvent("onresize", this.Resize);
                 } else {
                     this.onresize = window.onresize;
-                    window.onresize = this.Resize
+                    window.onresize = this.Resize;
                 }
             }
-            a.signal.Post(["math zoomed", p]);
-            return e(o)
+            pHub.signal.Post(["math zoomed", p]);
+            return __event.False(o);
         },
         Position: function (p, r) {
             p.style.display = "none";
@@ -1725,53 +1783,53 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 , n = r.Y;
             p.style.left = Math.max(o, 10 - m) + "px";
             p.style.top = Math.max(n, 10 - s) + "px";
-            if (!h.msiePositionBug) {
-                h.SetWH()
+            if (!__mathZoom.msiePositionBug) {
+                __mathZoom.SetWH();
             }
         },
         Resize: function (m) {
-            if (h.onresize) {
-                h.onresize(m)
+            if (__mathZoom.onresize) {
+                __mathZoom.onresize(m);
             }
             var q = document.getElementById("MathJax_ZoomFrame")
                 , l = document.getElementById("MathJax_ZoomOverlay");
-            var o = h.getXY(q)
-                , n = h.findContainer(q);
-            if (h.getOverflow(n) !== "visible") {
+            var o = __mathZoom.getXY(q)
+                , n = __mathZoom.findContainer(q);
+            if (__mathZoom.getOverflow(n) !== "visible") {
                 l.scroll_parent = n;
-                var p = h.getXY(n);
+                var p = __mathZoom.getXY(n);
                 o.x -= p.x;
                 o.y -= p.y;
-                p = h.getBorder(n);
+                p = __mathZoom.getBorder(n);
                 o.x -= p.x;
                 o.y -= p.y
             }
             l.style.left = (-o.x) + "px";
             l.style.top = (-o.y) + "px";
-            if (h.msiePositionBug) {
-                setTimeout(h.SetWH, 0)
+            if (__mathZoom.msiePositionBug) {
+                setTimeout(__mathZoom.SetWH, 0);
             } else {
-                h.SetWH()
+                __mathZoom.SetWH();
             }
-            return o
+            return o;
         },
         SetWH: function () {
             var l = document.getElementById("MathJax_ZoomOverlay");
             if (!l) {
-                return
+                return;
             }
             l.style.display = "none";
             var m = l.scroll_parent || document.documentElement || document.body;
             l.style.width = m.scrollWidth + "px";
             l.style.height = Math.max(m.clientHeight, m.scrollHeight) + "px";
-            l.style.display = ""
+            l.style.display = "";
         },
         findContainer: function (l) {
             l = l.parentNode;
-            while (l.parentNode && l !== document.body && h.getOverflow(l) === "visible") {
-                l = l.parentNode
+            while (l.parentNode && l !== document.body && __mathZoom.getOverflow(l) === "visible") {
+                l = l.parentNode;
             }
-            return l
+            return l;
         },
         getOverflow: (window.getComputedStyle ? function (l) {
             return getComputedStyle(l).overflow
@@ -1792,59 +1850,52 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 borderLeftWidth: 0,
                 borderTopWidth: 0
             }));
-            var l = n.borderLeftWidth
-                , p = n.borderTopWidth;
+            var l = n.borderLeftWidth, p = n.borderTopWidth;
             if (m[l]) {
-                l = m[l]
+                l = m[l];
             } else {
-                l = parseInt(l)
+                l = parseInt(l);
             }
             if (m[p]) {
-                p = m[p]
+                p = m[p];
             } else {
-                p = parseInt(p)
+                p = parseInt(p);
             }
-            return {
-                x: l,
-                y: p
-            }
+            return { x: l, y: p };
         },
         getXY: function (o) {
             var l = 0, n = 0, m;
             m = o;
             while (m.offsetParent) {
                 l += m.offsetLeft;
-                m = m.offsetParent
+                m = m.offsetParent;
             }
-            if (h.operaPositionBug) {
-                o.style.border = "1px solid"
+            if (__mathZoom.operaPositionBug) {
+                o.style.border = "1px solid";
             }
             m = o;
             while (m.offsetParent) {
                 n += m.offsetTop;
-                m = m.offsetParent
+                m = m.offsetParent;
             }
-            if (h.operaPositionBug) {
-                o.style.border = ""
+            if (__mathZoom.operaPositionBug) {
+                o.style.border = "";
             }
-            return {
-                x: l,
-                y: n
-            }
+            return { x: l, y: n };
         },
         Remove: function (n) {
             var p = document.getElementById("MathJax_ZoomFrame");
             if (p) {
                 var o = MathJax.OutputJax[p.previousSibling.jaxID];
                 var l = o.getJaxFromMath(p.previousSibling);
-                a.signal.Post(["math unzoomed", l]);
+                pHub.signal.Post(["math unzoomed", l]);
                 p.parentNode.removeChild(p);
                 p = document.getElementById("MathJax_ZoomTracker");
                 if (p) {
-                    p.parentNode.removeChild(p)
+                    p.parentNode.removeChild(p);
                 }
-                if (h.operaRefreshBug) {
-                    var m = d.addElement(document.body, "div", {
+                if (__mathZoom.operaRefreshBug) {
+                    var m = pHtml.addElement(document.body, "div", {
                         style: {
                             position: "fixed",
                             left: 0,
@@ -1856,61 +1907,66 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                         },
                         id: "MathJax_OperaDiv"
                     });
-                    document.body.removeChild(m)
+                    document.body.removeChild(m);
                 }
                 if (window.removeEventListener) {
-                    removeEventListener("resize", h.Resize, false)
+                    removeEventListener("resize", __mathZoom.Resize, false);
                 } else {
                     if (window.detachEvent) {
-                        detachEvent("onresize", h.Resize)
+                        detachEvent("onresize", __mathZoom.Resize);
                     } else {
-                        window.onresize = h.onresize;
-                        delete h.onresize
+                        window.onresize = __mathZoom.onresize;
+                        delete __mathZoom.onresize;
                     }
                 }
             }
-            return e(n)
+            return __event.False(n);
         }
     };
-    a.Browser.Select({
+    pHub.Browser.Select({
         MSIE: function (l) {
             var n = (document.documentMode || 0);
             var m = (n >= 9);
-            h.msiePositionBug = !m;
-            h.msieSizeBug = l.versionAtLeast("7.0") && (!document.documentMode || n === 7 || n === 8);
-            h.msieZIndexBug = (n <= 7);
-            h.msieInlineBlockAlignBug = (n <= 7);
-            h.msieTrapEventBug = !window.addEventListener;
+            __mathZoom.msiePositionBug = !m;
+            __mathZoom.msieSizeBug = l.versionAtLeast("7.0") && (!document.documentMode || n === 7 || n === 8);
+            __mathZoom.msieZIndexBug = (n <= 7);
+            __mathZoom.msieInlineBlockAlignBug = (n <= 7);
+            __mathZoom.msieTrapEventBug = !window.addEventListener;
             if (document.compatMode === "BackCompat") {
-                h.scrollSize = 52
+                __mathZoom.scrollSize = 52
             }
             if (m) {
-                delete i.styles["#MathJax_Zoom"].filter
+                delete zoomMenuConfig.styles["#MathJax_Zoom"].filter
             }
         },
         Opera: function (l) {
-            h.operaPositionBug = true;
-            h.operaRefreshBug = true
+            __mathZoom.operaPositionBug = true;
+            __mathZoom.operaRefreshBug = true
         }
     });
-    h.topImg = (h.msieInlineBlockAlignBug ? d.Element("img", {
+    __mathZoom.topImg = (__mathZoom.msieInlineBlockAlignBug ? pHtml.Element("img", {
         style: {
             width: 0,
             height: 0,
             position: "relative"
         },
         src: "about:blank"
-    }) : d.Element("span", {
+    }) : pHtml.Element("span", {
         style: {
             width: 0,
             height: 0,
             display: "inline-block"
         }
     }));
-    if (h.operaPositionBug || h.msieTopBug) {
-        h.topImg.style.border = "1px solid"
+    if (__mathZoom.operaPositionBug || __mathZoom.msieTopBug) {
+        __mathZoom.topImg.style.border = "1px solid"
     }
-    CallbackUtil.Queue(["StartupHook", MathJax.Hub.Register, "Begin Styles", {}], ["Styles", f, i.styles], ["Post", a.Startup.signal, "MathZoom Ready"], ["loadComplete", f, "[MathJax]/extensions/MathZoom.js"])
+    CallbackUtil.Queue(
+        ["StartupHook", MathJax.Hub.Register, "Begin Styles", {}], 
+        ["Styles", pAjax, zoomMenuConfig.styles], 
+        ["Post", pHub.Startup.signal, "MathZoom Ready"], 
+        ["loadComplete", pAjax, "[MathJax]/extensions/MathZoom.js"]
+    );
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.OutputJax["HTML-CSS"], MathJax.OutputJax.NativeMML);
 
@@ -3116,39 +3172,35 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             x.style.marginLeft = Math.floor(-x.offsetWidth / 2) + "px";
             x.style.top = Math.floor((w - x.offsetHeight) / 3) + "px"
         }
-    }
-        ;
+    };
     g.About.Remove = function (u) {
         if (g.About.div) {
             document.body.removeChild(g.About.div);
             delete g.About.div
         }
-    }
-        ;
+    };
     g.About.Keydown = function (u) {
         if (u.keyCode === b.ESCAPE || (this.id === "MathJax_AboutClose" && (u.keyCode === b.SPACE || u.keyCode === b.RETURN))) {
             g.About.Remove(u);
             g.CurrentNode().focus();
             n(u)
         }
-    }
-        ,
-        g.About.GetJax = function (v, A, y, x) {
-            var z = [];
-            for (var B in A) {
-                if (A.hasOwnProperty(B) && A[B]) {
-                    if ((x && A[B].version) || (A[B].isa && A[B].isa(A))) {
-                        z.push(t(y[0], y[1], (A[B].id || B), A[B].version))
-                    }
+    };
+    g.About.GetJax = function (v, A, y, x) {
+        var z = [];
+        for (var B in A) {
+            if (A.hasOwnProperty(B) && A[B]) {
+                if ((x && A[B].version) || (A[B].isa && A[B].isa(A))) {
+                    z.push(t(y[0], y[1], (A[B].id || B), A[B].version))
                 }
             }
-            z.sort();
-            for (var w = 0, u = z.length; w < u; w++) {
-                v.push(z[w], ["br"])
-            }
-            return v
         }
-        ;
+        z.sort();
+        for (var w = 0, u = z.length; w < u; w++) {
+            v.push(z[w], ["br"])
+        }
+        return v
+    };
     g.About.GetFont = function () {
         var u = MathJax.Hub.outputJax["jax/mml"][0] || {};
         var v = {
@@ -3157,24 +3209,21 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             "HTML-CSS": (u.imgFonts ? "image" : (u.webFonts ? "web" : "local") + " " + u.fontInUse)
         }[u.id] || "generic";
         return v + " fonts"
-    }
-        ;
+    };
     g.About.GetFormat = function () {
         var u = MathJax.Hub.outputJax["jax/mml"][0] || {};
         if (u.id !== "HTML-CSS" || !u.webFonts || u.imgFonts) {
             return
         }
         return u.allowWebFonts.replace(/otf/, "woff or otf") + " fonts"
-    }
-        ;
+    };
     g.Help = function (u) {
         q.Require("[MathJax]/extensions/HelpDialog.js", function () {
             MathJax.Extension.Help.Dialog({
                 type: u.type
             })
         })
-    }
-        ;
+    };
     g.ShowSource = function (y) {
         if (!y) {
             y = window.event
@@ -3228,8 +3277,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             }
         }
-    }
-        ;
+    };
     g.ShowSource.Window = function (v) {
         if (!g.ShowSource.w) {
             var w = []
@@ -3242,8 +3290,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             g.ShowSource.w = window.open("", "_blank", w.join(","))
         }
         return g.ShowSource.w
-    }
-        ;
+    };
     g.ShowSource.Text = function (z, x) {
         var u = g.ShowSource.Window(x);
         delete g.ShowSource.w;
@@ -3283,8 +3330,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             }, 50)
         }
-    }
-        ;
+    };
     g.Scale = function () {
         var z = ["CommonHTML", "HTML-CSS", "SVG", "NativeMML", "PreviewHTML"], u = z.length, y = 100, w, v;
         for (w = 0; w < u; w++) {
@@ -3317,14 +3363,12 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 alert(t("PercentScale", "The scale should be a percentage (e.g., 120%%)"))
             }
         }
-    }
-        ;
+    };
     g.Zoom = function () {
         if (!MathJax.Extension.MathZoom) {
             q.Require("[MathJax]/extensions/MathZoom.js")
         }
-    }
-        ;
+    };
     g.Renderer = function () {
         var v = f.outputJax["jax/mml"];
         if (v[0] !== s.settings.renderer) {
@@ -3381,8 +3425,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }
             CallbackUtil.Queue(["setRenderer", f, s.settings.renderer, "jax/mml"], ["Rerender", f])
         }
-    }
-        ;
+    };
     g.Renderer.Messages = {
         MML: {
             WebKit: ["WebkitNativeMMLWarning", "Your browser doesn't seem to support MathML natively, so switching to MathML output may cause the mathematics on the page to become unreadable."],
@@ -3404,21 +3447,18 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             return
         }
         MathJax.Hub.Queue([(s.settings.assistiveMML ? "Add" : "Remove") + "AssistiveMathML", v])
-    }
-        ;
+    };
     g.Font = function () {
         var u = r["HTML-CSS"];
         if (!u) {
             return
         }
         document.location.reload()
-    }
-        ;
+    };
     g.Locale = function () {
         MathJax.Localization.setLocale(s.settings.locale);
         MathJax.Hub.Queue(["Reprocess", MathJax.Hub])
-    }
-        ;
+    };
     g.LoadLocale = function () {
         var u = prompt(t("LoadURL", "Load translation data from this URL:"));
         if (u) {
@@ -3431,8 +3471,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }
             })
         }
-    }
-        ;
+    };
     g.MPEvents = function (w) {
         var v = s.settings.discoverable
             , u = g.MPEvents.Messages;
@@ -3454,8 +3493,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 alert(t.apply(t, u.IE9warning))
             }
         }
-    }
-        ;
+    };
     g.MPEvents.Messages = {
         IE8warning: ["IE8warning", "This will disable the MathJax menu and zoom features, but you can Alt-Click on an expression to obtain the MathJax menu instead.\n\nReally change the MathPlayer settings?"],
         IE9warning: ["IE9warning", "The MathJax contextual menu will be disabled, but you can Alt-Click on an expression to obtain the MathJax menu instead."]
@@ -3510,8 +3548,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
             }))
         }
         z.items.push(w[w.length - 2], w[w.length - 1])
-    }
-        ;
+    };
     g.CreateAnnotationMenu = function () {
         if (!g.menu) {
             return
@@ -3527,8 +3564,7 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
                 }))
             }
         }
-    }
-        ;
+    };
     f.Register.StartupHook("End Config", function () {
         s.settings = f.config.menuSettings;
         if (typeof (s.settings.showRenderer) !== "undefined") {
@@ -3659,45 +3695,44 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
         g.cookie.showRenderer = s.showRenderer = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Math Renderer").hidden = !u
-    }
-        ;
+    };
     g.showMathPlayer = function (u) {
         g.cookie.showMathPlayer = s.showMathPlayer = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "MathPlayer").hidden = !u
-    }
-        ;
+    };
     g.showFontMenu = function (u) {
         g.cookie.showFontMenu = s.showFontMenu = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Font Preference").hidden = !u
-    }
-        ;
+    };
     g.showContext = function (u) {
         g.cookie.showContext = s.showContext = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Contextual Menu").hidden = !u
-    }
-        ;
+    };
     g.showDiscoverable = function (u) {
         g.cookie.showDiscoverable = s.showDiscoverable = u;
         g.saveCookie();
         g.menu.Find("Math Settings", "Highlight on Hover").hidden = !u;
         g.menu.Find("Math Settings", "discover_rule").hidden = !u
-    }
-        ;
+    };
     g.showLocale = function (u) {
         g.cookie.showLocale = s.showLocale = u;
         g.saveCookie();
         g.menu.Find("Language").hidden = !u
-    }
-        ;
+    };
     MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready", function () {
         if (!MathJax.OutputJax["HTML-CSS"].config.imageFont) {
             g.menu.Find("Math Settings", "Font Preference", "TeX (image)").disabled = true
         }
     });
-    CallbackUtil.Queue(f.Register.StartupHook("End Config", {}), ["Styles", q, s.styles], ["Post", f.Startup.signal, "MathMenu Ready"], ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"])
+    CallbackUtil.Queue(
+        f.Register.StartupHook("End Config", {}),
+        ["Styles", q, s.styles],
+        ["Post", f.Startup.signal, "MathMenu Ready"],
+        ["loadComplete", q, "[MathJax]/extensions/MathMenu.js"]
+    );
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, CallbackUtil.Create, MathJax.OutputJax);
 
@@ -10032,7 +10067,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
         if (g.refs.length) {
             g.refUpdate = true;
             for (var k = 0, j = g.refs.length; k < j; k++) {
-                g.refs[k].MathJax.state = MathJax.ElementJax.STATE.UPDATE
+                g.refs[k].MathJax.state = ElementJax.STATE.UPDATE
             }
             return MathJax.Hub.processInput({
                 scripts: g.refs,
