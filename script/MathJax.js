@@ -15,6 +15,7 @@ class MATHJAX {
         this.InputJax = null;
         this.OutputJax = null;
         this.ElementJax = null;
+        this.Object = null;
     }
 }
 var MathJax = new MATHJAX();
@@ -2729,10 +2730,10 @@ function createMathJax() {
     MathJax.HTML = new HTML();
     MathJax.Localization = new Localization();
     MathJax.Message = new Message();
-    MathJax.Extension = {};
     MathJax.Hub = new Hub();
     MathJax.Hub.Insert(MathJax.Hub.config.styles, MathJax.Message.styles);
     MathJax.Hub.Insert(MathJax.Hub.config.styles, { ".MathJax_Error": MathJax.Hub.config.errorSettings.style });
+    MathJax.Extension = {};
 
     (function () {
         var e = "[" + NAME_TAG + "]";
