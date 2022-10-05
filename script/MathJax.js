@@ -16,6 +16,7 @@ class MATHJAX {
         this.OutputJax = null;
         this.ElementJax = null;
         this.Object = null;
+        this.Menu = null;
     }
 }
 var MathJax = new MATHJAX();
