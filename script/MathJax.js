@@ -1,5 +1,20 @@
 const NAME_TAG = "MathJax";
-var MathJax = null;
+var MathJax = {
+    /** @type{Ajax} */
+    Ajax: null,
+    /** @type{HTML} */
+    HTML: null,
+    /** @type{Localization} */
+    Localization: null,
+    /** @type{Message} */
+    Message: null,
+    /** @type{Message} */
+    Hub: null,
+    Extension: {},
+    InputJax: null,
+    OutputJax: null,
+    ElementJax: null
+};
 
 class HTML {
     constructor() {
@@ -2852,7 +2867,6 @@ function createMathJax() {
             directory: g.directory + "/input",
             extensionDir: g.extensionDir
         });
-
         MathJax.OutputJax = g.Subclass({
             copyTranslate: true,
             preProcess: function (j) {
@@ -2894,7 +2908,6 @@ function createMathJax() {
             fontDir: e + (MathJax.isPacked ? "" : "/..") + "/fonts",
             imageDir: e + (MathJax.isPacked ? "" : "/..") + "/images"
         });
-
         MathJax.ElementJax = g.Subclass({
             Init: function (i, h) {
                 return this.constr.Subclass(i, h);
@@ -3017,7 +3030,6 @@ function createMathJax() {
         });
 
         MathJax.ElementJax.prototype.STATE = MathJax.ElementJax.STATE;
-
         MathJax.OutputJax.Error = {
             id: "Error",
             version: "2.7.2",
@@ -3048,7 +3060,6 @@ function createMathJax() {
                 };
             }
         };
-
         MathJax.InputJax.Error = {
             id: "Error",
             version: "2.7.2",
