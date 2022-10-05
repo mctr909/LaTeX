@@ -750,200 +750,6 @@ class Message {
         return b.join("\n");
     }
 }
-class CallbackUtil {
-    static Queue = null;
-    static Signal = null;
-    static Create(args, i) {
-        if (arguments.length > 1) {
-            if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0] instanceof Object && typeof arguments[1] === "number") {
-                args = [].slice.call(args, i);
-            } else {
-                args = [].slice.call(arguments, 0);
-            }
-        }
-        if (MathJax.Object.isArray(args) && args.length === 1 && typeof (args[0]) === "function") {
-            args = args[0];
-        }
-        if (typeof args === "function") {
-            if (args.execute === __CALLBACK.prototype.execute) {
-                return args;
-            }
-            return __CALLBACK({ hook: args });
-        } else {
-            if (MathJax.Object.isArray(args)) {
-                if (typeof (args[0]) === "string" && args[1] instanceof Object && typeof args[1][args[0]] === "function") {
-                    return __CALLBACK({
-                        hook: args[1][args[0]],
-                        object: args[1],
-                        data: args.slice(2)
-                    });
-                } else {
-                    if (typeof args[0] === "function") {
-                        return __CALLBACK({
-                            hook: args[0],
-                            data: args.slice(1)
-                        });
-                    } else {
-                        if (typeof args[1] === "function") {
-                            return __CALLBACK({
-                                hook: args[1],
-                                object: args[0],
-                                data: args.slice(2)
-                            });
-                        }
-                    }
-                }
-            } else {
-                if (typeof (args) === "string") {
-                    if (CallbackUtil.TestEval) {
-                        CallbackUtil.TestEval();
-                    }
-                    return __CALLBACK({ hook: CallbackUtil.Eval, data: [args] });
-                } else {
-                    if (args instanceof Object) {
-                        return __CALLBACK(args);
-                    } else {
-                        if (typeof (args) === "undefined") {
-                            return __CALLBACK({});
-                        }
-                    }
-                }
-            }
-        }
-        throw Error("Can't make callback from given data");
-    }
-    static Eval(code) {
-        return eval.call(window, code);
-    }
-    static TestEval() {
-        CallbackUtil.Eval("var __TeSt_VaR__ = 1");
-        if (window.__TeSt_VaR__) {
-            try {
-                delete window.__TeSt_VaR__;
-            } catch (error) {
-                window.__TeSt_VaR__ = null;
-            }
-        } else {
-            if (window.execScript) {
-                CallbackUtil.Eval = function (code) {
-                    MathJax.__code = code;
-                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
-                    window.execScript(code);
-                    var result = MathJax.__result;
-                    delete MathJax.__result;
-                    delete MathJax.__code;
-                    if (result instanceof Error) {
-                        throw result;
-                    }
-                    return result;
-                }
-            } else {
-                CallbackUtil.Eval = function (code) {
-                    MathJax.__code = code;
-                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
-                    var head = (document.getElementsByTagName("head"))[0];
-                    if (!head) {
-                        head = document.body;
-                    }
-                    var script = document.createElement("script");
-                    script.appendChild(document.createTextNode(code));
-                    head.appendChild(script);
-                    head.removeChild(script);
-                    var result = MathJax.__result;
-                    delete MathJax.__result;
-                    delete MathJax.__code;
-                    if (result instanceof Error) {
-                        throw result;
-                    }
-                    return result;
-                }
-            }
-        }
-    }
-    static IsCallback(f) {
-        return (typeof (f) === "function" && f.isCallback);
-    }
-    static WaitSignal(callback, signals) {
-        if (!MathJax.Object.isArray(signals)) {
-            signals = [signals];
-        }
-        if (!callback.signal) {
-            callback.oldExecute = callback.execute;
-            callback.execute = CallbackUtil.WaitExecute;
-            callback.signal = signals;
-        } else {
-            if (signals.length === 1) {
-                callback.signal.push(signals[0]);
-            } else {
-                callback.signal = callback.signal.concat(signals);
-            }
-        }
-    }
-    static WaitExecute() {
-        var signals = this.signal;
-        delete this.signal;
-        this.execute = this.oldExecute;
-        delete this.oldExecute;
-        var result = this.execute.apply(this, arguments);
-        if (CallbackUtil.IsCallback(result) && !result.called) {
-            CallbackUtil.WaitSignal(result, signals);
-        } else {
-            for (var i = 0, m = signals.length; i < m; i++) {
-                signals[i].pending--;
-                if (signals[i].pending <= 0) {
-                    signals[i].call();
-                }
-            }
-        }
-    }
-    static Delay(time, callback) {
-        callback = CallbackUtil.Create(callback);
-        callback.timeout = setTimeout(callback, time);
-        return callback;
-    }
-    static WaitFor(callback, signal) {
-        callback = CallbackUtil.Create(callback);
-        if (!callback.called) {
-            CallbackUtil.WaitSignal(callback, signal);
-            signal.pending++;
-        }
-    }
-    static After(callback) {
-        callback = CallbackUtil.Create(callback);
-        callback.pending = 0;
-        for (var i = 1, m = arguments.length; i < m; i++) {
-            if (arguments[i]) {
-                CallbackUtil.WaitFor(arguments[i], callback);
-            }
-        }
-        if (callback.pending === 0) {
-            var result = callback();
-            if (CallbackUtil.IsCallback(result)) {
-                callback = result;
-            }
-        }
-        return callback;
-    }
-    static ExecuteHooks(hooks, data, reset) {
-        if (!hooks) {
-            return null;
-        }
-        if (!MathJax.Object.isArray(hooks)) {
-            hooks = [hooks];
-        }
-        if (!MathJax.Object.isArray(data)) {
-            data = (data == null ? [] : [data]);
-        }
-        var handler = new Hooks(reset);
-        for (var i = 0, m = hooks.length; i < m; i++) {
-            handler.Add(hooks[i]);
-        }
-        return handler.Execute.apply(handler, data);
-    }
-    static Hooks(reset) {
-        return new Hooks(reset);
-    }
-}
 class Hooks {
     constructor(reset) {
         this.hooks = [];
@@ -1010,200 +816,6 @@ class Hooks {
         this.remove = [];
     }
 }
-
-var __CALLBACK = function(data) {
-    var cb = function () {
-        return arguments.callee.execute.apply(arguments.callee, arguments);
-    };
-    for (var id in __CALLBACK.prototype) {
-        if (__CALLBACK.prototype.hasOwnProperty(id)) {
-            if (typeof (data[id]) !== "undefined") {
-                cb[id] = data[id];
-            } else {
-                cb[id] = __CALLBACK.prototype[id];
-            }
-        }
-    }
-    cb.toString = __CALLBACK.prototype.toString;
-    return cb;
-};
-__CALLBACK.prototype = {
-    isCallback: true,
-    hook: function () { },
-    data: [],
-    object: window,
-    execute: function () {
-        if (!this.called || this.autoReset) {
-            this.called = !this.autoReset;
-            return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
-        }
-    },
-    reset: function () {
-        delete this.called;
-    },
-    toString: function () {
-        return this.hook.toString.apply(this.hook, arguments);
-    }
-};
-
-function createCallback() {
-    CallbackUtil.Queue = MathJax.Object.Subclass({
-        Init: function () {
-            this.pending = this.running = 0;
-            this.queue = [];
-            this.Push.apply(this, arguments);
-        },
-        Push: function () {
-            var callback;
-            for (var i = 0, m = arguments.length; i < m; i++) {
-                callback = CallbackUtil.Create(arguments[i]);
-                if (callback === arguments[i] && !callback.called) {
-                    callback = CallbackUtil.Create(["wait", this, callback]);
-                }
-                this.queue.push(callback);
-            }
-            if (!this.running && !this.pending) {
-                this.Process();
-            }
-            return callback;
-        },
-        Process: function (queue) {
-            while (!this.running && !this.pending && this.queue.length) {
-                var callback = this.queue[0];
-                queue = this.queue.slice(1);
-                this.queue = [];
-                this.Suspend();
-                var result = callback();
-                this.Resume();
-                if (queue.length) {
-                    this.queue = queue.concat(this.queue);
-                }
-                if (CallbackUtil.IsCallback(result) && !result.called) {
-                    CallbackUtil.WaitFor(result, this);
-                }
-            }
-        },
-        Suspend: function () {
-            this.running++;
-        },
-        Resume: function () {
-            if (this.running) {
-                this.running--;
-            }
-        },
-        call: function () {
-            this.Process.apply(this, arguments);
-        },
-        wait: function (callback) {
-            return callback;
-        }
-    });
-    CallbackUtil.Signal = CallbackUtil.Queue.Subclass({
-        Init: function (name) {
-            CallbackUtil.Queue.prototype.Init.call(this);
-            this.name = name;
-            this.posted = [];
-            this.listeners = new Hooks(true);
-            this.posting = false;
-            this.callback = null;
-        },
-        Post: function (message, callback, forget) {
-            callback = CallbackUtil.Create(callback);
-            if (this.posting || this.pending) {
-                this.Push(["Post", this, message, callback, forget]);
-            } else {
-                this.callback = callback;
-                callback.reset();
-                if (!forget) {
-                    this.posted.push(message);
-                }
-                this.Suspend();
-                this.posting = true;
-                var result = this.listeners.Execute(message);
-                if (CallbackUtil.IsCallback(result) && !result.called) {
-                    CallbackUtil.WaitFor(result, this);
-                }
-                this.Resume();
-                this.posting = false;
-                if (!this.pending) {
-                    this.call();
-                }
-            }
-            return callback;
-        },
-        Clear: function (callback) {
-            callback = CallbackUtil.Create(callback);
-            if (this.posting || this.pending) {
-                callback = this.Push(["Clear", this, callback]);
-            } else {
-                this.posted = [];
-                callback();
-            }
-            return callback;
-        },
-        call: function () {
-            this.callback(this);
-            this.Process();
-        },
-        Interest: function (callback, ignorePast, priority) {
-            callback = CallbackUtil.Create(callback);
-            this.listeners.Add(callback, priority);
-            if (!ignorePast) {
-                for (var i = 0, m = this.posted.length; i < m; i++) {
-                    callback.reset();
-                    var result = callback(this.posted[i]);
-                    if (CallbackUtil.IsCallback(result) && i === this.posted.length - 1) {
-                        CallbackUtil.WaitFor(result, this);
-                    }
-                }
-            }
-            return callback;
-        },
-        NoInterest: function (callback) {
-            this.listeners.Remove(callback);
-        },
-        MessageHook: function (msg, callback, priority) {
-            callback = CallbackUtil.Create(callback);
-            if (!this.hooks) {
-                this.hooks = {};
-                this.Interest(["ExecuteHooks", this]);
-            }
-            if (!this.hooks[msg]) {
-                this.hooks[msg] = new Hooks(true);
-            }
-            this.hooks[msg].Add(callback, priority);
-            for (var i = 0, m = this.posted.length; i < m; i++) {
-                if (this.posted[i] == msg) {
-                    callback.reset();
-                    callback(this.posted[i]);
-                }
-            }
-            callback.msg = msg;
-            return callback;
-        },
-        ExecuteHooks: function (msg) {
-            var type = (MathJax.Object.isArray(msg) ? msg[0] : msg);
-            if (!this.hooks[type]) {
-                return null;
-            }
-            return this.hooks[type].Execute(msg);
-        },
-        RemoveHook: function (hook) {
-            this.hooks[hook.msg].Remove(hook);
-        }
-    }, {
-        signals: {},
-        find: function (name) {
-            if (!CallbackUtil.Signal.signals[name]) {
-                CallbackUtil.Signal.signals[name] = new CallbackUtil.Signal(name);
-            }
-            return CallbackUtil.Signal.signals[name];
-        }
-    });
-    MathJax.Callback = CallbackUtil.Create;
-    MathJax.Callback.Delay = CallbackUtil.Delay;
-}
-
 class HubConfig {
     constructor() {
         this.root = "";
@@ -2185,6 +1797,782 @@ class HubStartUp {
         return null;
     }
 }
+class AjaxLoader {
+    JS(k, m) {
+        var j = this.fileName(k);
+        var i = document.createElement("script");
+        var l = CallbackUtil.Create(["loadTimeout", this, k]);
+        this.loading[k] = {
+            callback: m,
+            timeout: setTimeout(l, this.timeout),
+            status: this.STATUS.OK,
+            script: i
+        };
+        this.loading[k].message = MathJax.Message.File(j);
+        i.onerror = l;
+        i.type = "text/javascript";
+        i.src = k + this.fileRev(j);
+        this.head.appendChild(i);
+    }
+    CSS(j, l) {
+        var i = this.fileName(j);
+        var k = document.createElement("link");
+        k.rel = "stylesheet";
+        k.type = "text/css";
+        k.href = j + this.fileRev(i);
+        this.loading[j] = {
+            callback: l,
+            message: MathJax.Message.File(i),
+            status: this.STATUS.OK
+        };
+        this.head.appendChild(k);
+        this.timer.create.call(this, [this.timer.file, j], k);
+    }
+}
+class AjaxTimer {
+    create(j, i) {
+        j = CallbackUtil.Create(j);
+        if (i.nodeName === "STYLE" && i.styleSheet && typeof (i.styleSheet.cssText) !== "undefined") {
+            j(this.STATUS.OK);
+        } else {
+            if (window.chrome && i.nodeName === "LINK") {
+                j(this.STATUS.OK);
+            } else {
+                if (navigator.vendor === "Apple Computer, Inc." && typeof navigator.vendorSub === "undefined") {
+                    this.timer.start(this, [this.timer.checkSafari2, Ajax.StylesheetCount++, j], this.styleDelay);
+                } else {
+                    this.timer.start(this, [this.timer.checkLength, i, j], this.styleDelay);
+                }
+            }
+        }
+        return j;
+    }
+    start(j, i, k, l) {
+        i = CallbackUtil.Create(i);
+        i.execute = this.execute;
+        i.time = this.time;
+        i.STATUS = j.STATUS;
+        i.timeout = l || j.timeout;
+        i.delay = i.total = k || 0;
+        if (k) {
+            setTimeout(i, k);
+        } else {
+            i();
+        }
+    }
+    time(i) {
+        this.total += this.delay;
+        this.delay = Math.floor(this.delay * 1.05 + 5);
+        if (this.total >= this.timeout) {
+            i(this.STATUS.ERROR);
+            return 1;
+        }
+        return 0;
+    }
+    file(j, i) {
+        if (i < 0) {
+            MathJax.Ajax.loadTimeout(j);
+        } else {
+            MathJax.Ajax.loadComplete(j);
+        }
+    }
+    execute() {
+        this.hook.call(this.object, this, this.data[0], this.data[1]);
+    }
+    checkSafari2(i, j, k) {
+        if (i.time(k)) {
+            return;
+        }
+        if (document.styleSheets.length > j && document.styleSheets[j].cssRules && document.styleSheets[j].cssRules.length) {
+            k(i.STATUS.OK);
+        } else {
+            setTimeout(i, i.delay);
+        }
+    }
+    checkLength(i, l, n) {
+        if (i.time(n)) {
+            return;
+        }
+        var m = 0;
+        var j = (l.sheet || l.styleSheet);
+        try {
+            if ((j.cssRules || j.rules || []).length > 0) {
+                m = 1;
+            }
+        } catch (k) {
+            if (k.message.match(/protected variable|restricted URI/)) {
+                m = 1;
+            } else {
+                if (k.message.match(/Security error/)) {
+                    m = 1;
+                }
+            }
+        }
+        if (m) {
+            setTimeout(CallbackUtil.Create([n, i.STATUS.OK]), 0);
+        } else {
+            setTimeout(i, i.delay);
+        }
+    }
+}
+class Ajax {
+    static PATH = {
+        a11y: "[MathJax]/extensions/a11y",
+        Contrib: "https://cdn.mathjax.org/mathjax/contrib"
+    };
+    static StylesheetCount = 0;
+    static ScriptList = [];
+    static GetHead(i) {
+        if (document.styleSheets && document.styleSheets.length > Ajax.StylesheetCount) {
+            Ajax.StylesheetCount = document.styleSheets.length;
+        }
+        if (!i) {
+            i = document.head || ((document.getElementsByTagName("head"))[0]);
+            if (!i) {
+                i = document.body;
+            }
+        }
+        return i;
+    };
+    static RemoveScript() {
+        for (var k = 0, j = Ajax.ScriptList.length; k < j; k++) {
+            MathJax.Ajax.head.removeChild(Ajax.ScriptList[k]);
+        }
+        Ajax.ScriptList = [];
+    };
+    constructor() {
+        Ajax.PATH[NAME_TAG] = "";
+        this.loaded = {};
+        this.loading = {};
+        this.loadHooks = {};
+        this.timeout = 15 * 1000;
+        this.styleDelay = 1;
+        this.config = {
+            root: "",
+            path: Ajax.PATH
+        };
+        this.params = {};
+        this.STATUS = {
+            OK: 1,
+            ERROR: -1
+        };
+        /** @type{AjaxLoader} */
+        this.loader = new AjaxLoader();
+        /** @type{AjaxTimer} */
+        this.timer = new AjaxTimer();
+    }
+    fileURL(j) {
+        var i;
+        while ((i = j.match(/^\[([-._a-z0-9]+)\]/i)) && Ajax.PATH.hasOwnProperty(i[1])) {
+            j = (Ajax.PATH[i[1]] || this.config.root) + j.substr(i[1].length + 2);
+        }
+        return j;
+    }
+    fileName(j) {
+        var i = this.config.root;
+        if (j.substr(0, i.length) === i) {
+            j = "[" + NAME_TAG + "]" + j.substr(i.length);
+        }
+        do {
+            var k = false;
+            for (var l in Ajax.PATH) {
+                if (Ajax.PATH.hasOwnProperty(l) && Ajax.PATH[l]) {
+                    if (j.substr(0, Ajax.PATH[l].length) === Ajax.PATH[l]) {
+                        j = "[" + l + "]" + j.substr(Ajax.PATH[l].length);
+                        k = true;
+                        break;
+                    }
+                }
+            }
+        } while (k);
+        return j;
+    }
+    fileRev(j) {
+        var i = MathJax.cdnFileVersions[j] || MathJax.cdnVersion || "";
+        if (i) {
+            i = "?V=" + i;
+        }
+        return i;
+    }
+    urlRev(i) {
+        return this.fileURL(i) + this.fileRev(i);
+    }
+    Require(k, n) {
+        n = CallbackUtil.Create(n);
+        var l;
+        if (k instanceof Object) {
+            for (var j in k) {
+                if (k.hasOwnProperty(j)) {
+                    l = j.toUpperCase();
+                    k = k[j];
+                }
+            }
+        } else {
+            l = k.split(/\./).pop().toUpperCase();
+        }
+        if (this.params.noContrib && k.substr(0, 9) === "[Contrib]") {
+            n(this.STATUS.ERROR);
+        } else {
+            k = this.fileURL(k);
+            if (this.loaded[k]) {
+                n(this.loaded[k]);
+            } else {
+                var m = {};
+                m[l] = k;
+                this.Load(m, n);
+            }
+        }
+        return n;
+    }
+    Load(k, m) {
+        m = CallbackUtil.Create(m);
+        var l;
+        if (k instanceof Object) {
+            for (var j in k) {
+                if (k.hasOwnProperty(j)) {
+                    l = j.toUpperCase();
+                    k = k[j];
+                }
+            }
+        } else {
+            l = k.split(/\./).pop().toUpperCase();
+        }
+        k = this.fileURL(k);
+        if (this.loading[k]) {
+            this.addHook(k, m);
+        } else {
+            this.head = Ajax.GetHead(this.head);
+            if (this.loader[l]) {
+                this.loader[l].call(this, k, m);
+            } else {
+                throw Error("Can't load files of type " + l);
+            }
+        }
+        return m;
+    }
+    LoadHook(l, m, k) {
+        m = CallbackUtil.Create(m);
+        if (l instanceof Object) {
+            for (var j in l) {
+                if (l.hasOwnProperty(j)) {
+                    l = l[j];
+                }
+            }
+        }
+        l = this.fileURL(l);
+        if (this.loaded[l]) {
+            m(this.loaded[l]);
+        } else {
+            this.addHook(l, m, k);
+        }
+        return m;
+    }
+    addHook(j, k, i) {
+        if (!this.loadHooks[j]) {
+            this.loadHooks[j] = new Hooks();
+        }
+        this.loadHooks[j].Add(k, i);
+        k.file = j;
+    }
+    removeHook(i) {
+        if (this.loadHooks[i.file]) {
+            this.loadHooks[i.file].Remove(i);
+            if (!this.loadHooks[i.file].hooks.length) {
+                delete this.loadHooks[i.file];
+            }
+        }
+    }
+    Preloading() {
+        for (var l = 0, j = arguments.length; l < j; l++) {
+            var k = this.fileURL(arguments[l]);
+            if (!this.loading[k]) {
+                this.loading[k] = { preloaded: true };
+            }
+        }
+    }
+    loadComplete(i) {
+        i = this.fileURL(i);
+        var j = this.loading[i];
+        if (j && !j.preloaded) {
+            MathJax.Message.Clear(j.message);
+            clearTimeout(j.timeout);
+            if (j.script) {
+                if (Ajax.ScriptList.length === 0) {
+                    setTimeout(Ajax.RemoveScript, 0);
+                }
+                Ajax.ScriptList.push(j.script);
+            }
+            this.loaded[i] = j.status;
+            delete this.loading[i];
+            this.addHook(i, j.callback);
+        } else {
+            if (j) {
+                delete this.loading[i];
+            }
+            this.loaded[i] = this.STATUS.OK;
+            j = { status: this.STATUS.OK };
+        }
+        if (!this.loadHooks[i]) {
+            return null;
+        }
+        return this.loadHooks[i].Execute(j.status);
+    }
+    loadTimeout(i) {
+        if (this.loading[i].timeout) {
+            clearTimeout(this.loading[i].timeout);
+        }
+        this.loading[i].status = this.STATUS.ERROR;
+        this.loadError(i);
+        this.loadComplete(i);
+    }
+    loadError(i) {
+        MathJax.Message.Set(["LoadFailed", "File failed to load: %1", i], null, 2000);
+        MathJax.Hub.signal.Post(["file load error", i]);
+    }
+    Styles(k, l) {
+        var i = this.StyleString(k);
+        if (i === "") {
+            l = CallbackUtil.Create(l);
+            l();
+        } else {
+            var j = document.createElement("style");
+            j.type = "text/css";
+            this.head = Ajax.GetHead(this.head);
+            this.head.appendChild(j);
+            if (j.styleSheet && typeof (j.styleSheet.cssText) !== "undefined") {
+                j.styleSheet.cssText = i;
+            } else {
+                j.appendChild(document.createTextNode(i));
+            }
+            l = this.timer.create.call(this, l, j);
+        }
+        return l;
+    }
+    StyleString(n) {
+        if (typeof (n) === "string") {
+            return n;
+        }
+        var k = "", o, m;
+        for (o in n) {
+            if (n.hasOwnProperty(o)) {
+                if (typeof n[o] === "string") {
+                    k += o + " {" + n[o] + "}\n";
+                } else {
+                    if (MathJax.Object.isArray(n[o])) {
+                        for (var l = 0; l < n[o].length; l++) {
+                            m = {};
+                            m[o] = n[o][l];
+                            k += this.StyleString(m);
+                        }
+                    } else {
+                        if (o.substr(0, 6) === "@media") {
+                            k += o + " {" + this.StyleString(n[o]) + "}\n";
+                        } else {
+                            if (n[o] != null) {
+                                m = [];
+                                for (var j in n[o]) {
+                                    if (n[o].hasOwnProperty(j)) {
+                                        if (n[o][j] != null) {
+                                            m[m.length] = j + ": " + n[o][j];
+                                        }
+                                    }
+                                }
+                                k += o + " {" + m.join("; ") + "}\n";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return k;
+    }
+}
+
+class CallbackUtil {
+    static Queue = null;
+    static Signal = null;
+    static Create(args, i) {
+        if (arguments.length > 1) {
+            if (arguments.length === 2 && !(typeof arguments[0] === "function") && arguments[0] instanceof Object && typeof arguments[1] === "number") {
+                args = [].slice.call(args, i);
+            } else {
+                args = [].slice.call(arguments, 0);
+            }
+        }
+        if (MathJax.Object.isArray(args) && args.length === 1 && typeof (args[0]) === "function") {
+            args = args[0];
+        }
+        if (typeof args === "function") {
+            if (args.execute === __CALLBACK.prototype.execute) {
+                return args;
+            }
+            return __CALLBACK({ hook: args });
+        } else {
+            if (MathJax.Object.isArray(args)) {
+                if (typeof (args[0]) === "string" && args[1] instanceof Object && typeof args[1][args[0]] === "function") {
+                    return __CALLBACK({
+                        hook: args[1][args[0]],
+                        object: args[1],
+                        data: args.slice(2)
+                    });
+                } else {
+                    if (typeof args[0] === "function") {
+                        return __CALLBACK({
+                            hook: args[0],
+                            data: args.slice(1)
+                        });
+                    } else {
+                        if (typeof args[1] === "function") {
+                            return __CALLBACK({
+                                hook: args[1],
+                                object: args[0],
+                                data: args.slice(2)
+                            });
+                        }
+                    }
+                }
+            } else {
+                if (typeof (args) === "string") {
+                    if (CallbackUtil.TestEval) {
+                        CallbackUtil.TestEval();
+                    }
+                    return __CALLBACK({ hook: CallbackUtil.Eval, data: [args] });
+                } else {
+                    if (args instanceof Object) {
+                        return __CALLBACK(args);
+                    } else {
+                        if (typeof (args) === "undefined") {
+                            return __CALLBACK({});
+                        }
+                    }
+                }
+            }
+        }
+        throw Error("Can't make callback from given data");
+    }
+    static Eval(code) {
+        return eval.call(window, code);
+    }
+    static TestEval() {
+        CallbackUtil.Eval("var __TeSt_VaR__ = 1");
+        if (window.__TeSt_VaR__) {
+            try {
+                delete window.__TeSt_VaR__;
+            } catch (error) {
+                window.__TeSt_VaR__ = null;
+            }
+        } else {
+            if (window.execScript) {
+                CallbackUtil.Eval = function (code) {
+                    MathJax.__code = code;
+                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
+                    window.execScript(code);
+                    var result = MathJax.__result;
+                    delete MathJax.__result;
+                    delete MathJax.__code;
+                    if (result instanceof Error) {
+                        throw result;
+                    }
+                    return result;
+                }
+            } else {
+                CallbackUtil.Eval = function (code) {
+                    MathJax.__code = code;
+                    code = "try {" + NAME_TAG + ".__result = eval(" + NAME_TAG + ".__code)} catch(err) {" + NAME_TAG + ".__result = err}";
+                    var head = (document.getElementsByTagName("head"))[0];
+                    if (!head) {
+                        head = document.body;
+                    }
+                    var script = document.createElement("script");
+                    script.appendChild(document.createTextNode(code));
+                    head.appendChild(script);
+                    head.removeChild(script);
+                    var result = MathJax.__result;
+                    delete MathJax.__result;
+                    delete MathJax.__code;
+                    if (result instanceof Error) {
+                        throw result;
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+    static IsCallback(f) {
+        return (typeof (f) === "function" && f.isCallback);
+    }
+    static WaitSignal(callback, signals) {
+        if (!MathJax.Object.isArray(signals)) {
+            signals = [signals];
+        }
+        if (!callback.signal) {
+            callback.oldExecute = callback.execute;
+            callback.execute = CallbackUtil.WaitExecute;
+            callback.signal = signals;
+        } else {
+            if (signals.length === 1) {
+                callback.signal.push(signals[0]);
+            } else {
+                callback.signal = callback.signal.concat(signals);
+            }
+        }
+    }
+    static WaitExecute() {
+        var signals = this.signal;
+        delete this.signal;
+        this.execute = this.oldExecute;
+        delete this.oldExecute;
+        var result = this.execute.apply(this, arguments);
+        if (CallbackUtil.IsCallback(result) && !result.called) {
+            CallbackUtil.WaitSignal(result, signals);
+        } else {
+            for (var i = 0, m = signals.length; i < m; i++) {
+                signals[i].pending--;
+                if (signals[i].pending <= 0) {
+                    signals[i].call();
+                }
+            }
+        }
+    }
+    static Delay(time, callback) {
+        callback = CallbackUtil.Create(callback);
+        callback.timeout = setTimeout(callback, time);
+        return callback;
+    }
+    static WaitFor(callback, signal) {
+        callback = CallbackUtil.Create(callback);
+        if (!callback.called) {
+            CallbackUtil.WaitSignal(callback, signal);
+            signal.pending++;
+        }
+    }
+    static After(callback) {
+        callback = CallbackUtil.Create(callback);
+        callback.pending = 0;
+        for (var i = 1, m = arguments.length; i < m; i++) {
+            if (arguments[i]) {
+                CallbackUtil.WaitFor(arguments[i], callback);
+            }
+        }
+        if (callback.pending === 0) {
+            var result = callback();
+            if (CallbackUtil.IsCallback(result)) {
+                callback = result;
+            }
+        }
+        return callback;
+    }
+    static ExecuteHooks(hooks, data, reset) {
+        if (!hooks) {
+            return null;
+        }
+        if (!MathJax.Object.isArray(hooks)) {
+            hooks = [hooks];
+        }
+        if (!MathJax.Object.isArray(data)) {
+            data = (data == null ? [] : [data]);
+        }
+        var handler = new Hooks(reset);
+        for (var i = 0, m = hooks.length; i < m; i++) {
+            handler.Add(hooks[i]);
+        }
+        return handler.Execute.apply(handler, data);
+    }
+    static Hooks(reset) {
+        return new Hooks(reset);
+    }
+}
+var __CALLBACK = function (data) {
+    var cb = function () {
+        return arguments.callee.execute.apply(arguments.callee, arguments);
+    };
+    for (var id in __CALLBACK.prototype) {
+        if (__CALLBACK.prototype.hasOwnProperty(id)) {
+            if (typeof (data[id]) !== "undefined") {
+                cb[id] = data[id];
+            } else {
+                cb[id] = __CALLBACK.prototype[id];
+            }
+        }
+    }
+    cb.toString = __CALLBACK.prototype.toString;
+    return cb;
+};
+__CALLBACK.prototype = {
+    isCallback: true,
+    hook: function () { },
+    data: [],
+    object: window,
+    execute: function () {
+        if (!this.called || this.autoReset) {
+            this.called = !this.autoReset;
+            return this.hook.apply(this.object, this.data.concat([].slice.call(arguments, 0)));
+        }
+    },
+    reset: function () {
+        delete this.called;
+    },
+    toString: function () {
+        return this.hook.toString.apply(this.hook, arguments);
+    }
+};
+function createCallback() {
+    CallbackUtil.Queue = MathJax.Object.Subclass({
+        Init: function () {
+            this.pending = this.running = 0;
+            this.queue = [];
+            this.Push.apply(this, arguments);
+        },
+        Push: function () {
+            var callback;
+            for (var i = 0, m = arguments.length; i < m; i++) {
+                callback = CallbackUtil.Create(arguments[i]);
+                if (callback === arguments[i] && !callback.called) {
+                    callback = CallbackUtil.Create(["wait", this, callback]);
+                }
+                this.queue.push(callback);
+            }
+            if (!this.running && !this.pending) {
+                this.Process();
+            }
+            return callback;
+        },
+        Process: function (queue) {
+            while (!this.running && !this.pending && this.queue.length) {
+                var callback = this.queue[0];
+                queue = this.queue.slice(1);
+                this.queue = [];
+                this.Suspend();
+                var result = callback();
+                this.Resume();
+                if (queue.length) {
+                    this.queue = queue.concat(this.queue);
+                }
+                if (CallbackUtil.IsCallback(result) && !result.called) {
+                    CallbackUtil.WaitFor(result, this);
+                }
+            }
+        },
+        Suspend: function () {
+            this.running++;
+        },
+        Resume: function () {
+            if (this.running) {
+                this.running--;
+            }
+        },
+        call: function () {
+            this.Process.apply(this, arguments);
+        },
+        wait: function (callback) {
+            return callback;
+        }
+    });
+    CallbackUtil.Signal = CallbackUtil.Queue.Subclass({
+        Init: function (name) {
+            CallbackUtil.Queue.prototype.Init.call(this);
+            this.name = name;
+            this.posted = [];
+            this.listeners = new Hooks(true);
+            this.posting = false;
+            this.callback = null;
+        },
+        Post: function (message, callback, forget) {
+            callback = CallbackUtil.Create(callback);
+            if (this.posting || this.pending) {
+                this.Push(["Post", this, message, callback, forget]);
+            } else {
+                this.callback = callback;
+                callback.reset();
+                if (!forget) {
+                    this.posted.push(message);
+                }
+                this.Suspend();
+                this.posting = true;
+                var result = this.listeners.Execute(message);
+                if (CallbackUtil.IsCallback(result) && !result.called) {
+                    CallbackUtil.WaitFor(result, this);
+                }
+                this.Resume();
+                this.posting = false;
+                if (!this.pending) {
+                    this.call();
+                }
+            }
+            return callback;
+        },
+        Clear: function (callback) {
+            callback = CallbackUtil.Create(callback);
+            if (this.posting || this.pending) {
+                callback = this.Push(["Clear", this, callback]);
+            } else {
+                this.posted = [];
+                callback();
+            }
+            return callback;
+        },
+        call: function () {
+            this.callback(this);
+            this.Process();
+        },
+        Interest: function (callback, ignorePast, priority) {
+            callback = CallbackUtil.Create(callback);
+            this.listeners.Add(callback, priority);
+            if (!ignorePast) {
+                for (var i = 0, m = this.posted.length; i < m; i++) {
+                    callback.reset();
+                    var result = callback(this.posted[i]);
+                    if (CallbackUtil.IsCallback(result) && i === this.posted.length - 1) {
+                        CallbackUtil.WaitFor(result, this);
+                    }
+                }
+            }
+            return callback;
+        },
+        NoInterest: function (callback) {
+            this.listeners.Remove(callback);
+        },
+        MessageHook: function (msg, callback, priority) {
+            callback = CallbackUtil.Create(callback);
+            if (!this.hooks) {
+                this.hooks = {};
+                this.Interest(["ExecuteHooks", this]);
+            }
+            if (!this.hooks[msg]) {
+                this.hooks[msg] = new Hooks(true);
+            }
+            this.hooks[msg].Add(callback, priority);
+            for (var i = 0, m = this.posted.length; i < m; i++) {
+                if (this.posted[i] == msg) {
+                    callback.reset();
+                    callback(this.posted[i]);
+                }
+            }
+            callback.msg = msg;
+            return callback;
+        },
+        ExecuteHooks: function (msg) {
+            var type = (MathJax.Object.isArray(msg) ? msg[0] : msg);
+            if (!this.hooks[type]) {
+                return null;
+            }
+            return this.hooks[type].Execute(msg);
+        },
+        RemoveHook: function (hook) {
+            this.hooks[hook.msg].Remove(hook);
+        }
+    }, {
+        signals: {},
+        find: function (name) {
+            if (!CallbackUtil.Signal.signals[name]) {
+                CallbackUtil.Signal.signals[name] = new CallbackUtil.Signal(name);
+            }
+            return CallbackUtil.Signal.signals[name];
+        }
+    });
+    MathJax.Callback = CallbackUtil.Create;
+    MathJax.Callback.Delay = CallbackUtil.Delay;
+}
 
 function createMathJax() {
     MathJax.isPacked = true;
@@ -2202,7 +2590,7 @@ function createMathJax() {
             MathJax = window[NAME_TAG] = {};
         }
         var EMPTY = [];
-        var CREATE_CLS = function(cls) {
+        var CREATE_CLS = function (cls) {
             var new_class = cls.constr;
             if (!new_class) {
                 new_class = function () { };
@@ -2315,8 +2703,8 @@ function createMathJax() {
     })();
 
     createCallback();
-    createAjax();
 
+    MathJax.Ajax = new Ajax();
     MathJax.HTML = new HTML();
     MathJax.Localization = new Localization();
     MathJax.Message = new Message();
@@ -2671,394 +3059,6 @@ function createMathJax() {
 
     checkBrowser();
 }
-
-function createAjax() {
-    var d = (navigator.vendor === "Apple Computer, Inc." && typeof navigator.vendorSub === "undefined");
-    var g = 0;
-    var h = function (i) {
-        if (document.styleSheets && document.styleSheets.length > g) {
-            g = document.styleSheets.length;
-        }
-        if (!i) {
-            i = document.head || ((document.getElementsByTagName("head"))[0]);
-            if (!i) {
-                i = document.body;
-            }
-        }
-        return i;
-    };
-    var f = [];
-    var c = function () {
-        for (var k = 0, j = f.length; k < j; k++) {
-            MathJax.Ajax.head.removeChild(f[k]);
-        }
-        f = [];
-    };
-    var b = {};
-    b[NAME_TAG] = "";
-    b.a11y = "[MathJax]/extensions/a11y";
-    b.Contrib = "https://cdn.mathjax.org/mathjax/contrib";
-    MathJax.Ajax = {
-        loaded: {},
-        loading: {},
-        loadHooks: {},
-        timeout: 15 * 1000,
-        styleDelay: 1,
-        config: {
-            root: "",
-            path: b
-        },
-        params: {},
-        STATUS: {
-            OK: 1,
-            ERROR: -1
-        },
-        fileURL: function (j) {
-            var i;
-            while ((i = j.match(/^\[([-._a-z0-9]+)\]/i)) && b.hasOwnProperty(i[1])) {
-                j = (b[i[1]] || this.config.root) + j.substr(i[1].length + 2);
-            }
-            return j;
-        },
-        fileName: function (j) {
-            var i = this.config.root;
-            if (j.substr(0, i.length) === i) {
-                j = "[" + NAME_TAG + "]" + j.substr(i.length);
-            }
-            do {
-                var k = false;
-                for (var l in b) {
-                    if (b.hasOwnProperty(l) && b[l]) {
-                        if (j.substr(0, b[l].length) === b[l]) {
-                            j = "[" + l + "]" + j.substr(b[l].length);
-                            k = true;
-                            break;
-                        }
-                    }
-                }
-            } while (k);
-            return j;
-        },
-        fileRev: function (j) {
-            var i = MathJax.cdnFileVersions[j] || MathJax.cdnVersion || "";
-            if (i) {
-                i = "?V=" + i;
-            }
-            return i;
-        },
-        urlRev: function (i) {
-            return this.fileURL(i) + this.fileRev(i);
-        },
-        Require: function (k, n) {
-            n = CallbackUtil.Create(n);
-            var l;
-            if (k instanceof Object) {
-                for (var j in k) {
-                    if (k.hasOwnProperty(j)) {
-                        l = j.toUpperCase();
-                        k = k[j];
-                    }
-                }
-            } else {
-                l = k.split(/\./).pop().toUpperCase();
-            }
-            if (this.params.noContrib && k.substr(0, 9) === "[Contrib]") {
-                n(this.STATUS.ERROR);
-            } else {
-                k = this.fileURL(k);
-                if (this.loaded[k]) {
-                    n(this.loaded[k]);
-                } else {
-                    var m = {};
-                    m[l] = k;
-                    this.Load(m, n);
-                }
-            }
-            return n;
-        },
-        Load: function (k, m) {
-            m = CallbackUtil.Create(m);
-            var l;
-            if (k instanceof Object) {
-                for (var j in k) {
-                    if (k.hasOwnProperty(j)) {
-                        l = j.toUpperCase();
-                        k = k[j];
-                    }
-                }
-            } else {
-                l = k.split(/\./).pop().toUpperCase();
-            }
-            k = this.fileURL(k);
-            if (this.loading[k]) {
-                this.addHook(k, m);
-            } else {
-                this.head = h(this.head);
-                if (this.loader[l]) {
-                    this.loader[l].call(this, k, m);
-                } else {
-                    throw Error("Can't load files of type " + l);
-                }
-            }
-            return m;
-        },
-        LoadHook: function (l, m, k) {
-            m = CallbackUtil.Create(m);
-            if (l instanceof Object) {
-                for (var j in l) {
-                    if (l.hasOwnProperty(j)) {
-                        l = l[j];
-                    }
-                }
-            }
-            l = this.fileURL(l);
-            if (this.loaded[l]) {
-                m(this.loaded[l]);
-            } else {
-                this.addHook(l, m, k);
-            }
-            return m;
-        },
-        addHook: function (j, k, i) {
-            if (!this.loadHooks[j]) {
-                this.loadHooks[j] = new Hooks();
-            }
-            this.loadHooks[j].Add(k, i);
-            k.file = j;
-        },
-        removeHook: function (i) {
-            if (this.loadHooks[i.file]) {
-                this.loadHooks[i.file].Remove(i);
-                if (!this.loadHooks[i.file].hooks.length) {
-                    delete this.loadHooks[i.file];
-                }
-            }
-        },
-        Preloading: function () {
-            for (var l = 0, j = arguments.length; l < j; l++) {
-                var k = this.fileURL(arguments[l]);
-                if (!this.loading[k]) {
-                    this.loading[k] = { preloaded: true };
-                }
-            }
-        },
-        loader: {
-            JS: function (k, m) {
-                var j = this.fileName(k);
-                var i = document.createElement("script");
-                var l = CallbackUtil.Create(["loadTimeout", this, k]);
-                this.loading[k] = {
-                    callback: m,
-                    timeout: setTimeout(l, this.timeout),
-                    status: this.STATUS.OK,
-                    script: i
-                };
-                this.loading[k].message = MathJax.Message.File(j);
-                i.onerror = l;
-                i.type = "text/javascript";
-                i.src = k + this.fileRev(j);
-                this.head.appendChild(i);
-            },
-            CSS: function (j, l) {
-                var i = this.fileName(j);
-                var k = document.createElement("link");
-                k.rel = "stylesheet";
-                k.type = "text/css";
-                k.href = j + this.fileRev(i);
-                this.loading[j] = {
-                    callback: l,
-                    message: MathJax.Message.File(i),
-                    status: this.STATUS.OK
-                };
-                this.head.appendChild(k);
-                this.timer.create.call(this, [this.timer.file, j], k);
-            }
-        },
-        timer: {
-            create: function (j, i) {
-                j = CallbackUtil.Create(j);
-                if (i.nodeName === "STYLE" && i.styleSheet && typeof (i.styleSheet.cssText) !== "undefined") {
-                    j(this.STATUS.OK);
-                } else {
-                    if (window.chrome && i.nodeName === "LINK") {
-                        j(this.STATUS.OK);
-                    } else {
-                        if (d) {
-                            this.timer.start(this, [this.timer.checkSafari2, g++, j], this.styleDelay);
-                        } else {
-                            this.timer.start(this, [this.timer.checkLength, i, j], this.styleDelay);
-                        }
-                    }
-                }
-                return j;
-            },
-            start: function (j, i, k, l) {
-                i = CallbackUtil.Create(i);
-                i.execute = this.execute;
-                i.time = this.time;
-                i.STATUS = j.STATUS;
-                i.timeout = l || j.timeout;
-                i.delay = i.total = k || 0;
-                if (k) {
-                    setTimeout(i, k);
-                } else {
-                    i();
-                }
-            },
-            time: function (i) {
-                this.total += this.delay;
-                this.delay = Math.floor(this.delay * 1.05 + 5);
-                if (this.total >= this.timeout) {
-                    i(this.STATUS.ERROR);
-                    return 1;
-                }
-                return 0;
-            },
-            file: function (j, i) {
-                if (i < 0) {
-                    MathJax.Ajax.loadTimeout(j);
-                } else {
-                    MathJax.Ajax.loadComplete(j);
-                }
-            },
-            execute: function () {
-                this.hook.call(this.object, this, this.data[0], this.data[1]);
-            },
-            checkSafari2: function (i, j, k) {
-                if (i.time(k)) {
-                    return;
-                }
-                if (document.styleSheets.length > j && document.styleSheets[j].cssRules && document.styleSheets[j].cssRules.length) {
-                    k(i.STATUS.OK);
-                } else {
-                    setTimeout(i, i.delay);
-                }
-            },
-            checkLength: function (i, l, n) {
-                if (i.time(n)) {
-                    return;
-                }
-                var m = 0;
-                var j = (l.sheet || l.styleSheet);
-                try {
-                    if ((j.cssRules || j.rules || []).length > 0) {
-                        m = 1;
-                    }
-                } catch (k) {
-                    if (k.message.match(/protected variable|restricted URI/)) {
-                        m = 1;
-                    } else {
-                        if (k.message.match(/Security error/)) {
-                            m = 1;
-                        }
-                    }
-                }
-                if (m) {
-                    setTimeout(CallbackUtil.Create([n, i.STATUS.OK]), 0);
-                } else {
-                    setTimeout(i, i.delay);
-                }
-            }
-        },
-        loadComplete: function (i) {
-            i = this.fileURL(i);
-            var j = this.loading[i];
-            if (j && !j.preloaded) {
-                MathJax.Message.Clear(j.message);
-                clearTimeout(j.timeout);
-                if (j.script) {
-                    if (f.length === 0) {
-                        setTimeout(c, 0);
-                    }
-                    f.push(j.script);
-                }
-                this.loaded[i] = j.status;
-                delete this.loading[i];
-                this.addHook(i, j.callback);
-            } else {
-                if (j) {
-                    delete this.loading[i];
-                }
-                this.loaded[i] = this.STATUS.OK;
-                j = { status: this.STATUS.OK };
-            }
-            if (!this.loadHooks[i]) {
-                return null;
-            }
-            return this.loadHooks[i].Execute(j.status);
-        },
-        loadTimeout: function (i) {
-            if (this.loading[i].timeout) {
-                clearTimeout(this.loading[i].timeout);
-            }
-            this.loading[i].status = this.STATUS.ERROR;
-            this.loadError(i);
-            this.loadComplete(i);
-        },
-        loadError: function (i) {
-            MathJax.Message.Set(["LoadFailed", "File failed to load: %1", i], null, 2000);
-            MathJax.Hub.signal.Post(["file load error", i]);
-        },
-        Styles: function (k, l) {
-            var i = this.StyleString(k);
-            if (i === "") {
-                l = CallbackUtil.Create(l);
-                l();
-            } else {
-                var j = document.createElement("style");
-                j.type = "text/css";
-                this.head = h(this.head);
-                this.head.appendChild(j);
-                if (j.styleSheet && typeof (j.styleSheet.cssText) !== "undefined") {
-                    j.styleSheet.cssText = i;
-                } else {
-                    j.appendChild(document.createTextNode(i));
-                }
-                l = this.timer.create.call(this, l, j);
-            }
-            return l;
-        },
-        StyleString: function (n) {
-            if (typeof (n) === "string") {
-                return n;
-            }
-            var k = "", o, m;
-            for (o in n) {
-                if (n.hasOwnProperty(o)) {
-                    if (typeof n[o] === "string") {
-                        k += o + " {" + n[o] + "}\n";
-                    } else {
-                        if (MathJax.Object.isArray(n[o])) {
-                            for (var l = 0; l < n[o].length; l++) {
-                                m = {};
-                                m[o] = n[o][l];
-                                k += this.StyleString(m);
-                            }
-                        } else {
-                            if (o.substr(0, 6) === "@media") {
-                                k += o + " {" + this.StyleString(n[o]) + "}\n";
-                            } else {
-                                if (n[o] != null) {
-                                    m = [];
-                                    for (var j in n[o]) {
-                                        if (n[o].hasOwnProperty(j)) {
-                                            if (n[o][j] != null) {
-                                                m[m.length] = j + ": " + n[o][j];
-                                            }
-                                        }
-                                    }
-                                    k += o + " {" + m.join("; ") + "}\n";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return k;
-        }
-    }
-}
-
 function checkBrowser() {
     var mathJaxHub = MathJax.Hub;
     var k = navigator.userAgent;
@@ -3256,7 +3256,6 @@ function checkBrowser() {
         MathJax.AuthorConfig.AuthorInit();
     }
 }
-
 function loadScript() {
     var mathJaxHub = MathJax.Hub;
     var startup = mathJaxHub.Startup;
@@ -3313,7 +3312,6 @@ function loadScript() {
         ["Post", startup.signal, "End"]
     );
 }
-
 if (document.getElementById && document.childNodes && document.createElement) {
     if (!(window.MathJax && MathJax.Hub)) {
         if (window.MathJax) {
