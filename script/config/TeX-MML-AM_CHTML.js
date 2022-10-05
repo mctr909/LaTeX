@@ -937,10 +937,8 @@ MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
 MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.asciimath2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 
-var __version = "2.7.2";
-var __extension = MathJax.Extension;
-var __eventHandle = __extension.MathEvents = {
-    version: __version,
+var __eventHandle = MathJax.Extension.MathEvents = {
+    version: "2.7.2",
     safariContextMenuBug: false,
     operaPositionBug: false,
     /** @type{HTMLSpanElement} */
@@ -1017,6 +1015,74 @@ var __menuStyle = {
         }
     }
 };
+var __zoomMenuConfig = MathJax.Hub.CombineConfig("MathZoom", {
+    styles: {
+        "#MathJax_Zoom": {
+            position: "absolute",
+            "background-color": "#F0F0F0",
+            overflow: "auto",
+            display: "block",
+            "z-index": 301,
+            padding: ".5em",
+            border: "1px solid black",
+            margin: 0,
+            "font-weight": "normal",
+            "font-style": "normal",
+            "text-align": "left",
+            "text-indent": 0,
+            "text-transform": "none",
+            "line-height": "normal",
+            "letter-spacing": "normal",
+            "word-spacing": "normal",
+            "word-wrap": "normal",
+            "white-space": "nowrap",
+            "float": "none",
+            "-webkit-box-sizing": "content-box",
+            "-moz-box-sizing": "content-box",
+            "box-sizing": "content-box",
+            "box-shadow": "5px 5px 15px #AAAAAA",
+            "-webkit-box-shadow": "5px 5px 15px #AAAAAA",
+            "-moz-box-shadow": "5px 5px 15px #AAAAAA",
+            "-khtml-box-shadow": "5px 5px 15px #AAAAAA",
+            filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')"
+        },
+        "#MathJax_ZoomOverlay": {
+            position: "absolute",
+            left: 0,
+            top: 0,
+            "z-index": 300,
+            display: "inline-block",
+            width: "100%",
+            height: "100%",
+            border: 0,
+            padding: 0,
+            margin: 0,
+            "background-color": "white",
+            opacity: 0,
+            filter: "alpha(opacity=0)"
+        },
+        "#MathJax_ZoomFrame": {
+            position: "relative",
+            display: "inline-block",
+            height: 0,
+            width: 0
+        },
+        "#MathJax_ZoomEventTrap": {
+            position: "absolute",
+            left: 0,
+            top: 0,
+            "z-index": 302,
+            display: "inline-block",
+            border: 0,
+            padding: 0,
+            margin: 0,
+            "background-color": "white",
+            opacity: 0,
+            filter: "alpha(opacity=0)"
+        }
+    }
+});
+
 class Events {
     /** @type{Events} */
     static INSTANCE = null;
@@ -1086,8 +1152,8 @@ class Events {
         if (q[r]) {
             return q[r](t, s);
         }
-        if (__extension.MathZoom) {
-            return __extension.MathZoom.HandleEvent(t, r, s);
+        if (MathJax.Extension.MathZoom) {
+            return MathJax.Extension.MathZoom.HandleEvent(t, r, s);
         }
     }
     False(q) {
@@ -1304,8 +1370,8 @@ class Hover {
         }
     }
     Hover(q, u) {
-        if (__extension.MathZoom && __extension.MathZoom.Hover({}, u)) {
-            return
+        if (MathJax.Extension.MathZoom && MathJax.Extension.MathZoom.Hover({}, u)) {
+            return;
         }
         var t = Hover.INSTANCE.outJax[q.outputJax]
             , v = t.getHoverSpan(q, u)
@@ -1502,6 +1568,327 @@ class Touch {
         return Events.INSTANCE.Handler((r.touches[0] || r.touch), "ContextMenu", q)
     }
 }
+class MathZoom {
+    /** @type{MathZoom} */
+    static INSTANCE = null;
+    /**
+     * @param {Hub} pHub
+     * @param {HTML} pHtml
+     * @returns {MathZoom}
+     */
+    static GetInstance(pHub, pHtml) {
+        if (null == MathZoom.INSTANCE) {
+            MathZoom.INSTANCE = new MathZoom(pHub, pHtml);
+        }
+        return MathZoom.INSTANCE;
+    }
+    constructor(pHub, pHtml) {
+        this.hub = pHub;
+        this.html = pHtml;
+        this.version = "2.7.2";
+        this.settings = pHub.config.menuSettings;
+        this.scrollSize = 18;
+    }
+    HandleEvent(n, l, m) {
+        if (MathZoom.INSTANCE.settings.CTRL && !n.ctrlKey) {
+            return true;
+        }
+        if (MathZoom.INSTANCE.settings.ALT && !n.altKey) {
+            return true;
+        }
+        if (MathZoom.INSTANCE.settings.CMD && !n.metaKey) {
+            return true;
+        }
+        if (MathZoom.INSTANCE.settings.Shift && !n.shiftKey) {
+            return true;
+        }
+        if (!MathZoom.INSTANCE[l]) {
+            return true;
+        }
+        return MathZoom.INSTANCE[l](n, m);
+    }
+    Click(m, l) {
+        if (this.settings.zoom === "Click") {
+            return this.Zoom(m, l);
+        }
+    }
+    DblClick(m, l) {
+        if (this.settings.zoom === "Double-Click" || this.settings.zoom === "DoubleClick") {
+            return this.Zoom(m, l);
+        }
+    }
+    Hover(m, l) {
+        if (this.settings.zoom === "Hover") {
+            this.Zoom(m, l);
+            return true;
+        }
+        return false;
+    }
+    Zoom(o, u) {
+        this.Remove();
+        __eventHandle.Hover.ClearHoverTimer();
+        __eventHandle.Event.ClearSelection();
+        var s = MathJax.OutputJax[u.jaxID];
+        var p = s.getJaxFromMath(u);
+        if (p.hover) {
+            __eventHandle.Hover.UnHover(p);
+        }
+        var q = this.findContainer(u);
+        var l = Math.floor(0.85 * q.clientWidth)
+            , t = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+        if (this.getOverflow(q) !== "visible") {
+            t = Math.min(q.clientHeight, t);
+        }
+        t = Math.floor(0.85 * t);
+        var n = MathZoom.INSTANCE.html.Element("span", {
+            id: "MathJax_ZoomFrame"
+        }, [["span", {
+            id: "MathJax_ZoomOverlay",
+            onmousedown: this.Remove
+        }], ["span", {
+            id: "MathJax_Zoom",
+            onclick: this.Remove,
+            style: {
+                visibility: "hidden",
+                fontSize: this.settings.zscale
+            }
+        }, [["span", {
+            style: {
+                display: "inline-block",
+                "white-space": "nowrap"
+            }
+        }]]]]);
+        var z = n.lastChild
+            , w = z.firstChild
+            , r = n.firstChild;
+        u.parentNode.insertBefore(n, u);
+        u.parentNode.insertBefore(u, n);
+        if (w.addEventListener) {
+            w.addEventListener("mousedown", this.Remove, true);
+        }
+        var m = z.offsetWidth || z.clientWidth;
+        l -= m;
+        t -= m;
+        z.style.maxWidth = l + "px";
+        z.style.maxHeight = t + "px";
+        if (this.msieTrapEventBug) {
+            var y = MathZoom.INSTANCE.html.Element("span", {
+                id: "MathJax_ZoomEventTrap",
+                onmousedown: this.Remove
+            });
+            n.insertBefore(y, z);
+        }
+        if (this.msieZIndexBug) {
+            var v = MathZoom.INSTANCE.html.addElement(document.body, "img", {
+                src: "about:blank",
+                id: "MathJax_ZoomTracker",
+                width: 0,
+                height: 0,
+                style: {
+                    width: 0,
+                    height: 0,
+                    position: "relative"
+                }
+            });
+            n.style.position = "relative";
+            n.style.zIndex = __zoomMenuConfig.styles["#MathJax_ZoomOverlay"]["z-index"];
+            n = v;
+        }
+        var x = s.Zoom(p, w, u, l, t);
+        if (this.msiePositionBug) {
+            if (this.msieSizeBug) {
+                z.style.height = x.zH + "px";
+                z.style.width = x.zW + "px";
+            }
+            if (z.offsetHeight > t) {
+                z.style.height = t + "px";
+                z.style.width = (x.zW + this.scrollSize) + "px";
+            }
+            if (z.offsetWidth > l) {
+                z.style.width = l + "px";
+                z.style.height = (x.zH + this.scrollSize) + "px";
+            }
+        }
+        if (this.operaPositionBug) {
+            z.style.width = Math.min(l, x.zW) + "px";
+        }
+        if (z.offsetWidth > m && z.offsetWidth - m < l && z.offsetHeight - m < t) {
+            z.style.overflow = "visible";
+        }
+        this.Position(z, x);
+        if (this.msieTrapEventBug) {
+            y.style.height = z.clientHeight + "px";
+            y.style.width = z.clientWidth + "px";
+            y.style.left = (parseFloat(z.style.left) + z.clientLeft) + "px";
+            y.style.top = (parseFloat(z.style.top) + z.clientTop) + "px";
+        }
+        z.style.visibility = "";
+        if (this.settings.zoom === "Hover") {
+            r.onmouseover = this.Remove;
+        }
+        if (window.addEventListener) {
+            addEventListener("resize", this.Resize, false);
+        } else {
+            if (window.attachEvent) {
+                attachEvent("onresize", this.Resize);
+            } else {
+                this.onresize = window.onresize;
+                window.onresize = this.Resize;
+            }
+        }
+        MathZoom.INSTANCE.hub.signal.Post(["math zoomed", p]);
+        return __eventHandle.Event.False(o);
+    }
+    Position(p, r) {
+        p.style.display = "none";
+        var q = this.Resize()
+            , m = q.x
+            , s = q.y
+            , l = r.mW;
+        p.style.display = "";
+        var o = -l - Math.floor((p.offsetWidth - l) / 2)
+            , n = r.Y;
+        p.style.left = Math.max(o, 10 - m) + "px";
+        p.style.top = Math.max(n, 10 - s) + "px";
+        if (!MathZoom.INSTANCE.msiePositionBug) {
+            MathZoom.INSTANCE.SetWH();
+        }
+    }
+    Resize(m) {
+        if (MathZoom.INSTANCE.onresize) {
+            MathZoom.INSTANCE.onresize(m);
+        }
+        var q = document.getElementById("MathJax_ZoomFrame")
+            , l = document.getElementById("MathJax_ZoomOverlay");
+        var o = MathZoom.INSTANCE.getXY(q)
+            , n = MathZoom.INSTANCE.findContainer(q);
+        if (MathZoom.INSTANCE.getOverflow(n) !== "visible") {
+            l.scroll_parent = n;
+            var p = MathZoom.INSTANCE.getXY(n);
+            o.x -= p.x;
+            o.y -= p.y;
+            p = MathZoom.INSTANCE.getBorder(n);
+            o.x -= p.x;
+            o.y -= p.y
+        }
+        l.style.left = (-o.x) + "px";
+        l.style.top = (-o.y) + "px";
+        if (MathZoom.INSTANCE.msiePositionBug) {
+            setTimeout(MathZoom.INSTANCE.SetWH, 0);
+        } else {
+            MathZoom.INSTANCE.SetWH();
+        }
+        return o;
+    }
+    SetWH() {
+        var l = document.getElementById("MathJax_ZoomOverlay");
+        if (!l) {
+            return;
+        }
+        l.style.display = "none";
+        var m = l.scroll_parent || document.documentElement || document.body;
+        l.style.width = m.scrollWidth + "px";
+        l.style.height = Math.max(m.clientHeight, m.scrollHeight) + "px";
+        l.style.display = "";
+    }
+    findContainer(l) {
+        l = l.parentNode;
+        while (l.parentNode && l !== document.body && MathZoom.INSTANCE.getOverflow(l) === "visible") {
+            l = l.parentNode;
+        }
+        return l;
+    }
+    getOverflow(l) {
+        if (window.getComputedStyle) {
+            return getComputedStyle(l).overflow;
+        } else {
+            return (l.currentStyle || { overflow: "visible" }).overflow;
+        }
+    }
+    getBorder(o) {
+        var m = {
+            thin: 1,
+            medium: 2,
+            thick: 3
+        };
+        var n = (window.getComputedStyle ? getComputedStyle(o) : (o.currentStyle || {
+            borderLeftWidth: 0,
+            borderTopWidth: 0
+        }));
+        var l = n.borderLeftWidth, p = n.borderTopWidth;
+        if (m[l]) {
+            l = m[l];
+        } else {
+            l = parseInt(l);
+        }
+        if (m[p]) {
+            p = m[p];
+        } else {
+            p = parseInt(p);
+        }
+        return { x: l, y: p };
+    }
+    getXY(o) {
+        var l = 0, n = 0, m;
+        m = o;
+        while (m.offsetParent) {
+            l += m.offsetLeft;
+            m = m.offsetParent;
+        }
+        if (MathZoom.INSTANCE.operaPositionBug) {
+            o.style.border = "1px solid";
+        }
+        m = o;
+        while (m.offsetParent) {
+            n += m.offsetTop;
+            m = m.offsetParent;
+        }
+        if (MathZoom.INSTANCE.operaPositionBug) {
+            o.style.border = "";
+        }
+        return { x: l, y: n };
+    }
+    Remove(n) {
+        var p = document.getElementById("MathJax_ZoomFrame");
+        if (p) {
+            var o = MathJax.OutputJax[p.previousSibling.jaxID];
+            var l = o.getJaxFromMath(p.previousSibling);
+            MathZoom.INSTANCE.hub.signal.Post(["math unzoomed", l]);
+            p.parentNode.removeChild(p);
+            p = document.getElementById("MathJax_ZoomTracker");
+            if (p) {
+                p.parentNode.removeChild(p);
+            }
+            if (MathZoom.INSTANCE.operaRefreshBug) {
+                var m = MathZoom.INSTANCE.html.addElement(document.body, "div", {
+                    style: {
+                        position: "fixed",
+                        left: 0,
+                        top: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "white",
+                        opacity: 0
+                    },
+                    id: "MathJax_OperaDiv"
+                });
+                document.body.removeChild(m);
+            }
+            if (window.removeEventListener) {
+                removeEventListener("resize", MathZoom.INSTANCE.Resize, false);
+            } else {
+                if (window.detachEvent) {
+                    detachEvent("onresize", MathZoom.INSTANCE.Resize);
+                } else {
+                    window.onresize = MathZoom.INSTANCE.onresize;
+                    delete MathZoom.INSTANCE.onresize;
+                }
+            }
+        }
+        return __eventHandle.Event.False(n);
+    }
+}
+
 (function (pHub, pHtml, pAjax, pCallback, pLoc, pOutJax, pInJax) {
     __eventHandle.Event = Events.GetInstance(pHub, pLoc, pAjax, pInJax, pOutJax);
     __eventHandle.Hover = Hover.GetInstance(pHub, pOutJax, pHtml, pCallback);
@@ -1540,430 +1927,27 @@ class Touch {
     );
 }
 )(MathJax.Hub, MathJax.HTML, MathJax.Ajax, MathJax.Callback, MathJax.Localization, MathJax.OutputJax, MathJax.InputJax);
-
 (function (pHub, pHtml, pAjax, c, j) {
-    var version = "2.7.2";
-    var zoomMenuConfig = pHub.CombineConfig("MathZoom", {
-        styles: {
-            "#MathJax_Zoom": {
-                position: "absolute",
-                "background-color": "#F0F0F0",
-                overflow: "auto",
-                display: "block",
-                "z-index": 301,
-                padding: ".5em",
-                border: "1px solid black",
-                margin: 0,
-                "font-weight": "normal",
-                "font-style": "normal",
-                "text-align": "left",
-                "text-indent": 0,
-                "text-transform": "none",
-                "line-height": "normal",
-                "letter-spacing": "normal",
-                "word-spacing": "normal",
-                "word-wrap": "normal",
-                "white-space": "nowrap",
-                "float": "none",
-                "-webkit-box-sizing": "content-box",
-                "-moz-box-sizing": "content-box",
-                "box-sizing": "content-box",
-                "box-shadow": "5px 5px 15px #AAAAAA",
-                "-webkit-box-shadow": "5px 5px 15px #AAAAAA",
-                "-moz-box-shadow": "5px 5px 15px #AAAAAA",
-                "-khtml-box-shadow": "5px 5px 15px #AAAAAA",
-                filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')"
-            },
-            "#MathJax_ZoomOverlay": {
-                position: "absolute",
-                left: 0,
-                top: 0,
-                "z-index": 300,
-                display: "inline-block",
-                width: "100%",
-                height: "100%",
-                border: 0,
-                padding: 0,
-                margin: 0,
-                "background-color": "white",
-                opacity: 0,
-                filter: "alpha(opacity=0)"
-            },
-            "#MathJax_ZoomFrame": {
-                position: "relative",
-                display: "inline-block",
-                height: 0,
-                width: 0
-            },
-            "#MathJax_ZoomEventTrap": {
-                position: "absolute",
-                left: 0,
-                top: 0,
-                "z-index": 302,
-                display: "inline-block",
-                border: 0,
-                padding: 0,
-                margin: 0,
-                "background-color": "white",
-                opacity: 0,
-                filter: "alpha(opacity=0)"
-            }
-        }
-    });
-    /** @type{Hover} */
-    var __hover = null;
-    /** @type{Events} */
-    var __event = null;
-    MathJax.Hub.Register.StartupHook("MathEvents Ready", function () {
-        __event = MathJax.Extension.MathEvents.Event;
-        __hover = MathJax.Extension.MathEvents.Hover;
-    });
-    var __mathZoom = MathJax.Extension.MathZoom = {
-        version: version,
-        settings: pHub.config.menuSettings,
-        scrollSize: 18,
-        HandleEvent: function (n, l, m) {
-            if (__mathZoom.settings.CTRL && !n.ctrlKey) {
-                return true;
-            }
-            if (__mathZoom.settings.ALT && !n.altKey) {
-                return true;
-            }
-            if (__mathZoom.settings.CMD && !n.metaKey) {
-                return true;
-            }
-            if (__mathZoom.settings.Shift && !n.shiftKey) {
-                return true;
-            }
-            if (!__mathZoom[l]) {
-                return true;
-            }
-            return __mathZoom[l](n, m);
-        },
-        Click: function (m, l) {
-            if (this.settings.zoom === "Click") {
-                return this.Zoom(m, l);
-            }
-        },
-        DblClick: function (m, l) {
-            if (this.settings.zoom === "Double-Click" || this.settings.zoom === "DoubleClick") {
-                return this.Zoom(m, l);
-            }
-        },
-        Hover: function (m, l) {
-            if (this.settings.zoom === "Hover") {
-                this.Zoom(m, l);
-                return true;
-            }
-            return false;
-        },
-        Zoom: function (o, u) {
-            this.Remove();
-            __hover.ClearHoverTimer();
-            __event.ClearSelection();
-            var s = MathJax.OutputJax[u.jaxID];
-            var p = s.getJaxFromMath(u);
-            if (p.hover) {
-                __hover.UnHover(p);
-            }
-            var q = this.findContainer(u);
-            var l = Math.floor(0.85 * q.clientWidth)
-                , t = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
-            if (this.getOverflow(q) !== "visible") {
-                t = Math.min(q.clientHeight, t);
-            }
-            t = Math.floor(0.85 * t);
-            var n = pHtml.Element("span", {
-                id: "MathJax_ZoomFrame"
-            }, [["span", {
-                id: "MathJax_ZoomOverlay",
-                onmousedown: this.Remove
-            }], ["span", {
-                id: "MathJax_Zoom",
-                onclick: this.Remove,
-                style: {
-                    visibility: "hidden",
-                    fontSize: this.settings.zscale
-                }
-            }, [["span", {
-                style: {
-                    display: "inline-block",
-                    "white-space": "nowrap"
-                }
-            }]]]]);
-            var z = n.lastChild
-                , w = z.firstChild
-                , r = n.firstChild;
-            u.parentNode.insertBefore(n, u);
-            u.parentNode.insertBefore(u, n);
-            if (w.addEventListener) {
-                w.addEventListener("mousedown", this.Remove, true);
-            }
-            var m = z.offsetWidth || z.clientWidth;
-            l -= m;
-            t -= m;
-            z.style.maxWidth = l + "px";
-            z.style.maxHeight = t + "px";
-            if (this.msieTrapEventBug) {
-                var y = pHtml.Element("span", {
-                    id: "MathJax_ZoomEventTrap",
-                    onmousedown: this.Remove
-                });
-                n.insertBefore(y, z);
-            }
-            if (this.msieZIndexBug) {
-                var v = pHtml.addElement(document.body, "img", {
-                    src: "about:blank",
-                    id: "MathJax_ZoomTracker",
-                    width: 0,
-                    height: 0,
-                    style: {
-                        width: 0,
-                        height: 0,
-                        position: "relative"
-                    }
-                });
-                n.style.position = "relative";
-                n.style.zIndex = zoomMenuConfig.styles["#MathJax_ZoomOverlay"]["z-index"];
-                n = v;
-            }
-            var x = s.Zoom(p, w, u, l, t);
-            if (this.msiePositionBug) {
-                if (this.msieSizeBug) {
-                    z.style.height = x.zH + "px";
-                    z.style.width = x.zW + "px";
-                }
-                if (z.offsetHeight > t) {
-                    z.style.height = t + "px";
-                    z.style.width = (x.zW + this.scrollSize) + "px";
-                }
-                if (z.offsetWidth > l) {
-                    z.style.width = l + "px";
-                    z.style.height = (x.zH + this.scrollSize) + "px";
-                }
-            }
-            if (this.operaPositionBug) {
-                z.style.width = Math.min(l, x.zW) + "px";
-            }
-            if (z.offsetWidth > m && z.offsetWidth - m < l && z.offsetHeight - m < t) {
-                z.style.overflow = "visible";
-            }
-            this.Position(z, x);
-            if (this.msieTrapEventBug) {
-                y.style.height = z.clientHeight + "px";
-                y.style.width = z.clientWidth + "px";
-                y.style.left = (parseFloat(z.style.left) + z.clientLeft) + "px";
-                y.style.top = (parseFloat(z.style.top) + z.clientTop) + "px";
-            }
-            z.style.visibility = "";
-            if (this.settings.zoom === "Hover") {
-                r.onmouseover = this.Remove;
-            }
-            if (window.addEventListener) {
-                addEventListener("resize", this.Resize, false);
-            } else {
-                if (window.attachEvent) {
-                    attachEvent("onresize", this.Resize);
-                } else {
-                    this.onresize = window.onresize;
-                    window.onresize = this.Resize;
-                }
-            }
-            pHub.signal.Post(["math zoomed", p]);
-            return __event.False(o);
-        },
-        Position: function (p, r) {
-            p.style.display = "none";
-            var q = this.Resize()
-                , m = q.x
-                , s = q.y
-                , l = r.mW;
-            p.style.display = "";
-            var o = -l - Math.floor((p.offsetWidth - l) / 2)
-                , n = r.Y;
-            p.style.left = Math.max(o, 10 - m) + "px";
-            p.style.top = Math.max(n, 10 - s) + "px";
-            if (!__mathZoom.msiePositionBug) {
-                __mathZoom.SetWH();
-            }
-        },
-        Resize: function (m) {
-            if (__mathZoom.onresize) {
-                __mathZoom.onresize(m);
-            }
-            var q = document.getElementById("MathJax_ZoomFrame")
-                , l = document.getElementById("MathJax_ZoomOverlay");
-            var o = __mathZoom.getXY(q)
-                , n = __mathZoom.findContainer(q);
-            if (__mathZoom.getOverflow(n) !== "visible") {
-                l.scroll_parent = n;
-                var p = __mathZoom.getXY(n);
-                o.x -= p.x;
-                o.y -= p.y;
-                p = __mathZoom.getBorder(n);
-                o.x -= p.x;
-                o.y -= p.y
-            }
-            l.style.left = (-o.x) + "px";
-            l.style.top = (-o.y) + "px";
-            if (__mathZoom.msiePositionBug) {
-                setTimeout(__mathZoom.SetWH, 0);
-            } else {
-                __mathZoom.SetWH();
-            }
-            return o;
-        },
-        SetWH: function () {
-            var l = document.getElementById("MathJax_ZoomOverlay");
-            if (!l) {
-                return;
-            }
-            l.style.display = "none";
-            var m = l.scroll_parent || document.documentElement || document.body;
-            l.style.width = m.scrollWidth + "px";
-            l.style.height = Math.max(m.clientHeight, m.scrollHeight) + "px";
-            l.style.display = "";
-        },
-        findContainer: function (l) {
-            l = l.parentNode;
-            while (l.parentNode && l !== document.body && __mathZoom.getOverflow(l) === "visible") {
-                l = l.parentNode;
-            }
-            return l;
-        },
-        getOverflow: (window.getComputedStyle ? function (l) {
-            return getComputedStyle(l).overflow
-        }
-            : function (l) {
-                return (l.currentStyle || {
-                    overflow: "visible"
-                }).overflow
-            }
-        ),
-        getBorder: function (o) {
-            var m = {
-                thin: 1,
-                medium: 2,
-                thick: 3
-            };
-            var n = (window.getComputedStyle ? getComputedStyle(o) : (o.currentStyle || {
-                borderLeftWidth: 0,
-                borderTopWidth: 0
-            }));
-            var l = n.borderLeftWidth, p = n.borderTopWidth;
-            if (m[l]) {
-                l = m[l];
-            } else {
-                l = parseInt(l);
-            }
-            if (m[p]) {
-                p = m[p];
-            } else {
-                p = parseInt(p);
-            }
-            return { x: l, y: p };
-        },
-        getXY: function (o) {
-            var l = 0, n = 0, m;
-            m = o;
-            while (m.offsetParent) {
-                l += m.offsetLeft;
-                m = m.offsetParent;
-            }
-            if (__mathZoom.operaPositionBug) {
-                o.style.border = "1px solid";
-            }
-            m = o;
-            while (m.offsetParent) {
-                n += m.offsetTop;
-                m = m.offsetParent;
-            }
-            if (__mathZoom.operaPositionBug) {
-                o.style.border = "";
-            }
-            return { x: l, y: n };
-        },
-        Remove: function (n) {
-            var p = document.getElementById("MathJax_ZoomFrame");
-            if (p) {
-                var o = MathJax.OutputJax[p.previousSibling.jaxID];
-                var l = o.getJaxFromMath(p.previousSibling);
-                pHub.signal.Post(["math unzoomed", l]);
-                p.parentNode.removeChild(p);
-                p = document.getElementById("MathJax_ZoomTracker");
-                if (p) {
-                    p.parentNode.removeChild(p);
-                }
-                if (__mathZoom.operaRefreshBug) {
-                    var m = pHtml.addElement(document.body, "div", {
-                        style: {
-                            position: "fixed",
-                            left: 0,
-                            top: 0,
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: "white",
-                            opacity: 0
-                        },
-                        id: "MathJax_OperaDiv"
-                    });
-                    document.body.removeChild(m);
-                }
-                if (window.removeEventListener) {
-                    removeEventListener("resize", __mathZoom.Resize, false);
-                } else {
-                    if (window.detachEvent) {
-                        detachEvent("onresize", __mathZoom.Resize);
-                    } else {
-                        window.onresize = __mathZoom.onresize;
-                        delete __mathZoom.onresize;
-                    }
-                }
-            }
-            return __event.False(n);
-        }
-    };
+    var mathZoom = MathJax.Extension.MathZoom = MathZoom.GetInstance(pHub, pHtml);
     pHub.Browser.Select({
-        MSIE: function (l) {
-            var n = (document.documentMode || 0);
-            var m = (n >= 9);
-            __mathZoom.msiePositionBug = !m;
-            __mathZoom.msieSizeBug = l.versionAtLeast("7.0") && (!document.documentMode || n === 7 || n === 8);
-            __mathZoom.msieZIndexBug = (n <= 7);
-            __mathZoom.msieInlineBlockAlignBug = (n <= 7);
-            __mathZoom.msieTrapEventBug = !window.addEventListener;
-            if (document.compatMode === "BackCompat") {
-                __mathZoom.scrollSize = 52
-            }
-            if (m) {
-                delete zoomMenuConfig.styles["#MathJax_Zoom"].filter
-            }
-        },
         Opera: function (l) {
-            __mathZoom.operaPositionBug = true;
-            __mathZoom.operaRefreshBug = true
+            mathZoom.operaPositionBug = true;
+            mathZoom.operaRefreshBug = true
         }
     });
-    __mathZoom.topImg = (__mathZoom.msieInlineBlockAlignBug ? pHtml.Element("img", {
-        style: {
-            width: 0,
-            height: 0,
-            position: "relative"
-        },
-        src: "about:blank"
-    }) : pHtml.Element("span", {
+    mathZoom.topImg = pHtml.Element("span", {
         style: {
             width: 0,
             height: 0,
             display: "inline-block"
         }
-    }));
-    if (__mathZoom.operaPositionBug || __mathZoom.msieTopBug) {
-        __mathZoom.topImg.style.border = "1px solid"
+    });
+    if (mathZoom.operaPositionBug) {
+        mathZoom.topImg.style.border = "1px solid";
     }
     CallbackUtil.Queue(
         ["StartupHook", MathJax.Hub.Register, "Begin Styles", {}], 
-        ["Styles", pAjax, zoomMenuConfig.styles], 
+        ["Styles", pAjax, __zoomMenuConfig.styles], 
         ["Post", pHub.Startup.signal, "MathZoom Ready"], 
         ["loadComplete", pAjax, "[MathJax]/extensions/MathZoom.js"]
     );
