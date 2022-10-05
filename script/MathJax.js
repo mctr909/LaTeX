@@ -1,20 +1,23 @@
 const NAME_TAG = "MathJax";
-var MathJax = {
-    /** @type{Ajax} */
-    Ajax: null,
-    /** @type{HTML} */
-    HTML: null,
-    /** @type{Localization} */
-    Localization: null,
-    /** @type{Message} */
-    Message: null,
-    /** @type{Hub} */
-    Hub: null,
-    Extension: {},
-    InputJax: null,
-    OutputJax: null,
-    ElementJax: null
-};
+class MATHJAX {
+    constructor() {
+        /** @type{Ajax} */
+        this.Ajax = null;
+        /** @type{HTML} */
+        this.HTML = null;
+        /** @type{Localization} */
+        this.Localization = null;
+        /** @type{Message} */
+        this.Message = null;
+        /** @type{Hub} */
+        this.Hub = null;
+        this.Extension = {};
+        this.InputJax = null;
+        this.OutputJax = null;
+        this.ElementJax = null;
+    }
+}
+var MathJax = new MATHJAX();
 
 class HTML {
     constructor() {
