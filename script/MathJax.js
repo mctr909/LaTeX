@@ -869,6 +869,28 @@ class Hooks {
         this.remove = [];
     }
 }
+class MenuSettings {
+    constructor() {
+        this.zoom = "None";
+        this.CTRL = false;
+        this.ALT = false;
+        this.CMD = false;
+        this.Shift = false;
+        this.discoverable = false;
+        this.zscale = "200%";
+        this.renderer = null;
+        this.font = "Auto";
+        this.context = "MathJax";
+        this.locale = null;
+        this.mpContext = false;
+        this.mpMouse = false;
+        this.texHints = true;
+        this.FastPreview = null;
+        this.assistiveMML = null;
+        this.inTabOrder = true;
+        this.semantics = false;
+    }
+}
 class HubConfig {
     constructor() {
         this.root = "";
@@ -894,26 +916,8 @@ class HubConfig {
         this.positionToHash = true;
         this.showMathMenu = true;
         this.showMathMenuMSIE = true;
-        this.menuSettings = {
-            zoom: "None",
-            CTRL: false,
-            ALT: false,
-            CMD: false,
-            Shift: false,
-            discoverable: false,
-            zscale: "200%",
-            renderer: null,
-            font: "Auto",
-            context: "MathJax",
-            locale: null,
-            mpContext: false,
-            mpMouse: false,
-            texHints: true,
-            FastPreview: null,
-            assistiveMML: null,
-            inTabOrder: true,
-            semantics: false
-        };
+        /** @type{MenuSettings} */
+        this.menuSettings = new MenuSettings();
         this.errorSettings = {
             message: ["[", ["MathProcessingError", "Math Processing Error"], "]"],
             style: {
