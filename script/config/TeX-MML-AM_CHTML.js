@@ -27,9 +27,7 @@ MathJax.Ajax.Preloading(
     "[MathJax]/extensions/a11y/accessibility-menu.js"
 );
 
-MathJax.Hub.Config({
-    extensions: ['[a11y]/accessibility-menu.js']
-});
+MathJax.Hub.Config({ extensions: ['[a11y]/accessibility-menu.js'] });
 
 MathJax.InputJax.TeX = MathJax.InputJax({
     id: "TeX",
@@ -62,34 +60,6 @@ MathJax.InputJax.TeX = MathJax.InputJax({
 MathJax.InputJax.TeX.Register("math/tex");
 MathJax.InputJax.TeX.loadComplete("config.js");
 
-MathJax.InputJax.MathML = MathJax.InputJax({
-    id: "MathML",
-    version: "2.7.2",
-    directory: MathJax.InputJax.directory + "/MathML",
-    extensionDir: MathJax.InputJax.extensionDir + "/MathML",
-    entityDir: MathJax.InputJax.directory + "/MathML/entities",
-    config: {
-        useMathMLspacing: false
-    }
-});
-MathJax.InputJax.MathML.Register("math/mml");
-MathJax.InputJax.MathML.loadComplete("config.js");
-
-MathJax.InputJax.AsciiMath = MathJax.InputJax({
-    id: "AsciiMath",
-    version: "2.7.2",
-    directory: MathJax.InputJax.directory + "/AsciiMath",
-    extensionDir: MathJax.InputJax.extensionDir + "/AsciiMath",
-    config: {
-        fixphi: true,
-        useMathMLspacing: true,
-        displaystyle: true,
-        decimalsign: "."
-    }
-});
-MathJax.InputJax.AsciiMath.Register("math/asciimath");
-MathJax.InputJax.AsciiMath.loadComplete("config.js");
-
 MathJax.OutputJax.CommonHTML = MathJax.OutputJax({
     id: "CommonHTML",
     version: "2.7.2",
@@ -117,27 +87,6 @@ if (!MathJax.Hub.config.delayJaxRegistration) {
     MathJax.OutputJax.CommonHTML.Register("jax/mml")
 }
 MathJax.OutputJax.CommonHTML.loadComplete("config.js");
-
-MathJax.OutputJax.PreviewHTML = MathJax.OutputJax({
-    id: "PreviewHTML",
-    version: "2.7.2",
-    directory: MathJax.OutputJax.directory + "/PreviewHTML",
-    extensionDir: MathJax.OutputJax.extensionDir + "/PreviewHTML",
-    noFastPreview: true,
-    config: {
-        scale: 100,
-        minScaleAdjust: 50,
-        mtextFontInherit: false,
-        linebreaks: {
-            automatic: false,
-            width: "container"
-        }
-    }
-});
-if (!MathJax.Hub.config.delayJaxRegistration) {
-    MathJax.OutputJax.PreviewHTML.Register("jax/mml")
-}
-MathJax.OutputJax.PreviewHTML.loadComplete("config.js");
 
 class Tex2Jax {
     constructor() {
@@ -340,7 +289,7 @@ class Tex2Jax {
                         c = [d.substr(1).replace(/\\\\/g, "\\"), "$"];
                         g = 0;
                     }
-                    c = MathJax.HTML.Element("span", null, c);
+                    c = MathJax.HTML.ElementSpan(null, c);
                     var e = MathJax.HTML.TextNode(b.nodeValue.substr(0, a.index));
                     b.nodeValue = b.nodeValue.substr(a.index + a[0].length - g);
                     b.parentNode.insertBefore(c, b);
@@ -441,7 +390,7 @@ class Tex2Jax {
             c = [this.filterPreview(a)];
         }
         if (c) {
-            c = MathJax.HTML.Element("span", {
+            c = MathJax.HTML.ElementSpan({
                 className: b
             }, c);
             this.insertNode(c);
@@ -458,523 +407,11 @@ class Tex2Jax {
         return a;
     }
 }
-class Mml2Jax {
-    constructor() {
-        this.version = "2.7.2";
-        this.config = {
-            preview: "mathml"
-        };
-        this.MMLnamespace = "http://www.w3.org/1998/Math/MathML";
-    }
-    PreProcess(e) {
-        if (!this.configured) {
-            this.config = MathJax.Hub.CombineConfig("mml2jax", this.config);
-            if (this.config.Augment) {
-                MathJax.Hub.Insert(this, this.config.Augment);
-            }
-            this.InitBrowser();
-            this.configured = true;
-        }
-        if (typeof (e) === "string") {
-            e = document.getElementById(e);
-        }
-        if (!e) {
-            e = document.body;
-        }
-        var h = [];
-        this.PushMathElements(h, e, "math");
-        this.PushMathElements(h, e, "math", this.MMLnamespace);
-        var d, b;
-        if (typeof (document.namespaces) !== "undefined") {
-            try {
-                for (d = 0,
-                    b = document.namespaces.length; d < b; d++) {
-                    var f = document.namespaces[d];
-                    if (f.urn === this.MMLnamespace) {
-                        this.PushMathElements(h, e, f.name + ":math");
-                    }
-                }
-            } catch (g) { }
-        } else {
-            var c = document.getElementsByTagName("html")[0];
-            if (c) {
-                for (d = 0,
-                    b = c.attributes.length; d < b; d++) {
-                    var a = c.attributes[d];
-                    if (a.nodeName.substr(0, 6) === "xmlns:" && a.nodeValue === this.MMLnamespace) {
-                        this.PushMathElements(h, e, a.nodeName.substr(6) + ":math");
-                    }
-                }
-            }
-        }
-        this.ProcessMathArray(h);
-    }
-    PushMathElements(f, d, a, c) {
-        var h, g = MathJax.Hub.config.preRemoveClass;
-        if (c) {
-            if (!d.getElementsByTagNameNS) {
-                return;
-            }
-            h = d.getElementsByTagNameNS(c, a);
-        } else {
-            h = d.getElementsByTagName(a);
-        }
-        for (var e = 0, b = h.length; e < b; e++) {
-            var j = h[e].parentNode;
-            if (j && j.className !== g && !j.isMathJax && !h[e].prefix === !c) {
-                f.push(h[e]);
-            }
-        }
-    }
-    ProcessMathArray(c) {
-        var b, a = c.length;
-        if (a) {
-            if (this.MathTagBug) {
-                for (b = 0; b < a; b++) {
-                    if (c[b].nodeName === "MATH") {
-                        this.ProcessMathFlattened(c[b]);
-                    } else {
-                        this.ProcessMath(c[b]);
-                    }
-                }
-            } else {
-                for (b = 0; b < a; b++) {
-                    this.ProcessMath(c[b]);
-                }
-            }
-        }
-    }
-    ProcessMath(e) {
-        var d = e.parentNode;
-        if (!d || d.className === MathJax.Hub.config.preRemoveClass) {
-            return;
-        }
-        var a = document.createElement("script");
-        a.type = "math/mml";
-        d.insertBefore(a, e);
-        if (this.AttributeBug) {
-            var b = this.OuterHTML(e);
-            if (this.CleanupHTML) {
-                b = b.replace(/<\?import .*?>/i, "").replace(/<\?xml:namespace .*?\/>/i, "");
-                b = b.replace(/&nbsp;/g, "&#xA0;");
-            }
-            MathJax.HTML.setScript(a, b);
-            d.removeChild(e);
-        } else {
-            var c = MathJax.HTML.Element("span");
-            c.appendChild(e);
-            MathJax.HTML.setScript(a, c.innerHTML);
-        }
-        if (this.config.preview !== "none") {
-            this.createPreview(e, a);
-        }
-    }
-    ProcessMathFlattened(f) {
-        var d = f.parentNode;
-        if (!d || d.className === MathJax.Hub.config.preRemoveClass) {
-            return;
-        }
-        var b = document.createElement("script");
-        b.type = "math/mml";
-        d.insertBefore(b, f);
-        var c = "", e, a = f;
-        while (f && f.nodeName !== "/MATH") {
-            e = f;
-            f = f.nextSibling;
-            c += this.NodeHTML(e);
-            e.parentNode.removeChild(e);
-        }
-        if (f && f.nodeName === "/MATH") {
-            f.parentNode.removeChild(f);
-        }
-        b.text = c + "</math>";
-        if (this.config.preview !== "none") {
-            this.createPreview(a, b);
-        }
-    }
-    NodeHTML(e) {
-        var c, b, a;
-        if (e.nodeName === "#text") {
-            c = this.quoteHTML(e.nodeValue);
-        } else {
-            if (e.nodeName === "#comment") {
-                c = "<!--" + e.nodeValue + "-->";
-            } else {
-                c = "<" + e.nodeName.toLowerCase();
-                for (b = 0,
-                    a = e.attributes.length; b < a; b++) {
-                    var d = e.attributes[b];
-                    if (d.specified && d.nodeName.substr(0, 10) !== "_moz-math-") {
-                        c += " " + d.nodeName.toLowerCase().replace(/xmlns:xmlns/, "xmlns") + "=";
-                        var f = d.nodeValue;
-                        if (f == null && d.nodeName === "style" && e.style) {
-                            f = e.style.cssText;
-                        }
-                        c += '"' + this.quoteHTML(f) + '"';
-                    }
-                }
-                c += ">";
-                if (e.outerHTML != null && e.outerHTML.match(/(.<\/[A-Z]+>|\/>)$/)) {
-                    for (b = 0,
-                        a = e.childNodes.length; b < a; b++) {
-                        c += this.OuterHTML(e.childNodes[b]);
-                    }
-                    c += "</" + e.nodeName.toLowerCase() + ">";
-                }
-            }
-        }
-        return c;
-    }
-    OuterHTML(d) {
-        if (d.nodeName.charAt(0) === "#") {
-            return this.NodeHTML(d);
-        }
-        if (!this.AttributeBug) {
-            return d.outerHTML;
-        }
-        var c = this.NodeHTML(d);
-        for (var b = 0, a = d.childNodes.length; b < a; b++) {
-            c += this.OuterHTML(d.childNodes[b]);
-        }
-        c += "</" + d.nodeName.toLowerCase() + ">";
-        return c;
-    }
-    quoteHTML(a) {
-        if (a == null) {
-            a = "";
-        }
-        return a.replace(/&/g, "&#x26;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
-    }
-    createPreview(g, f) {
-        var e = this.config.preview;
-        if (e === "none") {
-            return;
-        }
-        var i = false;
-        var c = MathJax.Hub.config.preRemoveClass;
-        if ((f.previousSibling || {}).className === c) {
-            return;
-        }
-        if (e === "mathml") {
-            i = true;
-            if (this.MathTagBug) {
-                e = "alttext";
-            } else {
-                e = g.cloneNode(true);
-            }
-        }
-        if (e === "alttext" || e === "altimg") {
-            i = true;
-            var d = this.filterPreview(g.getAttribute("alttext"));
-            if (e === "alttext") {
-                if (d != null) {
-                    e = MathJax.HTML.TextNode(d);
-                } else {
-                    e = null;
-                }
-            } else {
-                var a = g.getAttribute("altimg");
-                if (a != null) {
-                    var b = {
-                        width: g.getAttribute("altimg-width"),
-                        height: g.getAttribute("altimg-height")
-                    };
-                    e = MathJax.HTML.Element("img", {
-                        src: a,
-                        alt: d,
-                        style: b
-                    });
-                } else {
-                    e = null;
-                }
-            }
-        }
-        if (e) {
-            var h;
-            if (i) {
-                h = MathJax.HTML.Element("span", {
-                    className: c
-                });
-                h.appendChild(e);
-            } else {
-                h = MathJax.HTML.Element("span", {
-                    className: c
-                }, e);
-            }
-            f.parentNode.insertBefore(h, f);
-        }
-    }
-    filterPreview(a) {
-        return a;
-    }
-    InitBrowser() {
-        var b = MathJax.HTML.Element("span", {
-            id: "<",
-            className: "mathjax",
-            innerHTML: "<math><mi>x</mi><mspace /></math>"
-        });
-        var a = b.outerHTML || "";
-        this.AttributeBug = a !== "" && !(a.match(/id="&lt;"/) && a.match(/class="mathjax"/) && a.match(/<\/math>/));
-        this.MathTagBug = b.childNodes.length > 1;
-        this.CleanupHTML = MathJax.Hub.Browser.isMSIE;
-    }
-}
-class Asciimath2Jax {
-    constructor() {
-        this.version = "2.7.2";
-        this.config = {
-            delimiters: [["`", "`"]],
-            skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "annotation", "annotation-xml"],
-            ignoreClass: "asciimath2jax_ignore",
-            processClass: "asciimath2jax_process",
-            preview: "AsciiMath"
-        };
-        this.ignoreTags = {
-            br: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9 ? "\n" : " "),
-            wbr: "",
-            "#comment": ""
-        };
-    }
-    PreProcess(a) {
-        if (!this.configured) {
-            this.config = MathJax.Hub.CombineConfig("asciimath2jax", this.config);
-            if (this.config.Augment) {
-                MathJax.Hub.Insert(this, this.config.Augment);
-            }
-            this.configured = true;
-        }
-        if (typeof (a) === "string") {
-            a = document.getElementById(a);
-        }
-        if (!a) {
-            a = document.body;
-        }
-        if (this.createPatterns()) {
-            this.scanElement(a, a.nextSibling);
-        }
-    }
-    createPatterns() {
-        var d = [], c, a, b = this.config;
-        this.match = {};
-        if (b.delimiters.length === 0) {
-            return false;
-        }
-        for (c = 0,
-            a = b.delimiters.length; c < a; c++) {
-            d.push(this.patternQuote(b.delimiters[c][0]));
-            this.match[b.delimiters[c][0]] = {
-                mode: "",
-                end: b.delimiters[c][1],
-                pattern: this.endPattern(b.delimiters[c][1])
-            };
-        }
-        this.start = new RegExp(d.sort(this.sortLength).join("|"), "g");
-        this.skipTags = new RegExp("^(" + b.skipTags.join("|") + ")$", "i");
-        var e = [];
-        if (MathJax.Hub.config.preRemoveClass) {
-            e.push(MathJax.Hub.config.preRemoveClass);
-        }
-        if (b.ignoreClass) {
-            e.push(b.ignoreClass);
-        }
-        this.ignoreClass = (e.length ? new RegExp("(^| )(" + e.join("|") + ")( |$)") : /^$/);
-        this.processClass = new RegExp("(^| )(" + b.processClass + ")( |$)");
-        return true;
-    }
-    patternQuote(a) {
-        return a.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, "\\$1");
-    }
-    endPattern(a) {
-        return new RegExp(this.patternQuote(a) + "|\\\\.", "g");
-    }
-    sortLength(d, c) {
-        if (d.length !== c.length) {
-            return c.length - d.length;
-        }
-        return (d == c ? 0 : (d < c ? -1 : 1));
-    }
-    scanElement(c, b, g) {
-        var a, e, d, f;
-        while (c && c != b) {
-            if (c.nodeName.toLowerCase() === "#text") {
-                if (!g) {
-                    c = this.scanText(c);
-                }
-            } else {
-                a = (typeof (c.className) === "undefined" ? "" : c.className);
-                e = (typeof (c.tagName) === "undefined" ? "" : c.tagName);
-                if (typeof (a) !== "string") {
-                    a = String(a);
-                }
-                f = this.processClass.exec(a);
-                if (c.firstChild && !a.match(/(^| )MathJax/) && (f || !this.skipTags.exec(e))) {
-                    d = (g || this.ignoreClass.exec(a)) && !f;
-                    this.scanElement(c.firstChild, b, d);
-                }
-            }
-            if (c) {
-                c = c.nextSibling;
-            }
-        }
-    }
-    scanText(b) {
-        if (b.nodeValue.replace(/\s+/, "") == "") {
-            return b;
-        }
-        var a, c;
-        this.search = {
-            start: true
-        };
-        this.pattern = this.start;
-        while (b) {
-            this.pattern.lastIndex = 0;
-            while (b && b.nodeName.toLowerCase() === "#text" && (a = this.pattern.exec(b.nodeValue))) {
-                if (this.search.start) {
-                    b = this.startMatch(a, b);
-                } else {
-                    b = this.endMatch(a, b);
-                }
-            }
-            if (this.search.matched) {
-                b = this.encloseMath(b);
-            }
-            if (b) {
-                do {
-                    c = b;
-                    b = b.nextSibling;
-                } while (b && this.ignoreTags[b.nodeName.toLowerCase()] != null);
-                if (!b || b.nodeName !== "#text") {
-                    return c;
-                }
-            }
-        }
-        return b;
-    }
-    startMatch(a, b) {
-        var c = this.match[a[0]];
-        if (c != null) {
-            this.search = {
-                end: c.end,
-                mode: c.mode,
-                open: b,
-                olen: a[0].length,
-                opos: this.pattern.lastIndex - a[0].length
-            };
-            this.switchPattern(c.pattern);
-        }
-        return b;
-    }
-    endMatch(a, b) {
-        if (a[0] == this.search.end) {
-            this.search.close = b;
-            this.search.cpos = this.pattern.lastIndex;
-            this.search.clen = (this.search.isBeginEnd ? 0 : a[0].length);
-            this.search.matched = true;
-            b = this.encloseMath(b);
-            this.switchPattern(this.start);
-        }
-        return b;
-    }
-    switchPattern(a) {
-        a.lastIndex = this.pattern.lastIndex;
-        this.pattern = a;
-        this.search.start = (a === this.start);
-    }
-    encloseMath(b) {
-        var a = this.search, g = a.close, f, d, c;
-        if (a.cpos === g.length) {
-            g = g.nextSibling;
-        } else {
-            g = g.splitText(a.cpos);
-        }
-        if (!g) {
-            f = g = MathJax.HTML.addText(a.close.parentNode, "");
-        }
-        a.close = g;
-        d = (a.opos ? a.open.splitText(a.opos) : a.open);
-        while ((c = d.nextSibling) && c !== g) {
-            if (c.nodeValue !== null) {
-                if (c.nodeName === "#comment") {
-                    d.nodeValue += c.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/, "$1");
-                } else {
-                    d.nodeValue += d.nextSibling.nodeValue;
-                }
-            } else {
-                var h = this.ignoreTags[c.nodeName.toLowerCase()];
-                d.nodeValue += (h == null ? " " : h);
-            }
-            d.parentNode.removeChild(c);
-        }
-        var e = d.nodeValue.substr(a.olen, d.nodeValue.length - a.olen - a.clen);
-        d.parentNode.removeChild(d);
-        if (this.config.preview !== "none") {
-            this.createPreview(a.mode, e);
-        }
-        d = this.createMathTag(a.mode, e);
-        this.search = {};
-        this.pattern.lastIndex = 0;
-        if (f) {
-            f.parentNode.removeChild(f);
-        }
-        return d;
-    }
-    insertNode(b) {
-        var a = this.search;
-        a.close.parentNode.insertBefore(b, a.close);
-    }
-    createPreview(d, a) {
-        var b = MathJax.Hub.config.preRemoveClass;
-        var c = this.config.preview;
-        if (c === "none") {
-            return;
-        }
-        if ((this.search.close.previousSibling || {}).className === b) {
-            return;
-        }
-        if (c === "AsciiMath") {
-            c = [this.filterPreview(a)];
-        }
-        if (c) {
-            c = MathJax.HTML.Element("span", {
-                className: b
-            }, c);
-            this.insertNode(c);
-        }
-    }
-    createMathTag(c, a) {
-        var b = document.createElement("script");
-        b.type = "math/asciimath" + c;
-        MathJax.HTML.setScript(b, a);
-        this.insertNode(b);
-        return b;
-    }
-    filterPreview(a) {
-        return a;
-    }
-}
 MathJax.Extension.tex2jax = new Tex2Jax();
-MathJax.Extension.mml2jax = new Mml2Jax();
-MathJax.Extension.asciimath2jax = new Asciimath2Jax();
 MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.tex2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");
-MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.mml2jax], 5);
-MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
-MathJax.Hub.Register.PreProcessor(["PreProcess", MathJax.Extension.asciimath2jax]);
-MathJax.Ajax.loadComplete("[MathJax]/extensions/asciimath2jax.js");
 
-var __eventHandle = MathJax.Extension.MathEvents = {
-    version: "2.7.2",
-    safariContextMenuBug: false,
-    operaPositionBug: false,
-    /** @type{HTMLSpanElement} */
-    topImg: null,
-    /** @type{Events} */
-    Event: null,
-    /** @type{Hover} */
-    Hover: null,
-    /** @type{Touch} */
-    Touch: null
-};
+var __eventHandle = MathJax.Extension.MathEvents = new MathEvents();
 var __menuSettings = MathJax.Hub.config.menuSettings;
 var __menuStyle = {
     hover: 500,
@@ -1107,7 +544,6 @@ var __zoomMenuConfig = MathJax.Hub.CombineConfig("MathZoom", {
         }
     }
 });
-
 class Events {
     /** @type{Events} */
     static INSTANCE = null;
@@ -1141,60 +577,66 @@ class Events {
         /** @type{OutputJax} */
         this.outJax = pOutJax;
     }
-    Mousedown(q) {
-        return Events.INSTANCE.Handler(q, "Mousedown", this);
+    Mousedown(ev) {
+        return Events.INSTANCE.Handler(ev, "Mousedown", this);
     }
-    Mouseup(q) {
-        return Events.INSTANCE.Handler(q, "Mouseup", this);
+    Mouseup(ev) {
+        return Events.INSTANCE.Handler(ev, "Mouseup", this);
     }
-    Mousemove(q) {
-        return Events.INSTANCE.Handler(q, "Mousemove", this);
+    Mousemove(ev) {
+        return Events.INSTANCE.Handler(ev, "Mousemove", this);
     }
-    Mouseover(q) {
-        return Events.INSTANCE.Handler(q, "Mouseover", this);
+    Mouseover(ev) {
+        return Events.INSTANCE.Handler(ev, "Mouseover", this);
     }
-    Mouseout(q) {
-        return Events.INSTANCE.Handler(q, "Mouseout", this);
+    Mouseout(ev) {
+        return Events.INSTANCE.Handler(ev, "Mouseout", this);
     }
-    Click(q) {
-        return Events.INSTANCE.Handler(q, "Click", this);
+    Click(ev) {
+        return Events.INSTANCE.Handler(ev, "Click", this);
     }
-    DblClick(q) {
-        return Events.INSTANCE.Handler(q, "DblClick", this);
+    DblClick(ev) {
+        return Events.INSTANCE.Handler(ev, "DblClick", this);
     }
-    Menu(q) {
-        return Events.INSTANCE.Handler(q, "ContextMenu", this);
+    Menu(ev) {
+        return Events.INSTANCE.Handler(ev, "ContextMenu", this);
     }
-    Handler(t, r, s) {
+    /**
+     * @param {MouseEvent} ev 
+     * @param {string} evType 
+     * @param {*} s 
+     * @returns 
+     */
+    Handler(ev, evType, s) {
         if (this.ajax.loadingMathMenu) {
-            return Events.INSTANCE.False(t);
+            return Events.INSTANCE.False(ev);
         }
         var q = this.outJax[s.jaxID];
-        if (!t) {
-            t = window.event;
+        if (!ev) {
+            ev = window.event;
         }
-        t.isContextMenu = (r === "ContextMenu");
-        if (q[r]) {
-            return q[r](t, s);
+        ev.isContextMenu = (evType === "ContextMenu");
+        if (q[evType]) {
+            return q[evType](ev, s);
         }
         if (MathJax.Extension.MathZoom) {
-            return MathJax.Extension.MathZoom.HandleEvent(t, r, s);
+            return MathJax.Extension.MathZoom.HandleEvent(ev, evType, s);
         }
     }
-    False(q) {
-        if (!q) {
-            q = window.event;
+    False(ev) {
+        if (!ev) {
+            ev = window.event;
         }
-        if (q) {
-            if (q.preventDefault) {
-                q.preventDefault();
+        if (ev) {
+            if (ev.preventDefault) {
+                ev.preventDefault();
             } else {
-                q.returnValue = false;
+                ev.returnValue = false;
             }
-            if (q.stopPropagation) {
-                q.stopPropagation();
+            if (ev.stopPropagation) {
+                ev.stopPropagation();
             }
-            q.cancelBubble = true;
+            ev.cancelBubble = true;
         }
         return false;
     }
@@ -1409,7 +851,7 @@ class Hover {
             opacity: 0,
             id: q.inputID + "-Hover"
         };
-        var r = Hover.INSTANCE.html.Element("span", {
+        var r = Hover.INSTANCE.html.ElementSpan({
             id: q.hover.id,
             isMathJax: true,
             style: {
@@ -1432,7 +874,7 @@ class Hover {
                 filter: "alpha(opacity=0)"
             }
         }]]);
-        var s = Hover.INSTANCE.html.Element("span", {
+        var s = Hover.INSTANCE.html.ElementSpan({
             isMathJax: true,
             id: q.hover.id + "Menu",
             className: "MathJax_Menu_Button",
@@ -1607,6 +1049,10 @@ class MathZoom {
         }
         return MathZoom.INSTANCE;
     }
+    /**
+     * @param {Hub} pHub 
+     * @param {HTML} pHtml 
+     */
     constructor(pHub, pHtml) {
         this.version = "2.7.2";
         this.scrollSize = 11;
@@ -1672,7 +1118,7 @@ class MathZoom {
             t = Math.min(q.clientHeight, t);
         }
         t = Math.floor(0.85 * t);
-        var n = MathZoom.INSTANCE.html.Element("span", {
+        var n = MathZoom.INSTANCE.html.ElementSpan({
             id: "MathJax_ZoomFrame"
         }, [["span", {
             id: "MathJax_ZoomOverlay",
@@ -1704,7 +1150,7 @@ class MathZoom {
         z.style.maxWidth = l + "px";
         z.style.maxHeight = t + "px";
         if (this.msieTrapEventBug) {
-            var y = MathZoom.INSTANCE.html.Element("span", {
+            var y = MathZoom.INSTANCE.html.ElementSpan({
                 id: "MathJax_ZoomEventTrap",
                 onmousedown: this.Remove
             });
@@ -1727,20 +1173,6 @@ class MathZoom {
             n = v;
         }
         var x = s.Zoom(p, w, u, l, t);
-        if (this.msiePositionBug) {
-            if (this.msieSizeBug) {
-                z.style.height = x.zH + "px";
-                z.style.width = x.zW + "px";
-            }
-            if (z.offsetHeight > t) {
-                z.style.height = t + "px";
-                z.style.width = (x.zW + this.scrollSize) + "px";
-            }
-            if (z.offsetWidth > l) {
-                z.style.width = l + "px";
-                z.style.height = (x.zH + this.scrollSize) + "px";
-            }
-        }
         if (this.operaPositionBug) {
             z.style.width = Math.min(l, x.zW) + "px";
         }
@@ -1782,9 +1214,7 @@ class MathZoom {
             , n = r.Y;
         p.style.left = Math.max(o, 10 - m) + "px";
         p.style.top = Math.max(n, 10 - s) + "px";
-        if (!MathZoom.INSTANCE.msiePositionBug) {
-            MathZoom.INSTANCE.SetWH();
-        }
+        MathZoom.INSTANCE.SetWH();
     }
     Resize(m) {
         if (MathZoom.INSTANCE.onresize) {
@@ -1805,11 +1235,7 @@ class MathZoom {
         }
         l.style.left = (-o.x) + "px";
         l.style.top = (-o.y) + "px";
-        if (MathZoom.INSTANCE.msiePositionBug) {
-            setTimeout(MathZoom.INSTANCE.SetWH, 0);
-        } else {
-            MathZoom.INSTANCE.SetWH();
-        }
+        MathZoom.INSTANCE.SetWH();
         return o;
     }
     SetWH() {
@@ -1932,7 +1358,7 @@ class MathZoom {
             __eventHandle.operaPositionBug = true;
         }
     });
-    __eventHandle.topImg = (pHtml.Element("span", {
+    __eventHandle.topImg = (pHtml.ElementSpan({
         style: { width: 0, height: 0, display: "inline-block" }
     }));
     if (__eventHandle.operaPositionBug) {
@@ -1964,7 +1390,7 @@ class MathZoom {
             mathZoom.operaRefreshBug = true;
         }
     });
-    mathZoom.topImg = pHtml.Element("span", {
+    mathZoom.topImg = pHtml.ElementSpan({
         style: {
             width: 0,
             height: 0,
@@ -9867,116 +9293,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
     MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready")
 });
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");
-
-(function (a, e, b, f) {
-    var c = b.config.menuSettings;
-    var d = MathJax.Extension.AssistiveMML = {
-        version: "2.7.2",
-        config: b.CombineConfig("AssistiveMML", {
-            disabled: false,
-            styles: {
-                ".MJX_Assistive_MathML": {
-                    position: "absolute!important",
-                    top: 0,
-                    left: 0,
-                    clip: (b.Browser.isMSIE && (document.documentMode || 0) < 8 ? "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
-                    padding: "1px 0 0 0!important",
-                    border: "0!important",
-                    height: "1px!important",
-                    width: "1px!important",
-                    overflow: "hidden!important",
-                    display: "block!important",
-                    "-webkit-touch-callout": "none",
-                    "-webkit-user-select": "none",
-                    "-khtml-user-select": "none",
-                    "-moz-user-select": "none",
-                    "-ms-user-select": "none",
-                    "user-select": "none"
-                },
-                ".MJX_Assistive_MathML.MJX_Assistive_MathML_Block": {
-                    width: "100%!important"
-                }
-            }
-        }),
-        Config: function () {
-            if (!this.config.disabled && c.assistiveMML == null) {
-                b.Config({
-                    menuSettings: {
-                        assistiveMML: true
-                    }
-                })
-            }
-            a.Styles(this.config.styles);
-            b.Register.MessageHook("End Math", function (g) {
-                if (c.assistiveMML) {
-                    return d.AddAssistiveMathML(g[1])
-                }
-            })
-        },
-        AddAssistiveMathML: function (g) {
-            var h = {
-                jax: b.getAllJax(g),
-                i: 0,
-                callback: CallbackUtil.Create({})
-            };
-            this.HandleMML(h);
-            return h.callback
-        },
-        RemoveAssistiveMathML: function (k) {
-            var h = b.getAllJax(k), l;
-            for (var j = 0, g = h.length; j < g; j++) {
-                l = document.getElementById(h[j].inputID + "-Frame");
-                if (l && l.getAttribute("data-mathml")) {
-                    l.removeAttribute("data-mathml");
-                    if (l.lastChild && l.lastChild.className.match(/MJX_Assistive_MathML/)) {
-                        l.removeChild(l.lastChild)
-                    }
-                }
-            }
-        },
-        HandleMML: function (l) {
-            var g = l.jax.length, h, i, n, j;
-            while (l.i < g) {
-                h = l.jax[l.i];
-                n = document.getElementById(h.inputID + "-Frame");
-                if (h.outputJax !== "NativeMML" && h.outputJax !== "PlainSource" && n && !n.getAttribute("data-mathml")) {
-                    try {
-                        i = h.root.toMathML("").replace(/\n */g, "").replace(/<!--.*?-->/g, "")
-                    } catch (k) {
-                        if (!k.restart) {
-                            throw k
-                        }
-                        return CallbackUtil.After(["HandleMML", this, l], k.restart)
-                    }
-                    n.setAttribute("data-mathml", i);
-                    j = f.addElement(n, "span", {
-                        isMathJax: true,
-                        unselectable: "on",
-                        className: "MJX_Assistive_MathML" + (h.root.Get("display") === "block" ? " MJX_Assistive_MathML_Block" : "")
-                    });
-                    try {
-                        j.innerHTML = i
-                    } catch (k) { }
-                    n.style.position = "relative";
-                    n.setAttribute("role", "presentation");
-                    n.firstChild.setAttribute("aria-hidden", "true");
-                    j.setAttribute("role", "presentation")
-                }
-                l.i++
-            }
-            l.callback()
-        }
-    };
-    b.Startup.signal.Post("AssistiveMML Ready")
-}
-)(MathJax.Ajax, MathJax.Callback, MathJax.Hub, MathJax.HTML);
-CallbackUtil.Queue(
-    ["Require", MathJax.Ajax, "[MathJax]/extensions/toMathML.js"],
-    ["loadComplete", MathJax.Ajax, "[MathJax]/extensions/AssistiveMML.js"],
-    function () {
-        MathJax.Hub.Register.StartupHook("End Config", ["Config", MathJax.Extension.AssistiveMML]);
-    }
-);
 
 !function (a, b) {
     var c, d, e = a.config.menuSettings, f = Function.prototype.bind ? function (a, b) {

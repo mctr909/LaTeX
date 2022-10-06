@@ -308,7 +308,7 @@
                     left: "1em"
                 }
             }, [["mjx-ex-box-test"]]);
-            this.linebreakSpan = m.Element("span", {
+            this.linebreakSpan = m.ElementSpan({
                 className: "mjx-line-box-test"
             }, [["span"]]);
             return o.Styles(this.config.styles, ["InitializeCHTML", this])

@@ -244,7 +244,7 @@
                 opacity: 0,
                 id: q.inputID + "-Hover"
             };
-            var r = h.Element("span", {
+            var r = h.ElementSpan({
                 id: q.hover.id,
                 isMathJax: true,
                 style: {
@@ -267,7 +267,7 @@
                     filter: "alpha(opacity=0)"
                 }
             }]]);
-            var s = h.Element("span", {
+            var s = h.ElementSpan({
                 isMathJax: true,
                 id: q.hover.id + "Menu",
                 className: "MathJax_Menu_Button",
@@ -405,7 +405,7 @@
             c.operaPositionBug = true;
         }
     });
-    c.topImg = (h.Element("span", {
+    c.topImg = (h.ElementSpan({
         style: { width: 0, height: 0, display: "inline-block" }
     }));
     if (c.operaPositionBug) {

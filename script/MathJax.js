@@ -27,12 +27,27 @@ class Extension {
     constructor() {
         /** @type{Tex2Jax} */
         this.tex2jax = null;
-        /** @type{Mml2Jax} */
-        this.mml2jax = null;
-        /** @type{Asciimath2Jax} */
-        this.asciimath2jax = null;
+        /** @type{MathMenu} */
+        this.MathMenu = null;
         /** @type{MathZoom} */
         this.MathZoom = null;
+        /** @type{MathEvents} */
+        this.MathEvents = null;
+    }
+}
+class MathEvents {
+    constructor() {
+        this.version = "2.7.2";
+        this.safariContextMenuBug = false;
+        this.operaPositionBug = false;
+        /** @type{HTMLSpanElement} */
+        this.topImg = null;
+        /** @type{Events} */
+        this.Event = null;
+        /** @type{Hover} */
+        this.Hover = null;
+        /** @type{Touch} */
+        this.Touch = null;
     }
 }
 class ElementJax {
@@ -58,8 +73,8 @@ class HTML {
     constructor() {
         this.Cookie = new Cookie();
     }
-    Element(d, f, e) {
-        var g = document.createElement(d), h;
+    Element(tagName, f, e) {
+        var g = document.createElement(tagName), h;
         if (f) {
             if (f.hasOwnProperty("style")) {
                 var c = f.style;
@@ -85,7 +100,7 @@ class HTML {
                 if (MathJax.Object.isArray(e[b])) {
                     g.appendChild(this.Element(e[b][0], e[b][1], e[b][2]));
                 } else {
-                    if (d === "script") {
+                    if (tagName === "script") {
                         this.setScript(g, e[b]);
                     } else {
                         g.appendChild(document.createTextNode(e[b]));
@@ -94,6 +109,14 @@ class HTML {
             }
         }
         return g;
+    }
+    /**
+     * @param {*} f 
+     * @param {*} e 
+     * @returns {HTMLSpanElement}
+     */
+    ElementSpan(f, e) {
+        return this.Element("span", f, e);
     }
     ucMatch(a, b) {
         return b.toUpperCase();
@@ -1443,7 +1466,7 @@ class Hub {
         }
         var g = this.config.errorSettings;
         var a = h(g.messageId, g.message);
-        var c = MathJax.HTML.Element("span", {
+        var c = MathJax.HTML.ElementSpan({
             className: "MathJax_Error",
             jaxID: "Error",
             isMathJax: true,
