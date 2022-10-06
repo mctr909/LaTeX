@@ -28,6 +28,7 @@ class MATHJAX {
         this.ElementJax = null;
         this.InputJax = null;
         this.OutputJax = null;
+        /** @type{MathJaxObject} */
         this.Object = null;
         this.Menu = null;
     }
@@ -2723,24 +2724,20 @@ function createCallback() {
     MathJax.Callback = CallbackUtil.Create;
     MathJax.Callback.Delay = CallbackUtil.Delay;
 }
-
+function createClass(cls) {
+    var new_class = function () { };
+    for (var func in cls) {
+        if (func !== "instance" && cls.hasOwnProperty(func)) {
+            new_class[func] = cls[func];
+        }
+    }
+    return new_class;
+}
 function createObject() {
     if (MathJax.Object) {
         return;
     }
-    var CREATE_CLS = function (cls) {
-        var new_class = cls.constr;
-        if (!new_class) {
-            new_class = function () { };
-        }
-        for (var func in cls) {
-            if (func !== "constr" && cls.hasOwnProperty(func)) {
-                new_class[func] = cls[func];
-            }
-        }
-        return new_class;
-    }
-    MathJax.Object = CREATE_CLS({
+    MathJax.Object = createClass({
         prototype: new MathJaxObjectProto(),
         SUPER: null,
         Init: function (f) {
@@ -2766,7 +2763,7 @@ function createObject() {
             new_cls.has = this.has;
             new_cls.isa = this.isa;
             new_cls.prototype = new this(EMPTY);
-            new_cls.prototype.constr = new_cls;
+            new_cls.prototype.instance = new_cls;
             new_cls.Augment(f, h);
             return new_cls;
         },
@@ -2829,10 +2826,10 @@ function createJax() {
             if (arguments.length === 0) {
                 return this;
             }
-            return (this.constr.Subclass(i, h))();
+            return (this.instance.Subclass(i, h))();
         },
         Augment: function (k, j) {
-            var i = this.constr, h = {};
+            var i = this.instance, h = {};
             if (k != null) {
                 for (var l in k) {
                     if (k.hasOwnProperty(l)) {
@@ -2886,7 +2883,7 @@ function createJax() {
                         j.preProcess = j.preTranslate;
                         j.Process = j.Translate;
                         j.postProcess = j.postTranslate;
-                    }, this.constr.prototype]);
+                    }, this.instance.prototype]);
                 }
                 return h.Push(["loadComplete", MathJax.Ajax, this.directory + "/" + i]);
             }
@@ -2922,7 +2919,7 @@ function createJax() {
             o = this.directory + "/" + this.JAXFILE;
             var p = j.Push(MathJax.Ajax.Require(o));
             if (!p.called) {
-                this.constr.prototype.Process = function () {
+                this.instance.prototype.Process = function () {
                     if (!p.called) {
                         return p;
                     }
@@ -2955,7 +2952,7 @@ function createJax() {
         copyTranslate: true,
         preProcess: function (j) {
             var i, h = this.directory + "/" + this.JAXFILE;
-            this.constr.prototype.preProcess = function (k) {
+            this.instance.prototype.preProcess = function (k) {
                 if (!i.called) {
                     return i;
                 }
@@ -3000,7 +2997,7 @@ function createJax() {
         mimeType: "",
         sourceMenuTitle: ["MathMLcode", "MathML Code"],
         Init: function (i, h) {
-            return this.constr.Subclass(i, h);
+            return this.instance.Subclass(i, h);
         },
         Text: function (i, j) {
             var h = this.SourceElement();
