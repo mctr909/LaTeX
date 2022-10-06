@@ -2658,6 +2658,23 @@ function createCallback() {
     MathJax.Callback.Delay = CallbackUtil.Delay;
 }
 
+class MathJaxObjectProto {
+    Init() {
+    }
+    SUPER(f) {
+        return f.callee.SUPER;
+    }
+    can(f) {
+        return typeof (this[f]) === "function";
+    }
+    has(f) {
+        return typeof (this[f]) !== "undefined";
+    }
+    isa(f) {
+        return (f instanceof Object) && (this instanceof f);
+    }
+}
+
 function createMathJax() {
     MathJax.isPacked = true;
     MathJax.version = "2.7.2";
@@ -2687,22 +2704,7 @@ function createMathJax() {
             return new_class;
         }
         MathJax.Object = CREATE_CLS({
-            prototype: {
-                Init: function () {
-                },
-                SUPER: function (f) {
-                    return f.callee.SUPER;
-                },
-                can: function (f) {
-                    return typeof (this[f]) === "function";
-                },
-                has: function (f) {
-                    return typeof (this[f]) !== "undefined";
-                },
-                isa: function (f) {
-                    return (f instanceof Object) && (this instanceof f);
-                }
-            },
+            prototype: new MathJaxObjectProto(),
             constr: function () {
                 return arguments.callee.Init.call(this, arguments);
             },
