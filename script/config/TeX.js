@@ -49,10 +49,28 @@ MathJax.InputJax.TeX.loadComplete("config.js");
 ///TODO: TexParser
 function getTexParser() {
     return MathJax.Object.__Subclass({
+        PRIME: "\u2032",
+        SMARTQUOTE: "\u2019",
+        MmlTokenAllow: {
+            fontfamily: 1,
+            fontsize: 1,
+            fontweight: 1,
+            fontstyle: 1,
+            color: 1,
+            background: 1,
+            id: 1,
+            "class": 1,
+            href: 1,
+            style: 1
+        },
+        emPerInch: 7.2,
+        pxPerInch: 72,
+        string: "",
+        stack: [],
+        i: 0,
+        macroCount: 0,
         __Init: function (str, o) {
             this.string = str;
-            this.i = 0;
-            this.macroCount = 0;
             var m;
             if (o) {
                 m = {};
@@ -309,8 +327,6 @@ function getTexParser() {
                 movesupsub: n
             }));
         },
-        PRIME: "\u2032",
-        SMARTQUOTE: "\u2019",
         Prime: function (o) {
             var n = this.stack.Prev();
             if (!n) {
@@ -674,18 +690,6 @@ function getTexParser() {
         MmlFilterAttribute: function (m, n) {
             return n;
         },
-        MmlTokenAllow: {
-            fontfamily: 1,
-            fontsize: 1,
-            fontweight: 1,
-            fontstyle: 1,
-            color: 1,
-            background: 1,
-            id: 1,
-            "class": 1,
-            href: 1,
-            style: 1
-        },
         Strut: function (m) {
             this.Push(__mml.mpadded(__mml.mrow()).With({
                 height: "8.6pt",
@@ -1017,8 +1021,6 @@ function getTexParser() {
                 }));
             }
         },
-        emPerInch: 7.2,
-        pxPerInch: 72,
         matchDimen: function (m) {
             return m.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
         },
