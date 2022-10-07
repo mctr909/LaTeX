@@ -382,8 +382,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
         var n = [];
         for (var l = 0, j = k.length; l < j; l++) {
             ///TODO: TexParser
-            n[l] = tex.Parse.prototype.Em(k[l]);
-            //n[l] = h.Parse.Em(k[l]);
+            //n[l] = tex.Parse.prototype.Em(k[l]);
+            n[l] = tex.Parse.Em(k[l]);
         }
         return n.join(" ")
     };
