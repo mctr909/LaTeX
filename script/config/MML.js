@@ -1,30 +1,37 @@
-MathJax.ElementJax.mml = MathJax.ElementJax(
-    { mimeType: "jax/mml" },
-    {
-        id: "mml",
-        version: "2.7.2",
-        directory: MathJax.ElementJax.directory + "/mml",
-        extensionDir: MathJax.ElementJax.extensionDir + "/mml",
-        optableDir: MathJax.ElementJax.directory + "/mml/optable"
-    }
+
+///<reference path="../MathJax.js"/>
+
+MathJax.Ajax.Preloading(
+    "[MathJax]/jax/element/mml/jax.js"
 );
+
+MathJax.ElementJax.mml = MathJax.ElementJax({
+    mimeType: "jax/mml"
+}, {
+    id: "mml",
+    version: "2.7.2",
+    directory: MathJax.ElementJax.directory + "/mml",
+    extensionDir: MathJax.ElementJax.extensionDir + "/mml",
+    optableDir: MathJax.ElementJax.directory + "/mml/optable"
+});
+
 MathJax.ElementJax.mml.__Augment({
     __Init: function () {
         if (arguments.length === 1 && arguments[0].type === "math") {
-            this.root = arguments[0];
+            this.root = arguments[0]
         } else {
-            this.root = MathJax.ElementJax.mml.math.apply(this, arguments);
+            this.root = MathJax.ElementJax.mml.math.apply(this, arguments)
         }
         if (this.root.attr && this.root.attr.mode) {
             if (!this.root.display && this.root.attr.mode === "display") {
                 this.root.display = "block";
-                this.root.attrNames.push("display");
+                this.root.attrNames.push("display")
             }
             delete this.root.attr.mode;
             for (var b = 0, a = this.root.attrNames.length; b < a; b++) {
                 if (this.root.attrNames[b] === "mode") {
                     this.root.attrNames.splice(b, 1);
-                    break;
+                    break
                 }
             }
         }
@@ -32,8 +39,15 @@ MathJax.ElementJax.mml.__Augment({
 }, {
     INHERIT: "_inherit_",
     AUTO: "_auto_",
-    SIZE: { INFINITY: "infinity", SMALL: "small", NORMAL: "normal", BIG: "big" },
-    COLOR: { TRANSPARENT: "transparent" },
+    SIZE: {
+        INFINITY: "infinity",
+        SMALL: "small",
+        NORMAL: "normal",
+        BIG: "big"
+    },
+    COLOR: {
+        TRANSPARENT: "transparent"
+    },
     VARIANT: {
         NORMAL: "normal",
         BOLD: "bold",
@@ -82,8 +96,14 @@ MathJax.ElementJax.mml.__Augment({
         ID: "id",
         INDENTALIGN: "indentalign"
     },
-    INDENTSHIFT: { INDENTSHIFT: "indentshift" },
-    LINETHICKNESS: { THIN: "thin", MEDIUM: "medium", THICK: "thick" },
+    INDENTSHIFT: {
+        INDENTSHIFT: "indentshift"
+    },
+    LINETHICKNESS: {
+        THIN: "thin",
+        MEDIUM: "medium",
+        THICK: "thick"
+    },
     NOTATION: {
         LONGDIV: "longdiv",
         ACTUARIAL: "actuarial",
@@ -112,9 +132,21 @@ MathJax.ElementJax.mml.__Augment({
         LEFT: "left",
         RIGHT: "right"
     },
-    LINES: { NONE: "none", SOLID: "solid", DASHED: "dashed" },
-    SIDE: { LEFT: "left", RIGHT: "right", LEFTOVERLAP: "leftoverlap", RIGHTOVERLAP: "rightoverlap" },
-    WIDTH: { AUTO: "auto", FIT: "fit" },
+    LINES: {
+        NONE: "none",
+        SOLID: "solid",
+        DASHED: "dashed"
+    },
+    SIDE: {
+        LEFT: "left",
+        RIGHT: "right",
+        LEFTOVERLAP: "leftoverlap",
+        RIGHTOVERLAP: "rightoverlap"
+    },
+    WIDTH: {
+        AUTO: "auto",
+        FIT: "fit"
+    },
     ACTIONTYPE: {
         TOGGLE: "toggle",
         STATUSLINE: "statusline",
@@ -137,11 +169,41 @@ MathJax.ElementJax.mml.__Augment({
         NEGATIVEVERYTHICKMATHSPACE: "negativeverythickmathspace",
         NEGATIVEVERYVERYTHICKMATHSPACE: "negativeveryverythickmathspace"
     },
-    OVERFLOW: { LINBREAK: "linebreak", SCROLL: "scroll", ELIDE: "elide", TRUNCATE: "truncate", SCALE: "scale" },
-    UNIT: { EM: "em", EX: "ex", PX: "px", IN: "in", CM: "cm", MM: "mm", PT: "pt", PC: "pc" },
-    TEXCLASS: { ORD: 0, OP: 1, BIN: 2, REL: 3, OPEN: 4, CLOSE: 5, PUNCT: 6, INNER: 7, VCENTER: 8, NONE: -1 },
+    OVERFLOW: {
+        LINBREAK: "linebreak",
+        SCROLL: "scroll",
+        ELIDE: "elide",
+        TRUNCATE: "truncate",
+        SCALE: "scale"
+    },
+    UNIT: {
+        EM: "em",
+        EX: "ex",
+        PX: "px",
+        IN: "in",
+        CM: "cm",
+        MM: "mm",
+        PT: "pt",
+        PC: "pc"
+    },
+    TEXCLASS: {
+        ORD: 0,
+        OP: 1,
+        BIN: 2,
+        REL: 3,
+        OPEN: 4,
+        CLOSE: 5,
+        PUNCT: 6,
+        INNER: 7,
+        VCENTER: 8,
+        NONE: -1
+    },
     TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
-    skipAttributes: { texClass: true, useHeight: true, texprimestyle: true },
+    skipAttributes: {
+        texClass: true,
+        useHeight: true,
+        texprimestyle: true
+    },
     copyAttributes: {
         displaystyle: 1,
         scriptlevel: 1,
@@ -160,28 +222,11 @@ MathJax.ElementJax.mml.__Augment({
         href: true,
         style: true
     },
-    copyAttributeNames: [
-        "displaystyle",
-        "scriptlevel",
-        "open",
-        "close",
-        "form",
-        "actiontype",
-        "fontfamily",
-        "fontsize",
-        "fontweight",
-        "fontstyle",
-        "color",
-        "background",
-        "id",
-        "class",
-        "href",
-        "style"
-    ],
+    copyAttributeNames: ["displaystyle", "scriptlevel", "open", "close", "form", "actiontype", "fontfamily", "fontsize", "fontweight", "fontstyle", "color", "background", "id", "class", "href", "style"],
     nocopyAttributes: {
         fontfamily: true,
         fontsize: true,
-        ontweight: true,
+        fontweight: true,
         fontstyle: true,
         color: true,
         background: true,
@@ -192,16 +237,25 @@ MathJax.ElementJax.mml.__Augment({
         xmlns: true
     },
     Error: function (d, e) {
-        var c = this.merror(d), b = MathJax.Localization.fontDirection(), a = MathJax.Localization.fontFamily();
-        if (e) { c = c.With(e) }
+        var c = this.merror(d)
+            , b = MathJax.Localization.fontDirection()
+            , a = MathJax.Localization.fontFamily();
+        if (e) {
+            c = c.With(e)
+        }
         if (b || a) {
             c = this.mstyle(c);
-            if (b) { c.dir = b }
-            if (a) { c.style.fontFamily = "font-family: " + a }
+            if (b) {
+                c.dir = b
+            }
+            if (a) {
+                c.style.fontFamily = "font-family: " + a
+            }
         }
-        return c;
+        return c
     }
 });
+
 (function (a) {
     a.mbase = MathJax.Object.__Subclass({
         type: "base",
@@ -212,124 +266,151 @@ MathJax.ElementJax.mml.__Augment({
             dir: a.INHERIT
         },
         noInherit: {},
-        noInheritAttribute: { texClass: true },
+        noInheritAttribute: {
+            texClass: true
+        },
         getRemoved: {},
         linebreakContainer: false,
         __Init: function () {
             this.data = [];
             if (this.inferRow && !(arguments.length === 1 && arguments[0].inferred)) {
-                this.Append(a.mrow().With({ inferred: true, notParent: true }));
+                this.Append(a.mrow().With({
+                    inferred: true,
+                    notParent: true
+                }))
             }
-            this.Append.apply(this, arguments);
+            this.Append.apply(this, arguments)
         },
         With: function (e) {
             for (var f in e) {
-                if (e.hasOwnProperty(f)) { this[f] = e[f] }
+                if (e.hasOwnProperty(f)) {
+                    this[f] = e[f]
+                }
             }
-            return this;
+            return this
         },
         Append: function () {
             if (this.inferRow && this.data.length) {
-                this.data[0].Append.apply(this.data[0], arguments);
+                this.data[0].Append.apply(this.data[0], arguments)
             } else {
                 for (var f = 0, e = arguments.length; f < e; f++) {
-                    this.SetData(this.data.length, arguments[f]);
+                    this.SetData(this.data.length, arguments[f])
                 }
             }
         },
         SetData: function (e, f) {
             if (f != null) {
                 if (!(f instanceof a.mbase)) {
-                    f = (this.isToken || this.isChars ? a.chars(f) : a.mtext(f));
+                    f = (this.isToken || this.isChars ? a.chars(f) : a.mtext(f))
                 }
                 f.parent = this;
-                f.setInherit(this.inheritFromMe ? this : this.inherit);
+                f.setInherit(this.inheritFromMe ? this : this.inherit)
             }
-            this.data[e] = f;
+            this.data[e] = f
         },
         Parent: function () {
             var e = this.parent;
-            while (e && e.notParent) { e = e.parent }
-            return e;
+            while (e && e.notParent) {
+                e = e.parent
+            }
+            return e
         },
         Get: function (f, k, l) {
             if (!l) {
-                if (this[f] != null) { return this[f] }
+                if (this[f] != null) {
+                    return this[f]
+                }
                 if (this.attr && this.attr[f] != null) {
-                    return this.attr[f];
+                    return this.attr[f]
                 }
             }
             var g = this.Parent();
             if (g && g["adjustChild_" + f] != null) {
-                return (g["adjustChild_" + f])(this.childPosition(), k);
+                return (g["adjustChild_" + f])(this.childPosition(), k)
             }
             var j = this.inherit;
             var e = j;
             while (j) {
                 var i = j[f];
                 if (i == null && j.attr) {
-                    i = j.attr[f];
+                    i = j.attr[f]
                 }
                 if (j.removedStyles && j.getRemoved[f] && i == null) {
-                    i = j.removedStyles[j.getRemoved[f]];
+                    i = j.removedStyles[j.getRemoved[f]]
                 }
                 if (i != null && j.noInheritAttribute && !j.noInheritAttribute[f]) {
                     var h = j.noInherit[this.type];
-                    if (!(h && h[f])) { return i }
+                    if (!(h && h[f])) {
+                        return i
+                    }
                 }
                 e = j;
-                j = j.inherit;
+                j = j.inherit
             }
             if (!k) {
-                if (this.defaults[f] === a.AUTO) { return this.autoDefault(f) }
-                if (this.defaults[f] !== a.INHERIT && this.defaults[f] != null) { return this.defaults[f] }
-                if (e) { return e.defaults[f] }
+                if (this.defaults[f] === a.AUTO) {
+                    return this.autoDefault(f)
+                }
+                if (this.defaults[f] !== a.INHERIT && this.defaults[f] != null) {
+                    return this.defaults[f]
+                }
+                if (e) {
+                    return e.defaults[f]
+                }
             }
-            return null;
+            return null
         },
         hasValue: function (e) {
-            return (this.Get(e, true) != null);
+            return (this.Get(e, true) != null)
         },
         getValues: function () {
             var f = {};
             for (var g = 0, e = arguments.length; g < e; g++) {
-                f[arguments[g]] = this.Get(arguments[g]);
+                f[arguments[g]] = this.Get(arguments[g])
             }
-            return f;
+            return f
         },
         adjustChild_scriptlevel: function (f, e) {
-            return this.Get("scriptlevel", e);
+            return this.Get("scriptlevel", e)
         },
         adjustChild_displaystyle: function (f, e) {
-            return this.Get("displaystyle", e);
+            return this.Get("displaystyle", e)
         },
         adjustChild_texprimestyle: function (f, e) {
-            return this.Get("texprimestyle", e);
+            return this.Get("texprimestyle", e)
         },
         childPosition: function () {
-            var h = this, g = h.parent;
-            while (g.notParent) { h = g; g = h.parent }
-            for (var f = 0, e = g.data.length; f < e; f++) {
-                if (g.data[f] === h) { return f }
+            var h = this
+                , g = h.parent;
+            while (g.notParent) {
+                h = g;
+                g = h.parent
             }
-            return null;
+            for (var f = 0, e = g.data.length; f < e; f++) {
+                if (g.data[f] === h) {
+                    return f
+                }
+            }
+            return null
         },
         setInherit: function (g) {
             if (g !== this.inherit && this.inherit == null) {
                 this.inherit = g;
                 for (var f = 0, e = this.data.length; f < e; f++) {
-                    if (this.data[f] && this.data[f].setInherit) { this.data[f].setInherit(g) }
+                    if (this.data[f] && this.data[f].setInherit) {
+                        this.data[f].setInherit(g)
+                    }
                 }
             }
         },
         setTeXclass: function (e) {
             this.getPrevClass(e);
-            return (typeof (this.texClass) !== "undefined" ? this : e);
+            return (typeof (this.texClass) !== "undefined" ? this : e)
         },
         getPrevClass: function (e) {
             if (e) {
                 this.prevClass = e.Get("texClass");
-                this.prevLevel = e.Get("scriptlevel");
+                this.prevLevel = e.Get("scriptlevel")
             }
         },
         updateTeXclass: function (e) {
@@ -338,87 +419,108 @@ MathJax.ElementJax.mml.__Augment({
                 delete e.prevClass;
                 this.prevLevel = e.prevLevel;
                 delete e.prevLevel;
-                this.texClass = e.Get("texClass");
+                this.texClass = e.Get("texClass")
             }
         },
         texSpacing: function () {
             var f = (this.prevClass != null ? this.prevClass : a.TEXCLASS.NONE);
             var e = (this.Get("texClass") || a.TEXCLASS.ORD);
-            if (f === a.TEXCLASS.NONE || e === a.TEXCLASS.NONE) { return "" }
-            if (f === a.TEXCLASS.VCENTER) { f = a.TEXCLASS.ORD }
-            if (e === a.TEXCLASS.VCENTER) { e = a.TEXCLASS.ORD }
+            if (f === a.TEXCLASS.NONE || e === a.TEXCLASS.NONE) {
+                return ""
+            }
+            if (f === a.TEXCLASS.VCENTER) {
+                f = a.TEXCLASS.ORD
+            }
+            if (e === a.TEXCLASS.VCENTER) {
+                e = a.TEXCLASS.ORD
+            }
             var g = this.TEXSPACE[f][e];
-            if ((this.prevLevel > 0 || this.Get("scriptlevel") > 0) && g >= 0) { return "" }
-            return this.TEXSPACELENGTH[Math.abs(g)];
+            if ((this.prevLevel > 0 || this.Get("scriptlevel") > 0) && g >= 0) {
+                return ""
+            }
+            return this.TEXSPACELENGTH[Math.abs(g)]
         },
         TEXSPACELENGTH: ["", a.LENGTH.THINMATHSPACE, a.LENGTH.MEDIUMMATHSPACE, a.LENGTH.THICKMATHSPACE],
-        TEXSPACE: [
-            [0, -1, 2, 3, 0, 0, 0, 1],
-            [-1, -1, 0, 3, 0, 0, 0, 1],
-            [2, 2, 0, 0, 2, 0, 0, 2],
-            [3, 3, 0, 0, 3, 0, 0, 3],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, -1, 2, 3, 0, 0, 0, 1],
-            [1, 1, 0, 1, 1, 1, 1, 1],
-            [1, -1, 2, 3, 1, 0, 1, 1]
-        ],
-        autoDefault: function (e) { return "" },
-        isSpacelike: function () { return false },
-        isEmbellished: function () { return false },
-        Core: function () { return this },
-        CoreMO: function () { return this },
+        TEXSPACE: [[0, -1, 2, 3, 0, 0, 0, 1], [-1, -1, 0, 3, 0, 0, 0, 1], [2, 2, 0, 0, 2, 0, 0, 2], [3, 3, 0, 0, 3, 0, 0, 3], [0, 0, 0, 0, 0, 0, 0, 0], [0, -1, 2, 3, 0, 0, 0, 1], [1, 1, 0, 1, 1, 1, 1, 1], [1, -1, 2, 3, 1, 0, 1, 1]],
+        autoDefault: function (e) {
+            return ""
+        },
+        isSpacelike: function () {
+            return false
+        },
+        isEmbellished: function () {
+            return false
+        },
+        Core: function () {
+            return this
+        },
+        CoreMO: function () {
+            return this
+        },
         childIndex: function (g) {
-            if (g == null) { return }
+            if (g == null) {
+                return
+            }
             for (var f = 0, e = this.data.length; f < e; f++) {
-                if (g === this.data[f]) { return f }
+                if (g === this.data[f]) {
+                    return f
+                }
             }
         },
         CoreIndex: function () {
-            return (this.inferRow ? this.data[0] || this : this).childIndex(this.Core());
+            return (this.inferRow ? this.data[0] || this : this).childIndex(this.Core())
         },
         hasNewline: function () {
             if (this.isEmbellished()) {
-                return this.CoreMO().hasNewline();
+                return this.CoreMO().hasNewline()
             }
-            if (this.isToken || this.linebreakContainer) { return false }
+            if (this.isToken || this.linebreakContainer) {
+                return false
+            }
             for (var f = 0, e = this.data.length; f < e; f++) {
-                if (this.data[f] && this.data[f].hasNewline()) { return true }
+                if (this.data[f] && this.data[f].hasNewline()) {
+                    return true
+                }
             }
-            return false;
+            return false
         },
         array: function () {
             if (this.inferred) {
-                return this.data;
+                return this.data
             } else {
-                return [this];
+                return [this]
             }
         },
         toString: function () {
-            return this.type + "(" + this.data.join(",") + ")";
+            return this.type + "(" + this.data.join(",") + ")"
         },
-        getAnnotation: function () { return null }
+        getAnnotation: function () {
+            return null
+        }
     }, {
         childrenSpacelike: function () {
             for (var f = 0, e = this.data.length; f < e; f++) {
-                if (!this.data[f].isSpacelike()) { return false }
+                if (!this.data[f].isSpacelike()) {
+                    return false
+                }
             }
-            return true;
+            return true
         },
         childEmbellished: function () {
-            return (this.data[0] && this.data[0].isEmbellished());
+            return (this.data[0] && this.data[0].isEmbellished())
         },
         childCore: function () {
-            return (this.inferRow && this.data[0] ? this.data[0].Core() : this.data[0]);
+            return (this.inferRow && this.data[0] ? this.data[0].Core() : this.data[0])
         },
         childCoreMO: function () {
-            return (this.data[0] ? this.data[0].CoreMO() : null);
+            return (this.data[0] ? this.data[0].CoreMO() : null)
         },
         setChildTeXclass: function (e) {
             if (this.data[0]) {
                 e = this.data[0].setTeXclass(e);
-                this.updateTeXclass(this.data[0]);
+                this.updateTeXclass(this.data[0])
             }
-            return e;
+            return e
         },
         setBaseTeXclasses: function (g) {
             this.getPrevClass(g);
@@ -426,41 +528,49 @@ MathJax.ElementJax.mml.__Augment({
             if (this.data[0]) {
                 if (this.isEmbellished() || this.data[0].isa(a.mi)) {
                     g = this.data[0].setTeXclass(g);
-                    this.updateTeXclass(this.Core());
+                    this.updateTeXclass(this.Core())
                 } else {
                     this.data[0].setTeXclass();
-                    g = this;
+                    g = this
                 }
             } else {
-                g = this;
+                g = this
             }
             for (var f = 1, e = this.data.length; f < e; f++) {
                 if (this.data[f]) {
-                    this.data[f].setTeXclass();
+                    this.data[f].setTeXclass()
                 }
             }
-            return g;
+            return g
         },
         setSeparateTeXclasses: function (g) {
             this.getPrevClass(g);
             for (var f = 0, e = this.data.length; f < e; f++) {
-                if (this.data[f]) { this.data[f].setTeXclass() }
+                if (this.data[f]) {
+                    this.data[f].setTeXclass()
+                }
             }
             if (this.isEmbellished()) {
-                this.updateTeXclass(this.Core());
+                this.updateTeXclass(this.Core())
             }
-            return this;
+            return this
         }
     });
     a.mi = a.mbase.__Subclass({
         type: "mi",
         isToken: true,
         texClass: a.TEXCLASS.ORD,
-        defaults: { mathvariant: a.AUTO, mathsize: a.INHERIT, mathbackground: a.INHERIT, mathcolor: a.INHERIT, dir: a.INHERIT },
+        defaults: {
+            mathvariant: a.AUTO,
+            mathsize: a.INHERIT,
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            dir: a.INHERIT
+        },
         autoDefault: function (f) {
             if (f === "mathvariant") {
                 var e = (this.data[0] || "").toString();
-                return (e.length === 1 || (e.length === 2 && e.charCodeAt(0) >= 55296 && e.charCodeAt(0) < 56320) ? a.VARIANT.ITALIC : a.VARIANT.NORMAL);
+                return (e.length === 1 || (e.length === 2 && e.charCodeAt(0) >= 55296 && e.charCodeAt(0) < 56320) ? a.VARIANT.ITALIC : a.VARIANT.NORMAL)
             }
             return ""
         },
@@ -469,16 +579,22 @@ MathJax.ElementJax.mml.__Augment({
             var e = this.data.join("");
             if (e.length > 1 && e.match(/^[a-z][a-z0-9]*$/i) && this.texClass === a.TEXCLASS.ORD) {
                 this.texClass = a.TEXCLASS.OP;
-                this.autoOP = true;
+                this.autoOP = true
             }
-            return this;
+            return this
         }
     });
     a.mn = a.mbase.__Subclass({
         type: "mn",
         isToken: true,
         texClass: a.TEXCLASS.ORD,
-        defaults: { mathvariant: a.INHERIT, mathsize: a.INHERIT, mathbackground: a.INHERIT, mathcolor: a.INHERIT, dir: a.INHERIT }
+        defaults: {
+            mathvariant: a.INHERIT,
+            mathsize: a.INHERIT,
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            dir: a.INHERIT
+        }
     });
     a.mo = a.mbase.__Subclass({
         type: "mo",
@@ -539,14 +655,18 @@ MathJax.ElementJax.mml.__Augment({
             indentshiftlast: a.INDENTSHIFT.INDENTSHIFT,
             texClass: a.TEXCLASS.REL
         },
-        SPACE_ATTR: { lspace: 1, rspace: 2, form: 4 },
+        SPACE_ATTR: {
+            lspace: 1,
+            rspace: 2,
+            form: 4
+        },
         useMMLspacing: 7,
         autoDefault: function (g, n) {
             var l = this.def;
             if (!l) {
                 if (g === "form") {
                     this.useMMLspacing &= ~this.SPACE_ATTR.form;
-                    return this.getForm();
+                    return this.getForm()
                 }
                 var k = this.data.join("");
                 var f = [this.Get("form"), a.FORM.INFIX, a.FORM.POSTFIX, a.FORM.PREFIX];
@@ -554,92 +674,117 @@ MathJax.ElementJax.mml.__Augment({
                     var j = this.OPTABLE[f[h]][k];
                     if (j) {
                         l = this.makeDef(j);
-                        break;
+                        break
                     }
                 }
-                if (!l) { l = this.CheckRange(k) }
+                if (!l) {
+                    l = this.CheckRange(k)
+                }
                 if (!l && n) {
-                    l = {};
+                    l = {}
                 } else {
-                    if (!l) { l = MathJax.Hub.Insert({}, this.defaultDef) }
-                    if (this.parent) {
-                        this.def = l;
-                    } else {
-                        l = MathJax.Hub.Insert({}, l);
+                    if (!l) {
+                        l = MathJax.Hub.Insert({}, this.defaultDef)
                     }
-                    l.form = f[0];
+                    if (this.parent) {
+                        this.def = l
+                    } else {
+                        l = MathJax.Hub.Insert({}, l)
+                    }
+                    l.form = f[0]
                 }
             }
             this.useMMLspacing &= ~(this.SPACE_ATTR[g] || 0);
             if (l[g] != null) {
-                return l[g];
+                return l[g]
             } else {
                 if (!n) {
-                    return this.defaultDef[g];
+                    return this.defaultDef[g]
                 }
             }
-            return "";
+            return ""
         },
         CheckRange: function (j) {
             var k = j.charCodeAt(0);
             if (k >= 55296 && k < 56320) {
-                k = (((k - 55296) << 10) + (j.charCodeAt(1) - 56320)) + 65536;
+                k = (((k - 55296) << 10) + (j.charCodeAt(1) - 56320)) + 65536
             }
             for (var g = 0, e = this.RANGES.length; g < e && this.RANGES[g][0] <= k; g++) {
                 if (k <= this.RANGES[g][1]) {
                     if (this.RANGES[g][3]) {
                         var f = a.optableDir + "/" + this.RANGES[g][3] + ".js";
-                        this.RANGES[g][3] = null; MathJax.Hub.RestartAfter(MathJax.Ajax.Require(f));
+                        this.RANGES[g][3] = null;
+                        MathJax.Hub.RestartAfter(MathJax.Ajax.Require(f))
                     }
                     var h = a.TEXCLASSNAMES[this.RANGES[g][2]];
                     h = this.OPTABLE.infix[j] = a.mo.OPTYPES[h === "BIN" ? "BIN3" : h];
-                    return this.makeDef(h);
+                    return this.makeDef(h)
                 }
             }
-            return null;
+            return null
         },
         makeDef: function (f) {
             if (f[2] == null) {
-                f[2] = this.defaultDef.texClass;
+                f[2] = this.defaultDef.texClass
             }
-            if (!f[3]) { f[3] = {} }
+            if (!f[3]) {
+                f[3] = {}
+            }
             var e = MathJax.Hub.Insert({}, f[3]);
             e.lspace = this.SPACE[f[0]];
             e.rspace = this.SPACE[f[1]];
             e.texClass = f[2];
             if (e.texClass === a.TEXCLASS.REL && (this.movablelimits || this.data.join("").match(/^[a-z]+$/i))) {
-                e.texClass = a.TEXCLASS.OP;
+                e.texClass = a.TEXCLASS.OP
             }
-            return e;
+            return e
         },
         getForm: function () {
-            var e = this, g = this.parent, f = this.Parent();
+            var e = this
+                , g = this.parent
+                , f = this.Parent();
             while (f && f.isEmbellished()) {
                 e = g;
                 g = f.parent;
-                f = f.Parent();
+                f = f.Parent()
             }
             if (g && g.type === "mrow" && g.NonSpaceLength() !== 1) {
-                if (g.FirstNonSpace() === e) { return a.FORM.PREFIX }
-                if (g.LastNonSpace() === e) { return a.FORM.POSTFIX }
+                if (g.FirstNonSpace() === e) {
+                    return a.FORM.PREFIX
+                }
+                if (g.LastNonSpace() === e) {
+                    return a.FORM.POSTFIX
+                }
             }
-            return a.FORM.INFIX;
+            return a.FORM.INFIX
         },
-        isEmbellished: function () { return true },
-        hasNewline: function () { return (this.Get("linebreak") === a.LINEBREAK.NEWLINE) },
+        isEmbellished: function () {
+            return true
+        },
+        hasNewline: function () {
+            return (this.Get("linebreak") === a.LINEBREAK.NEWLINE)
+        },
         CoreParent: function () {
             var e = this;
-            while (e && e.isEmbellished() && e.CoreMO() === this && !e.isa(a.math)) { e = e.Parent() }
-            return e;
+            while (e && e.isEmbellished() && e.CoreMO() === this && !e.isa(a.math)) {
+                e = e.Parent()
+            }
+            return e
         },
         CoreText: function (e) {
-            if (!e) { return "" }
-            if (e.isEmbellished()) { return e.CoreMO().data.join("") }
-            while ((((e.isa(a.mrow) || e.isa(a.TeXAtom) || e.isa(a.mstyle) || e.isa(a.mphantom)) && e.data.length === 1) || e.isa(a.munderover)) && e.data[0]) { e = e.data[0] }
+            if (!e) {
+                return ""
+            }
+            if (e.isEmbellished()) {
+                return e.CoreMO().data.join("")
+            }
+            while ((((e.isa(a.mrow) || e.isa(a.TeXAtom) || e.isa(a.mstyle) || e.isa(a.mphantom)) && e.data.length === 1) || e.isa(a.munderover)) && e.data[0]) {
+                e = e.data[0]
+            }
             if (!e.isToken) {
-                return "";
+                return ""
             } else {
-                return e.data.join("");
+                return e.data.join("")
             }
         },
         remapChars: {
@@ -655,86 +800,135 @@ MathJax.ElementJax.mml.__Augment({
             f = f.replace(/-/g, "\u2212");
             if (e) {
                 f = f.replace(/'/g, "\u2032").replace(/`/g, "\u2035");
-                if (f.length === 1) { f = e[f] || f }
+                if (f.length === 1) {
+                    f = e[f] || f
+                }
             }
-            return f;
+            return f
         },
         setTeXclass: function (f) {
             var e = this.getValues("form", "lspace", "rspace", "fence");
             if (this.useMMLspacing) {
                 this.texClass = a.TEXCLASS.NONE;
-                return this;
+                return this
             }
             if (e.fence && !this.texClass) {
                 if (e.form === a.FORM.PREFIX) {
-                    this.texClass = a.TEXCLASS.OPEN;
+                    this.texClass = a.TEXCLASS.OPEN
                 }
                 if (e.form === a.FORM.POSTFIX) {
-                    this.texClass = a.TEXCLASS.CLOSE;
+                    this.texClass = a.TEXCLASS.CLOSE
                 }
             }
             this.texClass = this.Get("texClass");
             if (this.data.join("") === "\u2061") {
-                if (f) { f.texClass = a.TEXCLASS.OP; f.fnOP = true }
+                if (f) {
+                    f.texClass = a.TEXCLASS.OP;
+                    f.fnOP = true
+                }
                 this.texClass = this.prevClass = a.TEXCLASS.NONE;
-                return f;
+                return f
             }
-            return this.adjustTeXclass(f);
+            return this.adjustTeXclass(f)
         },
         adjustTeXclass: function (f) {
-            if (this.texClass === a.TEXCLASS.NONE) { return f }
+            if (this.texClass === a.TEXCLASS.NONE) {
+                return f
+            }
             if (f) {
-                if (f.autoOP && (this.texClass === a.TEXCLASS.BIN || this.texClass === a.TEXCLASS.REL)) { f.texClass = a.TEXCLASS.ORD }
+                if (f.autoOP && (this.texClass === a.TEXCLASS.BIN || this.texClass === a.TEXCLASS.REL)) {
+                    f.texClass = a.TEXCLASS.ORD
+                }
                 this.prevClass = f.texClass || a.TEXCLASS.ORD;
-                this.prevLevel = f.Get("scriptlevel");
+                this.prevLevel = f.Get("scriptlevel")
             } else {
-                this.prevClass = a.TEXCLASS.NONE;
+                this.prevClass = a.TEXCLASS.NONE
             }
             if (this.texClass === a.TEXCLASS.BIN && (this.prevClass === a.TEXCLASS.NONE || this.prevClass === a.TEXCLASS.BIN || this.prevClass === a.TEXCLASS.OP || this.prevClass === a.TEXCLASS.REL || this.prevClass === a.TEXCLASS.OPEN || this.prevClass === a.TEXCLASS.PUNCT)) {
-                this.texClass = a.TEXCLASS.ORD;
+                this.texClass = a.TEXCLASS.ORD
             } else {
                 if (this.prevClass === a.TEXCLASS.BIN && (this.texClass === a.TEXCLASS.REL || this.texClass === a.TEXCLASS.CLOSE || this.texClass === a.TEXCLASS.PUNCT)) {
-                    f.texClass = this.prevClass = a.TEXCLASS.ORD;
+                    f.texClass = this.prevClass = a.TEXCLASS.ORD
                 } else {
                     if (this.texClass === a.TEXCLASS.BIN) {
-                        var g = this, e = this.parent;
-                        while (e && e.parent && e.isEmbellished() && (e.data.length === 1 || (e.type !== "mrow" && e.Core() === g))) { g = e; e = e.parent } if (e.data[e.data.length - 1] === g) {
-                            this.texClass = a.TEXCLASS.ORD;
+                        var g = this
+                            , e = this.parent;
+                        while (e && e.parent && e.isEmbellished() && (e.data.length === 1 || (e.type !== "mrow" && e.Core() === g))) {
+                            g = e;
+                            e = e.parent
+                        }
+                        if (e.data[e.data.length - 1] === g) {
+                            this.texClass = a.TEXCLASS.ORD
                         }
                     }
                 }
             }
-            return this;
+            return this
         }
     });
     a.mtext = a.mbase.__Subclass({
         type: "mtext",
         isToken: true,
-        isSpacelike: function () { return true },
+        isSpacelike: function () {
+            return true
+        },
         texClass: a.TEXCLASS.ORD,
-        defaults: { mathvariant: a.INHERIT, mathsize: a.INHERIT, mathbackground: a.INHERIT, mathcolor: a.INHERIT, dir: a.INHERIT }
+        defaults: {
+            mathvariant: a.INHERIT,
+            mathsize: a.INHERIT,
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            dir: a.INHERIT
+        }
     });
     a.mspace = a.mbase.__Subclass({
         type: "mspace",
         isToken: true,
-        isSpacelike: function () { return true },
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, width: "0em", height: "0ex", depth: "0ex", linebreak: a.LINEBREAK.AUTO },
-        hasDimAttr: function () {
-            return (this.hasValue("width") || this.hasValue("height") || this.hasValue("depth"));
+        isSpacelike: function () {
+            return true
         },
-        hasNewline: function () { return (!this.hasDimAttr() && this.Get("linebreak") === a.LINEBREAK.NEWLINE) }
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            width: "0em",
+            height: "0ex",
+            depth: "0ex",
+            linebreak: a.LINEBREAK.AUTO
+        },
+        hasDimAttr: function () {
+            return (this.hasValue("width") || this.hasValue("height") || this.hasValue("depth"))
+        },
+        hasNewline: function () {
+            return (!this.hasDimAttr() && this.Get("linebreak") === a.LINEBREAK.NEWLINE)
+        }
     });
     a.ms = a.mbase.__Subclass({
         type: "ms",
         isToken: true,
         texClass: a.TEXCLASS.ORD,
-        defaults: { mathvariant: a.INHERIT, mathsize: a.INHERIT, mathbackground: a.INHERIT, mathcolor: a.INHERIT, dir: a.INHERIT, lquote: '"', rquote: '"' }
+        defaults: {
+            mathvariant: a.INHERIT,
+            mathsize: a.INHERIT,
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            dir: a.INHERIT,
+            lquote: '"',
+            rquote: '"'
+        }
     });
     a.mglyph = a.mbase.__Subclass({
         type: "mglyph",
         isToken: true,
         texClass: a.TEXCLASS.ORD,
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, alt: "", src: "", width: a.AUTO, height: a.AUTO, valign: "0em" }
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            alt: "",
+            src: "",
+            width: a.AUTO,
+            height: a.AUTO,
+            valign: "0em"
+        }
     });
     a.mrow = a.mbase.__Subclass({
         type: "mrow",
@@ -744,48 +938,65 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: function () {
             var f = false;
             for (var g = 0, e = this.data.length; g < e; g++) {
-                if (this.data[g] == null) { continue }
-                if (this.data[g].isEmbellished()) {
-                    if (f) { return false }
-                    f = true;
-                    this.core = g;
-                } else {
-                    if (!this.data[g].isSpacelike()) { return false }
+                if (this.data[g] == null) {
+                    continue
                 }
-            } return f;
+                if (this.data[g].isEmbellished()) {
+                    if (f) {
+                        return false
+                    }
+                    f = true;
+                    this.core = g
+                } else {
+                    if (!this.data[g].isSpacelike()) {
+                        return false
+                    }
+                }
+            }
+            return f
         },
         NonSpaceLength: function () {
             var g = 0;
             for (var f = 0, e = this.data.length; f < e; f++) {
-                if (this.data[f] && !this.data[f].isSpacelike()) { g++ }
+                if (this.data[f] && !this.data[f].isSpacelike()) {
+                    g++
+                }
             }
-            return g;
+            return g
         },
         FirstNonSpace: function () {
             for (var f = 0, e = this.data.length; f < e; f++) {
-                if (this.data[f] && !this.data[f].isSpacelike()) { return this.data[f] }
+                if (this.data[f] && !this.data[f].isSpacelike()) {
+                    return this.data[f]
+                }
             }
-            return null;
+            return null
         },
         LastNonSpace: function () {
             for (var e = this.data.length - 1; e >= 0; e--) {
-                if (this.data[0] && !this.data[e].isSpacelike()) { return this.data[e] }
+                if (this.data[0] && !this.data[e].isSpacelike()) {
+                    return this.data[e]
+                }
             }
-            return null;
+            return null
         },
         Core: function () {
-            if (!(this.isEmbellished()) || typeof (this.core) === "undefined") { return this }
-            return this.data[this.core];
+            if (!(this.isEmbellished()) || typeof (this.core) === "undefined") {
+                return this
+            }
+            return this.data[this.core]
         },
         CoreMO: function () {
-            if (!(this.isEmbellished()) || typeof (this.core) === "undefined") { return this }
-            return this.data[this.core].CoreMO();
+            if (!(this.isEmbellished()) || typeof (this.core) === "undefined") {
+                return this
+            }
+            return this.data[this.core].CoreMO()
         },
         toString: function () {
             if (this.inferred) {
-                return "[" + this.data.join(",") + "]";
+                return "[" + this.data.join(",") + "]"
             }
-            return this.__SUPER(arguments).toString.call(this);
+            return this.__SUPER(arguments).toString.call(this)
         },
         setTeXclass: function (g) {
             var f, e = this.data.length;
@@ -794,26 +1005,30 @@ MathJax.ElementJax.mml.__Augment({
                 g = null;
                 for (f = 0; f < e; f++) {
                     if (this.data[f]) {
-                        g = this.data[f].setTeXclass(g);
+                        g = this.data[f].setTeXclass(g)
                     }
                 }
                 if (!this.hasOwnProperty("texClass")) {
-                    this.texClass = a.TEXCLASS.INNER;
+                    this.texClass = a.TEXCLASS.INNER
                 }
-                return this;
+                return this
             } else {
                 for (f = 0; f < e; f++) {
                     if (this.data[f]) {
-                        g = this.data[f].setTeXclass(g);
+                        g = this.data[f].setTeXclass(g)
                     }
                 }
-                if (this.data[0]) { this.updateTeXclass(this.data[0]) }
-                return g;
+                if (this.data[0]) {
+                    this.updateTeXclass(this.data[0])
+                }
+                return g
             }
         },
         getAnnotation: function (e) {
-            if (this.data.length != 1) { return null }
-            return this.data[0].getAnnotation(e);
+            if (this.data.length != 1) {
+                return null
+            }
+            return this.data[0].getAnnotation(e)
         }
     });
     a.mfrac = a.mbase.__Subclass({
@@ -824,16 +1039,29 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: a.mbase.childEmbellished,
         Core: a.mbase.childCore,
         CoreMO: a.mbase.childCoreMO,
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, linethickness: a.LINETHICKNESS.MEDIUM, numalign: a.ALIGN.CENTER, denomalign: a.ALIGN.CENTER, bevelled: false },
-        adjustChild_displaystyle: function (e) { return false },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            linethickness: a.LINETHICKNESS.MEDIUM,
+            numalign: a.ALIGN.CENTER,
+            denomalign: a.ALIGN.CENTER,
+            bevelled: false
+        },
+        adjustChild_displaystyle: function (e) {
+            return false
+        },
         adjustChild_scriptlevel: function (f) {
             var e = this.Get("scriptlevel");
-            if (!this.Get("displaystyle") || e > 0) { e++ }
-            return e;
+            if (!this.Get("displaystyle") || e > 0) {
+                e++
+            }
+            return e
         },
         adjustChild_texprimestyle: function (e) {
-            if (e == this.den) { return true }
-            return this.Get("texprimestyle");
+            if (e == this.den) {
+                return true
+            }
+            return this.Get("texprimestyle")
         },
         setTeXclass: a.mbase.setSeparateTeXclasses
     });
@@ -843,24 +1071,32 @@ MathJax.ElementJax.mml.__Augment({
         linebreakContainer: true,
         texClass: a.TEXCLASS.ORD,
         setTeXclass: a.mbase.setSeparateTeXclasses,
-        adjustChild_texprimestyle: function (e) { return true }
+        adjustChild_texprimestyle: function (e) {
+            return true
+        }
     });
     a.mroot = a.mbase.__Subclass({
         type: "mroot",
         linebreakContainer: true,
         texClass: a.TEXCLASS.ORD,
         adjustChild_displaystyle: function (e) {
-            if (e === 1) { return false }
-            return this.Get("displaystyle");
+            if (e === 1) {
+                return false
+            }
+            return this.Get("displaystyle")
         },
         adjustChild_scriptlevel: function (f) {
             var e = this.Get("scriptlevel");
-            if (f === 1) { e += 2 }
-            return e;
+            if (f === 1) {
+                e += 2
+            }
+            return e
         },
         adjustChild_texprimestyle: function (e) {
-            if (e === 0) { return true }
-            return this.Get("texprimestyle");
+            if (e === 0) {
+                return true
+            }
+            return this.Get("texprimestyle")
         },
         setTeXclass: a.mbase.setSeparateTeXclasses
     });
@@ -885,21 +1121,37 @@ MathJax.ElementJax.mml.__Augment({
         adjustChild_scriptlevel: function (g) {
             var f = this.scriptlevel;
             if (f == null) {
-                f = this.Get("scriptlevel");
+                f = this.Get("scriptlevel")
             } else {
                 if (String(f).match(/^ *[-+]/)) {
                     var e = this.Get("scriptlevel", null, true);
-                    f = e + parseInt(f);
+                    f = e + parseInt(f)
                 }
             }
-            return f;
+            return f
         },
         inheritFromMe: true,
         noInherit: {
-            mpadded: { width: true, height: true, depth: true, lspace: true, voffset: true },
-            mtable: { width: true, height: true, depth: true, align: true }
+            mpadded: {
+                width: true,
+                height: true,
+                depth: true,
+                lspace: true,
+                voffset: true
+            },
+            mtable: {
+                width: true,
+                height: true,
+                depth: true,
+                align: true
+            }
         },
-        getRemoved: { fontfamily: "fontFamily", fontweight: "fontWeight", fontstyle: "fontStyle", fontsize: "fontSize" },
+        getRemoved: {
+            fontfamily: "fontFamily",
+            fontweight: "fontWeight",
+            fontstyle: "fontStyle",
+            fontsize: "fontSize"
+        },
         setTeXclass: a.mbase.setChildTeXclass
     });
     a.merror = a.mbase.__Subclass({
@@ -915,7 +1167,15 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: a.mbase.childEmbellished,
         Core: a.mbase.childCore,
         CoreMO: a.mbase.childCoreMO,
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, width: "", height: "", depth: "", lspace: 0, voffset: 0 },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            width: "",
+            height: "",
+            depth: "",
+            lspace: 0,
+            voffset: 0
+        },
         setTeXclass: a.mbase.setChildTeXclass
     });
     a.mphantom = a.mbase.__Subclass({
@@ -930,59 +1190,84 @@ MathJax.ElementJax.mml.__Augment({
     });
     a.mfenced = a.mbase.__Subclass({
         type: "mfenced",
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, open: "(", close: ")", separators: "," },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            open: "(",
+            close: ")",
+            separators: ","
+        },
         addFakeNodes: function () {
             var f = this.getValues("open", "close", "separators");
             f.open = f.open.replace(/[ \t\n\r]/g, "");
             f.close = f.close.replace(/[ \t\n\r]/g, "");
             f.separators = f.separators.replace(/[ \t\n\r]/g, "");
             if (f.open !== "") {
-                this.SetData("open", a.mo(f.open).With({ fence: true, form: a.FORM.PREFIX, texClass: a.TEXCLASS.OPEN }));
-                this.data.open.useMMLspacing = 0;
+                this.SetData("open", a.mo(f.open).With({
+                    fence: true,
+                    form: a.FORM.PREFIX,
+                    texClass: a.TEXCLASS.OPEN
+                }));
+                this.data.open.useMMLspacing = 0
             }
             if (f.separators !== "") {
                 while (f.separators.length < this.data.length) {
-                    f.separators += f.separators.charAt(f.separators.length - 1);
+                    f.separators += f.separators.charAt(f.separators.length - 1)
                 }
                 for (var g = 1, e = this.data.length; g < e; g++) {
                     if (this.data[g]) {
-                        this.SetData("sep" + g, a.mo(f.separators.charAt(g - 1)).With({ separator: true }));
-                        this.data["sep" + g].useMMLspacing = 0;
+                        this.SetData("sep" + g, a.mo(f.separators.charAt(g - 1)).With({
+                            separator: true
+                        }));
+                        this.data["sep" + g].useMMLspacing = 0
                     }
                 }
             }
             if (f.close !== "") {
-                this.SetData("close", a.mo(f.close).With({ fence: true, form: a.FORM.POSTFIX, texClass: a.TEXCLASS.CLOSE }));
-                this.data.close.useMMLspacing = 0;
+                this.SetData("close", a.mo(f.close).With({
+                    fence: true,
+                    form: a.FORM.POSTFIX,
+                    texClass: a.TEXCLASS.CLOSE
+                }));
+                this.data.close.useMMLspacing = 0
             }
         },
         texClass: a.TEXCLASS.OPEN,
         setTeXclass: function (g) {
             this.addFakeNodes();
             this.getPrevClass(g);
-            if (this.data.open) { g = this.data.open.setTeXclass(g) }
-            if (this.data[0]) { g = this.data[0].setTeXclass(g) }
+            if (this.data.open) {
+                g = this.data.open.setTeXclass(g)
+            }
+            if (this.data[0]) {
+                g = this.data[0].setTeXclass(g)
+            }
             for (var f = 1, e = this.data.length; f < e; f++) {
                 if (this.data["sep" + f]) {
-                    g = this.data["sep" + f].setTeXclass(g);
+                    g = this.data["sep" + f].setTeXclass(g)
                 }
                 if (this.data[f]) {
-                    g = this.data[f].setTeXclass(g);
+                    g = this.data[f].setTeXclass(g)
                 }
             }
             if (this.data.close) {
-                g = this.data.close.setTeXclass(g);
+                g = this.data.close.setTeXclass(g)
             }
             this.updateTeXclass(this.data.open);
             this.texClass = a.TEXCLASS.INNER;
-            return g;
+            return g
         }
     });
     a.menclose = a.mbase.__Subclass({
         type: "menclose",
         inferRow: true,
         linebreakContainer: true,
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, notation: a.NOTATION.LONGDIV, texClass: a.TEXCLASS.ORD },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            notation: a.NOTATION.LONGDIV,
+            texClass: a.TEXCLASS.ORD
+        },
         setTeXclass: a.mbase.setSeparateTeXclasses
     });
     a.msubsup = a.mbase.__Subclass({
@@ -993,41 +1278,63 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: a.mbase.childEmbellished,
         Core: a.mbase.childCore,
         CoreMO: a.mbase.childCoreMO,
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, subscriptshift: "", superscriptshift: "", texClass: a.AUTO },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            subscriptshift: "",
+            superscriptshift: "",
+            texClass: a.AUTO
+        },
         autoDefault: function (e) {
             if (e === "texClass") {
-                return (this.isEmbellished() ? this.CoreMO().Get(e) : a.TEXCLASS.ORD);
+                return (this.isEmbellished() ? this.CoreMO().Get(e) : a.TEXCLASS.ORD)
             }
-            return 0;
+            return 0
         },
         adjustChild_displaystyle: function (e) {
             if (e > 0) {
-                return false;
+                return false
             }
-            return this.Get("displaystyle");
+            return this.Get("displaystyle")
         },
         adjustChild_scriptlevel: function (f) {
             var e = this.Get("scriptlevel");
-            if (f > 0) { e++ }
-            return e;
+            if (f > 0) {
+                e++
+            }
+            return e
         },
         adjustChild_texprimestyle: function (e) {
-            if (e === this.sub) { return true }
-            return this.Get("texprimestyle");
+            if (e === this.sub) {
+                return true
+            }
+            return this.Get("texprimestyle")
         },
         setTeXclass: a.mbase.setBaseTeXclasses
     });
-    a.msub = a.msubsup.__Subclass({ type: "msub" });
-    a.msup = a.msubsup.__Subclass({ type: "msup", sub: 2, sup: 1 });
+    a.msub = a.msubsup.__Subclass({
+        type: "msub"
+    });
+    a.msup = a.msubsup.__Subclass({
+        type: "msup",
+        sub: 2,
+        sup: 1
+    });
     a.mmultiscripts = a.msubsup.__Subclass({
         type: "mmultiscripts",
         adjustChild_texprimestyle: function (e) {
-            if (e % 2 === 1) { return true }
-            return this.Get("texprimestyle");
+            if (e % 2 === 1) {
+                return true
+            }
+            return this.Get("texprimestyle")
         }
     });
-    a.mprescripts = a.mbase.__Subclass({ type: "mprescripts" });
-    a.none = a.mbase.__Subclass({ type: "none" });
+    a.mprescripts = a.mbase.__Subclass({
+        type: "mprescripts"
+    });
+    a.none = a.mbase.__Subclass({
+        type: "none"
+    });
     a.munderover = a.mbase.__Subclass({
         type: "munderover",
         base: 0,
@@ -1052,34 +1359,44 @@ MathJax.ElementJax.mml.__Augment({
         },
         autoDefault: function (e) {
             if (e === "texClass") {
-                return (this.isEmbellished() ? this.CoreMO().Get(e) : a.TEXCLASS.ORD);
+                return (this.isEmbellished() ? this.CoreMO().Get(e) : a.TEXCLASS.ORD)
             }
             if (e === "accent" && this.data[this.over]) {
-                return this.data[this.over].CoreMO().Get("accent");
+                return this.data[this.over].CoreMO().Get("accent")
             }
             if (e === "accentunder" && this.data[this.under]) {
-                return this.data[this.under].CoreMO().Get("accent");
+                return this.data[this.under].CoreMO().Get("accent")
             }
-            return false;
+            return false
         },
         adjustChild_displaystyle: function (e) {
-            if (e > 0) { return false }
-            return this.Get("displaystyle");
+            if (e > 0) {
+                return false
+            }
+            return this.Get("displaystyle")
         },
         adjustChild_scriptlevel: function (g) {
             var f = this.Get("scriptlevel");
             var e = (this.data[this.base] && !this.Get("displaystyle") && this.data[this.base].CoreMO().Get("movablelimits"));
-            if (g == this.under && (e || !this.Get("accentunder"))) { f++ }
-            if (g == this.over && (e || !this.Get("accent"))) { f++ }
-            return f;
+            if (g == this.under && (e || !this.Get("accentunder"))) {
+                f++
+            }
+            if (g == this.over && (e || !this.Get("accent"))) {
+                f++
+            }
+            return f
         },
         adjustChild_texprimestyle: function (e) {
-            if (e === this.base && this.data[this.over]) { return true }
-            return this.Get("texprimestyle");
+            if (e === this.base && this.data[this.over]) {
+                return true
+            }
+            return this.Get("texprimestyle")
         },
         setTeXclass: a.mbase.setBaseTeXclasses
     });
-    a.munder = a.munderover.__Subclass({ type: "munder" });
+    a.munder = a.munderover.__Subclass({
+        type: "munder"
+    });
     a.mover = a.munderover.__Subclass({
         type: "mover",
         over: 1,
@@ -1115,13 +1432,19 @@ MathJax.ElementJax.mml.__Augment({
             useHeight: 1
         },
         adjustChild_displaystyle: function () {
-            return (this.displaystyle != null ? this.displaystyle : this.defaults.displaystyle);
+            return (this.displaystyle != null ? this.displaystyle : this.defaults.displaystyle)
         },
         inheritFromMe: true,
         noInherit: {
-            mover: { align: true },
-            munder: { align: true },
-            munderover: { align: true },
+            mover: {
+                align: true
+            },
+            munder: {
+                align: true
+            },
+            munderover: {
+                align: true
+            },
             mtable: {
                 align: true,
                 rowalign: true,
@@ -1149,29 +1472,43 @@ MathJax.ElementJax.mml.__Augment({
         Append: function () {
             for (var f = 0, e = arguments.length; f < e; f++) {
                 if (!((arguments[f] instanceof a.mtr) || (arguments[f] instanceof a.mlabeledtr))) {
-                    arguments[f] = a.mtr(arguments[f]);
+                    arguments[f] = a.mtr(arguments[f])
                 }
             }
-            this.__SUPER(arguments).Append.apply(this, arguments);
+            this.__SUPER(arguments).Append.apply(this, arguments)
         },
         setTeXclass: a.mbase.setSeparateTeXclasses
     });
     a.mtr = a.mbase.__Subclass({
         type: "mtr",
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, rowalign: a.INHERIT, columnalign: a.INHERIT, groupalign: a.INHERIT },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            rowalign: a.INHERIT,
+            columnalign: a.INHERIT,
+            groupalign: a.INHERIT
+        },
         inheritFromMe: true,
         noInherit: {
-            mrow: { rowalign: true, columnalign: true, groupalign: true },
-            mtable: { rowalign: true, columnalign: true, groupalign: true }
+            mrow: {
+                rowalign: true,
+                columnalign: true,
+                groupalign: true
+            },
+            mtable: {
+                rowalign: true,
+                columnalign: true,
+                groupalign: true
+            }
         },
         linebreakContainer: true,
         Append: function () {
             for (var f = 0, e = arguments.length; f < e; f++) {
                 if (!(arguments[f] instanceof a.mtd)) {
-                    arguments[f] = a.mtd(arguments[f]);
+                    arguments[f] = a.mtd(arguments[f])
                 }
             }
-            this.__SUPER(arguments).Append.apply(this, arguments);
+            this.__SUPER(arguments).Append.apply(this, arguments)
         },
         setTeXclass: a.mbase.setSeparateTeXclasses
     });
@@ -1182,53 +1519,82 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: a.mbase.childEmbellished,
         Core: a.mbase.childCore,
         CoreMO: a.mbase.childCoreMO,
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, rowspan: 1, columnspan: 1, rowalign: a.INHERIT, columnalign: a.INHERIT, groupalign: a.INHERIT },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            rowspan: 1,
+            columnspan: 1,
+            rowalign: a.INHERIT,
+            columnalign: a.INHERIT,
+            groupalign: a.INHERIT
+        },
         setTeXclass: a.mbase.setSeparateTeXclasses
     });
     a.maligngroup = a.mbase.__Subclass({
         type: "maligngroup",
-        isSpacelike: function () { return true },
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, groupalign: a.INHERIT },
+        isSpacelike: function () {
+            return true
+        },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            groupalign: a.INHERIT
+        },
         inheritFromMe: true,
         noInherit: {
-            mrow: { groupalign: true },
-            mtable: { groupalign: true }
+            mrow: {
+                groupalign: true
+            },
+            mtable: {
+                groupalign: true
+            }
         }
     });
     a.malignmark = a.mbase.__Subclass({
         type: "malignmark",
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, edge: a.SIDE.LEFT },
-        isSpacelike: function () { return true }
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            edge: a.SIDE.LEFT
+        },
+        isSpacelike: function () {
+            return true
+        }
     });
     a.mlabeledtr = a.mtr.__Subclass({
         type: "mlabeledtr"
     });
     a.maction = a.mbase.__Subclass({
         type: "maction",
-        defaults: { mathbackground: a.INHERIT, mathcolor: a.INHERIT, actiontype: a.ACTIONTYPE.TOGGLE, selection: 1 },
+        defaults: {
+            mathbackground: a.INHERIT,
+            mathcolor: a.INHERIT,
+            actiontype: a.ACTIONTYPE.TOGGLE,
+            selection: 1
+        },
         selected: function () {
-            return this.data[this.Get("selection") - 1] || a.NULL;
+            return this.data[this.Get("selection") - 1] || a.NULL
         },
         isEmbellished: function () {
-            return this.selected().isEmbellished();
+            return this.selected().isEmbellished()
         },
         isSpacelike: function () {
-            return this.selected().isSpacelike();
+            return this.selected().isSpacelike()
         },
         Core: function () {
-            return this.selected().Core();
+            return this.selected().Core()
         },
         CoreMO: function () {
-            return this.selected().CoreMO();
+            return this.selected().CoreMO()
         },
         setTeXclass: function (f) {
             if (this.Get("actiontype") === a.ACTIONTYPE.TOOLTIP && this.data[1]) {
-                this.data[1].setTeXclass();
+                this.data[1].setTeXclass()
             }
             var e = this.selected();
             f = e.setTeXclass(f);
             this.updateTeXclass(e);
-            return f;
+            return f
         }
     });
     a.semantics = a.mbase.__Subclass({
@@ -1237,7 +1603,10 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: a.mbase.childEmbellished,
         Core: a.mbase.childCore,
         CoreMO: a.mbase.childCoreMO,
-        defaults: { definitionURL: null, encoding: null },
+        defaults: {
+            definitionURL: null,
+            encoding: null
+        },
         setTeXclass: a.mbase.setChildTeXclass,
         getAnnotation: function (g) {
             var l = MathJax.Hub.config.MathMenu.semanticsAnnotations[g];
@@ -1247,25 +1616,37 @@ MathJax.ElementJax.mml.__Augment({
                     if (k) {
                         for (var f = 0, o = l.length; f < o; f++) {
                             if (l[f] === k) {
-                                return this.data[h];
+                                return this.data[h]
                             }
                         }
                     }
                 }
             }
-            return null;
+            return null
         }
     });
     a.annotation = a.mbase.__Subclass({
         type: "annotation",
         isChars: true,
         linebreakContainer: true,
-        defaults: { definitionURL: null, encoding: null, cd: "mathmlkeys", name: "", src: null }
+        defaults: {
+            definitionURL: null,
+            encoding: null,
+            cd: "mathmlkeys",
+            name: "",
+            src: null
+        }
     });
     a["annotation-xml"] = a.mbase.__Subclass({
         type: "annotation-xml",
         linebreakContainer: true,
-        defaults: { definitionURL: null, encoding: null, cd: "mathmlkeys", name: "", src: null }
+        defaults: {
+            definitionURL: null,
+            encoding: null,
+            cd: "mathmlkeys",
+            name: "",
+            src: null
+        }
     });
     a.math = a.mstyle.__Subclass({
         type: "math",
@@ -1301,100 +1682,112 @@ MathJax.ElementJax.mml.__Augment({
         },
         autoDefault: function (e) {
             if (e === "displaystyle") {
-                return this.Get("display") === "block";
+                return this.Get("display") === "block"
             }
-            return "";
+            return ""
         },
         linebreakContainer: true,
         setTeXclass: a.mbase.setChildTeXclass,
         getAnnotation: function (e) {
-            if (this.data.length != 1) { return null }
-            return this.data[0].getAnnotation(e);
+            if (this.data.length != 1) {
+                return null
+            }
+            return this.data[0].getAnnotation(e)
         }
     });
     a.chars = a.mbase.__Subclass({
         type: "chars",
         Append: function () {
-            this.data.push.apply(this.data, arguments);
+            this.data.push.apply(this.data, arguments)
         },
         value: function () {
-            return this.data.join("");
+            return this.data.join("")
         },
         toString: function () {
-            return this.data.join("");
+            return this.data.join("")
         }
     });
     a.entity = a.mbase.__Subclass({
         type: "entity",
         Append: function () {
-            this.data.push.apply(this.data, arguments);
+            this.data.push.apply(this.data, arguments)
         },
         value: function () {
             if (this.data[0].substr(0, 2) === "#x") {
-                return parseInt(this.data[0].substr(2), 16);
+                return parseInt(this.data[0].substr(2), 16)
             } else {
                 if (this.data[0].substr(0, 1) === "#") {
-                    return parseInt(this.data[0].substr(1));
+                    return parseInt(this.data[0].substr(1))
                 } else {
-                    return 0;
+                    return 0
                 }
             }
         },
         toString: function () {
             var e = this.value();
-            if (e <= 65535) { return String.fromCharCode(e) }
+            if (e <= 65535) {
+                return String.fromCharCode(e)
+            }
             e -= 65536;
-            return String.fromCharCode((e >> 10) + 55296) + String.fromCharCode((e & 1023) + 56320);
+            return String.fromCharCode((e >> 10) + 55296) + String.fromCharCode((e & 1023) + 56320)
         }
     });
     a.xml = a.mbase.__Subclass({
         type: "xml",
         __Init: function () {
             this.div = document.createElement("div");
-            return this.__SUPER(arguments).__Init.apply(this, arguments);
+            return this.__SUPER(arguments).__Init.apply(this, arguments)
         },
         Append: function () {
             for (var f = 0, e = arguments.length; f < e; f++) {
                 var g = this.Import(arguments[f]);
                 this.data.push(g);
-                this.div.appendChild(g);
+                this.div.appendChild(g)
             }
         },
         Import: function (j) {
             if (document.importNode) {
-                return document.importNode(j, true);
+                return document.importNode(j, true)
             }
             var f, g, e;
             if (j.nodeType === 1) {
                 f = document.createElement(j.nodeName);
-                for (g = 0, e = j.attributes.length; g < e; g++) {
+                for (g = 0,
+                    e = j.attributes.length; g < e; g++) {
                     var h = j.attributes[g];
                     if (h.specified && h.nodeValue != null && h.nodeValue != "") {
-                        f.setAttribute(h.nodeName, h.nodeValue);
+                        f.setAttribute(h.nodeName, h.nodeValue)
                     }
                     if (h.nodeName === "style") {
-                        f.style.cssText = h.nodeValue;
+                        f.style.cssText = h.nodeValue
                     }
                 }
-                if (j.className) { f.className = j.className }
+                if (j.className) {
+                    f.className = j.className
+                }
             } else {
                 if (j.nodeType === 3 || j.nodeType === 4) {
-                    f = document.createTextNode(j.nodeValue);
+                    f = document.createTextNode(j.nodeValue)
                 } else {
                     if (j.nodeType === 8) {
-                        f = document.createComment(j.nodeValue);
+                        f = document.createComment(j.nodeValue)
                     } else {
-                        return document.createTextNode("");
+                        return document.createTextNode("")
                     }
                 }
             }
-            for (g = 0, e = j.childNodes.length; g < e; g++) {
-                f.appendChild(this.Import(j.childNodes[g]));
+            for (g = 0,
+                e = j.childNodes.length; g < e; g++) {
+                f.appendChild(this.Import(j.childNodes[g]))
             }
-            return f;
+            return f
         },
-        value: function () { return this.div },
-        toString: function () { return this.div.innerHTML }
+        value: function () {
+            return this.div
+        },
+        toString: function () {
+            return this.div.innerHTML
+        }
     });
     a.TeXAtom = a.mbase.__Subclass({
         type: "texatom",
@@ -1407,11 +1800,13 @@ MathJax.ElementJax.mml.__Augment({
         isEmbellished: a.mbase.childEmbellished,
         setTeXclass: function (e) {
             this.data[0].setTeXclass();
-            return this.adjustTeXclass(e);
+            return this.adjustTeXclass(e)
         },
         adjustTeXclass: a.mo.prototype.adjustTeXclass
     });
-    a.NULL = a.mbase().With({ type: "null" });
+    a.NULL = a.mbase().With({
+        type: "null"
+    });
     var b = a.TEXCLASS;
     var d = {
         ORD: [0, 0, b.ORD],
@@ -1440,56 +1835,51 @@ MathJax.ElementJax.mml.__Augment({
         BIN4: [4, 4, b.BIN],
         BIN01: [0, 1, b.BIN],
         BIN5: [5, 5, b.BIN],
-        TALLBIN: [4, 4, b.BIN, { stretchy: true }],
+        TALLBIN: [4, 4, b.BIN, {
+            stretchy: true
+        }],
         BINOP: [4, 4, b.BIN, {
             largeop: true,
             movablelimits: true
         }],
         REL: [5, 5, b.REL],
-        REL1: [1, 1, b.REL, { stretchy: true }],
+        REL1: [1, 1, b.REL, {
+            stretchy: true
+        }],
         REL4: [4, 4, b.REL],
-        RELSTRETCH: [5, 5, b.REL, { stretchy: true }],
-        RELACCENT: [5, 5, b.REL, { accent: true }],
-        WIDEREL: [5, 5, b.REL, { accent: true, stretchy: true }],
-        OPEN: [0, 0, b.OPEN, { fence: true, stretchy: true, symmetric: true }],
-        CLOSE: [0, 0, b.CLOSE, { fence: true, stretchy: true, symmetric: true }],
+        RELSTRETCH: [5, 5, b.REL, {
+            stretchy: true
+        }],
+        RELACCENT: [5, 5, b.REL, {
+            accent: true
+        }],
+        WIDEREL: [5, 5, b.REL, {
+            accent: true,
+            stretchy: true
+        }],
+        OPEN: [0, 0, b.OPEN, {
+            fence: true,
+            stretchy: true,
+            symmetric: true
+        }],
+        CLOSE: [0, 0, b.CLOSE, {
+            fence: true,
+            stretchy: true,
+            symmetric: true
+        }],
         INNER: [0, 0, b.INNER],
         PUNCT: [0, 3, b.PUNCT],
-        ACCENT: [0, 0, b.ORD, { accent: true }],
-        WIDEACCENT: [0, 0, b.ORD, { accent: true, stretchy: true }]
+        ACCENT: [0, 0, b.ORD, {
+            accent: true
+        }],
+        WIDEACCENT: [0, 0, b.ORD, {
+            accent: true,
+            stretchy: true
+        }]
     };
     a.mo.__Augment({
         SPACE: ["0em", "0.1111em", "0.1667em", "0.2222em", "0.2667em", "0.3333em"],
-        RANGES: [
-            [32, 127, b.REL, "BasicLatin"],
-            [160, 255, b.ORD, "Latin1Supplement"],
-            [256, 383, b.ORD],
-            [384, 591, b.ORD],
-            [688, 767, b.ORD, "SpacingModLetters"],
-            [768, 879, b.ORD, "CombDiacritMarks"],
-            [880, 1023, b.ORD, "GreekAndCoptic"],
-            [7680, 7935, b.ORD],
-            [8192, 8303, b.PUNCT, "GeneralPunctuation"],
-            [8304, 8351, b.ORD],
-            [8352, 8399, b.ORD],
-            [8400, 8447, b.ORD, "CombDiactForSymbols"],
-            [8448, 8527, b.ORD, "LetterlikeSymbols"],
-            [8528, 8591, b.ORD],
-            [8592, 8703, b.REL, "Arrows"],
-            [8704, 8959, b.BIN, "MathOperators"],
-            [8960, 9215, b.ORD, "MiscTechnical"],
-            [9312, 9471, b.ORD],
-            [9472, 9631, b.ORD],
-            [9632, 9727, b.ORD, "GeometricShapes"],
-            [9984, 10175, b.ORD, "Dingbats"],
-            [10176, 10223, b.ORD, "MiscMathSymbolsA"],
-            [10224, 10239, b.REL, "SupplementalArrowsA"],
-            [10496, 10623, b.REL, "SupplementalArrowsB"],
-            [10624, 10751, b.ORD, "MiscMathSymbolsB"],
-            [10752, 11007, b.BIN, "SuppMathOperators"],
-            [11008, 11263, b.ORD, "MiscSymbolsAndArrows"],
-            [119808, 120831, b.ORD]
-        ],
+        RANGES: [[32, 127, b.REL, "BasicLatin"], [160, 255, b.ORD, "Latin1Supplement"], [256, 383, b.ORD], [384, 591, b.ORD], [688, 767, b.ORD, "SpacingModLetters"], [768, 879, b.ORD, "CombDiacritMarks"], [880, 1023, b.ORD, "GreekAndCoptic"], [7680, 7935, b.ORD], [8192, 8303, b.PUNCT, "GeneralPunctuation"], [8304, 8351, b.ORD], [8352, 8399, b.ORD], [8400, 8447, b.ORD, "CombDiactForSymbols"], [8448, 8527, b.ORD, "LetterlikeSymbols"], [8528, 8591, b.ORD], [8592, 8703, b.REL, "Arrows"], [8704, 8959, b.BIN, "MathOperators"], [8960, 9215, b.ORD, "MiscTechnical"], [9312, 9471, b.ORD], [9472, 9631, b.ORD], [9632, 9727, b.ORD, "GeometricShapes"], [9984, 10175, b.ORD, "Dingbats"], [10176, 10223, b.ORD, "MiscMathSymbolsA"], [10224, 10239, b.REL, "SupplementalArrowsA"], [10496, 10623, b.REL, "SupplementalArrowsB"], [10624, 10751, b.ORD, "MiscMathSymbolsB"], [10752, 11007, b.BIN, "SuppMathOperators"], [11008, 11263, b.ORD, "MiscSymbolsAndArrows"], [119808, 120831, b.ORD]],
         OPTABLE: {
             prefix: {
                 "\u2200": d.ORD21,
@@ -1501,7 +1891,9 @@ MathJax.ElementJax.mml.__Augment({
                 "\u2211": d.OP,
                 "\u2212": d.BIN01,
                 "\u2213": d.BIN01,
-                "\u221A": [1, 1, b.ORD, { stretchy: true }],
+                "\u221A": [1, 1, b.ORD, {
+                    stretchy: true
+                }],
                 "\u2220": d.ORD,
                 "\u222B": d.INTEGRAL,
                 "\u222E": d.INTEGRAL,
@@ -1569,7 +1961,10 @@ MathJax.ElementJax.mml.__Augment({
                 "\u2044": d.TALLBIN,
                 "\u2061": d.ORD,
                 "\u2062": d.ORD,
-                "\u2063": [0, 0, b.ORD, { linebreakstyle: "after", separator: true }],
+                "\u2063": [0, 0, b.ORD, {
+                    linebreakstyle: "after",
+                    separator: true
+                }],
                 "\u2064": d.ORD,
                 "\u2190": d.WIDEREL,
                 "\u2191": d.RELSTRETCH,
@@ -1677,12 +2072,18 @@ MathJax.ElementJax.mml.__Augment({
                 "\u00F7": d.BIN4,
                 "*": d.BIN3,
                 "+": d.BIN4,
-                ",": [0, 3, b.PUNCT, { linebreakstyle: "after", separator: true }],
+                ",": [0, 3, b.PUNCT, {
+                    linebreakstyle: "after",
+                    separator: true
+                }],
                 "-": d.BIN4,
                 ".": [3, 3, b.ORD],
                 "/": d.ORD11,
                 ":": [1, 2, b.REL],
-                ";": [0, 3, b.PUNCT, { linebreakstyle: "after", separator: true }],
+                ";": [0, 3, b.PUNCT, {
+                    linebreakstyle: "after",
+                    separator: true
+                }],
                 "<": d.REL,
                 "=": d.REL,
                 ">": d.REL,
@@ -1690,10 +2091,16 @@ MathJax.ElementJax.mml.__Augment({
                 "\\": d.ORD,
                 "^": d.ORD11,
                 _: d.ORD11,
-                "|": [2, 2, b.ORD, { fence: true, stretchy: true, symmetric: true }],
+                "|": [2, 2, b.ORD, {
+                    fence: true,
+                    stretchy: true,
+                    symmetric: true
+                }],
                 "#": d.ORD,
                 "$": d.ORD,
-                "\u002E": [0, 3, b.PUNCT, { separator: true }],
+                "\u002E": [0, 3, b.PUNCT, {
+                    separator: true
+                }],
                 "\u02B9": d.ORD,
                 "\u0300": d.ACCENT,
                 "\u0301": d.ACCENT,
@@ -1705,8 +2112,12 @@ MathJax.ElementJax.mml.__Augment({
                 "\u030C": d.ACCENT,
                 "\u0332": d.WIDEACCENT,
                 "\u0338": d.REL4,
-                "\u2015": [0, 0, b.ORD, { stretchy: true }],
-                "\u2017": [0, 0, b.ORD, { stretchy: true }],
+                "\u2015": [0, 0, b.ORD, {
+                    stretchy: true
+                }],
+                "\u2017": [0, 0, b.ORD, {
+                    stretchy: true
+                }],
                 "\u2020": d.BIN3,
                 "\u2021": d.BIN3,
                 "\u20D7": d.ACCENT,
@@ -1723,7 +2134,9 @@ MathJax.ElementJax.mml.__Augment({
                 "\u2329": d.OPEN,
                 "\u232A": d.CLOSE,
                 "\u23AA": d.ORD,
-                "\u23AF": [0, 0, b.ORD, { stretchy: true }],
+                "\u23AF": [0, 0, b.ORD, {
+                    stretchy: true
+                }],
                 "\u23B0": d.OPEN,
                 "\u23B1": d.CLOSE,
                 "\u2500": d.ORD,
@@ -1738,7 +2151,9 @@ MathJax.ElementJax.mml.__Augment({
                 "\uFE38": d.WIDEACCENT
             }
         }
-    }, { OPTYPES: d });
+    }, {
+        OPTYPES: d
+    });
     var c = a.mo.prototype.OPTABLE;
     c.infix["^"] = d.WIDEREL;
     c.infix._ = d.WIDEREL;
@@ -1746,5 +2161,7 @@ MathJax.ElementJax.mml.__Augment({
     c.prefix["\u2225"] = d.OPEN;
     c.postfix["\u2223"] = d.CLOSE;
     c.postfix["\u2225"] = d.CLOSE
-})(MathJax.ElementJax.mml);
+}
+)(MathJax.ElementJax.mml);
+
 MathJax.ElementJax.mml.loadComplete("jax.js");

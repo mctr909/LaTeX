@@ -268,7 +268,7 @@
     var n = 5;
     var c = {}
       , r = MathJax.Hub.config;
-    a.Augment({
+    a.__Augment({
         settings: f.config.menuSettings,
         config: {
             styles: p
@@ -277,7 +277,7 @@
             if (!this.require) {
                 this.require = []
             }
-            this.SUPER(arguments).Config.call(this);
+            this.__SUPER(arguments).Config.call(this);
             var s = this.settings;
             if (s.scale) {
                 this.config.scale = s.scale
@@ -1605,8 +1605,8 @@
         },
         removeStyles: ["fontSize", "fontFamily", "fontWeight", "fontStyle", "fontVariant", "font"]
     });
-    a.BBOX = MathJax.Object.Subclass({
-        Init: function(s) {
+    a.BBOX = MathJax.Object.__Subclass({
+        __Init: function(s) {
             for (var t in s) {
                 if (s.hasOwnProperty(t)) {
                     this[t] = s[t]
@@ -1774,7 +1774,7 @@
     });
     MathJax.Hub.Register.StartupHook("mml Jax Ready", function() {
         d = MathJax.ElementJax.mml;
-        d.mbase.Augment({
+        d.mbase.__Augment({
             toCommonHTML: function(t, s) {
                 return this.CHTMLdefaultNode(t, s)
             },
@@ -2261,7 +2261,7 @@
                 return this.CHTML
             }
         });
-        d.chars.Augment({
+        d.chars.__Augment({
             toCommonHTML: function(t, s) {
                 if (s == null) {
                     s = {}
@@ -2273,7 +2273,7 @@
                 this.CHTMLhandleText(t, u, s.variant || this.parent.CHTMLvariant)
             }
         });
-        d.entity.Augment({
+        d.entity.__Augment({
             toCommonHTML: function(t, s) {
                 if (s == null) {
                     s = {}
@@ -2285,7 +2285,7 @@
                 this.CHTMLhandleText(t, u, s.variant || this.parent.CHTMLvariant)
             }
         });
-        d.math.Augment({
+        d.math.__Augment({
             toCommonHTML: function(x) {
                 x = this.CHTMLdefaultNode(x);
                 if (this.CHTML.w < 0) {
@@ -2342,7 +2342,7 @@
                 return x
             }
         });
-        d.mi.Augment({
+        d.mi.__Augment({
             toCommonHTML: function(s) {
                 s = this.CHTMLdefaultNode(s);
                 var u = this.CHTML
@@ -2358,7 +2358,7 @@
                 return s
             }
         });
-        d.mn.Augment({
+        d.mn.__Augment({
             CHTMLremapMinus: function(s) {
                 return s.replace(/^-/, "\u2212")
             },
@@ -2381,7 +2381,7 @@
                 return s
             }
         });
-        d.mo.Augment({
+        d.mo.__Augment({
             toCommonHTML: function(v) {
                 v = this.CHTMLcreateNode(v);
                 this.CHTMLhandleStyle(v);
@@ -2453,7 +2453,7 @@
                     this.CHTML.L = t.lspace;
                     this.CHTML.R = t.rspace
                 } else {
-                    this.SUPER(arguments).CHTMLhandleSpace.apply(this, arguments)
+                    this.__SUPER(arguments).CHTMLhandleSpace.apply(this, arguments)
                 }
             },
             CHTMLadjustAccent: function(u) {
@@ -2590,7 +2590,7 @@
                 return this.CHTML
             }
         });
-        d.mtext.Augment({
+        d.mtext.__Augment({
             CHTMLgetVariant: function() {
                 if (a.config.mtextFontInherit || this.Parent().type === "merror") {
                     var u = (a.config.scale / 100) / a.scale;
@@ -2627,11 +2627,11 @@
                     }
                     this.CHTMLvariant = t
                 } else {
-                    this.SUPER(arguments).CHTMLgetVariant.call(this)
+                    this.__SUPER(arguments).CHTMLgetVariant.call(this)
                 }
             }
         });
-        d.merror.Augment({
+        d.merror.__Augment({
             toCommonHTML: function(s) {
                 s = this.CHTMLdefaultNode(s);
                 var t = this.CHTML;
@@ -2650,7 +2650,7 @@
                 return s
             }
         });
-        d.mspace.Augment({
+        d.mspace.__Augment({
             toCommonHTML: function(v) {
                 v = this.CHTMLcreateNode(v);
                 this.CHTMLhandleStyle(v);
@@ -2678,7 +2678,7 @@
                 return v
             }
         });
-        d.mpadded.Augment({
+        d.mpadded.__Augment({
             toCommonHTML: function(t, F) {
                 var s;
                 if (F && F.stretch) {
@@ -2766,7 +2766,7 @@
                 return v
             }
         });
-        d.munderover.Augment({
+        d.munderover.__Augment({
             toCommonHTML: function(w, G) {
                 var E = this.getValues("displaystyle", "accent", "accentunder", "align");
                 var u = this.data[this.base];
@@ -2994,7 +2994,7 @@
                 return a.getNode(u, s[t])
             }
         });
-        d.msubsup.Augment({
+        d.msubsup.__Augment({
             toCommonHTML: function(S, C) {
                 var A = this.getValues("displaystyle", "subscriptshift", "superscriptshift", "texprimestyle");
                 var D, H, z;
@@ -3128,7 +3128,7 @@
                 return a.getNode(u, s[t])
             }
         });
-        d.mfrac.Augment({
+        d.mfrac.__Augment({
             toCommonHTML: function(N) {
                 N = this.CHTMLdefaultNode(N, {
                     childNodes: ["mjx-numerator", "mjx-denominator"],
@@ -3248,7 +3248,7 @@
                 return false
             }
         });
-        d.msqrt.Augment({
+        d.msqrt.__Augment({
             toCommonHTML: function(w) {
                 w = this.CHTMLdefaultNode(w, {
                     childNodes: ["mjx-box", "mjx-root"],
@@ -3287,7 +3287,7 @@
                 return 0
             }
         });
-        d.mroot.Augment({
+        d.mroot.__Augment({
             toCommonHTML: d.msqrt.prototype.toCommonHTML,
             CHTMLaddRoot: function(A, u, v) {
                 if (!this.data[1]) {
@@ -3315,7 +3315,7 @@
                 return 0.45 * (s.h + s.d - 0.9) + s.offset + Math.max(0, u.d - 0.075)
             }
         });
-        d.mfenced.Augment({
+        d.mfenced.__Augment({
             toCommonHTML: function(v) {
                 v = this.CHTMLcreateNode(v);
                 this.CHTMLhandleStyle(v);
@@ -3341,7 +3341,7 @@
                 return v
             }
         });
-        d.mrow.Augment({
+        d.mrow.__Augment({
             toCommonHTML: function(w, t) {
                 t = t || {};
                 w = this.CHTMLdefaultNode(w);
@@ -3382,7 +3382,7 @@
                 return this.CHTML
             }
         });
-        d.mstyle.Augment({
+        d.mstyle.__Augment({
             toCommonHTML: function(s) {
                 s = this.CHTMLdefaultNode(s);
                 if (this.scriptlevel && this.data[0]) {
@@ -3391,7 +3391,7 @@
                 return s
             }
         });
-        d.TeXAtom.Augment({
+        d.TeXAtom.__Augment({
             toCommonHTML: function(x, w) {
                 if (!w || !w.stretch) {
                     x = this.CHTMLdefaultNode(x)
@@ -3425,7 +3425,7 @@
                 return this.CHTML
             }
         });
-        d.semantics.Augment({
+        d.semantics.__Augment({
             toCommonHTML: function(s) {
                 s = this.CHTMLcreateNode(s);
                 if (this.data[0]) {
@@ -3436,30 +3436,30 @@
                 return s
             }
         });
-        d.annotation.Augment({
+        d.annotation.__Augment({
             toCommonHTML: function(s) {
                 return this.CHTMLcreateNode(s)
             }
         });
-        d["annotation-xml"].Augment({
+        d["annotation-xml"].__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
-        d.ms.Augment({
+        d.ms.__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
-        d.mglyph.Augment({
+        d.mglyph.__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
-        d.menclose.Augment({
+        d.menclose.__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
-        d.maction.Augment({
+        d.maction.__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
-        d.mmultiscripts.Augment({
+        d.mmultiscripts.__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
-        d.mtable.Augment({
+        d.mtable.__Augment({
             toCommonHTML: d.mbase.CHTMLautoload
         });
         MathJax.Hub.Register.StartupHook("onLoad", function() {
