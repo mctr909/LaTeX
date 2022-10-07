@@ -385,7 +385,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
             n[l] = tex.Parse.prototype.Em(k[l]);
             //n[l] = tex.Parse.Em(k[l]);
         }
-        return n.join(" ")
+        return n.join(" ");
     };
     d.Add({
         mathchar0mo: {
