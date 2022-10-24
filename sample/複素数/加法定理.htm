@@ -5,9 +5,18 @@
     <script type="text/javascript" src="../../script/config/TeX.js"></script>
     <script type="text/javascript" src="../../script/config/MML.js"></script>
     <script type="text/javascript" src="../../script/config/Menu.js"></script>
+    <style type="text/css">
+    table {
+        border-collapse: collapse;
+    }
+    td {
+        border: 1px #000000 solid;
+    }
+    </style>
 </head>
 <body>
-	<div id="disp" style="width: 0px;">
+<table id="disp"><tr>
+<td>
 	\begin{align}
 	&e^{i(\alpha+\beta)}=e^{i\alpha}e^{i\beta} \\
 	&=(\cos\alpha + i\sin\alpha)(\cos\beta + i\sin\beta) \\
@@ -18,7 +27,7 @@
 	&=\cos\alpha\cdot\cos\beta - \sin\alpha\cdot\sin\beta
 		+ i\left(\sin\alpha\cdot\cos\beta + \cos\alpha\cdot\sin\beta\right) \\
 	\end{align}
-
+</td></tr><tr><td>
 	\begin{align}
 	&e^{i(\alpha-\beta)}=e^{i\alpha}e^{-i\beta} \\
 	&=(\cos\alpha + i\sin\alpha)(\cos\beta - i\sin\beta) \\
@@ -29,28 +38,8 @@
 	&=\cos\alpha\cdot\cos\beta + \sin\alpha\cdot\sin\beta
 		+ i\left(\sin\alpha\cdot\cos\beta - \cos\alpha\cdot\sin\beta\right) \\
 	\end{align}
-
-	\begin{align}
-	&e^{-i(\alpha+\beta)}=e^{-i\alpha}e^{-i\beta} \\
-	&=(\cos\alpha - i\sin\alpha)(\cos\beta - i\sin\beta) \\
-	&=\cos\alpha\cdot\cos\beta
-		- \cos\alpha\cdot i\sin\beta
-		- i\sin\alpha\cdot\cos\beta
-		+ i\sin\alpha\cdot i\sin\beta \\
-	&=\cos\alpha\cdot\cos\beta - \sin\alpha\cdot\sin\beta
-		- i\left(\sin\alpha\cdot\cos\beta + \cos\alpha\cdot\sin\beta\right) \\
-	\end{align}
-
-	\begin{align}
-	&e^{-i(\alpha-\beta)}=e^{-i\alpha}e^{i\beta} \\
-	&=(\cos\alpha - i\sin\alpha)(\cos\beta + i\sin\beta) \\
-	&=\cos\alpha\cdot\cos\beta
-		+ \cos\alpha\cdot i\sin\beta
-		- i\sin\alpha\cdot\cos\beta
-		- i\sin\alpha\cdot i\sin\beta \\
-	&=\cos\alpha\cdot\cos\beta + \sin\alpha\cdot\sin\beta
-		- i\left(\sin\alpha\cdot\cos\beta -\cos\alpha\cdot\sin\beta\right) \\
-	\end{align}
-	</div>
+</td>
+</tr>
+</table>
 </body>
 </html>
