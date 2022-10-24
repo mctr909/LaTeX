@@ -1572,17 +1572,17 @@ class Hub {
         }
         return b;
     }
-    Insert(c, a) {
-        for (var b in a) {
-            if (a.hasOwnProperty(b)) {
-                if (typeof a[b] === "object" && !(MathJax.Object.isArray(a[b])) && (typeof c[b] === "object" || typeof c[b] === "function")) {
-                    this.Insert(c[b], a[b]);
+    Insert(dst, src) {
+        for (var b in src) {
+            if (src.hasOwnProperty(b)) {
+                if (typeof src[b] === "object" && !(MathJax.Object.isArray(src[b])) && (typeof dst[b] === "object" || typeof dst[b] === "function")) {
+                    this.Insert(dst[b], src[b]);
                 } else {
-                    c[b] = a[b];
+                    dst[b] = src[b];
                 }
             }
         }
-        return c;
+        return dst;
     }
     getTabOrder(a) {
         return this.config.menuSettings.inTabOrder ? 0 : -1;
