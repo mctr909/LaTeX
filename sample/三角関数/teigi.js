@@ -3,12 +3,12 @@
 const AXIZ_COLOR = [0, 0, 0];
 const MEASURE_COLOR = [167, 167, 167];
 const COS_COLOR = [0, 0, 211];
-const SIN_COLOR = [191, 0, 0];
+const SIN_COLOR = [211, 0, 0];
 const TAN_COLOR = [0, 191, 0];
 const CIRCLE_COLOR = [0, 0, 0];
-const CIRCLE_RADIUS = 80;
-const WAVE_LENGTH = 360;
-const WAVE_BEGIN = CIRCLE_RADIUS + 20;
+const CIRCLE_RADIUS = 150;
+const WAVE_LENGTH = 300;
+const WAVE_BEGIN = CIRCLE_RADIUS + 30;
 
 let MeasureList = [];
 let LabelList = [];
@@ -20,17 +20,17 @@ let gDrawer = new Drawer("disp", 700, 800);
 init();
 
 function init() {
-    gDrawer.Offset = new vec3(gDrawer.Width/4, 3 * gDrawer.Height/8);
+    gDrawer.Offset = new vec3(gDrawer.Width/4, gDrawer.Height*3/8);
 
     MeasureList.push({
         a:new vec3(-WAVE_BEGIN, 0),
         b:new vec3(500, 0),
-        color:AXIZ_COLOR
+        color:MEASURE_COLOR
     });
     MeasureList.push({
         a:new vec3(0, -500),
         b:new vec3(0, WAVE_BEGIN),
-        color:AXIZ_COLOR
+        color:MEASURE_COLOR
     });
     MeasureList.push({
         a:new vec3(CIRCLE_RADIUS, -500),
@@ -68,12 +68,12 @@ function init() {
         });
         if (deg % 90 == 0) {
             LabelList.push({
-                pos: new vec3(x-5, -30),
-                text: deg + "\n" + (deg / 180) + "π"
+                pos: new vec3(x-10, -30),
+                text: deg + "°\n" + (deg / 180) + "π"
             });
             LabelList.push({
-                pos: new vec3(20, -x-5),
-                text: deg + "\n" + (deg / 180) + "π"
+                pos: new vec3(20, -x+2),
+                text: deg + "°\n" + (deg / 180) + "π"
             });
         }
     }
@@ -103,7 +103,7 @@ function main() {
     gDrawer.clear();
 
     for (let i=0; i<MeasureList.length; i++) {
-        gDrawer.drawLine(MeasureList[i].a, MeasureList[i].b, MeasureList[i].color, 1);
+        gDrawer.drawLine(MeasureList[i].a, MeasureList[i].b, MeasureList[i].color);
     }
     for (let i=0; i<LabelList.length; i++) {
         gDrawer.drawString(LabelList[i].pos, LabelList[i].text, 16);
@@ -116,6 +116,33 @@ function main() {
     }
     gDrawer.drawPolyline(CosLine, COS_COLOR);
     gDrawer.drawPolyline(SinLine, SIN_COLOR);
+
+    let th = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);
+    if (th < 0) {
+        th += 2*Math.PI;
+    }
+    let p = new vec3(Math.cos(th) * CIRCLE_RADIUS, Math.sin(th) * CIRCLE_RADIUS);
+    let pTan = new vec3(CIRCLE_RADIUS, Math.tan(th) * CIRCLE_RADIUS);
+    let px = WAVE_BEGIN + th * WAVE_LENGTH / Math.PI / 2;
+    let pv = new vec3(0, -px);
+    let ph = new vec3(px, 0);
+    let pc = new vec3(p.X, -px);
+    let ps = new vec3(px, p.Y);
+    let pt = new vec3(px, pTan.Y);
+
+    gDrawer.drawLine(new vec3(), p);
+    gDrawer.drawLine(pv, pc);
+    gDrawer.drawLine(ph, ps);
+    gDrawer.drawLine(ph, pt);
+    gDrawer.drawLine(p, pc);
+    gDrawer.drawLine(p, ps);
+    gDrawer.drawLine(pTan, pt);
+    gDrawer.drawLineD(new vec3(), pTan);
+    gDrawer.fillCircle(p, 4);
+    gDrawer.fillCircle(pTan, 4);
+    gDrawer.fillCircle(pc, 4);
+    gDrawer.fillCircle(ps, 4);
+    gDrawer.fillCircle(pt, 4);
 
     requestNextAnimationFrame(main);
 }

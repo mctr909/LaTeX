@@ -8,12 +8,12 @@ class Drawer {
 	#ctx;
 	/** @type {HTMLCanvasElement} */
 	#element;
-	/** @type {vec3} */
 	#offset = new vec3();
+	cursor = new vec3();
+	isDrag = false;
 
 	/** @param {vec3} offset */
 	set Offset(offset) { this.#offset = offset; }
-
 	get Width() { return this.#element.width; }
 	get Height() { return this.#element.height; }
 
@@ -26,6 +26,23 @@ class Drawer {
 		this.#element = document.getElementById(canvasId);
 		this.#element.width = width;
 		this.#element.height = height;
+
+		let self = this;
+		this.#element.addEventListener("mousemove", function(ev) {
+			self.cursor.X = ev.offsetX - self.#offset.X;
+			self.cursor.Y = self.#offset.Y - ev.offsetY;
+		});
+		this.#element.addEventListener("mousedown", function(ev) {
+			if (0 == ev.button) {
+				self.isDrag = true;
+			}
+		});
+		this.#element.addEventListener("mouseup", function(ev) {
+			if (0 == ev.button) {
+				self.isDrag = false;
+			}
+		});
+
 		this.#ctx = this.#element.getContext("2d");
 		this.#ctx.scale(1, 1);
 
@@ -167,20 +184,19 @@ class Drawer {
 	/**
 	 * @param {vec3} center
 	 * @param {number} radius
-	 * @param {vec3} ofs
 	 * @param {[number, number, number]} color
 	 */
-	fillCircle(center, radius, ofs=new vec3(), color = [0,0,0]) {
+	fillCircle(center, radius, color = [0,0,0]) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
-			ofs.X + center.X,
-			ofs.Y - center.Y,
+			this.#offset.X + center.X,
+			this.#offset.Y - center.Y,
 			radius,
 			0 * Math.PI / 180,
 			360 * Math.PI / 180,
 			false
 		);
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
+		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", 1)" ;
 		this.#ctx.fill();
 	}
 
