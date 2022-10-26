@@ -7,8 +7,8 @@ const COS_COLOR = [0, 0, 211];
 const SIN_COLOR = [211, 0, 0];
 const TAN_COLOR = [0, 191, 0];
 const CIRCLE_COLOR = [0, 0, 0];
-const CIRCLE_RADIUS = 150;
-const WAVE_LENGTH = 300;
+const CIRCLE_RADIUS = 100;
+const WAVE_LENGTH = 360;
 const WAVE_BEGIN = CIRCLE_RADIUS + 30;
 
 let gMeasureList = [];
@@ -22,23 +22,8 @@ let gDrawer = new Drawer("disp", 700, 800);
 init();
 
 function init() {
-    gDrawer.Offset = new vec(5*gDrawer.Width/16, gDrawer.Height*3/8);
+    gDrawer.Offset = new vec(WAVE_BEGIN, gDrawer.Height*3/8);
 
-    gMeasureList.push({
-        a:new vec(-WAVE_BEGIN, 0),
-        b:new vec(500, 0),
-        color:AXIZ_COLOR
-    });
-    gMeasureList.push({
-        a:new vec(0, -500),
-        b:new vec(0, WAVE_BEGIN),
-        color:AXIZ_COLOR
-    });
-    gMeasureList.push({
-        a:new vec(CIRCLE_RADIUS, -500),
-        b:new vec(CIRCLE_RADIUS, 500),
-        color:AXIZ_COLOR
-    });
     gMeasureList.push({
         a:new vec(-CIRCLE_RADIUS, -500),
         b:new vec(-CIRCLE_RADIUS, 0),
@@ -53,6 +38,21 @@ function init() {
         a:new vec(0, -CIRCLE_RADIUS),
         b:new vec(500, -CIRCLE_RADIUS),
         color:MEASURE_COLOR
+    });
+    gMeasureList.push({
+        a:new vec(-WAVE_BEGIN, 0),
+        b:new vec(500, 0),
+        color:AXIZ_COLOR
+    });
+    gMeasureList.push({
+        a:new vec(0, -500),
+        b:new vec(0, WAVE_BEGIN),
+        color:AXIZ_COLOR
+    });
+    gMeasureList.push({
+        a:new vec(CIRCLE_RADIUS, -500),
+        b:new vec(CIRCLE_RADIUS, 500),
+        color:AXIZ_COLOR
     });
 
     for (let deg=0; deg<=360; deg += 15) {
@@ -132,9 +132,14 @@ function main() {
     let x = WAVE_BEGIN + gTheta * WAVE_LENGTH / Math.PI / 2;
     let pv = new vec(0, -x);
     let ph = new vec(x, 0);
+    let oc = new vec(pr.X, 0);
     let pc = new vec(pr.X, -x);
     let ps = new vec(x, pr.Y);
     let pt = new vec(x, vt.Y);
+    let hpr = new vec(pr.X * 0.45 - 5, pr.Y * 0.45 + 5);
+    let hpc = new vec(oc.X * 0.45, -20);
+    let hps = new vec(pr.X, pr.Y * 0.45 - 5);
+
     gDrawer.drawLine(new vec(), pr, CIRCLE_COLOR, 2);
     gDrawer.drawLine(pv, pc);
     gDrawer.drawLine(ph, ps);
@@ -143,6 +148,8 @@ function main() {
     gDrawer.drawLineD(pr, ps, SIN_COLOR, 2);
     gDrawer.drawLineD(vt, pt, TAN_COLOR, 2);
     gDrawer.drawLineD(new vec(), vt);
+    gDrawer.drawLine(new vec(), oc, COS_COLOR, 2);
+    gDrawer.drawLine(oc, pr, SIN_COLOR, 2);
     gDrawer.fillCircle(pr, 4);
     gDrawer.fillCircle(pc, 4, COS_COLOR);
     gDrawer.fillCircle(ps, 4, SIN_COLOR);
@@ -152,6 +159,9 @@ function main() {
     let rad = parseInt(1000 * gTheta / Math.PI + 0.5) / 1000;
     let deg = parseInt(1800 * gTheta / Math.PI + 0.5) / 10;
     gDrawer.drawString(new vec(5, 2), deg + "°\n" + rad + "π", 16);
+    gDrawer.drawString(hpr, "r", 24);
+    gDrawer.drawString(hpc, "c", 24);
+    gDrawer.drawString(hps, "s", 24);
 
     requestNextAnimationFrame(main);
 }

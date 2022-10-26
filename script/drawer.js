@@ -111,7 +111,7 @@ class Drawer {
 	drawLineD(a, b, color = [0,0,0], width = 1) {
 		this.#ctx.beginPath();
 		this.#drawLine(a, b, color, width);
-		this.#ctx.setLineDash([this.#ctx.lineWidth, this.#ctx.lineWidth*2]);
+		this.#ctx.setLineDash([width, width]);
 		this.#ctx.stroke();
 	}
 
@@ -145,7 +145,7 @@ class Drawer {
 		}
 		this.#ctx.lineWidth = width;
 		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
-		this.#ctx.setLineDash([this.#ctx.lineWidth, this.#ctx.lineWidth*2]);
+		this.#ctx.setLineDash([width, width]);
 		this.#ctx.stroke();
 	}
 
@@ -172,7 +172,7 @@ class Drawer {
 	drawArrowD(a, b, color = [0,0,0], width = 2) {
 		this.#ctx.beginPath();
 		this.#drawLine(a, b, color, width);
-		this.#ctx.setLineDash([this.#ctx.lineWidth, this.#ctx.lineWidth*2]);
+		this.#ctx.setLineDash([width, width]);
 		this.#ctx.stroke();
 		this.#fillArrow(a, b, color);
 	}
