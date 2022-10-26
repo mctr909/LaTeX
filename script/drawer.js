@@ -8,11 +8,11 @@ class Drawer {
 	#ctx;
 	/** @type {HTMLCanvasElement} */
 	#element;
-	#offset = new vec3();
-	cursor = new vec3();
+	#offset = new vec();
+	cursor = new vec();
 	isDrag = false;
 
-	/** @param {vec3} offset */
+	/** @param {vec} offset */
 	set Offset(offset) { this.#offset = offset; }
 	get Width() { return this.#element.width; }
 	get Height() { return this.#element.height; }
@@ -90,8 +90,8 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} a
-	 * @param {vec3} b
+	 * @param {vec} a
+	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
@@ -103,8 +103,8 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} a
-	 * @param {vec3} b
+	 * @param {vec} a
+	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
@@ -116,7 +116,7 @@ class Drawer {
 	}
 
 	/**
-	 * @param {Array<vec3>} points
+	 * @param {Array<vec>} points
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
@@ -132,8 +132,8 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} a
-	 * @param {vec3} b
+	 * @param {vec} a
+	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
@@ -146,8 +146,8 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} a
-	 * @param {vec3} b
+	 * @param {vec} a
+	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
@@ -160,7 +160,7 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} center
+	 * @param {vec} center
 	 * @param {number} radius
 	 * @param {[number, number, number]} color
 	 * @param {number} width
@@ -182,7 +182,7 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} center
+	 * @param {vec} center
 	 * @param {number} radius
 	 * @param {[number, number, number]} color
 	 */
@@ -201,11 +201,11 @@ class Drawer {
 	}
 
 	/**
-	 * @param {Array<vec3>} points
-	 * @param {vec3} ofs
+	 * @param {Array<vec>} points
+	 * @param {vec} ofs
 	 * @param {[number, number, number]} color
 	 */
-	fillPolygon(points, ofs = new vec3(), color = [0,0,0]) {
+	fillPolygon(points, ofs = new vec(), color = [0,0,0]) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(ofs.X + points[0].X, ofs.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
@@ -216,7 +216,7 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} p
+	 * @param {vec} p
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
@@ -234,7 +234,7 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} p
+	 * @param {vec} p
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
@@ -299,8 +299,8 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} a
-	 * @param {vec3} b
+	 * @param {vec} a
+	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
@@ -316,17 +316,17 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec3} a
-	 * @param {vec3} b
+	 * @param {vec} a
+	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 */
 	#fillArrow(a, b, color) {
 		const SIZE = 15;
 		let polygon = [
-			new vec3(0, 0),
-			new vec3(-1, 0.33),
-			new vec3(-1, -0.33),
-			new vec3(0, 0)
+			new vec(0, 0),
+			new vec(-1, 0.33),
+			new vec(-1, -0.33),
+			new vec(0, 0)
 		];
 		let th = Math.atan2(b.Y - a.Y, b.X - a.X);
 		for (let i=0; i<polygon.length; i++) {

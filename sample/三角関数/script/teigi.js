@@ -1,5 +1,6 @@
-/// <reference path="../../script/drawer.js" />
-/// <reference path="../../script/math.js" />
+/// <reference path="../../../script/drawer.js" />
+/// <reference path="../../../script/math.js" />
+
 const AXIZ_COLOR = [0, 0, 0];
 const MEASURE_COLOR = [167, 167, 167];
 const COS_COLOR = [0, 0, 211];
@@ -15,41 +16,42 @@ let LabelList = [];
 let SinLine = [];
 let CosLine = [];
 let TanLines = [];
+let Theta = Math.PI / 4;
 
 let gDrawer = new Drawer("disp", 700, 800);
 init();
 
 function init() {
-    gDrawer.Offset = new vec3(gDrawer.Width/4, gDrawer.Height*3/8);
+    gDrawer.Offset = new vec(5*gDrawer.Width/16, gDrawer.Height*3/8);
 
     MeasureList.push({
-        a:new vec3(-WAVE_BEGIN, 0),
-        b:new vec3(500, 0),
+        a:new vec(-WAVE_BEGIN, 0),
+        b:new vec(500, 0),
+        color:AXIZ_COLOR
+    });
+    MeasureList.push({
+        a:new vec(0, -500),
+        b:new vec(0, WAVE_BEGIN),
+        color:AXIZ_COLOR
+    });
+    MeasureList.push({
+        a:new vec(CIRCLE_RADIUS, -500),
+        b:new vec(CIRCLE_RADIUS, 500),
+        color:AXIZ_COLOR
+    });
+    MeasureList.push({
+        a:new vec(-CIRCLE_RADIUS, -500),
+        b:new vec(-CIRCLE_RADIUS, 0),
         color:MEASURE_COLOR
     });
     MeasureList.push({
-        a:new vec3(0, -500),
-        b:new vec3(0, WAVE_BEGIN),
+        a:new vec(0, CIRCLE_RADIUS),
+        b:new vec(500, CIRCLE_RADIUS),
         color:MEASURE_COLOR
     });
     MeasureList.push({
-        a:new vec3(CIRCLE_RADIUS, -500),
-        b:new vec3(CIRCLE_RADIUS, 500),
-        color:MEASURE_COLOR
-    });
-    MeasureList.push({
-        a:new vec3(-CIRCLE_RADIUS, -500),
-        b:new vec3(-CIRCLE_RADIUS, 0),
-        color:MEASURE_COLOR
-    });
-    MeasureList.push({
-        a:new vec3(0, CIRCLE_RADIUS),
-        b:new vec3(500, CIRCLE_RADIUS),
-        color:MEASURE_COLOR
-    });
-    MeasureList.push({
-        a:new vec3(0, -CIRCLE_RADIUS),
-        b:new vec3(500, -CIRCLE_RADIUS),
+        a:new vec(0, -CIRCLE_RADIUS),
+        b:new vec(500, -CIRCLE_RADIUS),
         color:MEASURE_COLOR
     });
 
@@ -57,22 +59,22 @@ function init() {
         let x = WAVE_BEGIN + WAVE_LENGTH * deg / 360.0;
         let h = deg % 90 == 0 ? 15 : deg % 45 == 0 ? 10 : 5;
         MeasureList.push({
-            a:new vec3(x, -h),
-            b:new vec3(x, h),
+            a:new vec(x, -h),
+            b:new vec(x, h),
             color:AXIZ_COLOR
         });
         MeasureList.push({
-            a:new vec3(-h, -x),
-            b:new vec3(h, -x),
+            a:new vec(-h, -x),
+            b:new vec(h, -x),
             color:AXIZ_COLOR
         });
         if (deg % 90 == 0) {
             LabelList.push({
-                pos: new vec3(x-10, -30),
+                pos: new vec(x-10, -30),
                 text: deg + "°\n" + (deg / 180) + "π"
             });
             LabelList.push({
-                pos: new vec3(20, -x+2),
+                pos: new vec(20, -x+2),
                 text: deg + "°\n" + (deg / 180) + "π"
             });
         }
@@ -81,8 +83,8 @@ function init() {
     let tanList = [];
     for(let x=WAVE_BEGIN; x<WAVE_BEGIN + WAVE_LENGTH; x++) {
         let th = 2 * Math.PI * (x - WAVE_BEGIN) / WAVE_LENGTH;
-        CosLine.push(new vec3(Math.cos(th) * CIRCLE_RADIUS, -x));
-        SinLine.push(new vec3(x, Math.sin(th) * CIRCLE_RADIUS));
+        CosLine.push(new vec(Math.cos(th) * CIRCLE_RADIUS, -x));
+        SinLine.push(new vec(x, Math.sin(th) * CIRCLE_RADIUS));
         var t = Math.tan(th) * CIRCLE_RADIUS;
         if (t < -500 || t > 500) {
             if (0 < tanList.length) {
@@ -91,7 +93,7 @@ function init() {
             }
             continue;
         }
-        tanList.push(new vec3(x, t));
+        tanList.push(new vec(x, t));
     }
     if (0 < tanList.length) {
         TanLines.push(tanList);
@@ -109,7 +111,8 @@ function main() {
         gDrawer.drawString(LabelList[i].pos, LabelList[i].text, 16);
     }
 
-    gDrawer.drawCircle(new vec3(), CIRCLE_RADIUS, CIRCLE_COLOR, 2);
+    gDrawer.drawCircle(new vec(), CIRCLE_RADIUS, CIRCLE_COLOR, 2);
+
     for (let i=0; i<TanLines.length; i++) {
         let tanLine = TanLines[i];
         gDrawer.drawPolyline(tanLine, TAN_COLOR);
@@ -117,32 +120,38 @@ function main() {
     gDrawer.drawPolyline(CosLine, COS_COLOR);
     gDrawer.drawPolyline(SinLine, SIN_COLOR);
 
-    let th = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);
-    if (th < 0) {
-        th += 2*Math.PI;
+    if (gDrawer.isDrag) {
+        Theta = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);
+        if (Theta < 0) {
+            Theta += 2*Math.PI;
+        }
     }
-    let p = new vec3(Math.cos(th) * CIRCLE_RADIUS, Math.sin(th) * CIRCLE_RADIUS);
-    let pTan = new vec3(CIRCLE_RADIUS, Math.tan(th) * CIRCLE_RADIUS);
-    let px = WAVE_BEGIN + th * WAVE_LENGTH / Math.PI / 2;
-    let pv = new vec3(0, -px);
-    let ph = new vec3(px, 0);
-    let pc = new vec3(p.X, -px);
-    let ps = new vec3(px, p.Y);
-    let pt = new vec3(px, pTan.Y);
 
-    gDrawer.drawLine(new vec3(), p);
+    let pr = new vec(Math.cos(Theta) * CIRCLE_RADIUS, Math.sin(Theta) * CIRCLE_RADIUS);
+    let vt = new vec(CIRCLE_RADIUS, Math.tan(Theta) * CIRCLE_RADIUS);
+    let x = WAVE_BEGIN + Theta * WAVE_LENGTH / Math.PI / 2;
+    let pv = new vec(0, -x);
+    let ph = new vec(x, 0);
+    let pc = new vec(pr.X, -x);
+    let ps = new vec(x, pr.Y);
+    let pt = new vec(x, vt.Y);
+    gDrawer.drawLine(new vec(), pr, CIRCLE_COLOR, 2);
     gDrawer.drawLine(pv, pc);
     gDrawer.drawLine(ph, ps);
     gDrawer.drawLine(ph, pt);
-    gDrawer.drawLine(p, pc);
-    gDrawer.drawLine(p, ps);
-    gDrawer.drawLine(pTan, pt);
-    gDrawer.drawLineD(new vec3(), pTan);
-    gDrawer.fillCircle(p, 4);
-    gDrawer.fillCircle(pTan, 4);
-    gDrawer.fillCircle(pc, 4);
-    gDrawer.fillCircle(ps, 4);
-    gDrawer.fillCircle(pt, 4);
+    gDrawer.drawLineD(pr, pc, COS_COLOR, 2);
+    gDrawer.drawLineD(pr, ps, SIN_COLOR, 2);
+    gDrawer.drawLineD(vt, pt, TAN_COLOR, 2);
+    gDrawer.drawLineD(new vec(), vt);
+    gDrawer.fillCircle(pr, 4);
+    gDrawer.fillCircle(pc, 4, COS_COLOR);
+    gDrawer.fillCircle(ps, 4, SIN_COLOR);
+    gDrawer.fillCircle(vt, 4, TAN_COLOR);
+    gDrawer.fillCircle(pt, 4, TAN_COLOR);
+
+    let rad = parseInt(1000 * Theta / Math.PI + 0.5) / 1000;
+    let deg = parseInt(1800 * Theta / Math.PI + 0.5) / 10;
+    gDrawer.drawString(new vec(5, 2), deg + "°\n" + rad + "π", 16);
 
     requestNextAnimationFrame(main);
 }

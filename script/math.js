@@ -1,4 +1,13 @@
-class vec3 {
+class vec {
+	X = 0.0;
+	Y = 0.0;
+	Z = 0.0;
+
+	get abs() { return Math.sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z); }
+	get arg() { return Math.atan2(this.Y, this.X); }
+	get azimuth() { return Math.atan2(this.Z, this.X); }
+	get altitude() { return Math.atan2(this.Y, Math.sqrt(this.X * this.X + this.Z * this.Z)); }
+
 	/**
 	 * @param {number} x
 	 * @param {number} y
@@ -10,97 +19,36 @@ class vec3 {
 		this.Z = z;
 	}
 
-	get abs() {
-		return Math.sqrt(this.X*this.X + this.Y*this.Y + this.Z*this.Z)
-	}
-
-	distance(v) {
-		let sx = v.X - this.X;
-		let sy = v.Y - this.Y;
-		let sz = v.Z - this.Z;
-		return Math.sqrt(sx*sx + sy*sy + sz*sz);
-	}
-
 	/**
-	 * @param {vec3} returnValue
+	 * @param {vec} returnValue
+	 * @param {number} scale
 	 */
-	normalize(returnValue) {
+	normalize(returnValue, scale = 1) {
 		let inv = Math.sqrt(this.X*this.X + this.Y*this.Y + this.Z*this.Z);
-		inv = 1 / inv;
-		returnValue.X = inv * this.X;
-		returnValue.Y = inv * this.Y;
-		returnValue.Z = inv * this.Z;
+		if (0 == inv) {
+			returnValue.X = 0;
+			returnValue.Y = 0;
+			returnValue.Z = 0;
+		} else {
+			inv = scale / inv;
+			returnValue.X = inv * this.X;
+			returnValue.Y = inv * this.Y;
+			returnValue.Z = inv * this.Z;
+		}
 	}
 
 	/**
+	 * @param {vec} returnValue
 	 * @param {number} scale
-	 * @param {vec3} returnValue
 	 */
-	normalizeScale(scale, returnValue) {
-		let r = Math.sqrt(this.X*this.X + this.Y*this.Y + this.Z*this.Z);
-		scale /= r;
+	scale(returnValue, scale) {
 		returnValue.X = scale * this.X;
 		returnValue.Y = scale * this.Y;
 		returnValue.Z = scale * this.Z;
 	}
 
 	/**
-	 * @param {vec3} offset
-	 * @param {vec3} returnValue
-	 */
-	normalizeOfs(offset, returnValue) {
-		let sx = this.X - offset.X;
-		let sy = this.Y - offset.Y;
-		let sz = this.Z - offset.Z;
-		let inv = Math.sqrt(sx*sx + sy*sy + sz*sz);
-		inv = 1 / inv;
-		returnValue.X = inv * sx + offset.X;
-		returnValue.Y = inv * sy + offset.Y;
-		returnValue.Z = inv * sz + offset.Z;
-	}
-
-	/**
-	 * @param {number} scale
-	 * @param {vec3} offset
-	 * @param {vec3} returnValue
-	 */
-	normalizeScaleOfs(scale, offset, returnValue) {
-		let sx = this.X - offset.X;
-		let sy = this.Y - offset.Y;
-		let sz = this.Z - offset.Z;
-		let r = Math.sqrt(sx*sx + sy*sy + sz*sz);
-		scale /= r;
-		returnValue.X = scale * sx + offset.X;
-		returnValue.Y = scale * sy + offset.Y;
-		returnValue.Z = scale * sz + offset.Z;
-	}
-
-	/**
-	 * @param {number} scale
-	 * @param {vec3} returnValue
-	 */
-	scale(scale, returnValue) {
-		returnValue.X = scale * this.X;
-		returnValue.Y = scale * this.Y;
-		returnValue.Z = scale * this.Z;
-	}
-
-	/**
-	 * @param {number} scale
-	 * @param {vec3} offset
-	 * @param {vec3} returnValue
-	 */
-	scaleOfs(scale, offset, returnValue) {
-		var sx = this.X - offset.X;
-		var sy = this.Y - offset.Y;
-		var sz = this.Z - offset.Z;
-		returnValue.X = scale * sx + offset.X;
-		returnValue.Y = scale * sy + offset.Y;
-		returnValue.Z = scale * sz + offset.Z;
-	}
-
-	/**
-	 * @param {vec3} v
+	 * @param {vec} v
 	 * @return {number}
 	 */
 	dot(v) {
@@ -108,8 +56,8 @@ class vec3 {
 	}
 
 	/**
-	 * @param {vec3} v
-	 * @param {vec3} returnValue
+	 * @param {vec} v
+	 * @param {vec} returnValue
 	 */
 	cross(v, returnValue) {
 		returnValue.X = this.Y * v.Z - this.Z * v.Y;
@@ -118,8 +66,26 @@ class vec3 {
 	}
 
 	/**
-	 * @param {vec3} v
-	 * @param {vec3} returnValue
+	 * @param {vec} dv
+	 * @param {vec} returnValue
+	 */
+	rotXY(dv, returnValue) {
+		returnValue.X = this.X * dv.X - this.Y * dv.Y;
+		returnValue.Y = this.X * dv.Y + this.Y * dv.X;
+	}
+
+	/**
+	 * @param {vec} dv
+	 * @param {vec} returnValue
+	 */
+	rotAzimuth(dv, returnValue) {
+		returnValue.X = this.X * dv.X - this.Z * dv.Z;
+		returnValue.Z = this.X * dv.Z + this.Z * dv.X;
+	}
+
+	/**
+	 * @param {vec} v
+	 * @param {vec} returnValue
 	 */
 	add(v, returnValue) {
 		returnValue.X = this.X + v.X;
@@ -128,53 +94,33 @@ class vec3 {
 	}
 
 	/**
-	 * @param {vec3} v
-	 * @param {vec3} returnValue
+	 * @param {vec} v
+	 * @param {vec} returnValue
 	 */
 	sub(v, returnValue) {
 		returnValue.X = this.X - v.X;
 		returnValue.Y = this.Y - v.Y;
 		returnValue.Z = this.Z - v.Z;
 	}
-
-	/**
-	 * @param {vec3} offset
-	 * @param {phaser} returnValue
-	 */
-	toPhaserOfs(offset, returnValue) {
-		var sx = this.X - offset.X;
-		var sy = this.Y - offset.Y;
-		var sz = this.Z - offset.Z;
-		var xx_zz = sx*sx + sz*sz;
-		returnValue.radius = Math.sqrt(xx_zz + sy*sy);
-		returnValue.azimuth = Math.atan2(sz, sx);
-		returnValue.elevation = Math.atan2(sy, Math.sqrt(xx_zz));
-	}
-}
-
-class phaser {
-	/**
-	 * @param {number} radius
-	 * @param {number} azimuth
-	 * @param {number} elevation
-	 */
-	constructor(radius=0, azimuth=0, elevation=0) {
-		this.radius = radius;
-		this.azimuth = azimuth;
-		this.elevation = elevation;
-	}
-	toVec(returnValue) {
-		returnValue.X = this.radius * Math.cos(this.azimuth) * Math.cos(this.elevation);
-		returnValue.Y = this.radius * Math.sin(this.elevation);
-		returnValue.Z = this.radius * Math.sin(this.azimuth) * Math.cos(this.elevation);
-	}
 }
 
 /**
- * @param {vec3} p
- * @param {vec3} a
- * @param {vec3} b
- * @param {vec3} returnValue
+ * @param {vec} a 
+ * @param {vec} b 
+ * @returns {number}
+ */
+function distance(a, b) {
+	let sx = b.X - a.X;
+	let sy = b.Y - a.Y;
+	let sz = b.Z - a.Z;
+	return Math.sqrt(sx*sx + sy*sy + sz*sz);
+}
+
+/**
+ * @param {vec} p
+ * @param {vec} a
+ * @param {vec} b
+ * @param {vec} returnValue
  * @param {number} beginLimit
  * @param {number} endLimit
  * @return {number}
@@ -206,10 +152,10 @@ function nearPointOnLine(p, a, b, returnValue, beginLimit=true, endLimit=true) {
 }
 
 /**
- * @param {vec3} o
- * @param {vec3} a
- * @param {vec3} b
- * @param {vec3} returnValue
+ * @param {vec} o
+ * @param {vec} a
+ * @param {vec} b
+ * @param {vec} returnValue
  */
 function divLine(o, a, b, returnValue) {
 	var oax = a.X - o.X;
@@ -226,10 +172,10 @@ function divLine(o, a, b, returnValue) {
 }
 
 /**
- * @param {vec3} o
- * @param {vec3} a
- * @param {vec3} b
- * @param {vec3} returnValue
+ * @param {vec} o
+ * @param {vec} a
+ * @param {vec} b
+ * @param {vec} returnValue
  */
 function crossedDivLine(o, a, b, returnValue) {
 	var oax = a.X - o.X;
