@@ -17,26 +17,61 @@
 <body>
 <table>
 <tr>
-    <td><canvas id="disp1"></canvas></td>
+    <td rowspan="2"><canvas id="disp1"></canvas></td>
+    <td>
+        \begin{align}
+        \cos^2{\theta}
+        \end{align}
+    </td>
+</tr><tr>
+    <td style="width:200px;"><span id="lblDisp1"></span></td>
+</tr><tr>
+    <td rowspan="2"><canvas id="disp2"></canvas></td>
+    <td>
+        \begin{align}
+        \sin^2{\theta}
+        \end{align}
+    </td>
+</tr><tr>
+    <td><span id="lblDisp2"></span></td>
+</tr><tr>
+    <td rowspan="2"><canvas id="disp3"></canvas></td>
     <td>
         \begin{align}
         \cos^2{\theta}+\sin^2{\theta}=1
         \end{align}
-    </td>
-</tr><tr>
-    <td><canvas id="disp2"></canvas></td>
-    <td>
         \begin{align}
-        \cos^2{\theta} = 1-\sin^2{\theta}
-        \end{align}
-    </td>
-</tr><tr>
-    <td><canvas id="disp3"></canvas></td>
-    <td>
-        \begin{align}
+        \cos^2{\theta} = 1-\sin^2{\theta} \\
         \sin^2{\theta} = 1-\cos^2{\theta}
         \end{align}
     </td>
+</tr><tr>
+    <td><span id="lblDisp3"></span></td>
+</tr><tr>
+    <td rowspan="2"><canvas id="disp4"></canvas></td>
+    <td>
+        \begin{align}
+        \cos^2{\theta}-\sin^2{\theta} = 2\cos^2{\theta}-1
+        \end{align}
+        \begin{align}
+        2\cos^2{\theta}-1 = 1-2\sin^2{\theta}
+        \end{align}
+    </td>
+</tr><tr>
+    <td><span id="lblDisp4"></span></td>
+</tr><tr>
+    <td rowspan="2"><canvas id="disp5"></canvas></td>
+    <td>
+        \begin{align}
+        \sin^2{\theta}-\cos^2{\theta} = 2\sin^2{\theta}-1
+        \end{align}
+        \begin{align}
+        2\sin^2{\theta}-1 = 1-2\cos^2{\theta}
+        \end{align}
+    </td>
+</tr><tr>
+    <td><span id="lblDisp5"></span></td>
+</tr>
 </table>
 </body>
 <script type="text/javascript" src="script/kihon_koushiki.js"></script>
