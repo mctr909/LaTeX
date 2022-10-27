@@ -10,6 +10,7 @@ const UNIT_RADIUS = 75;
 const WAVE_LENGTH = 360;
 const GAP = 30;
 
+/** @type{LineInfo[]} */
 let gMeasureList = [];
 let gLabelList = [];
 let gSinLine = [];
@@ -46,58 +47,58 @@ function init() {
 
     gDrawer.Offset = new vec(gWaveBegin, gDrawer.Height/4);
 
-    gMeasureList.push({
-        a:new vec(-UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH),
-        b:new vec(-UNIT_RADIUS, 0),
-        color:AXIZ_COLOR,
-        dot: true
-    });
-    gMeasureList.push({
-        a:new vec(0, UNIT_RADIUS),
-        b:new vec(gWaveBegin + WAVE_LENGTH, UNIT_RADIUS),
-        color:AXIZ_COLOR,
-        dot: true
-    });
-    gMeasureList.push({
-        a:new vec(0, -UNIT_RADIUS),
-        b:new vec(gWaveBegin + WAVE_LENGTH, -UNIT_RADIUS),
-        color:AXIZ_COLOR,
-        dot: true
-    });
-    gMeasureList.push({
-        a:new vec(-UNIT_RADIUS, 0),
-        b:new vec(gWaveBegin + WAVE_LENGTH, 0),
-        color:AXIZ_COLOR,
-        dot: false
-    });
-    gMeasureList.push({
-        a:new vec(0, -gWaveBegin - WAVE_LENGTH),
-        b:new vec(0, UNIT_RADIUS),
-        color:AXIZ_COLOR,
-        dot: false
-    });
-    gMeasureList.push({
-        a:new vec(UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH),
-        b:new vec(UNIT_RADIUS, gWaveBegin + WAVE_LENGTH),
-        color:TAN_COLOR,
-        dot: false
-    });
+    gMeasureList.push(new LineInfo(
+        -UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
+        -UNIT_RADIUS, 0,
+        1, true,
+        AXIZ_COLOR
+    ));
+    gMeasureList.push(new LineInfo(
+        0, UNIT_RADIUS,
+        gWaveBegin + WAVE_LENGTH, UNIT_RADIUS,
+        1, true,
+        AXIZ_COLOR
+    ));
+    gMeasureList.push(new LineInfo(
+        0, -UNIT_RADIUS,
+        gWaveBegin + WAVE_LENGTH, -UNIT_RADIUS,
+        1, true,
+        AXIZ_COLOR
+    ));
+    gMeasureList.push(new LineInfo(
+        -UNIT_RADIUS, 0,
+        gWaveBegin + WAVE_LENGTH, 0,
+        1, false,
+        AXIZ_COLOR
+    ));
+    gMeasureList.push(new LineInfo(
+        0, -gWaveBegin - WAVE_LENGTH,
+        0, UNIT_RADIUS,
+        1, false,
+        AXIZ_COLOR
+    ));
+    gMeasureList.push(new LineInfo(
+        UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
+        UNIT_RADIUS, gWaveBegin + WAVE_LENGTH,
+        2, false,
+        TAN_COLOR
+    ));
 
     for (let deg=0; deg<=360; deg += 15) {
         let x = gWaveBegin + WAVE_LENGTH * deg / 360.0;
         let h = deg % 90 == 0 ? 15 : deg % 45 == 0 ? 10 : 5;
-        gMeasureList.push({
-            a:new vec(x, -h),
-            b:new vec(x, h),
-            color:AXIZ_COLOR,
-            dot: false
-        });
-        gMeasureList.push({
-            a:new vec(-h, -x),
-            b:new vec(h, -x),
-            color:AXIZ_COLOR,
-            dot: false
-        });
+        gMeasureList.push(new LineInfo(
+            x, -h,
+            x, h,
+            1, false,
+            AXIZ_COLOR
+        ));
+        gMeasureList.push(new LineInfo(
+            -h, -x,
+            h, -x,
+            1, false,
+            AXIZ_COLOR
+        ));
         if (deg % 90 == 0) {
             gLabelList.push({
                 pos: new vec(x-10, -30),
@@ -134,11 +135,7 @@ function main() {
     gDrawer.clear();
 
     for (let i=0; i<gMeasureList.length; i++) {
-        if (gMeasureList[i].dot) {
-            gDrawer.drawLineD(gMeasureList[i].a, gMeasureList[i].b, gMeasureList[i].color);
-        } else {
-            gDrawer.drawLine(gMeasureList[i].a, gMeasureList[i].b, gMeasureList[i].color);
-        }
+        gMeasureList[i].draw(gDrawer);
     }
     for (let i=0; i<gLabelList.length; i++) {
         gDrawer.drawString(gLabelList[i].pos, gLabelList[i].text, 16);
@@ -161,35 +158,34 @@ function main() {
         }
     }
 
-    let pr = new vec(Math.cos(gTheta) * gCircleRadius, Math.sin(gTheta) * gCircleRadius);
-    let vt = new vec(UNIT_RADIUS, Math.tan(gTheta) * UNIT_RADIUS);
     let x = gWaveBegin + gTheta * WAVE_LENGTH / Math.PI / 2;
-    let pv = new vec(0, -x);
-    let ph = new vec(x, 0);
-    let oc = new vec(pr.X, 0);
-    let pc = new vec(pr.X, -x);
-    let ps = new vec(x, pr.Y);
-    let pt = new vec(x, vt.Y);
-    let lblR = new vec(pr.X * 0.45 - 5, pr.Y * 0.45 + 5);
-    let lblC = new vec(oc.X * 0.5 - 5, -13);
-    let lblS = new vec(pr.X + 3, pr.Y * 0.5 - 6);
-
-    gDrawer.drawLine(new vec(), pr, CIRCLE_COLOR, 2);
-    gDrawer.drawLine(pv, pc);
-    gDrawer.drawLine(ph, ps);
-    gDrawer.drawLine(ph, pt);
-    gDrawer.drawLineD(pr, pc, COS_COLOR, 2);
-    gDrawer.drawLineD(pr, ps, SIN_COLOR, 2);
-    gDrawer.drawLineD(vt, pt, TAN_COLOR, 2);
+    let vx = new vec(x, 0);
+    let vy = new vec(0, -x);
+    let vp = new vec(Math.cos(gTheta) * gCircleRadius, Math.sin(gTheta) * gCircleRadius);
+    let vt = new vec(UNIT_RADIUS, Math.tan(gTheta) * UNIT_RADIUS);
+    let vc = new vec(vp.X, 0);
+    let wave_c = new vec(vp.X, -x);
+    let wave_s = new vec(x, vp.Y);
+    let wave_t = new vec(x, vt.Y);
+    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 2);
+    gDrawer.drawLine(vy, wave_c);
+    gDrawer.drawLine(vx, wave_s);
+    gDrawer.drawLine(vx, wave_t);
+    gDrawer.drawLineD(vp, wave_c, COS_COLOR, 2);
+    gDrawer.drawLineD(vp, wave_s, SIN_COLOR, 2);
+    gDrawer.drawLineD(vt, wave_t, TAN_COLOR, 2);
     gDrawer.drawLineD(new vec(), vt);
-    gDrawer.drawLine(new vec(), oc, COS_COLOR, 2);
-    gDrawer.drawLine(oc, pr, SIN_COLOR, 2);
-    gDrawer.fillCircle(pr, 4);
-    gDrawer.fillCircle(pc, 4, COS_COLOR);
-    gDrawer.fillCircle(ps, 4, SIN_COLOR);
+    gDrawer.drawLine(new vec(), vc, COS_COLOR, 2);
+    gDrawer.drawLine(vc, vp, SIN_COLOR, 2);
+    gDrawer.fillCircle(vp, 4);
     gDrawer.fillCircle(vt, 4, TAN_COLOR);
-    gDrawer.fillCircle(pt, 4, TAN_COLOR);
+    gDrawer.fillCircle(wave_c, 4, COS_COLOR);
+    gDrawer.fillCircle(wave_s, 4, SIN_COLOR);
+    gDrawer.fillCircle(wave_t, 4, TAN_COLOR);
 
+    let lblR = new vec(vp.X * 0.45 - 5, vp.Y * 0.45 + 5);
+    let lblC = new vec(vc.X * 0.5 - 5, -13);
+    let lblS = new vec(vp.X + 3, vp.Y * 0.5 - 6);
     gDrawer.drawString(lblR, "r", 20);
     gDrawer.drawString(lblC, "c", 20);
     gDrawer.drawString(lblS, "s", 20);
