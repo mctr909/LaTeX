@@ -1,11 +1,6 @@
 /// <reference path="Math.js" />
 
 class LineInfo {
-	static BLACK = [0, 0, 0];
-	static RED = [211, 0, 0];
-	static GREEEN = [0, 191, 0];
-	static BLUE = [0, 0, 255];
-
     /** @type{vec} */
     posA;
     /** @type{vec} */
@@ -13,22 +8,24 @@ class LineInfo {
 	width = 1;
     isDot = false;
 	isArrow = false;
-	color = LineInfo.BLACK;
+	color = Drawer.BLACK;
 	/**
-	 * @param {number} ax 
-	 * @param {number} ay 
-	 * @param {number} bx 
-	 * @param {number} by 
-	 * @param {number} width 
-	 * @param {boolean} isDot 
-	 * @param {number[]} color 
+	 * @param {number} ax
+	 * @param {number} ay
+	 * @param {number} bx
+	 * @param {number} by
+	 * @param {number} width
+	 * @param {number[]} color
+	 * @param {boolean} isDot
+	 * @param {boolean} isArrow
 	 */
-	constructor(ax, ay, bx, by, width=1, isDot=false, color=LineInfo.BLACK) {
+	constructor(ax, ay, bx, by, width=1, color=Drawer.BLACK, isDot=false, isArrow=false) {
 		this.posA = new vec(ax, ay);
 		this.posB = new vec(bx, by);
 		this.width = width;
-		this.isDot = isDot;
 		this.color = color;
+		this.isDot = isDot;
+		this.isArrow = isArrow;
 	}
 	/**
 	 * @param {Drawer} drawer 
@@ -53,6 +50,15 @@ class LineInfo {
 class Drawer {
 	static #FONT_NAME = "Cambria Math";
 	static FRAME_RATE = 60;
+
+	static BLACK = [0, 0, 0];
+	static GRAY = [167, 167, 167];
+	static WHITE = [255, 255, 255];
+	static RED = [211, 0, 0];
+	static GREEN = [0, 191, 0];
+	static BLUE = [0, 0, 255];
+	static ORANGE = [211, 127, 0];
+	static PURPLE = [191, 0, 255];
 
 	/** @type {CanvasRenderingContext2D} */
 	#ctx;
@@ -332,10 +338,20 @@ class Drawer {
 	drawStringC(p, value, size = 11, color = [0,0,0]) {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
 		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
-		var met = this.#ctx.measureText(value);
-		this.#ctx.fillText(value,
-			this.#offset.X + p.X - met.width / 2,
-			this.#offset.Y + p.Y + size / 2);
+		let lines = value.split("\n");
+		let width = 0;
+		for(let i=0; i<lines.length; i++) {
+			let met = this.#ctx.measureText(lines[i]);
+			if (width < met.width) {
+				width = met.width;
+			}
+		}
+		let px = this.#offset.X + p.X - width / 2;
+		let py = this.#offset.Y - p.Y + size / 2;
+		for(let i=0; i<lines.length; i++) {
+			this.#ctx.fillText(lines[i], px, py);
+			py += size;
+		}
 	}
 
 	/**

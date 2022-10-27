@@ -1,20 +1,24 @@
 /// <reference path="../../../script/drawer.js" />
 /// <reference path="../../../script/math.js" />
 
-const AXIZ_COLOR = LineInfo.BLACK;
-const CIRCLE_COLOR = LineInfo.BLACK;
-const COS_COLOR = LineInfo.BLUE;
-const SIN_COLOR = LineInfo.RED
-const TAN_COLOR = LineInfo.GREEEN;
+const AXIZ_COLOR = Drawer.BLACK;
+const MEASURE_COLOR = Drawer.BLACK;
+const CIRCLE_COLOR = Drawer.GREEN;
+const COS_COLOR = Drawer.BLUE;
+const SIN_COLOR = Drawer.RED;
+const TAN_COLOR = Drawer.ORANGE;
 const UNIT_RADIUS = 75;
 const WAVE_LENGTH = 360;
 const GAP = 30;
 
 /** @type{LineInfo[]} */
-let gMeasureList = [];
+let gLineList = [];
 let gLabelList = [];
+/** @type{vec[]} */
 let gSinLine = [];
+/** @type{vec[]} */
 let gCosLine = [];
+/** @type{Array<vec[]>} */
 let gTanLines = [];
 let gRadius = 2.5;
 let gTheta = Math.PI / 4;
@@ -35,7 +39,7 @@ init();
 requestNextAnimationFrame(main);
 
 function init() {
-    gMeasureList = [];
+    gLineList = [];
     gLabelList = [];
     gSinLine = [];
     gCosLine = [];
@@ -47,69 +51,66 @@ function init() {
 
     gDrawer.Offset = new vec(gWaveBegin, gDrawer.Height/4);
 
-    gMeasureList.push(new LineInfo(
-        -UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
-        -UNIT_RADIUS, 0,
-        1, true,
-        AXIZ_COLOR
-    ));
-    gMeasureList.push(new LineInfo(
-        0, UNIT_RADIUS,
-        gWaveBegin + WAVE_LENGTH, UNIT_RADIUS,
-        1, true,
-        AXIZ_COLOR
-    ));
-    gMeasureList.push(new LineInfo(
-        0, -UNIT_RADIUS,
-        gWaveBegin + WAVE_LENGTH, -UNIT_RADIUS,
-        1, true,
-        AXIZ_COLOR
-    ));
-    gMeasureList.push(new LineInfo(
+    gLineList.push(new LineInfo(
         -UNIT_RADIUS, 0,
         gWaveBegin + WAVE_LENGTH, 0,
-        1, false,
-        AXIZ_COLOR
+        1, AXIZ_COLOR
     ));
-    gMeasureList.push(new LineInfo(
+    gLineList.push(new LineInfo(
         0, -gWaveBegin - WAVE_LENGTH,
         0, UNIT_RADIUS,
-        1, false,
-        AXIZ_COLOR
+        1, AXIZ_COLOR
     ));
-    gMeasureList.push(new LineInfo(
-        UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
-        UNIT_RADIUS, gWaveBegin + WAVE_LENGTH,
-        2, false,
-        TAN_COLOR
-    ));
-
     for (let deg=0; deg<=360; deg += 15) {
         let x = gWaveBegin + WAVE_LENGTH * deg / 360.0;
         let h = deg % 90 == 0 ? 15 : deg % 45 == 0 ? 10 : 5;
-        gMeasureList.push(new LineInfo(
+        gLineList.push(new LineInfo(
             x, -h,
             x, h,
-            1, false,
-            AXIZ_COLOR
+            1, AXIZ_COLOR
         ));
-        gMeasureList.push(new LineInfo(
+        gLineList.push(new LineInfo(
             -h, -x,
             h, -x,
-            1, false,
-            AXIZ_COLOR
+            1, AXIZ_COLOR
         ));
         if (deg % 90 == 0) {
             gLabelList.push({
-                pos: new vec(x-10, -30),
-                text: deg + "°\n" + (deg / 180) + "π"
+                pos: new vec(x, -20),
+                text: deg + "°\n" + (deg / 180) + "π",
+                center: true
             });
             gLabelList.push({
-                pos: new vec(20, -x+2),
-                text: deg + "°\n" + (deg / 180) + "π"
+                pos: new vec(17, -x+2),
+                text: deg + "°\n" + (deg / 180) + "π",
+                center: false
             });
         }
     }
+
+    gLineList.push(new LineInfo(
+        -UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
+        -UNIT_RADIUS, 0,
+        1, MEASURE_COLOR,
+        true
+    ));
+    gLineList.push(new LineInfo(
+        0, UNIT_RADIUS,
+        gWaveBegin + WAVE_LENGTH, UNIT_RADIUS,
+        1, MEASURE_COLOR,
+        true
+    ));
+    gLineList.push(new LineInfo(
+        0, -UNIT_RADIUS,
+        gWaveBegin + WAVE_LENGTH, -UNIT_RADIUS,
+        1, MEASURE_COLOR,
+        true
+    ));
+    gLineList.push(new LineInfo(
+        UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
+        UNIT_RADIUS, gWaveBegin + WAVE_LENGTH,
+        2, TAN_COLOR
+    ));
 
     let tanList = [];
     for(let x=gWaveBegin; x<gWaveBegin + WAVE_LENGTH; x++) {
@@ -134,11 +135,16 @@ function init() {
 function main() {
     gDrawer.clear();
 
-    for (let i=0; i<gMeasureList.length; i++) {
-        gMeasureList[i].draw(gDrawer);
+    for (let i=0; i<gLineList.length; i++) {
+        gLineList[i].draw(gDrawer);
     }
     for (let i=0; i<gLabelList.length; i++) {
-        gDrawer.drawString(gLabelList[i].pos, gLabelList[i].text, 16);
+        let lbl = gLabelList[i];
+        if (lbl.center) {
+            gDrawer.drawStringC(lbl.pos, lbl.text, 16);
+        } else {
+            gDrawer.drawString(lbl.pos, lbl.text, 16);
+        }
     }
 
     gDrawer.drawCircleD(new vec(), UNIT_RADIUS, CIRCLE_COLOR);
@@ -183,11 +189,11 @@ function main() {
     gDrawer.fillCircle(wave_s, 4, SIN_COLOR);
     gDrawer.fillCircle(wave_t, 4, TAN_COLOR);
 
-    let lblR = new vec(vp.X * 0.45 - 5, vp.Y * 0.45 + 5);
-    let lblC = new vec(vc.X * 0.5 - 5, -13);
+    let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
+    let lblC = new vec(vc.X * 0.5, -5);
     let lblS = new vec(vp.X + 3, vp.Y * 0.5 - 6);
     gDrawer.drawString(lblR, "r", 20);
-    gDrawer.drawString(lblC, "c", 20);
+    gDrawer.drawStringC(lblC, "c", 20);
     gDrawer.drawString(lblS, "s", 20);
 
     let rad = parseInt(1000 * gTheta / Math.PI + 0.5) / 1000;
