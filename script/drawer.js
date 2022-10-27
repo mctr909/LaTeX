@@ -1,5 +1,55 @@
 /// <reference path="Math.js" />
 
+class LineInfo {
+	static BLACK = [0, 0, 0];
+	static RED = [211, 0, 0];
+	static GREEEN = [0, 191, 0];
+	static BLUE = [0, 0, 255];
+
+    /** @type{vec} */
+    posA;
+    /** @type{vec} */
+    posB;
+	width = 1;
+    isDot = false;
+	isArrow = false;
+	color = LineInfo.BLACK;
+	/**
+	 * @param {number} ax 
+	 * @param {number} ay 
+	 * @param {number} bx 
+	 * @param {number} by 
+	 * @param {number} width 
+	 * @param {boolean} isDot 
+	 * @param {number[]} color 
+	 */
+	constructor(ax, ay, bx, by, width=1, isDot=false, color=LineInfo.BLACK) {
+		this.posA = new vec(ax, ay);
+		this.posB = new vec(bx, by);
+		this.width = width;
+		this.isDot = isDot;
+		this.color = color;
+	}
+	/**
+	 * @param {Drawer} drawer 
+	 */
+	draw(drawer) {
+		if (this.isArrow) {
+			if (this.isDot) {
+				drawer.drawArrowD(this.posA, this.posB, this.color, this.width);
+			} else {
+				drawer.drawArrow(this.posA, this.posB, this.color, this.width);
+			}
+		} else {
+			if (this.isDot) {
+				drawer.drawLineD(this.posA, this.posB, this.color, this.width);
+			} else {
+				drawer.drawLine(this.posA, this.posB, this.color, this.width);
+			}
+		}
+	}
+}
+
 class Drawer {
 	static #FONT_NAME = "Cambria Math";
 	static FRAME_RATE = 60;
@@ -120,7 +170,7 @@ class Drawer {
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
-	 drawPolyline(points, color = [0,0,0], width = 1) {
+	drawPolyline(points, color = [0,0,0], width = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(this.#offset.X + points[0].X, this.#offset.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
@@ -137,7 +187,7 @@ class Drawer {
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
-	 drawPolylineD(points, color = [0,0,0], width = 1) {
+	drawPolylineD(points, color = [0,0,0], width = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(this.#offset.X + points[0].X, this.#offset.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
@@ -205,7 +255,7 @@ class Drawer {
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */
-	 drawCircleD(center, radius, color = [0,0,0], width = 1) {
+	drawCircleD(center, radius, color = [0,0,0], width = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
 			this.#offset.X + center.X,

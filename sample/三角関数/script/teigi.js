@@ -1,11 +1,11 @@
 /// <reference path="../../../script/drawer.js" />
 /// <reference path="../../../script/math.js" />
 
-const AXIZ_COLOR = [0, 0, 0];
-const CIRCLE_COLOR = [0, 0, 0];
-const COS_COLOR = [0, 0, 211];
-const SIN_COLOR = [211, 0, 0];
-const TAN_COLOR = [0, 191, 0];
+const AXIZ_COLOR = LineInfo.BLACK;
+const CIRCLE_COLOR = LineInfo.BLACK;
+const COS_COLOR = LineInfo.BLUE;
+const SIN_COLOR = LineInfo.RED
+const TAN_COLOR = LineInfo.GREEEN;
 const UNIT_RADIUS = 75;
 const WAVE_LENGTH = 360;
 const GAP = 30;
