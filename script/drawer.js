@@ -53,8 +53,8 @@ class Drawer {
 
 	static BLACK = [0, 0, 0];
 	static GRAY = [167, 167, 167];
-	static WHITE = [255, 255, 255];
-	static RED = [211, 0, 0];
+	static WHITE = [211, 255, 255];
+	static RED = [255, 0, 0];
 	static GREEN = [0, 191, 0];
 	static BLUE = [0, 0, 255];
 	static ORANGE = [211, 127, 0];

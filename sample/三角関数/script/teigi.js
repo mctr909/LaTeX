@@ -173,7 +173,6 @@ function main() {
     let wave_c = new vec(vp.X, -x);
     let wave_s = new vec(x, vp.Y);
     let wave_t = new vec(x, vt.Y);
-    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 2);
     gDrawer.drawLine(vy, wave_c);
     gDrawer.drawLine(vx, wave_s);
     gDrawer.drawLine(vx, wave_t);
@@ -183,6 +182,7 @@ function main() {
     gDrawer.drawLineD(new vec(), vt);
     gDrawer.drawLine(new vec(), vc, COS_COLOR, 2);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 2);
+    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 2);
     gDrawer.fillCircle(vp, 4);
     gDrawer.fillCircle(vt, 4, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 4, COS_COLOR);
