@@ -98,6 +98,9 @@ class Drawer {
 				self.isDrag = false;
 			}
 		});
+		this.#element.addEventListener("mouseleave", function(ev) {
+			self.isDrag = false;
+		});
 
 		this.#ctx = this.#element.getContext("2d");
 		this.#ctx.scale(1, 1);
@@ -339,17 +342,11 @@ class Drawer {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
 		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
 		let lines = value.split("\n");
-		let width = 0;
-		for(let i=0; i<lines.length; i++) {
-			let met = this.#ctx.measureText(lines[i]);
-			if (width < met.width) {
-				width = met.width;
-			}
-		}
-		let px = this.#offset.X + p.X - width / 2;
+		let px = this.#offset.X + p.X;
 		let py = this.#offset.Y - p.Y + size / 2;
 		for(let i=0; i<lines.length; i++) {
-			this.#ctx.fillText(lines[i], px, py);
+			let met = this.#ctx.measureText(lines[i]);
+			this.#ctx.fillText(lines[i], px - met.width / 2, py);
 			py += size;
 		}
 	}

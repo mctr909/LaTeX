@@ -1,5 +1,5 @@
-/// <reference path="math.js" />
-/// <reference path="drawer.js" />
+/// <reference path="../math.js" />
+/// <reference path="../drawer.js" />
 
 const AXIZ_COLOR = Drawer.BLACK;
 const MEASURE_COLOR = Drawer.BLACK;
