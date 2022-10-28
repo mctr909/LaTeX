@@ -1,10 +1,10 @@
 /// <reference path="math.js" />
 /// <reference path="drawer.js" />
 
-const AXIZ_COLOR = [0, 0, 0];
-const MEASURE_COLOR = [167, 167, 167];
-const COS_COLOR = [0, 0, 211];
-const SIN_COLOR = [211, 0, 0];
+const AXIZ_COLOR = Drawer.BLACK;
+const MEASURE_COLOR = Drawer.GRAY;
+const COS_COLOR = Drawer.BLUE;
+const SIN_COLOR = Drawer.RED;
 const RADIUS = 100;
 const WAVE_LENGTH = 360;
 const WAVE_BEGIN = 10;
