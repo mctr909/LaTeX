@@ -1,12 +1,12 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
-const UNIT = 100;
+const UNIT = 200;
 const A_COLOR = Drawer.GREEN;
 const B_COLOR = Drawer.BLUE;
 const C_COLOR = Drawer.RED;
 const O_COLOR = Drawer.BLACK;
 
-let gDrawer = new Drawer("disp", 500, 500);
+let gDrawer = new Drawer("disp", 600, 600);
 
 let gPa = new vec(UNIT * 1.0, UNIT * 0.0);
 let gPb = new vec(UNIT * 1.0, UNIT * 1.0);
@@ -92,6 +92,9 @@ function main() {
     document.getElementById("lblA").innerHTML = "a = " + ta;
     document.getElementById("lblB").innerHTML = "b = " + tb;
     document.getElementById("lblC").innerHTML = "c = " + tc;
+    document.getElementById("lblTheta").innerHTML
+        = "θ = " + parseInt(dangle * 180 / Math.PI * 10) / 10 + "°<br>"
+        + "θ = " + parseInt(dangle / Math.PI * 100) / 100 + "π"
     document.getElementById("lblCos").innerHTML = "cosθ = " + parseInt(tcos * 1000) / 1000;
     requestNextAnimationFrame(main);
 }
