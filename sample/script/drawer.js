@@ -261,6 +261,30 @@ class Drawer {
 	/**
 	 * @param {vec} center
 	 * @param {number} radius
+	 * @param {number} begin
+	 * @param {number} elapse
+	 * @param {[number, number, number]} color
+	 * @param {number} width
+	 */
+	drawArc(center, radius, begin = 0, elapse = 2 * Math.PI, color = [0,0,0], width = 1) {
+		this.#ctx.beginPath();
+		this.#ctx.arc(
+			this.#offset.X + center.X,
+			this.#offset.Y - center.Y,
+			radius,
+			-begin,
+			-elapse,
+			true
+		);
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
+		this.#ctx.lineWidth = width;
+		this.#ctx.setLineDash([]);
+		this.#ctx.stroke();
+	}
+
+	/**
+	 * @param {vec} center
+	 * @param {number} radius
 	 * @param {[number, number, number]} color
 	 * @param {number} width
 	 */

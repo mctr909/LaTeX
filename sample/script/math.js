@@ -21,6 +21,15 @@ class vec {
 
 	/**
 	 * @param {vec} returnValue
+	 */
+	copy(returnValue) {
+		returnValue.X = this.X;
+		returnValue.Y = this.Y;
+		returnValue.Z = this.Z;
+	}
+
+	/**
+	 * @param {vec} returnValue
 	 * @param {number} scale
 	 */
 	normalize(returnValue, scale = 1) {
@@ -149,6 +158,19 @@ function nearPointOnLine(p, a, b, returnValue, beginLimit=true, endLimit=true) {
 	returnValue.Y = aby*r + a.Y;
 	returnValue.Z = abz*r + a.Z;
 	return r;
+}
+
+/**
+ * @param {vec} o
+ * @param {vec} a
+ * @param {vec} b
+ * @param {number} scale
+ * @param {vec} returnValue
+ */
+function midPos(a, b, scale, returnValue) {
+	returnValue.X = a.X + (b.X - a.X) * scale;
+	returnValue.Y = a.Y + (b.Y - a.Y) * scale;
+	returnValue.Z = a.Z + (b.Z - a.Z) * scale;
 }
 
 /**
