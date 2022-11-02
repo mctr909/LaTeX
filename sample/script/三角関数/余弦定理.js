@@ -63,6 +63,7 @@ function main() {
         dangle += 2*Math.PI;
     }
 
+    gDrawer.drawCircle(gPo, dr.abs);
     gDrawer.drawArc(gPo, 20, da.arg, dangle + da.arg, B_COLOR, 2);
     gDrawer.drawLine(gPo, gPa, A_COLOR, 2);
     gDrawer.drawLine(gPo, gPb, B_COLOR, 2);
@@ -91,13 +92,13 @@ function main() {
     ta = parseInt(ta * 1000) / 1000;
     tr = parseInt(tr * 1000) / 1000;
     to = parseInt(to * 1000) / 1000;
-    document.getElementById("lblA").innerHTML = "a = " + ta;
-    document.getElementById("lblR").innerHTML = "r = " + tr;
-    document.getElementById("lblO").innerHTML = "o = " + to;
+    document.getElementById("lblA").innerHTML = ta;
+    document.getElementById("lblR").innerHTML = tr;
+    document.getElementById("lblO").innerHTML = to;
     document.getElementById("lblTheta").innerHTML
-        = "θ = " + parseInt(dangle / Math.PI * 100) / 100 + "π"
+        = parseInt(dangle / Math.PI * 100) / 100 + "π"
         + "(" + parseInt(dangle * 180 / Math.PI * 10) / 10 + "°)";
-    document.getElementById("lblCos").innerHTML = "cosθ = " + parseInt(tcos * 1000) / 1000;
+    document.getElementById("lblCos").innerHTML = parseInt(tcos * 1000) / 1000;
 
     requestNextAnimationFrame(main);
 }

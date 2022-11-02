@@ -24,8 +24,8 @@ let gCSLine = [];
 let gSCLine = [];
 
 function init() {
-    gDrawer[0].Offset = new vec(20, RADIUS+5);
-    gDrawer[1].Offset = new vec(20, RADIUS+5);
+    gDrawer[0].Offset = new vec(20, RADIUS+15);
+    gDrawer[1].Offset = new vec(20, RADIUS+15);
 
     gLineList.push(new LineInfo(
         WAVE_BEGIN, 0,
