@@ -5,7 +5,7 @@ const AXIZ_COLOR = Drawer.BLACK;
 const MEASURE_COLOR = Drawer.GRAY;
 const COS_COLOR = Drawer.BLUE;
 const SIN_COLOR = Drawer.RED;
-const RADIUS = 100;
+const RADIUS = 128;
 const WAVE_LENGTH = 360*2;
 const WAVE_BEGIN = 5;
 
@@ -20,31 +20,34 @@ let gLineList = [];
 let gLabelList = [];
 let gCos2Line = [];
 let gSin2Line = [];
-let gCosLine = [];
-let gSinLine = [];
 let gCSLine = [];
 let gSCLine = [];
 
 function init() {
-    for(let i=0; i<gDrawer.length; i++) {
-        gDrawer[i].Offset = new vec(20, RADIUS+5);
-    }
+    gDrawer[0].Offset = new vec(20, RADIUS+5);
+    gDrawer[1].Offset = new vec(20, RADIUS+5);
 
     gLineList.push(new LineInfo(
         WAVE_BEGIN, 0,
         WAVE_LENGTH + WAVE_BEGIN, 0,
         1, AXIZ_COLOR
     ));
-    gLineList.push(new LineInfo(
-        WAVE_BEGIN, RADIUS,
-        WAVE_LENGTH + WAVE_BEGIN, RADIUS,
-        1, MEASURE_COLOR
-    ));
-    gLineList.push(new LineInfo(
-        WAVE_BEGIN, -RADIUS,
-        WAVE_LENGTH + WAVE_BEGIN, -RADIUS,
-        1, MEASURE_COLOR
-    ));
+
+    for (let i=1; i<=20; i++) {
+        let d = i/10;
+        gLineList.push(new LineInfo(
+            WAVE_BEGIN, RADIUS * d,
+            WAVE_LENGTH + WAVE_BEGIN, RADIUS * d,
+            0.75, MEASURE_COLOR,
+            i%5!=0
+        ));
+        gLineList.push(new LineInfo(
+            WAVE_BEGIN, -RADIUS * d,
+            WAVE_LENGTH + WAVE_BEGIN, -RADIUS * d,
+            0.75, MEASURE_COLOR,
+            i%5!=0
+        ));
+    }
 
     for (let deg=0; deg<=360; deg += 15) {
         let x = WAVE_BEGIN + WAVE_LENGTH * deg / 360.0;
@@ -54,10 +57,10 @@ function init() {
             x, h,
             1, AXIZ_COLOR
         ));
-        if (deg % 90 == 0) {
+        if (deg % 45 == 0) {
             gLabelList.push({
                 pos: new vec(x, -20),
-                text: deg + "°\n" + (deg / 180) + "π"
+                text: toFrac(deg / 180, "π", false) + "\n" + deg + "°"
             });
         }
     }
@@ -66,8 +69,6 @@ function init() {
         let th = 2 * Math.PI * (x - WAVE_BEGIN) / WAVE_LENGTH;
         let c = Math.cos(th);
         let s = Math.sin(th);
-        gCosLine.push(new vec(x, c * RADIUS));
-        gSinLine.push(new vec(x, s * RADIUS));
         gCos2Line.push(new vec(x, c*c * RADIUS));
         gSin2Line.push(new vec(x, s*s * RADIUS));
         gCSLine.push(new vec(x, (c*c - s*s) * RADIUS));
@@ -121,9 +122,9 @@ function main() {
         d.drawLine(new vec(px, 0), vcs);
         d.drawLine(new vec(px, 0), vc);
         d.drawLine(new vec(px, 0), vs);
-        d.fillCircle(vcs, 3, Drawer.ORANGE);
-        d.fillCircle(vc, 3, COS_COLOR);
-        d.fillCircle(vs, 3, SIN_COLOR);
+        d.fillCircle(vcs, 4, Drawer.ORANGE);
+        d.fillCircle(vc, 4, COS_COLOR);
+        d.fillCircle(vs, 4, SIN_COLOR);
         let dc = parseInt(1000 * pc + 0.5) / 1000;
         let ds = parseInt(1000 * ps + 0.5) / 1000;
         document.getElementById("lblDisp1a").innerHTML = dc;
@@ -141,9 +142,9 @@ function main() {
         d.drawLine(new vec(px, 0), vsc);
         d.drawLine(new vec(px, 0), vc);
         d.drawLine(new vec(px, 0), vs);
-        d.fillCircle(vsc, 3, Drawer.ORANGE);
-        d.fillCircle(vc, 3, COS_COLOR);
-        d.fillCircle(vs, 3, SIN_COLOR);
+        d.fillCircle(vsc, 4, Drawer.ORANGE);
+        d.fillCircle(vc, 4, COS_COLOR);
+        d.fillCircle(vs, 4, SIN_COLOR);
         let dc = parseInt(1000 * pc + 0.5) / 1000;
         let ds = parseInt(1000 * ps + 0.5) / 1000;
         document.getElementById("lblDisp2a").innerHTML = ds;

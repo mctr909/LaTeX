@@ -49,6 +49,21 @@ function main() {
         gDrawer.cursor.copy(gPo);
     }
 
+    let da = new vec();
+    let dr = new vec();
+    let dc = new vec();
+    gPa.sub(gPo, da);
+    gPb.sub(gPo, dr);
+    gPa.sub(gPb, dc);  
+    let dangle = dr.arg - da.arg;
+    if (2*Math.PI < dangle) {
+        dangle -= 2*Math.PI;
+    }
+    if (dangle < 0) {
+        dangle += 2*Math.PI;
+    }
+
+    gDrawer.drawArc(gPo, 20, da.arg, dangle + da.arg, B_COLOR, 2);
     gDrawer.drawLine(gPo, gPa, A_COLOR, 2);
     gDrawer.drawLine(gPo, gPb, B_COLOR, 2);
     gDrawer.drawLine(gPa, gPb, C_COLOR, 2);
@@ -56,45 +71,33 @@ function main() {
     gDrawer.fillCircle(gPb, 5, B_COLOR);
     gDrawer.fillCircle(gPo, 5, O_COLOR);
 
-    let da = new vec();
-    let db = new vec();
-    let dc = new vec();
-    midPos(gPo, gPa, 0.5, da);
-    midPos(gPo, gPb, 0.5, db);
-    midPos(gPa, gPb, 0.5, dc);
-    da.Y += 6;
-    db.Y += 6;
-    dc.Y += 6;
-    gDrawer.drawStringC(da, "a", 24);
-    gDrawer.drawStringC(db, "b", 24);
-    gDrawer.drawStringC(dc, "c", 24);
-
-    gPa.sub(gPo, da);
-    gPb.sub(gPo, db);
-    gPa.sub(gPb, dc);    
+    let lblA = new vec();
+    let lblR = new vec();
+    let lblO = new vec();
+    midPos(gPo, gPa, 0.5, lblA);
+    midPos(gPo, gPb, 0.5, lblR);
+    midPos(gPa, gPb, 0.5, lblO);
+    lblA.Y -= 15;
+    lblR.Y -= 15;
+    lblO.Y -= 15;
+    gDrawer.drawString(lblA, "a", 24);
+    gDrawer.drawString(lblR, "r", 24);
+    gDrawer.drawString(lblO, "o", 24);
+  
     let ta = da.abs / UNIT;
-    let tb = db.abs / UNIT;
-    let tc = dc.abs / UNIT;
-    let tcos = (ta*ta + tb*tb - tc*tc) / (2*ta*tb);
+    let tr = dr.abs / UNIT;
+    let to = dc.abs / UNIT;
+    let tcos = (ta*ta + tr*tr - to*to) / (2*ta*tr);
     ta = parseInt(ta * 1000) / 1000;
-    tb = parseInt(tb * 1000) / 1000;
-    tc = parseInt(tc * 1000) / 1000;
-
-    let dangle = db.arg - da.arg;
-    if (2*Math.PI < dangle) {
-        dangle -= 2*Math.PI;
-    }
-    if (dangle < 0) {
-        dangle += 2*Math.PI;
-    }
-    gDrawer.drawArc(gPo, 20, da.arg, dangle + da.arg, B_COLOR, 2);
-
+    tr = parseInt(tr * 1000) / 1000;
+    to = parseInt(to * 1000) / 1000;
     document.getElementById("lblA").innerHTML = "a = " + ta;
-    document.getElementById("lblB").innerHTML = "b = " + tb;
-    document.getElementById("lblC").innerHTML = "c = " + tc;
+    document.getElementById("lblR").innerHTML = "r = " + tr;
+    document.getElementById("lblO").innerHTML = "o = " + to;
     document.getElementById("lblTheta").innerHTML
-        = "θ = " + parseInt(dangle * 180 / Math.PI * 10) / 10 + "°<br>"
-        + "θ = " + parseInt(dangle / Math.PI * 100) / 100 + "π"
+        = "θ = " + parseInt(dangle / Math.PI * 100) / 100 + "π"
+        + "(" + parseInt(dangle * 180 / Math.PI * 10) / 10 + "°)";
     document.getElementById("lblCos").innerHTML = "cosθ = " + parseInt(tcos * 1000) / 1000;
+
     requestNextAnimationFrame(main);
 }

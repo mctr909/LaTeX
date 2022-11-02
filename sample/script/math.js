@@ -212,3 +212,32 @@ function crossedDivLine(o, a, b, returnValue) {
 	returnValue.Y = (obr * oay + oar * oby) / (oar + obr) + o.Y;
 	returnValue.Z = (obr * oaz + oar * obz) / (oar + obr) + o.Z;
 }
+
+/**
+ * @param {number} value 
+ * @param {string} unit 
+ * @returns {string} 
+ */
+function toFrac(value, unit="", dispOne=true) {
+	if (0 == value) {
+		return "0";
+	}
+	if (0 == value - parseInt(value)) {
+		if (dispOne) {
+			return value + unit;
+		} else {
+			return (1 == value ? "" : -1 == value ? "-" : value) + unit;
+		}
+	}
+	let sign = Math.sign(value);
+	for (let m=1; m<256;m++) {
+		for(let c=0; c<1000; c++) {
+			let diff = c / m - value * sign;
+			if (0 == diff) {
+				let ret = (c * sign) + "/" + m;
+				return ret + unit;
+			}
+		}
+	}
+	return value + unit;
+}
