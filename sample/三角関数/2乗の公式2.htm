@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../script/math.js"></script>
+    <script type="text/javascript" src="../script/drawer.js"></script>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px #000000 solid;
+        }
+    </style>
+</head>
+<body>
+<table>
+<tr>
+    <td rowspan="2"><canvas id="disp1"></canvas></td>
+    <td style="width:200px;">
+        \begin{align}
+        &\cos^2{\theta} - \sin^2{\theta}
+        \end{align}<br>
+        <span>
+            [ sinを置き換える場合 ]
+            \begin{align}
+            &= \cos^2{\theta} - \left( 1-\cos^2{\theta} \right) \\
+            &= \cos^2{\theta} - 1 + \cos^2{\theta} \\
+            &= 2\cos^2{\theta} - 1
+            \end{align}
+        </span><br>
+        <span>
+            [ cosを置き換える場合 ]
+            \begin{align}
+            &= \left( 1-\sin^2{\theta} \right) - \sin^2{\theta} \\
+            &= 1 - \sin^2{\theta} - \sin^2{\theta} \\
+            &= 1 - 2\sin^2{\theta}
+            \end{align}
+        </span>
+    </td>
+</tr><tr>
+    <td>
+        <span id="lblDisp1a" style="color:#0000FF"></span>
+        -
+        <span id="lblDisp1b" style="color:#DF0000"></span>
+        =
+        <span id="lblDisp1c" style="color:#CF7F00"></span>
+    </td>
+</tr><tr>
+    <td rowspan="2"><canvas id="disp2"></canvas></td>
+    <td>
+        \begin{align}
+        &\sin^2{\theta} - \cos^2{\theta}
+        \end{align}<br>
+        <span>
+            [ cosを置き換える場合 ]
+            \begin{align}
+            &= \sin^2{\theta} - \left( 1-\sin^2{\theta} \right) \\
+            &= \sin^2{\theta} - 1 + \sin^2{\theta} \\
+            &= 2\sin^2{\theta} - 1
+            \end{align}
+        </span><br>
+        <span>
+            [ sinを置き換える場合 ]
+            \begin{align}
+            &= \left( 1-\cos^2{\theta} \right) - \cos^2{\theta} \\
+            &= 1 - \cos^2{\theta} - \cos^2{\theta} \\
+            &= 1 - 2\cos^2{\theta}
+            \end{align}
+        </span>
+    </td>
+</tr><tr>
+    <td>
+        <span id="lblDisp2a" style="color:#DF0000"></span>
+        -
+        <span id="lblDisp2b" style="color:#0000FF"></span>
+        =
+        <span id="lblDisp2c" style="color:#CF7F00"></span>
+    </td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../script/三角関数/2乗の公式2.js"></script>
