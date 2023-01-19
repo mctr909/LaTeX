@@ -241,3 +241,39 @@ function toFrac(value, unit="", dispOne=true) {
 	}
 	return value + unit;
 }
+
+/**
+ * @param {number} value 
+ * @param {number} scale 
+ * @param {number} digit 
+ * @returns 
+ */
+function round1d(value, scale=1, digit=3) {
+	var f = Math.pow(10, digit);
+	return parseInt(value * scale * f) / f;
+}
+
+/**
+ * @param {vec} value 
+ * @param {number} scale 
+ * @param {number} digit 
+ * @returns 
+ */
+function round2d(value, scale=1, digit=3) {
+	var f = Math.pow(10, digit);
+	return (parseInt(value.X * scale * f) / f) + ", " + (parseInt(value.Y * scale * f) / f);
+}
+
+/**
+ * @param {vec} value 
+ * @param {number} scale 
+ * @param {number} digit 
+ * @returns 
+ */
+function round3d(value, scale=1, digit=3) {
+	var f = Math.pow(10, digit);
+	return (parseInt(value.X * scale * f) / f) + ", "
+		+ (parseInt(value.Y * scale * f) / f) + ", "
+		+ (parseInt(value.Z * scale * f) / f)
+	;
+}

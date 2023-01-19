@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../script/math.js"></script>
+    <script type="text/javascript" src="../script/drawer.js"></script>
+    <style type="text/css">
+        span {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 19px;
+        }
+    </style>
+</head>
+<body>
+<table>
+<tr>
+    <td style="width:150px;">
+        <span>
+            \begin{align}
+            k &= \frac{\overrightarrow{AB} \cdot \overrightarrow{AP}}{\overrightarrow{AB} \cdot \overrightarrow{AB}} \\
+            Q &= A+k\overrightarrow{AB}
+            \end{align}
+        </span><br>
+        A(<span id="dispA"></span>)<br/>
+        B(<span id="dispB"></span>)<br/>
+        P(<span id="dispP"></span>)<br/>
+        k = <span id="dispK"></span><br/>
+        Q(<span id="dispQ"></span>)
+    </td>
+    <td><canvas id="disp"></canvas></td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../script/幾何/線分への垂線の足.js"></script>
