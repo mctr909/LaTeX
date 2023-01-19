@@ -5,7 +5,8 @@
 <tr>
     <td>
         基本<br/>
-        <input type="button" value="align" onclick="insertText('\\begin{align}\n*\r\n\\end{align}\n');"/>
+        <input type="button" value="align" onclick="insertText('\\begin{align}\n*\r\n\\end{align}');"/>
+        <br/>
         <input type="button" value="frac" onclick="insertText('\\frac{*}{}');"/>
         <input type="button" value="cdot" onclick="insertText(' \\cdot ');"/>
         <input type="button" value="times" onclick="insertText(' \\times ');"/>
@@ -26,10 +27,13 @@
 </tr>
 <tr>
     <td>
-        ベクトル<br/>
-        <input type="button" value="mathbb" onclick="insertText('\\mathbb{*}');"/>
+        ベクトル・行列<br/>
         <input type="button" value="allow" onclick="insertText('\\overrightarrow{*}');"/>
+        <input type="button" value="mathbb" onclick="insertText('\\mathbb{*}');"/>
         <input type="button" value="norm" onclick="insertText('\\lVert{*}\\rVert');"/>
+        <br/>
+        <input type="button" value="bmatrix" onclick="insertText('\\begin{bmatrix}\n*\r\n\\end{bmatrix}');"/>
+        <input type="button" value="pmatrix" onclick="insertText('\\begin{pmatrix}\n*\r\n\\end{pmatrix}');"/>
     </td>
     <td>
         図形<br/>
