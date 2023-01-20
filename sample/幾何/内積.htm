@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../script/math.js"></script>
+    <script type="text/javascript" src="../script/drawer.js"></script>
+    <style type="text/css">
+        table, tr, td, span {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<table>
+<tr>
+    <td colspan="2">
+        \begin{align}
+        \overrightarrow{\textrm{a}} \cdot \overrightarrow{\textrm{b}}&=
+        (\overrightarrow{\textrm{a}}_x \times \overrightarrow{\textrm{b}}_x) +
+        (\overrightarrow{\textrm{a}}_y \times \overrightarrow{\textrm{b}}_y) +
+        \cdots\\
+        \overrightarrow{\textrm{a}} \cdot \overrightarrow{\textrm{b}}&=\lVert{\overrightarrow{\textrm{a}}}\rVert \lVert{\overrightarrow{\textrm{b}}}\rVert \cos{\theta}
+        \end{align}
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        a(<span id="dispA"></span>)<br/>
+        b(<span id="dispB"></span>)<br/>
+        θ=<span id="dispTheta"></span><br/>
+        cosθ=<span id="dispCos"></span>
+    </td>
+</tr>
+<tr>
+    <td style="width:40px;">\begin{align}\overrightarrow{\textrm{a}} \cdot \overrightarrow{\textrm{b}}=\end{align}</td>
+    <td><span id="dispAB"></span></td>
+</tr>
+<tr>
+    <td colspan="2"><canvas id="disp"></canvas></td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../script/幾何/内積.js"></script>

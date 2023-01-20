@@ -259,7 +259,7 @@ function round1d(value, scale=1, digit=3) {
  * @param {number} digit 
  * @returns 
  */
-function round2d(value, scale=1, digit=3) {
+function round2d(value, scale=1, digit=4) {
 	var f = Math.pow(10, digit);
 	return (parseInt(value.X * scale * f) / f) + ", " + (parseInt(value.Y * scale * f) / f);
 }
