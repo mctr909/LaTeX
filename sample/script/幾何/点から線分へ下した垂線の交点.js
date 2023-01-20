@@ -1,16 +1,12 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 const UNIT = 200;
-const A_COLOR = Drawer.BLACK;
-const B_COLOR = Drawer.GREEN;
-const P_COLOR = Drawer.BLUE;
-const Q_COLOR = Drawer.RED;
 
-let gDrawer = new Drawer("disp", 600, 600);
+let gDrawer = new Drawer("disp", 450, 400);
 
-let gPa = new vec(UNIT * 0.0, UNIT * 0.0);
-let gPb = new vec(UNIT * 1.0, UNIT * 0.25);
-let gPp = new vec(UNIT * 0.5, UNIT * 0.75);
+let gA = new vec(UNIT * 0.0, UNIT * 0.0);
+let gB = new vec(UNIT * 1.0, UNIT * 0.25);
+let gP = new vec(UNIT * 0.5, UNIT * 0.75);
 let gPaDrag = false;
 let gPbDrag = false;
 let gPpDrag = false;
@@ -26,11 +22,11 @@ function main() {
     gDrawer.clear();
 
     if (gDrawer.isDrag) {
-        if (!gPbDrag && !gPpDrag && distance(gDrawer.cursor, gPa) <= 10) {
+        if (!gPbDrag && !gPpDrag && distance(gDrawer.cursor, gA) <= 10) {
             gPaDrag = true;
-        } else if (!gPpDrag && !gPaDrag && distance(gDrawer.cursor, gPb) <= 10) {
+        } else if (!gPpDrag && !gPaDrag && distance(gDrawer.cursor, gB) <= 10) {
             gPbDrag = true;
-        } else if (!gPbDrag && !gPaDrag && distance(gDrawer.cursor, gPp) <= 10) {
+        } else if (!gPbDrag && !gPaDrag && distance(gDrawer.cursor, gP) <= 10) {
             gPpDrag = true;
         }
     } else {
@@ -40,41 +36,41 @@ function main() {
     }
 
     if (gPaDrag) {
-        gDrawer.cursor.copy(gPa);
+        gDrawer.cursor.copy(gA);
     }
     if (gPbDrag) {
-        gDrawer.cursor.copy(gPb);
+        gDrawer.cursor.copy(gB);
     }
     if (gPpDrag) {
-        gDrawer.cursor.copy(gPp);
+        gDrawer.cursor.copy(gP);
     }
 
     let ab = new vec();
     let ap = new vec();
-    gPb.sub(gPa, ab);
-    gPp.sub(gPa, ap);
+    gB.sub(gA, ab);
+    gP.sub(gA, ap);
     let abL2 = ab.X*ab.X + ab.Y*ab.Y;
     let k = (ab.X * ap.X + ab.Y*ap.Y) / abL2;
-    let q = new vec(ab.X * k + gPa.X, ab.Y * k + gPa.Y);
-    let pk = new vec(ab.X * k*0.5 + gPa.X, ab.Y * k*0.5 + gPa.Y);
+    let q = new vec(ab.X * k + gA.X, ab.Y * k + gA.Y);
+    let ak = new vec(ab.X * k*0.5 + gA.X, ab.Y * k*0.5 + gA.Y);
 
-    gDrawer.drawLine(gPa, gPb, B_COLOR, 3);
-    gDrawer.drawLineD(gPa, gPp, P_COLOR, 2);
-    gDrawer.drawLineD(gPp, q, A_COLOR, 2);
-    gDrawer.drawLineD(gPa, q, Q_COLOR, 2);
-    gDrawer.fillCircle(gPa, 3, A_COLOR);
-    gDrawer.fillCircle(gPb, 3, B_COLOR);
-    gDrawer.fillCircle(gPp, 3, P_COLOR);
-    gDrawer.fillCircle(q, 3, Q_COLOR);
-    gDrawer.drawString(gPa, "A", 20);
-    gDrawer.drawString(gPb, "B", 20);
-    gDrawer.drawString(gPp, "P", 20);
+    gDrawer.drawLine(gA, gB, Drawer.GREEN, 3);
+    gDrawer.drawLineD(gA, gP, Drawer.BLUE, 2);
+    gDrawer.drawLineD(gP, q, Drawer.GRAY, 2);
+    gDrawer.drawLineD(gA, q, Drawer.BLACK, 2);
+    gDrawer.fillCircle(gA, 3, Drawer.BLACK);
+    gDrawer.fillCircle(gB, 3, Drawer.GREEN);
+    gDrawer.fillCircle(gP, 3, Drawer.BLUE);
+    gDrawer.fillCircle(q, 3, Drawer.BLACK);
+    gDrawer.drawString(gA, "A", 20);
+    gDrawer.drawString(gB, "B", 20);
+    gDrawer.drawString(gP, "P", 20);
     gDrawer.drawString(q, "Q", 20);
-    gDrawer.drawStringC(pk, "k", 20);
+    gDrawer.drawStringC(ak, "k", 20);
 
-    document.getElementById("dispA").innerHTML = round2d(gPa, 1/UNIT);
-    document.getElementById("dispB").innerHTML = round2d(gPb, 1/UNIT);
-    document.getElementById("dispP").innerHTML = round2d(gPp, 1/UNIT);
+    document.getElementById("dispA").innerHTML = round2d(gA, 1/UNIT);
+    document.getElementById("dispB").innerHTML = round2d(gB, 1/UNIT);
+    document.getElementById("dispP").innerHTML = round2d(gP, 1/UNIT);
     document.getElementById("dispQ").innerHTML = round2d(q, 1/UNIT);
     document.getElementById("dispK").innerHTML = round1d(k);
     requestNextAnimationFrame(main);
