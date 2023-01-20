@@ -88,17 +88,41 @@ class Drawer {
 			self.cursor.X = ev.offsetX - self.#offset.X;
 			self.cursor.Y = self.#offset.Y - ev.offsetY;
 		});
+		this.#element.addEventListener("touchmove", function(ev) {
+			let x, y;
+			if (ev.touches && ev.touches[0]) {
+				x = ev.touches[0].clientX;
+				y = ev.touches[0].clientY;
+			} else if (ev.originalEvent && ev.originalEvent.changedTouches[0]) {
+				x = ev.originalEvent.changedTouches[0].clientX;
+				y = ev.originalEvent.changedTouches[0].clientY;
+			} else if (ev.clientX && ev.clientY) {
+				x = ev.clientX;
+				y = ev.clientY;
+			}
+			self.cursor.X = x - self.#offset.X;
+			self.cursor.Y = self.#offset.Y - y;
+		});
 		this.#element.addEventListener("mousedown", function(ev) {
 			if (0 == ev.button) {
 				self.isDrag = true;
 			}
+		});
+		this.#element.addEventListener("touchstart", function(ev) {
+			self.isDrag = true;
 		});
 		this.#element.addEventListener("mouseup", function(ev) {
 			if (0 == ev.button) {
 				self.isDrag = false;
 			}
 		});
+		this.#element.addEventListener("touchend", function(ev) {
+			self.isDrag = false;
+		});
 		this.#element.addEventListener("mouseleave", function(ev) {
+			self.isDrag = false;
+		});
+		this.#element.addEventListener("touchcancel", function(ev) {
 			self.isDrag = false;
 		});
 
