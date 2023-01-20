@@ -7,10 +7,10 @@ let gDrawer = new Drawer("disp", 500, 400);
 let ofsX = -1.0 * UNIT;
 let ofsY = 0.0 * UNIT;
 let radiusA = 1.0 * UNIT;
-let radiusB = 1.5 * UNIT;
+let radiusB = 1.0 * UNIT;
 let gO = new vec(ofsX, ofsY);
-let gA = new vec(radiusA*Math.cos(Math.PI*30/180) + ofsX, radiusA*Math.sin(Math.PI*30/180) + ofsY);
-let gB = new vec(radiusB*Math.cos(Math.PI*150/180) + ofsX, radiusB*Math.sin(Math.PI*150/180) + ofsY);
+let gA = new vec(radiusA*Math.cos(Math.PI*15/180) + ofsX, radiusA*Math.sin(Math.PI*15/180) + ofsY);
+let gB = new vec(radiusB*Math.cos(Math.PI*60/180) + ofsX, radiusB*Math.sin(Math.PI*60/180) + ofsY);
 let gPoDrag = false;
 let gPaDrag = false;
 let gPbDrag = false;
@@ -48,35 +48,27 @@ function main() {
 
     let oa = new vec();
     let ob = new vec();
+    let ab = new vec();
     gA.sub(gO, oa);
     gB.sub(gO, ob);
-
-    let dangle = ob.arg - oa.arg;
-    if (2*Math.PI < dangle) {
-        dangle -= 2*Math.PI;
-    }
-    if (dangle < 0) {
-        dangle += 2*Math.PI;
-    }
+    gA.add(gB, ab);
+    ab.sub(gO, ab);
 
     gDrawer.drawCircle(gO, UNIT);
-    gDrawer.drawArc(gO, 20, oa.arg, dangle + oa.arg, Drawer.BLUE, 2);
     gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
     gDrawer.drawLine(gO, gB, Drawer.BLUE, 3);
+    gDrawer.drawLineD(gA, ab, Drawer.BLUE, 2);
+    gDrawer.drawLineD(gB, ab, Drawer.GREEN, 2);
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
     gDrawer.fillCircle(gB, 4, Drawer.BLUE);
+    gDrawer.fillCircle(ab, 4, Drawer.RED);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
     gDrawer.drawString(gB, "b", 20);
-
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round2d(ob, 1/UNIT);
-    document.getElementById("dispAB").innerHTML = round1d(oa.X*ob.X + oa.Y*ob.Y, 1/UNIT/UNIT);
-    document.getElementById("dispCos").innerHTML = round1d(Math.cos(dangle));
-    document.getElementById("dispTheta").innerHTML
-        = round1d(dangle, 1 / Math.PI, 2) + "π"
-        + "(" + round1d(dangle, 180 / Math.PI, 1) + "°)";
+    document.getElementById("dispAB").innerHTML = round2d(new vec(ab.X - gO.X, ab.Y - gO.Y), 1/UNIT);
 
     requestNextAnimationFrame(main);
 }

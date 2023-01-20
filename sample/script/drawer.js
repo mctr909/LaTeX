@@ -70,6 +70,7 @@ class Drawer {
 
 	/** @param {vec} offset */
 	set Offset(offset) { this.#offset = offset; }
+	get Offset() { return this.#offset; }
 	get Width() { return this.#element.width; }
 	get Height() { return this.#element.height; }
 

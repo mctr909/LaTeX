@@ -58,9 +58,9 @@ function main() {
     gDrawer.drawLineD(gA, gP, Drawer.BLUE, 2);
     gDrawer.drawLineD(gP, q, Drawer.GRAY, 2);
     gDrawer.drawLineD(gA, q, Drawer.BLACK, 2);
-    gDrawer.fillCircle(gA, 3, Drawer.BLACK);
-    gDrawer.fillCircle(gB, 3, Drawer.GREEN);
-    gDrawer.fillCircle(gP, 3, Drawer.BLUE);
+    gDrawer.fillCircle(gA, 4, Drawer.BLACK);
+    gDrawer.fillCircle(gB, 4, Drawer.GREEN);
+    gDrawer.fillCircle(gP, 4, Drawer.BLUE);
     gDrawer.fillCircle(q, 3, Drawer.BLACK);
     gDrawer.drawString(gA, "A", 20);
     gDrawer.drawString(gB, "B", 20);
