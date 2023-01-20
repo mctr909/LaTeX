@@ -18,19 +18,18 @@
     <td style="width:150px;">
         <span>
             \begin{align}
-            &o^2 = r^2+a^2-2ra\cos{\theta} \\
-            &\cos{\theta} = \frac{r^2+a^2-o^2}{2ra} \\
-            &\theta = \cos^{-1}{\left( \frac{r^2+a^2-o^2}{2ra} \right)}
+            k &= \frac{\overrightarrow{AB} \cdot \overrightarrow{AP}}{\overrightarrow{AB} \cdot \overrightarrow{AB}} \\
+            Q &= A+k\overrightarrow{AB}
             \end{align}
         </span><br>
-        r(半径) = <span id="lblR" style="color:#0000FF;"></span><br>
-        a(隣辺) = <span id="lblA" style="color:#007F00;"></span><br>
-        o(対辺) = <span id="lblO" style="color:#DF0000;"></span><br>
-        θ = <span id="lblTheta" style="color:#000000;"></span><br>
-        cosθ = <span id="lblCos" style="color:#000000;"></span>
+        A(<span id="dispA"></span>)<br/>
+        B(<span id="dispB"></span>)<br/>
+        P(<span id="dispP"></span>)<br/>
+        k = <span id="dispK"></span><br/>
+        Q(<span id="dispQ"></span>)
     </td>
     <td><canvas id="disp"></canvas></td>
 </tr>
 </table>
 </body>
-<script type="text/javascript" src="../script/三角関数/余弦定理.js"></script>
+<script type="text/javascript" src="../script/幾何/点から線分へ下した垂線の交点.js"></script>
