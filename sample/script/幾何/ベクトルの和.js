@@ -46,15 +46,12 @@ function main() {
         gDrawer.cursor.copy(gB);
     }
 
-    let oa = new vec();
-    let ob = new vec();
+
     let ab = new vec();
-    gA.sub(gO, oa);
-    gB.sub(gO, ob);
     gA.add(gB, ab);
     ab.sub(gO, ab);
 
-    gDrawer.drawCircle(gO, UNIT);
+    gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
     gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
     gDrawer.drawLine(gO, gB, Drawer.BLUE, 3);
     gDrawer.drawLineD(gA, ab, Drawer.BLUE, 2);
@@ -66,9 +63,16 @@ function main() {
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
     gDrawer.drawString(gB, "b", 20);
+
+    let oa = new vec();
+    let ob = new vec();
+    gA.sub(gO, oa);
+    gB.sub(gO, ob);
+    ab.sub(gO, ab);
+
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round2d(ob, 1/UNIT);
-    document.getElementById("dispAB").innerHTML = round2d(new vec(ab.X - gO.X, ab.Y - gO.Y), 1/UNIT);
+    document.getElementById("dispAB").innerHTML = round2d(ab, 1/UNIT);
 
     requestNextAnimationFrame(main);
 }

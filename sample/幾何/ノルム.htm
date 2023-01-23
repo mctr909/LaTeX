@@ -6,10 +6,17 @@
     <script type="text/javascript" src="../script/math.js"></script>
     <script type="text/javascript" src="../script/drawer.js"></script>
     <style type="text/css">
-        table, tr, td, span {
+        span {
+            text-align: left;
+        }
+        table, tr, td {
             font-family: 'Times New Roman', Times, serif;
             font-size: 20px;
             text-align: left;
+            border-collapse: collapse;
+            padding: 0%;
+            border-style: solid;
+            border-width: 1px;
         }
     </style>
 </head>
@@ -19,17 +26,16 @@
     <td colspan="2">
         \begin{align}
         \overrightarrow{\textrm{a}} &= (a_1, a_2, \cdots, a_n)\\
-        \Rightarrow \lVert{\overrightarrow{\textrm{a}}}\rVert &= \sqrt{{\overrightarrow{\textrm{a}}_1}^2 + {\overrightarrow{\textrm{a}}_2}^2 + \cdots + {\overrightarrow{\textrm{a}}_n}^2}
+        \Rightarrow \lVert{\overrightarrow{\textrm{a}}}\rVert &= \sqrt{{a_1}^2 + {a_2}^2 + \cdots + {a_n}^2}
         \end{align}
     </td>
 </tr>
 <tr>
-    <td colspan="2">
-        a(<span id="dispA"></span>)
-    </td>
+    <td>\begin{align}\overrightarrow{\textrm{a}}\end{align}</td>
+    <td>(<span id="dispA"></span>)</td>
 </tr>
 <tr>
-    <td style="width:40px;">\begin{align}\lVert{\overrightarrow{\textrm{a}}}\rVert=\end{align}</td>
+    <td style="width:40px;">\begin{align}\lVert{\overrightarrow{\textrm{a}}}\rVert\end{align}</td>
     <td><span id="dispAn"></span></td>
 </tr>
 <tr>

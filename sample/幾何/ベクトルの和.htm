@@ -6,10 +6,17 @@
     <script type="text/javascript" src="../script/math.js"></script>
     <script type="text/javascript" src="../script/drawer.js"></script>
     <style type="text/css">
-        table, tr, td, span {
+        span {
+            text-align: left;
+        }
+        table, tr, td {
             font-family: 'Times New Roman', Times, serif;
             font-size: 20px;
             text-align: left;
+            border-collapse: collapse;
+            padding: 0%;
+            border-style: solid;
+            border-width: 1px;
         }
     </style>
 </head>
@@ -17,23 +24,23 @@
 <table>
 <tr>
     <td colspan="2">
-        \begin{align}
-        \overrightarrow{\textrm{a}} + \overrightarrow{\textrm{b}}=\begin{cases}
-        x=\overrightarrow{\textrm{a}}_x + \overrightarrow{\textrm{b}}_x\\
-        y=\overrightarrow{\textrm{a}}_y + \overrightarrow{\textrm{b}}_y\\
-        \cdots
-        \end{cases}
-        \end{align}
+		\begin{align}
+		\overrightarrow{\textrm{a}}&=(a_1, a_2, \cdots, a_n)\\
+		\overrightarrow{\textrm{b}}&=(b_1, b_2, \cdots, b_n)\\
+		\Rightarrow \overrightarrow{\textrm{a}}+\overrightarrow{\textrm{b}}&=(a_1+b_1, a_2+b_2, \cdots, a_n+b_n)
+		\end{align}
     </td>
 </tr>
 <tr>
-    <td colspan="2">
-        a(<span id="dispA"></span>)<br/>
-        b(<span id="dispB"></span>)
-    </td>
+    <td>\begin{align}\overrightarrow{\textrm{a}}\end{align}</td>
+    <td>(<span id="dispA"></span>)</td>
 </tr>
 <tr>
-    <td style="width:40px;">\begin{align}\overrightarrow{\textrm{a}} + \overrightarrow{\textrm{b}}\end{align}</td>
+    <td>\begin{align}\overrightarrow{\textrm{b}}\end{align}</td>
+    <td>(<span id="dispB"></span>)</td>
+</tr>
+<tr>
+    <td style="width:30px;">\begin{align}\overrightarrow{\textrm{a}} + \overrightarrow{\textrm{b}}\end{align}</td>
     <td>(<span id="dispAB"></span>)</td>
 </tr>
 <tr>

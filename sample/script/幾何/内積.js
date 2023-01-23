@@ -46,21 +46,7 @@ function main() {
         gDrawer.cursor.copy(gB);
     }
 
-    let oa = new vec();
-    let ob = new vec();
-    gA.sub(gO, oa);
-    gB.sub(gO, ob);
-
-    let dangle = ob.arg - oa.arg;
-    if (2*Math.PI < dangle) {
-        dangle -= 2*Math.PI;
-    }
-    if (dangle < 0) {
-        dangle += 2*Math.PI;
-    }
-
-    gDrawer.drawCircle(gO, UNIT);
-    gDrawer.drawArc(gO, 20, oa.arg, dangle + oa.arg, Drawer.BLUE, 2);
+    gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
     gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
     gDrawer.drawLine(gO, gB, Drawer.BLUE, 3);
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
@@ -70,13 +56,14 @@ function main() {
     gDrawer.drawString(gA, "a", 20);
     gDrawer.drawString(gB, "b", 20);
 
+    let oa = new vec();
+    let ob = new vec();
+    gA.sub(gO, oa);
+    gB.sub(gO, ob);
+
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round2d(ob, 1/UNIT);
     document.getElementById("dispAB").innerHTML = round1d(oa.X*ob.X + oa.Y*ob.Y, 1/UNIT/UNIT);
-    document.getElementById("dispCos").innerHTML = round1d(Math.cos(dangle));
-    document.getElementById("dispTheta").innerHTML
-        = round1d(dangle, 1 / Math.PI, 2) + "π"
-        + "(" + round1d(dangle, 180 / Math.PI, 1) + "°)";
 
     requestNextAnimationFrame(main);
 }

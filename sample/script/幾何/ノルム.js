@@ -40,7 +40,7 @@ function main() {
     let oa = new vec();
     gA.sub(gO, oa);
 
-    gDrawer.drawCircle(gO, UNIT);
+    gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
     gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
 
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
