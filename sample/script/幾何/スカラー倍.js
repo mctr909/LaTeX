@@ -7,12 +7,9 @@ let gDrawer = new Drawer("disp", 400, 400);
 let ofsX = 0.0 * UNIT;
 let ofsY = 0.0 * UNIT;
 let radiusA = 1.0 * UNIT;
-let radiusB = 1.0 * UNIT;
 let gO = new vec(ofsX, ofsY);
-let gA = new vec(radiusA*Math.cos(Math.PI*15/180) + ofsX, radiusA*Math.sin(Math.PI*15/180) + ofsY);
-let gB = new vec(radiusB*Math.cos(Math.PI*60/180) + ofsX, radiusB*Math.sin(Math.PI*60/180) + ofsY);
+let gA = new vec(radiusA*Math.cos(Math.PI*30/180) + ofsX, radiusA*Math.sin(Math.PI*30/180) + ofsY);
 let gPaDrag = false;
-let gPbDrag = false;
 
 init();
 requestNextAnimationFrame(main);
@@ -25,27 +22,22 @@ function main() {
     gDrawer.clear();
 
     if (gDrawer.isDrag) {
-        if (!gPbDrag && distance(gDrawer.cursor, gA) <= 10) {
+        if (distance(gDrawer.cursor, gA) <= 10) {
             gPaDrag = true;
-        } else if (!gPaDrag && distance(gDrawer.cursor, gB) <= 10) {
-            gPbDrag = true;
         }
     } else {
         gPaDrag = false;
-        gPbDrag = false;
     }
 
     if (gPaDrag) {
         gDrawer.cursor.copy(gA);
     }
-    if (gPbDrag) {
-        gDrawer.cursor.copy(gB);
-    }
 
-
-    let ab = new vec();
-    gA.add(gB, ab);
-    ab.sub(gO, ab);
+    let k = document.getElementById("rangeK").value * 0.1;
+    let oka = new vec();
+    gA.sub(gO, oka);
+    oka.scale(oka, k);
+    oka.add(gO, oka);
 
     gDrawer.drawLine(new vec(gO.X, UNIT*-2), new vec(gO.X, UNIT*2), Drawer.GRAY);
     gDrawer.drawLine(new vec(UNIT, UNIT*-2), new vec(UNIT, UNIT*2), Drawer.GRAY);
@@ -66,28 +58,20 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
+    gDrawer.drawLine(gO, oka, Drawer.RED, 1);
     gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
-    gDrawer.drawLine(gO, gB, Drawer.BLUE, 3);
-    gDrawer.drawLineD(gA, ab, Drawer.BLUE, 2);
-    gDrawer.drawLineD(gB, ab, Drawer.GREEN, 2);
-
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
-    gDrawer.fillCircle(gB, 4, Drawer.BLUE);
-    gDrawer.fillCircle(ab, 4, Drawer.RED);
+    gDrawer.fillCircle(oka, 4, Drawer.RED);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
-    gDrawer.drawString(gB, "b", 20);
 
     let oa = new vec();
-    let ob = new vec();
     gA.sub(gO, oa);
-    gB.sub(gO, ob);
-    ab.sub(gO, ab);
-
+    oka.sub(gO, oka);
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
-    document.getElementById("dispB").innerHTML = round2d(ob, 1/UNIT);
-    document.getElementById("dispAB").innerHTML = round2d(ab, 1/UNIT);
+    document.getElementById("dispAn").innerHTML = round2d(oka, 1/UNIT);
+    document.getElementById("dispK").innerHTML = round1d(k);
 
     requestNextAnimationFrame(main);
 }

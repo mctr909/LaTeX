@@ -195,7 +195,7 @@ class Drawer {
 	drawLineD(a, b, color = [0,0,0], width = 1) {
 		this.#ctx.beginPath();
 		this.#drawLine(a, b, color, width);
-		this.#ctx.setLineDash([width, width]);
+		this.#ctx.setLineDash([2, 2]);
 		this.#ctx.stroke();
 	}
 
@@ -325,7 +325,7 @@ class Drawer {
 		);
 		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
 		this.#ctx.lineWidth = width;
-		this.#ctx.setLineDash([width, width]);
+		this.#ctx.setLineDash([2, 2]);
 		this.#ctx.stroke();
 	}
 

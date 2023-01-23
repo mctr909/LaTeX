@@ -248,9 +248,9 @@ function toFrac(value, unit="", dispOne=true) {
  * @param {number} digit 
  * @returns 
  */
-function round1d(value, scale=1, digit=3) {
+function round1d(value, scale=1, digit=2) {
 	var f = Math.pow(10, digit);
-	return parseInt(value * scale * f) / f;
+	return parseInt(value * scale * f + Math.sign(value) * 0.5) / f;
 }
 
 /**
@@ -259,9 +259,10 @@ function round1d(value, scale=1, digit=3) {
  * @param {number} digit 
  * @returns 
  */
-function round2d(value, scale=1, digit=4) {
+function round2d(value, scale=1, digit=2) {
 	var f = Math.pow(10, digit);
-	return (parseInt(value.X * scale * f) / f) + ", " + (parseInt(value.Y * scale * f) / f);
+	return (parseInt(value.X * scale * f + Math.sign(value.X) * 0.5) / f) + ", "
+		+ (parseInt(value.Y * scale * f + Math.sign(value.Y) * 0.5) / f);
 }
 
 /**
@@ -270,10 +271,10 @@ function round2d(value, scale=1, digit=4) {
  * @param {number} digit 
  * @returns 
  */
-function round3d(value, scale=1, digit=3) {
+function round3d(value, scale=1, digit=2) {
 	var f = Math.pow(10, digit);
-	return (parseInt(value.X * scale * f) / f) + ", "
-		+ (parseInt(value.Y * scale * f) / f) + ", "
-		+ (parseInt(value.Z * scale * f) / f)
+	return (parseInt(value.X * scale * f + Math.sign(value.X) * 0.5) / f) + ", "
+		+ (parseInt(value.Y * scale * f + Math.sign(value.Y) * 0.5) / f) + ", "
+		+ (parseInt(value.Z * scale * f + Math.sign(value.Z) * 0.5) / f)
 	;
 }
