@@ -211,15 +211,16 @@ class Drawer {
 	 * @param {Array<vec>} points
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	drawPolyline(points, color = [0,0,0], width = 1) {
+	drawPolyline(points, color = [0,0,0], width = 1, alpha=1) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(this.#offset.X + points[0].X, this.#offset.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
 			this.#ctx.lineTo(this.#offset.X + points[i].X, this.#offset.Y - points[i].Y);
 		}
 		this.#ctx.lineWidth = width;
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + alpha + ")";
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
 	}
@@ -228,16 +229,17 @@ class Drawer {
 	 * @param {Array<vec>} points
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	drawPolylineD(points, color = [0,0,0], width = 1) {
+	drawPolylineD(points, color = [0,0,0], width = 1, alpha=1) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(this.#offset.X + points[0].X, this.#offset.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
 			this.#ctx.lineTo(this.#offset.X + points[i].X, this.#offset.Y - points[i].Y);
 		}
 		this.#ctx.lineWidth = width;
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
-		this.#ctx.setLineDash([width, width]);
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + alpha + ")";
+		this.#ctx.setLineDash([2, 2]);
 		this.#ctx.stroke();
 	}
 

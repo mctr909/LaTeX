@@ -2,18 +2,17 @@
 /// <reference path="../drawer.js" />
 const UNIT = 50;
 Drawer.CursorDiv = 5;
-let gDrawerXY = new Drawer("dispXY", 200, 200);
-let gDrawerZY = new Drawer("dispZY", 200, 200);
-let gDrawerXZ = new Drawer("dispXZ", 200, 200);
-let gDrawer = new Drawer("disp", 200, 200);
+let gDrawerXY = new Drawer("dispXY", 210, 210);
+let gDrawerZY = new Drawer("dispZY", 210, 210);
+let gDrawerXZ = new Drawer("dispXZ", 210, 210);
+let gDrawer = new Drawer("disp", 300, 300);
 
 let ofsX = 0.0 * UNIT;
 let ofsY = 0.0 * UNIT;
 let radiusA = 1.0 * UNIT;
-let radiusB = 1.5 * UNIT;
 let gO = new vec(ofsX, ofsY);
-let gA = new vec(radiusA*Math.cos(Math.PI*30/180) + ofsX, radiusA*Math.sin(Math.PI*30/180) + ofsY);
-let gB = new vec(radiusB*Math.cos(Math.PI*150/180) + ofsX, radiusB*Math.sin(Math.PI*150/180) + ofsY);
+let gA = new vec(radiusA*Math.cos(Math.PI*-45/180) + ofsX, radiusA*Math.sin(Math.PI*-45/180) + ofsY);
+let gB = new vec(0, 0, UNIT);
 let gXYPaDrag = false;
 let gXYPbDrag = false;
 let gZYPaDrag = false;
@@ -53,7 +52,7 @@ function drawGrid(g) {
 }
 
 function toAlpha(val) {
-    return 0.66 + 0.33 * val / UNIT;
+    return 0.5 + 0.3 * val / UNIT;
 }
 
 function main() {
@@ -203,18 +202,21 @@ function main() {
 
     /* view */
     for(let r=-2.0; r<=2.0; r+=0.5) {
-        var xa = to2d(new vec(UNIT*r, UNIT*-2, 0));
-        var xb = to2d(new vec(UNIT*r, UNIT*2, 0));
-        var ya = to2d(new vec(UNIT*-2, UNIT*r, 0));
-        var yb = to2d(new vec(UNIT*2, UNIT*r, 0));
+        let vx_a = to2d(new vec(UNIT*r, UNIT*-2, 0));
+        let vx_b = to2d(new vec(UNIT*r, UNIT*2, 0));
+        let vy_a = to2d(new vec(UNIT*-2, UNIT*r, 0));
+        let vy_b = to2d(new vec(UNIT*2, UNIT*r, 0));
         if (0 < Math.abs(r - parseInt(r))) {
-            gDrawer.drawLineD(xa, xb, Drawer.GRAY);
-            gDrawer.drawLineD(ya, yb, Drawer.GRAY);
+            gDrawer.drawLineD(vx_a, vx_b, Drawer.GRAY);
+            gDrawer.drawLineD(vy_a, vy_b, Drawer.GRAY);
         } else {
-            gDrawer.drawLine(xa, xb, Drawer.GRAY);
-            gDrawer.drawLine(ya, yb, Drawer.GRAY);
+            gDrawer.drawLine(vx_a, vx_b, Drawer.GRAY);
+            gDrawer.drawLine(vy_a, vy_b, Drawer.GRAY);
         }
     }
+
+    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.BLACK, 1, toAlpha(oaxb.Z));
+    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.RED, toAlpha(oaxb.Z));
 
     gDrawer.fillPolygon(
         [
@@ -225,20 +227,18 @@ function main() {
         ],
         gDrawer.Offset,
         Drawer.GRAY,
-        toAlpha((gA.Z + gB.Z + ab.Z) / 3)
+        toAlpha((gA.Z+gB.Z+ab.Z) / 3)
     );
 
     gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, 3, toAlpha(gA.Z));
     gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, 3, toAlpha(gB.Z));
     gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, 1, toAlpha(ab.Z));
     gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, 1, toAlpha(ab.Z));
-    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.GRAY, 1, toAlpha(oaxb.Z));
 
     gDrawer.fillCircle(to2d(gO), 3, Drawer.BLACK);
     gDrawer.fillCircle(to2d(gA), 4, Drawer.GREEN, toAlpha(gA.Z));
     gDrawer.fillCircle(to2d(gB), 4, Drawer.BLUE, toAlpha(gB.Z));
     gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Z));
-    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.RED, toAlpha(oaxb.Z));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round3d(ob, 1/UNIT);
