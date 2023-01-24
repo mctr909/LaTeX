@@ -2,23 +2,10 @@
 <html lang="ja">
 <meta charset="utf-8">
 <head>
+    <link href="style.css" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script type="text/javascript" src="../script/math.js"></script>
     <script type="text/javascript" src="../script/drawer.js"></script>
-    <style type="text/css">
-        span {
-            text-align: left;
-        }
-        table, tr, td {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 20px;
-            text-align: left;
-            border-collapse: collapse;
-            padding: 0%;
-            border-style: solid;
-            border-width: 1px;
-        }
-    </style>
 </head>
 <body>
 <table>
@@ -27,7 +14,7 @@
 		\begin{align}
 		\overrightarrow{\textrm{a}}&=(a_1, a_2, \cdots, a_n)\\
 		\overrightarrow{\textrm{b}}&=(b_1, b_2, \cdots, b_n)\\
-		\Rightarrow \overrightarrow{\textrm{a}}+\overrightarrow{\textrm{b}}&:=(a_1+b_1, a_2+b_2, \cdots, a_n+b_n)
+		\Rightarrow \overrightarrow{\textrm{a}}-\overrightarrow{\textrm{b}}&:=(a_1-b_1, a_2-b_2, \cdots, a_n-b_n)
 		\end{align}
     </td>
 </tr>
@@ -40,7 +27,7 @@
     <td>(<span id="dispB"></span>)</td>
 </tr>
 <tr>
-    <td style="width:30px;">\begin{align}\overrightarrow{\textrm{a}} + \overrightarrow{\textrm{b}}\end{align}</td>
+    <td style="width:40px;">\begin{align}\overrightarrow{\textrm{a}} - \overrightarrow{\textrm{b}}\end{align}</td>
     <td>(<span id="dispAB"></span>)</td>
 </tr>
 <tr>
@@ -48,4 +35,4 @@
 </tr>
 </table>
 </body>
-<script type="text/javascript" src="../script/幾何/ベクトルの和.js"></script>
+<script type="text/javascript" src="../script/幾何/ベクトルの減法.js"></script>

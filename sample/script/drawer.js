@@ -60,6 +60,9 @@ class Drawer {
 	static ORANGE = [231, 147, 0];
 	static PURPLE = [191, 0, 255];
 
+	/** @type {number} */
+	static CursorDiv = 2;
+
 	/** @type {CanvasRenderingContext2D} */
 	#ctx;
 	/** @type {HTMLCanvasElement} */
@@ -86,8 +89,7 @@ class Drawer {
 
 		let self = this;
 		this.#element.addEventListener("mousemove", function(ev) {
-			self.cursor.X = ev.offsetX - self.#offset.X;
-			self.cursor.Y = self.#offset.Y - ev.offsetY;
+			self.#roundCursor(ev.offsetX, ev.offsetY);
 		});
 		this.#element.addEventListener("touchmove", function(ev) {
 			let x, y;
@@ -101,8 +103,7 @@ class Drawer {
 				x = ev.clientX;
 				y = ev.clientY;
 			}
-			self.cursor.X = x - self.#offset.X;
-			self.cursor.Y = self.#offset.Y - y;
+			self.#roundCursor(x, y);
 		});
 		this.#element.addEventListener("mousedown", function(ev) {
 			if (0 == ev.button) {
@@ -171,6 +172,11 @@ class Drawer {
 				}
 			;
 		})();
+	}
+
+	#roundCursor(x, y) {
+		this.cursor.X = parseInt(x / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv - this.#offset.X;
+		this.cursor.Y = this.#offset.Y - parseInt(y / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv;
 	}
 
 	/**

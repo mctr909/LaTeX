@@ -1,0 +1,12 @@
+span {
+    text-align: left;
+}
+table, tr, td {
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    text-align: left;
+    padding: 0px;
+    border-collapse: collapse;
+    border-style: solid;
+    border-width: 1px;
+}
