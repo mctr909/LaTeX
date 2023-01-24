@@ -184,10 +184,11 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	drawLine(a, b, color = [0,0,0], width = 1) {
+	drawLine(a, b, color = [0,0,0], width = 1, alpha=1) {
 		this.#ctx.beginPath();
-		this.#drawLine(a, b, color, width);
+		this.#drawLine(a, b, color, width, alpha);
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
 	}
@@ -197,10 +198,11 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	drawLineD(a, b, color = [0,0,0], width = 1) {
+	drawLineD(a, b, color = [0,0,0], width = 1, alpha=1) {
 		this.#ctx.beginPath();
-		this.#drawLine(a, b, color, width);
+		this.#drawLine(a, b, color, width, alpha);
 		this.#ctx.setLineDash([2, 2]);
 		this.#ctx.stroke();
 	}
@@ -339,8 +341,9 @@ class Drawer {
 	 * @param {vec} center
 	 * @param {number} radius
 	 * @param {[number, number, number]} color
+	 * @param {number} alpha
 	 */
-	fillCircle(center, radius, color = [0,0,0]) {
+	fillCircle(center, radius, color = [0,0,0], alpha=1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
 			this.#offset.X + center.X,
@@ -350,7 +353,7 @@ class Drawer {
 			360 * Math.PI / 180,
 			false
 		);
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", 1)" ;
+		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
 		this.#ctx.fill();
 	}
 
@@ -358,14 +361,15 @@ class Drawer {
 	 * @param {Array<vec>} points
 	 * @param {vec} ofs
 	 * @param {[number, number, number]} color
+	 * @param {number} alpha
 	 */
-	fillPolygon(points, ofs = new vec(), color = [0,0,0]) {
+	fillPolygon(points, ofs = new vec(), color = [0,0,0], alpha=0.66) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(ofs.X + points[0].X, ofs.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
 			this.#ctx.lineTo(ofs.X + points[i].X, ofs.Y - points[i].Y);
 		}
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
+		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")";
 		this.#ctx.fill();
 	}
 
@@ -461,13 +465,14 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	#drawLine(a, b, color, width) {
+	#drawLine(a, b, color, width, alpha=1) {
 		let x1 = this.#offset.X + a.X;
 		let y1 = this.#offset.Y - a.Y;
 		let x2 = this.#offset.X + b.X;
 		let y2 = this.#offset.Y - b.Y;
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", 1)" ;
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
 		this.#ctx.lineWidth = width;
 		this.#ctx.moveTo(x1, y1);
 		this.#ctx.lineTo(x2, y2);

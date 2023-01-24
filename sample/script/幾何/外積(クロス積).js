@@ -52,6 +52,10 @@ function drawGrid(g) {
     g.drawCircle(gO, UNIT*2, Drawer.GRAY);
 }
 
+function toAlpha(val) {
+    return 0.66 + 0.33 * val / UNIT;
+}
+
 function main() {
     gDrawerXY.clear();
     gDrawerZY.clear();
@@ -196,6 +200,45 @@ function main() {
 
     gDrawerXZ.drawString(new vec(gA.X, gA.Z), "a", 20);
     gDrawerXZ.drawString(new vec(gB.X, gB.Z), "b", 20);
+
+    /* view */
+    for(let r=-2.0; r<=2.0; r+=0.5) {
+        var xa = to2d(new vec(UNIT*r, UNIT*-2, 0));
+        var xb = to2d(new vec(UNIT*r, UNIT*2, 0));
+        var ya = to2d(new vec(UNIT*-2, UNIT*r, 0));
+        var yb = to2d(new vec(UNIT*2, UNIT*r, 0));
+        if (0 < Math.abs(r - parseInt(r))) {
+            gDrawer.drawLineD(xa, xb, Drawer.GRAY);
+            gDrawer.drawLineD(ya, yb, Drawer.GRAY);
+        } else {
+            gDrawer.drawLine(xa, xb, Drawer.GRAY);
+            gDrawer.drawLine(ya, yb, Drawer.GRAY);
+        }
+    }
+
+    gDrawer.fillPolygon(
+        [
+            to2d(gO),
+            to2d(gA),
+            to2d(ab),
+            to2d(gB)
+        ],
+        gDrawer.Offset,
+        Drawer.GRAY,
+        toAlpha((gA.Z + gB.Z + ab.Z) / 3)
+    );
+
+    gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, 3, toAlpha(gA.Z));
+    gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, 3, toAlpha(gB.Z));
+    gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, 1, toAlpha(ab.Z));
+    gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, 1, toAlpha(ab.Z));
+    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.GRAY, 1, toAlpha(oaxb.Z));
+
+    gDrawer.fillCircle(to2d(gO), 3, Drawer.BLACK);
+    gDrawer.fillCircle(to2d(gA), 4, Drawer.GREEN, toAlpha(gA.Z));
+    gDrawer.fillCircle(to2d(gB), 4, Drawer.BLUE, toAlpha(gB.Z));
+    gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Z));
+    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.RED, toAlpha(oaxb.Z));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round3d(ob, 1/UNIT);

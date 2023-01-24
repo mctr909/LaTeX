@@ -114,6 +114,16 @@ class vec {
 }
 
 /**
+ * @param {vec} v
+ * @param {number} focalLength 
+ * @returns {vec}
+ */
+function to2d(v, focalLength=150) {
+	var w = focalLength / (focalLength + v.Y);
+	return new vec(v.X * w, v.Z * w + v.Y * w, 0);
+}
+
+/**
  * @param {vec} a 
  * @param {vec} b 
  * @returns {number}
