@@ -38,6 +38,10 @@ function main() {
     gA.sub(gO, oka);
     oka.scale(oka, k);
     oka.add(gO, oka);
+    let oa_k = new vec();
+    gA.sub(gO, oa_k);
+    oa_k.scale(oa_k, 1/k);
+    oa_k.add(gO, oa_k);
 
     gDrawer.drawLine(new vec(gO.X, UNIT*-2), new vec(gO.X, UNIT*2), Drawer.GRAY);
     gDrawer.drawLine(new vec(UNIT, UNIT*-2), new vec(UNIT, UNIT*2), Drawer.GRAY);
@@ -58,20 +62,25 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.drawLine(gO, oka, Drawer.RED, 1);
+    gDrawer.drawLine(gO, oka, Drawer.BLUE, 1);
+    gDrawer.drawLine(gO, oa_k, Drawer.RED, 1);
     gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
-    gDrawer.fillCircle(oka, 4, Drawer.RED);
+    gDrawer.fillCircle(oka, 4, Drawer.BLUE);
+    gDrawer.fillCircle(oa_k, 4, Drawer.RED);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
 
     let oa = new vec();
     gA.sub(gO, oa);
     oka.sub(gO, oka);
+    oa_k.sub(gO, oa_k);
+
+    document.getElementById("dispK").innerHTML = round1d(k);
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispAn").innerHTML = round2d(oka, 1/UNIT);
-    document.getElementById("dispK").innerHTML = round1d(k);
+    document.getElementById("dispAk").innerHTML = round2d(oa_k, 1/UNIT);
 
     requestNextAnimationFrame(main);
 }
