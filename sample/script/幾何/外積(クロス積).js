@@ -51,10 +51,6 @@ function drawGrid(g) {
     g.drawCircle(gO, UNIT*2, Drawer.GRAY);
 }
 
-function toAlpha(val) {
-    return 0.5 + 0.3 * val / UNIT;
-}
-
 function main() {
     gDrawerXY.clear();
     gDrawerZY.clear();
@@ -201,11 +197,11 @@ function main() {
     gDrawerXZ.drawString(new vec(gB.X, gB.Z), "b", 20);
 
     /* view */
-    for(let r=-2.0; r<=2.0; r+=0.5) {
-        let vx_a = to2d(new vec(UNIT*r, UNIT*-2, 0));
-        let vx_b = to2d(new vec(UNIT*r, UNIT*2, 0));
-        let vy_a = to2d(new vec(UNIT*-2, UNIT*r, 0));
-        let vy_b = to2d(new vec(UNIT*2, UNIT*r, 0));
+    for(let r=-3.0; r<=3.0; r+=0.5) {
+        let vx_a = to2d(new vec(UNIT*r, UNIT*-3, 0));
+        let vx_b = to2d(new vec(UNIT*r, UNIT*3, 0));
+        let vy_a = to2d(new vec(UNIT*-3, UNIT*r, 0));
+        let vy_b = to2d(new vec(UNIT*3, UNIT*r, 0));
         if (0 < Math.abs(r - parseInt(r))) {
             gDrawer.drawLineD(vx_a, vx_b, Drawer.GRAY);
             gDrawer.drawLineD(vy_a, vy_b, Drawer.GRAY);
@@ -214,9 +210,6 @@ function main() {
             gDrawer.drawLine(vy_a, vy_b, Drawer.GRAY);
         }
     }
-
-    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.BLACK, 1, toAlpha(oaxb.Z));
-    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.RED, toAlpha(oaxb.Z));
 
     gDrawer.fillPolygon(
         [
@@ -227,18 +220,20 @@ function main() {
         ],
         gDrawer.Offset,
         Drawer.GRAY,
-        toAlpha((gA.Z+gB.Z+ab.Z) / 3)
+        toAlpha((gA.Y+gB.Y+ab.Y) / 3, (gA.Z+gB.Z+ab.Z) / 3)
     );
 
-    gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, 3, toAlpha(gA.Z));
-    gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, 3, toAlpha(gB.Z));
-    gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, 1, toAlpha(ab.Z));
-    gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, 1, toAlpha(ab.Z));
+    gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, 3, toAlpha(gA.Y, gA.Z));
+    gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, 3, toAlpha(gB.Y, gB.Z));
+    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.BLACK, 1, toAlpha(oaxb.Y, oaxb.Z));
+    gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, 1, toAlpha(ab.Y, ab.Z));
+    gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, 1, toAlpha(ab.Y, ab.Z));
 
-    gDrawer.fillCircle(to2d(gO), 3, Drawer.BLACK);
-    gDrawer.fillCircle(to2d(gA), 4, Drawer.GREEN, toAlpha(gA.Z));
-    gDrawer.fillCircle(to2d(gB), 4, Drawer.BLUE, toAlpha(gB.Z));
-    gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Z));
+    gDrawer.fillCircle(to2d(gO), 2, Drawer.BLACK);
+    gDrawer.fillCircle(to2d(gA), 4, Drawer.GREEN, toAlpha(gA.Y, gA.Z));
+    gDrawer.fillCircle(to2d(gB), 4, Drawer.BLUE, toAlpha(gB.Y, gB.Z));
+    gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Y, ab.Z));
+    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.RED, toAlpha(oaxb.Y, oaxb.Z));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round3d(ob, 1/UNIT);

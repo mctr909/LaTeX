@@ -126,6 +126,15 @@ function to2d(v, focalLength=40) {
 }
 
 /**
+ * @param {number} y
+ * @param {number} z
+ * @returns {number}
+ */
+function toAlpha(y, z) {
+    return (0.7 - 0.3 * y / UNIT) * (0.8 + 0.2 * z / UNIT);
+}
+
+/**
  * @param {vec} a 
  * @param {vec} b 
  * @returns {number}
