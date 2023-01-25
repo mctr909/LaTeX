@@ -33,6 +33,8 @@ function main() {
         gDrawer.cursor.copy(gA);
     }
 
+    round(gA, gA, 2, UNIT, gO);
+
     let oa = new vec();
     gA.sub(gO, oa);
 
@@ -57,7 +59,7 @@ function main() {
 
     gDrawer.drawArrow(gO, gA, Drawer.GREEN, 4);
 
-    gDrawer.fillCircle(gO, 3, Drawer.BLACK);
+    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);

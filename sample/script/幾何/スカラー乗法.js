@@ -33,6 +33,8 @@ function main() {
         gDrawer.cursor.copy(gA);
     }
 
+    round(gA, gA, 2, UNIT, gO);
+
     let k = document.getElementById("rangeK").value * 0.1;
     let oka = new vec();
     gA.sub(gO, oka);
@@ -66,10 +68,10 @@ function main() {
     gDrawer.drawArrow(gO, oka, Drawer.BLUE);
     gDrawer.drawArrow(gO, oa_k, Drawer.RED);
 
-    gDrawer.fillCircle(gO, 3, Drawer.BLACK);
+    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
-    gDrawer.fillCircle(oka, 2, Drawer.BLUE);
-    gDrawer.fillCircle(oa_k, 2, Drawer.RED);
+    gDrawer.fillCircle(oka, 4, Drawer.BLUE);
+    gDrawer.fillCircle(oa_k, 4, Drawer.RED);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
 

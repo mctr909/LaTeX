@@ -28,7 +28,7 @@ let gWaveBegin = gCircleRadius + GAP;
 
 let gDrawer = new Drawer("disp",
     gWaveBegin * 2 + WAVE_LENGTH + GAP,
-    (WAVE_LENGTH + gCircleRadius + GAP) * 11/8 + 10
+    (WAVE_LENGTH + gCircleRadius + GAP) * 2 + 10
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
@@ -54,12 +54,12 @@ function init() {
     gLineList.push(new LineInfo(
         -Math.max(UNIT_RADIUS, gCircleRadius), 0,
         gWaveBegin + WAVE_LENGTH, 0,
-        1, AXIZ_COLOR
+        0.5, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
         0, -gWaveBegin - WAVE_LENGTH,
         0, Math.max(UNIT_RADIUS, gCircleRadius),
-        1, AXIZ_COLOR
+        0.5, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
         0, gCircleRadius,
@@ -83,16 +83,16 @@ function init() {
     ));
     for (let deg=0; deg<=360; deg += 15) {
         let x = gWaveBegin + WAVE_LENGTH * deg / 360.0;
-        let h = deg % 90 == 0 ? 16 : deg % 45 == 0 ? 8 : 4;
+        let h = deg % 90 == 0 ? 13 : deg % 45 == 0 ? 7 : 3;
         gLineList.push(new LineInfo(
             x, -h,
             x, h,
-            1, AXIZ_COLOR
+            0.5, AXIZ_COLOR
         ));
         gLineList.push(new LineInfo(
             -h, -x,
             h, -x,
-            1, AXIZ_COLOR
+            0.5, AXIZ_COLOR
         ));
         if (deg % 45 == 0) {
             gLabelList.push({
@@ -181,25 +181,26 @@ function main() {
     gDrawer.drawLineD(vp, wave_c, COS_COLOR);
     gDrawer.drawLineD(vp, wave_s, SIN_COLOR);
     gDrawer.drawLineD(vt, wave_t, TAN_COLOR);
-    gDrawer.drawLine(new vec(), vt, TAN_COLOR);
+    gDrawer.drawLine(new vec(), vt, TAN_COLOR, 4);
     gDrawer.drawLine(new vec(), vc, COS_COLOR, 4);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 4);
     gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 4);
-    gDrawer.fillCircle(vp, 4, CIRCLE_COLOR);
-    gDrawer.fillCircle(vt, 4, TAN_COLOR);
-    gDrawer.fillCircle(wave_c, 4, COS_COLOR);
-    gDrawer.fillCircle(wave_s, 4, SIN_COLOR);
-    gDrawer.fillCircle(wave_t, 4, TAN_COLOR);
+    gDrawer.fillCircle(vp, 5, CIRCLE_COLOR);
+    gDrawer.fillCircle(vt, 5, TAN_COLOR);
+    gDrawer.fillCircle(wave_c, 3, COS_COLOR);
+    gDrawer.fillCircle(wave_s, 3, SIN_COLOR);
+    gDrawer.fillCircle(wave_t, 3, TAN_COLOR);
 
     let dangle = vp.arg;
     if (dangle < 0) {
         dangle += 2*Math.PI;
     }
-    gDrawer.drawArc(new vec(), 20, 0, dangle, CIRCLE_COLOR);
+    gDrawer.drawArc(new vec(), 16, 0, dangle, CIRCLE_COLOR, 2);
 
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblC = new vec(vc.X * 0.5, -5);
     let lblS = new vec(vp.X + 3, vp.Y * 0.5 - 6);
+    gDrawer.drawString(new vec(16,3), "θ", 18);
     gDrawer.drawString(lblR, "r", 20);
     gDrawer.drawStringC(lblC, "c", 20);
     gDrawer.drawString(lblS, "s", 20);

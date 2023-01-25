@@ -131,6 +131,9 @@ function main() {
         gB.Z = xzB.Y;
     }
 
+    round(gA, gA, 2, UNIT, gO);
+    round(gB, gB, 2, UNIT, gO);
+
     drawGrid(gDrawerXY);
     drawGrid(gDrawerZY);
     drawGrid(gDrawerXZ);

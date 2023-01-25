@@ -264,10 +264,27 @@ function toFrac(value, unit="", dispOne=true) {
 }
 
 /**
- * @param {number} value 
- * @param {number} scale 
- * @param {number} digit 
- * @returns 
+ * @param {vec} returnVal
+ * @param {vec} v
+ * @param {number} digit
+ * @param {number} scale
+ * @param {vec} offset
+ */
+function round(returnVal, v, digit=2, scale=1, offset = new vec()) {
+	var f = Math.pow(10, digit);
+	var x = v.X - offset.X;
+	var y = v.Y - offset.Y;
+	var z = v.Z - offset.Z;
+	returnVal.X = parseInt(x / scale * f + Math.sign(x) * 0.5) / f * scale + offset.X;
+	returnVal.Y = parseInt(y / scale * f + Math.sign(y) * 0.5) / f * scale + offset.Y;
+	returnVal.Z = parseInt(z / scale * f + Math.sign(z) * 0.5) / f * scale + offset.Z;
+}
+
+/**
+ * @param {number} value
+ * @param {number} scale
+ * @param {number} digit
+ * @returns
  */
 function round1d(value, scale=1, digit=2) {
 	var f = Math.pow(10, digit);
@@ -275,10 +292,10 @@ function round1d(value, scale=1, digit=2) {
 }
 
 /**
- * @param {vec} value 
- * @param {number} scale 
- * @param {number} digit 
- * @returns 
+ * @param {vec} value
+ * @param {number} scale
+ * @param {number} digit
+ * @returns
  */
 function round2d(value, scale=1, digit=2) {
 	var f = Math.pow(10, digit);
@@ -287,10 +304,10 @@ function round2d(value, scale=1, digit=2) {
 }
 
 /**
- * @param {vec} value 
- * @param {number} scale 
- * @param {number} digit 
- * @returns 
+ * @param {vec} value
+ * @param {number} scale
+ * @param {number} digit
+ * @returns
  */
 function round3d(value, scale=1, digit=2) {
 	var f = Math.pow(10, digit);

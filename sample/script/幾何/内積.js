@@ -42,6 +42,9 @@ function main() {
         gDrawer.cursor.copy(gB);
     }
 
+    round(gA, gA, 2, UNIT, gO);
+    round(gB, gB, 2, UNIT, gO);
+
     gDrawer.drawLine(new vec(gO.X, UNIT*-2), new vec(gO.X, UNIT*2), Drawer.GRAY);
     gDrawer.drawLine(new vec(UNIT, UNIT*-2), new vec(UNIT, UNIT*2), Drawer.GRAY);
     gDrawer.drawLine(new vec(-UNIT, UNIT*-2), new vec(-UNIT, UNIT*2), Drawer.GRAY);
@@ -64,7 +67,7 @@ function main() {
     gDrawer.drawArrow(gO, gA, Drawer.GREEN, 4);
     gDrawer.drawArrow(gO, gB, Drawer.BLUE, 4);
 
-    gDrawer.fillCircle(gO, 3, Drawer.BLACK);
+    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
     gDrawer.fillCircle(gB, 4, Drawer.BLUE);
     gDrawer.drawString(gO, "O", 20);

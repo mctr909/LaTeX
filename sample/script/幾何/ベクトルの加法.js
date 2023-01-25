@@ -42,6 +42,8 @@ function main() {
         gDrawer.cursor.copy(gB);
     }
 
+    round(gA, gA, 2, UNIT, gO);
+    round(gB, gB, 2, UNIT, gO);
 
     let ab = new vec();
     gA.add(gB, ab);
@@ -71,10 +73,10 @@ function main() {
     gDrawer.drawArrowD(gA, ab, Drawer.BLUE, 2);
     gDrawer.drawArrowD(gB, ab, Drawer.GREEN, 2);
 
-    gDrawer.fillCircle(gO, 3, Drawer.BLACK);
+    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
     gDrawer.fillCircle(gB, 4, Drawer.BLUE);
-    gDrawer.fillCircle(ab, 2, Drawer.BLACK);
+    gDrawer.fillCircle(ab, 4, Drawer.RED);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
     gDrawer.drawString(gB, "b", 20);

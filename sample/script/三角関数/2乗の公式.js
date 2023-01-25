@@ -7,7 +7,7 @@ const COS_COLOR = Drawer.BLUE;
 const SIN_COLOR = Drawer.RED;
 const TAN_COLOR = Drawer.GREEN;
 const RADIUS = 100;
-const WAVE_LENGTH = 360*2;
+const WAVE_LENGTH = 360;
 const WAVE_BEGIN = 5;
 
 /** @type{Drawer[]} */
