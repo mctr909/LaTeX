@@ -92,17 +92,9 @@ class Drawer {
 			self.#roundCursor(ev.offsetX, ev.offsetY);
 		});
 		this.#element.addEventListener("touchmove", function(ev) {
-			let x, y;
-			if (ev.touches && ev.touches[0]) {
-				x = ev.touches[0].clientX;
-				y = ev.touches[0].clientY;
-			} else if (ev.originalEvent && ev.originalEvent.changedTouches[0]) {
-				x = ev.originalEvent.changedTouches[0].clientX;
-				y = ev.originalEvent.changedTouches[0].clientY;
-			} else if (ev.clientX && ev.clientY) {
-				x = ev.clientX;
-				y = ev.clientY;
-			}
+			let rect = self.#element.getBoundingClientRect();
+			let x = ev.changedTouches[0].pageX - rect.left;
+			let y = ev.changedTouches[0].pageY - rect.top;
 			self.#roundCursor(x, y);
 		});
 		this.#element.addEventListener("mousedown", function(ev) {
@@ -172,11 +164,6 @@ class Drawer {
 				}
 			;
 		})();
-	}
-
-	#roundCursor(x, y) {
-		this.cursor.X = parseInt(x / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv - this.#offset.X;
-		this.cursor.Y = this.#offset.Y - parseInt(y / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv;
 	}
 
 	/**
@@ -501,5 +488,14 @@ class Drawer {
 			polygon[i].Y = SIZE * (x*Math.sin(th) + y*Math.cos(th));
 		}
 		this.fillPolygon(polygon, b, color);;
+	}
+
+	/**
+	 * @param {number} x
+	 * @param {number} y
+	 */
+	#roundCursor(x, y) {
+		this.cursor.X = parseInt(x / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv - this.#offset.X;
+		this.cursor.Y = this.#offset.Y - parseInt(y / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv;
 	}
 }
