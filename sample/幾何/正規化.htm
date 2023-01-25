@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <link href="style.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../script/math.js"></script>
+    <script type="text/javascript" src="../script/drawer.js"></script>
+</head>
+<body>
+<table>
+<tr>
+    <td colspan="2">
+        \begin{align}
+        \frac{\overrightarrow{\textrm{a}}}{\lVert{\overrightarrow{\textrm{a}}}\rVert}:=
+        (\frac{a_1}{\lVert{\overrightarrow{\textrm{a}}}\rVert},
+         \frac{a_2}{\lVert{\overrightarrow{\textrm{a}}}\rVert},
+         \cdots,
+         \frac{a_n}{\lVert{\overrightarrow{\textrm{a}}}\rVert})\\
+        \end{align}
+    </td>
+</tr>
+<tr>
+    <td>\begin{align}\overrightarrow{\textrm{a}}\end{align}</td>
+    <td>(<span id="dispA"></span>)</td>
+</tr>
+<tr>
+    <td>\begin{align}\lVert{\overrightarrow{\textrm{a}}}\rVert\end{align}</td>
+    <td><span id="dispAn"></span></td>
+</tr>
+<tr>
+    <td style="width:40px;">\begin{align}\frac{\overrightarrow{\textrm{a}}}{\lVert{\overrightarrow{\textrm{a}}}\rVert}\end{align}</td>
+    <td>(<span id="dispAm"></span>)</td>
+</tr>
+<tr>
+    <td colspan="2"><canvas id="disp"></canvas></td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../script/幾何/正規化.js"></script>
