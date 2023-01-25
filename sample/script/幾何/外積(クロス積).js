@@ -5,7 +5,7 @@ Drawer.CursorDiv = 5;
 let gDrawerXY = new Drawer("dispXY", 210, 210);
 let gDrawerZY = new Drawer("dispZY", 210, 210);
 let gDrawerXZ = new Drawer("dispXZ", 210, 210);
-let gDrawer = new Drawer("disp", 300, 250);
+let gDrawer = new Drawer("disp", 210, 210);
 
 let ofsX = 0.0 * UNIT;
 let ofsY = 0.0 * UNIT;

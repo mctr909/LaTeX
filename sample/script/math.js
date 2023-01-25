@@ -119,7 +119,7 @@ class vec {
  * @returns {vec}
  */
 function to2d(v, focalLength=40) {
-	var py = v.Y * 0.2 + 20;
+	var py = v.Y * 0.2 + 50;
 	var pz = v.Z - 100;
 	var w = focalLength / (focalLength + py);
 	return new vec(v.X * w, pz * w + py * w, 0);
