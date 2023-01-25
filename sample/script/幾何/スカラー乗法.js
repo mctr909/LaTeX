@@ -64,7 +64,7 @@ function main() {
 
     gDrawer.drawLine(gO, oka, Drawer.BLUE, 1);
     gDrawer.drawLine(gO, oa_k, Drawer.RED, 1);
-    gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
+    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 3);
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
     gDrawer.fillCircle(oka, 4, Drawer.BLUE);

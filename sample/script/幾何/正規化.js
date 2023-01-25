@@ -59,7 +59,7 @@ function main() {
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
     gDrawer.drawLine(gO, ona, Drawer.RED, 1);
-    gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
+    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 3);
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
     gDrawer.fillCircle(ona, 4, Drawer.RED);

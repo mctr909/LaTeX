@@ -235,13 +235,14 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	drawArrow(a, b, color = [0,0,0], width = 2) {
+	drawArrow(a, b, color = [0,0,0], width = 2, alpha=1) {
 		this.#ctx.beginPath();
-		this.#drawLine(a, b, color, width);
+		this.#drawLine(a, b, color, width, alpha);
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
-		this.#fillArrow(a, b, color);
+		this.#fillArrow(a, b, color, alpha);
 	}
 
 	/**
@@ -471,8 +472,9 @@ class Drawer {
 	 * @param {vec} a
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
+	 * @param {number} alpha
 	 */
-	#fillArrow(a, b, color) {
+	#fillArrow(a, b, color, alpha=1) {
 		const SIZE = 15;
 		let polygon = [
 			new vec(0, 0),
@@ -484,10 +486,10 @@ class Drawer {
 		for (let i=0; i<polygon.length; i++) {
 			let x = polygon[i].X;
 			let y = polygon[i].Y;
-			polygon[i].X = SIZE * (x*Math.cos(th) - y*Math.sin(th));
-			polygon[i].Y = SIZE * (x*Math.sin(th) + y*Math.cos(th));
+			polygon[i].X = SIZE * (x*Math.cos(th) - y*Math.sin(th)) + b.X;
+			polygon[i].Y = SIZE * (x*Math.sin(th) + y*Math.cos(th)) + b.Y;
 		}
-		this.fillPolygon(polygon, b, color);;
+		this.fillPolygon(polygon, this.#offset, color, alpha);
 	}
 
 	/**

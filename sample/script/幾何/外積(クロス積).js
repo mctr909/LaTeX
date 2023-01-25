@@ -159,7 +159,7 @@ function main() {
     gDrawerXY.fillCircle(gA, 4, Drawer.GREEN);
     gDrawerXY.fillCircle(gB, 4, Drawer.BLUE);
     gDrawerXY.fillCircle(ab, 2, Drawer.BLACK);
-    gDrawerXY.fillCircle(oaxb, 4, Drawer.RED);
+    gDrawerXY.fillCircle(oaxb, 4, Drawer.BLACK);
 
     gDrawerXY.drawString(gA, "a", 20);
     gDrawerXY.drawString(gB, "b", 20);
@@ -175,7 +175,7 @@ function main() {
     gDrawerZY.fillCircle(new vec(gA.Z, gA.Y), 4, Drawer.GREEN);
     gDrawerZY.fillCircle(new vec(gB.Z, gB.Y), 4, Drawer.BLUE);
     gDrawerZY.fillCircle(new vec(ab.Z, ab.Y), 2, Drawer.BLACK);
-    gDrawerZY.fillCircle(new vec(oaxb.Z, oaxb.Y), 4, Drawer.RED);
+    gDrawerZY.fillCircle(new vec(oaxb.Z, oaxb.Y), 4, Drawer.BLACK);
 
     gDrawerZY.drawString(new vec(gA.Z, gA.Y), "a", 20);
     gDrawerZY.drawString(new vec(gB.Z, gB.Y), "b", 20);
@@ -191,7 +191,7 @@ function main() {
     gDrawerXZ.fillCircle(new vec(gA.X, gA.Z), 4, Drawer.GREEN);
     gDrawerXZ.fillCircle(new vec(gB.X, gB.Z), 4, Drawer.BLUE);
     gDrawerXZ.fillCircle(new vec(ab.X, ab.Z), 2, Drawer.BLACK);
-    gDrawerXZ.fillCircle(new vec(oaxb.X, oaxb.Z), 4, Drawer.RED);
+    gDrawerXZ.fillCircle(new vec(oaxb.X, oaxb.Z), 4, Drawer.BLACK);
 
     gDrawerXZ.drawString(new vec(gA.X, gA.Z), "a", 20);
     gDrawerXZ.drawString(new vec(gB.X, gB.Z), "b", 20);
@@ -233,7 +233,7 @@ function main() {
     gDrawer.fillCircle(to2d(gA), 4, Drawer.GREEN, toAlpha(gA.Y, gA.Z));
     gDrawer.fillCircle(to2d(gB), 4, Drawer.BLUE, toAlpha(gB.Y, gB.Z));
     gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Y, ab.Z));
-    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.RED, toAlpha(oaxb.Y, oaxb.Z));
+    gDrawer.fillCircle(to2d(oaxb), 4, Drawer.BLACK, toAlpha(oaxb.Y, oaxb.Z));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round3d(ob, 1/UNIT);

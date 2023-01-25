@@ -7,9 +7,9 @@ const CIRCLE_COLOR = Drawer.GREEN;
 const COS_COLOR = Drawer.BLUE;
 const SIN_COLOR = Drawer.RED;
 const TAN_COLOR = Drawer.ORANGE;
-const UNIT_RADIUS = 100;
-const WAVE_LENGTH = 400;
-const GAP = 55;
+const UNIT_RADIUS = 75;
+const WAVE_LENGTH = 360;
+const GAP = 50;
 
 /** @type{LineInfo[]} */
 let gLineList = [];
@@ -89,27 +89,9 @@ function init() {
     }
 
     gLineList.push(new LineInfo(
-        -UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
-        -UNIT_RADIUS, 0,
-        0.75, MEASURE_COLOR,
-        true
-    ));
-    gLineList.push(new LineInfo(
-        0, UNIT_RADIUS,
-        gWaveBegin + WAVE_LENGTH, UNIT_RADIUS,
-        0.75, MEASURE_COLOR,
-        true
-    ));
-    gLineList.push(new LineInfo(
-        0, -UNIT_RADIUS,
-        gWaveBegin + WAVE_LENGTH, -UNIT_RADIUS,
-        0.75, MEASURE_COLOR,
-        true
-    ));
-    gLineList.push(new LineInfo(
         UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
         UNIT_RADIUS, gWaveBegin + WAVE_LENGTH,
-        2, TAN_COLOR
+        1, TAN_COLOR
     ));
 
     let tanList = [];
@@ -141,21 +123,21 @@ function main() {
     for (let i=0; i<gLabelList.length; i++) {
         let lbl = gLabelList[i];
         if (lbl.center) {
-            gDrawer.drawStringC(lbl.pos, lbl.text, 16);
+            gDrawer.drawStringC(lbl.pos, lbl.text, 14);
         } else {
-            gDrawer.drawString(lbl.pos, lbl.text, 16);
+            gDrawer.drawString(lbl.pos, lbl.text, 14);
         }
     }
 
     gDrawer.drawCircle(new vec(), UNIT_RADIUS, MEASURE_COLOR);
-    gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR, 2);
+    gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR);
 
     for (let i=0; i<gTanLines.length; i++) {
         let tanLine = gTanLines[i];
-        gDrawer.drawPolyline(tanLine, TAN_COLOR);
+        gDrawer.drawPolyline(tanLine, TAN_COLOR, 0.5);
     }
-    gDrawer.drawPolyline(gCosLine, COS_COLOR);
-    gDrawer.drawPolyline(gSinLine, SIN_COLOR);
+    gDrawer.drawPolyline(gCosLine, COS_COLOR, 0.5);
+    gDrawer.drawPolyline(gSinLine, SIN_COLOR, 0.5);
 
     if (gDrawer.isDrag) {
         gTheta = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);
@@ -176,13 +158,13 @@ function main() {
     gDrawer.drawLine(vy, wave_c);
     gDrawer.drawLine(vx, wave_s);
     gDrawer.drawLine(vx, wave_t);
-    gDrawer.drawLineD(vp, wave_c, COS_COLOR, 2);
-    gDrawer.drawLineD(vp, wave_s, SIN_COLOR, 2);
-    gDrawer.drawLineD(vt, wave_t, TAN_COLOR, 2);
-    gDrawer.drawLineD(new vec(), vt);
-    gDrawer.drawLine(new vec(), vc, COS_COLOR, 2);
-    gDrawer.drawLine(vc, vp, SIN_COLOR, 2);
-    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 2);
+    gDrawer.drawLineD(vp, wave_c, COS_COLOR);
+    gDrawer.drawLineD(vp, wave_s, SIN_COLOR);
+    gDrawer.drawLineD(vt, wave_t, TAN_COLOR);
+    gDrawer.drawLine(new vec(), vt, TAN_COLOR);
+    gDrawer.drawLine(new vec(), vc, COS_COLOR, 3);
+    gDrawer.drawLine(vc, vp, SIN_COLOR, 3);
+    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 3);
     gDrawer.fillCircle(vp, 4, CIRCLE_COLOR);
     gDrawer.fillCircle(vt, 4, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 4, COS_COLOR);
@@ -193,7 +175,7 @@ function main() {
     if (dangle < 0) {
         dangle += 2*Math.PI;
     }
-    gDrawer.drawArc(new vec(), 24, 0, dangle, CIRCLE_COLOR, 2);
+    gDrawer.drawArc(new vec(), 24, 0, dangle, CIRCLE_COLOR);
 
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblC = new vec(vc.X * 0.5, -5);
@@ -208,12 +190,12 @@ function main() {
     let ts = parseInt(1000 * Math.sin(gTheta) * gRadius + 0.5) / 1000;
     document.getElementById("lblDisp").innerHTML
         = "r = " + gRadius + "<br>"
-        + "θ = " + rad + "π (" + deg + "°)<br><br>"
-        + "c = r cosθ = " + tc + "<br>"
-        + "s = r sinθ = " + ts + "<br>"
+        + "c = " + tc + "<br>"
+        + "s = " + ts + "<br><br>"
         + "cosθ = " + parseInt(1000 * Math.cos(gTheta) + 0.5) / 1000 + "<br>"
         + "sinθ = " + parseInt(1000 * Math.sin(gTheta) + 0.5) / 1000 + "<br>"
-        + "tanθ = " + parseInt(1000 * Math.sin(gTheta) / Math.cos(gTheta) + 0.5) / 1000
+        + "tanθ = " + parseInt(1000 * Math.sin(gTheta) / Math.cos(gTheta) + 0.5) / 1000 + "<br><br>"
+        + "θ = " + rad + "π (" + deg + "°)"
     ;
 
     requestNextAnimationFrame(main);

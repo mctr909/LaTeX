@@ -66,8 +66,8 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.drawLine(gO, gA, Drawer.GREEN, 3);
-    gDrawer.drawLine(gO, gB, Drawer.BLUE, 3);
+    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 3);
+    gDrawer.drawArrow(gO, gB, Drawer.BLUE, 3);
     gDrawer.drawLineD(gA, ab, Drawer.BLUE, 2);
     gDrawer.drawLineD(gB, ab, Drawer.GREEN, 2);
 
