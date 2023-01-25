@@ -28,7 +28,7 @@ let gWaveBegin = gCircleRadius + GAP;
 
 let gDrawer = new Drawer("disp",
     gWaveBegin * 2 + WAVE_LENGTH + GAP,
-    (WAVE_LENGTH + gCircleRadius + GAP) * 2 + 10
+    (WAVE_LENGTH + gCircleRadius + GAP) * 1.66 + 10
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
@@ -148,9 +148,9 @@ function main() {
     for (let i=0; i<gLabelList.length; i++) {
         let lbl = gLabelList[i];
         if (lbl.center) {
-            gDrawer.drawStringC(lbl.pos, lbl.text, 14);
+            gDrawer.drawStringC(lbl.pos, lbl.text, 16);
         } else {
-            gDrawer.drawString(lbl.pos, lbl.text, 14);
+            gDrawer.drawString(lbl.pos, lbl.text, 16);
         }
     }
 
@@ -205,24 +205,18 @@ function main() {
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblC = new vec(vc.X * 0.5, -5);
     let lblS = new vec(vp.X + 3, vp.Y * 0.5 - 6);
-    gDrawer.drawString(new vec(16,3), "θ", 18);
-    gDrawer.drawString(lblR, "r", 20);
-    gDrawer.drawStringC(lblC, "c", 20);
-    gDrawer.drawString(lblS, "s", 20);
+    gDrawer.drawString(new vec(16,3), "θ", 20);
+    gDrawer.drawString(lblR, "r", 24);
+    gDrawer.drawStringC(lblC, "c", 24);
+    gDrawer.drawString(lblS, "s", 24);
 
-    let rad = parseInt(1000 * gTheta / Math.PI + 0.5) / 1000;
-    let deg = parseInt(1800 * gTheta / Math.PI + 0.5) / 10;
-    let tc = parseInt(1000 * Math.cos(gTheta) * gRadius + 0.5) / 1000;
-    let ts = parseInt(1000 * Math.sin(gTheta) * gRadius + 0.5) / 1000;
-    document.getElementById("lblDisp").innerHTML
-        = "r = " + gRadius + "<br>"
-        + "c = " + tc + "<br>"
-        + "s = " + ts + "<br><br>"
-        + "cosθ = " + parseInt(1000 * Math.cos(gTheta) + 0.5) / 1000 + "<br>"
-        + "sinθ = " + parseInt(1000 * Math.sin(gTheta) + 0.5) / 1000 + "<br>"
-        + "tanθ = " + parseInt(1000 * Math.sin(gTheta) / Math.cos(gTheta) + 0.5) / 1000 + "<br><br>"
-        + "θ = " + rad + "π (" + deg + "°)"
-    ;
+    var tan = round1d(Math.sin(gTheta) / Math.cos(gTheta), 1, 3);
+    document.getElementById("lblR").innerHTML = gRadius;
+    document.getElementById("lblC").innerHTML = round1d(Math.cos(gTheta) * gRadius, 1, 3);
+    document.getElementById("lblS").innerHTML = round1d(Math.sin(gTheta) * gRadius, 1, 3);
+    document.getElementById("lblCos").innerHTML = round1d(Math.cos(gTheta), 1, 3);
+    document.getElementById("lblSin").innerHTML = round1d(Math.sin(gTheta), 1, 3);
+    document.getElementById("lblTan").innerHTML = 1000 < tan ? "∞" : (tan < -1000 ? "-∞" : tan);
 
     requestNextAnimationFrame(main);
 }

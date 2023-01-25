@@ -2,6 +2,7 @@
 <html lang="ja">
 <meta charset="utf-8">
 <head>
+    <link href="style.css" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script type="text/javascript" src="../script/math.js"></script>
     <script type="text/javascript" src="../script/drawer.js"></script>
@@ -9,7 +10,7 @@
 <body>
 <table>
 <tr>
-    <td style="width: 150px; vertical-align: top;">
+    <td style="width: 180px; vertical-align: top;" colspan="2">
         <span>
             \begin{align}
             \cos{\theta} &= \frac{c}{r}\\
@@ -17,10 +18,35 @@
             \tan{\theta} &= \frac{s}{c}
             \end{align}
         </span>
-        <input type="range" id="trbR" min="50" max="200" value="200" style="width: 150px;" /><br>
-        <span id="lblDisp" style="font-size: 18px; font-family: 'Times New Roman', Times, serif;"></span>
+        <input type="range" id="trbR" min="50" max="200" value="200" style="width: 150px;" /><br><br>
+        <table>
+            <tr>
+                <td>\begin{align}r\end{align}</td>
+                <td><span id="lblR"></span></td>
+            </tr>
+            <tr>
+                <td>\begin{align}c\end{align}</td>
+                <td><span id="lblC"></span></td>
+            </tr>
+            <tr>
+                <td>\begin{align}s\end{align}</td>
+                <td><span id="lblS"></span></td>
+            </tr>
+            <tr>
+                <td>\begin{align}\cos{\theta}\end{align}</td>
+                <td><span id="lblCos"></span></td>
+            </tr>
+            <tr>
+                <td>\begin{align}\sin{\theta}\end{align}</td>
+                <td><span id="lblSin"></span></td>
+            </tr>
+            <tr>
+                <td>\begin{align}\tan{\theta}\end{align}</td>
+                <td><span id="lblTan"></span></td>
+            </tr>
+        </table>
     </td>
-    <td><canvas id="disp"></canvas></td>
+    <td rowspan="2"><canvas id="disp"></canvas></td>
 </tr>
 </table>
 </body>
