@@ -131,8 +131,8 @@ function main() {
         gB.Z = xzB.Y;
     }
 
-    round(gA, gA, 2, UNIT, gO);
-    round(gB, gB, 2, UNIT, gO);
+    roundVec(gA, gA, 2, UNIT, gO);
+    roundVec(gB, gB, 2, UNIT, gO);
 
     drawGrid(gDrawerXY);
     drawGrid(gDrawerZY);

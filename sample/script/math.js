@@ -270,7 +270,7 @@ function toFrac(value, unit="", dispOne=true) {
  * @param {number} scale
  * @param {vec} offset
  */
-function round(returnVal, v, digit=2, scale=1, offset = new vec()) {
+function roundVec(returnVal, v, digit, scale, offset) {
 	var f = Math.pow(10, digit);
 	var x = v.X - offset.X;
 	var y = v.Y - offset.Y;

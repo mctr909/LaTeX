@@ -42,8 +42,8 @@ function main() {
         gDrawer.cursor.copy(gB);
     }
 
-    round(gA, gA, 2, UNIT, gO);
-    round(gB, gB, 2, UNIT, gO);
+    roundVec(gA, gA, 2, UNIT, gO);
+    roundVec(gB, gB, 2, UNIT, gO);
 
     gDrawer.drawLine(new vec(gO.X, UNIT*-2), new vec(gO.X, UNIT*2), Drawer.GRAY);
     gDrawer.drawLine(new vec(UNIT, UNIT*-2), new vec(UNIT, UNIT*2), Drawer.GRAY);

@@ -33,7 +33,7 @@ function main() {
         gDrawer.cursor.copy(gA);
     }
 
-    round(gA, gA, 2, UNIT, gO);
+    roundVec(gA, gA, 2, UNIT, gO);
 
     let k = document.getElementById("rangeK").value * 0.1;
     let oka = new vec();

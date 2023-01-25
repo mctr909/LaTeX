@@ -33,7 +33,7 @@ function main() {
         gDrawer.cursor.copy(gA);
     }
 
-    round(gA, gA, 2, UNIT, gO);
+    roundVec(gA, gA, 2, UNIT, gO);
 
     let ona = new vec();
     gA.sub(gO, ona);

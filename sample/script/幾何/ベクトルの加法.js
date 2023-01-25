@@ -42,8 +42,8 @@ function main() {
         gDrawer.cursor.copy(gB);
     }
 
-    round(gA, gA, 2, UNIT, gO);
-    round(gB, gB, 2, UNIT, gO);
+    roundVec(gA, gA, 2, UNIT, gO);
+    roundVec(gB, gB, 2, UNIT, gO);
 
     let ab = new vec();
     gA.add(gB, ab);
