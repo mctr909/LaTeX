@@ -92,6 +92,7 @@ class Drawer {
 			self.#roundCursor(ev.offsetX, ev.offsetY);
 		});
 		this.#element.addEventListener("touchmove", function(ev) {
+			ev.preventDefault();
 			let rect = self.#element.getBoundingClientRect();
 			let x = ev.changedTouches[0].pageX - rect.left;
 			let y = ev.changedTouches[0].pageY - rect.top;
@@ -103,6 +104,7 @@ class Drawer {
 			}
 		});
 		this.#element.addEventListener("touchstart", function(ev) {
+			ev.preventDefault();
 			self.isDrag = true;
 		});
 		this.#element.addEventListener("mouseup", function(ev) {
@@ -111,12 +113,7 @@ class Drawer {
 			}
 		});
 		this.#element.addEventListener("touchend", function(ev) {
-			self.isDrag = false;
-		});
-		this.#element.addEventListener("mouseleave", function(ev) {
-			self.isDrag = false;
-		});
-		this.#element.addEventListener("touchcancel", function(ev) {
+			ev.preventDefault();
 			self.isDrag = false;
 		});
 

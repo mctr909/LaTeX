@@ -39,6 +39,11 @@ init();
 requestNextAnimationFrame(main);
 
 function init() {
+    let eb = document.getElementsByTagName("body");
+    for (let item of eb) {
+        item.style.overflow = "hidden";
+    }
+
     gLineList = [];
     gLabelList = [];
     gSinLine = [];

@@ -16,6 +16,10 @@ requestNextAnimationFrame(main);
 
 function init() {
     gDrawer.Offset = new vec(gDrawer.Width/2, gDrawer.Height/2);
+    let eb = document.getElementsByTagName("body");
+    for (let item of eb) {
+        item.style.overflow = "hidden";
+    }
 }
 
 function main() {

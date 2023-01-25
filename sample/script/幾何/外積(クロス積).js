@@ -28,6 +28,10 @@ function init() {
     gDrawerZY.Offset = new vec(gDrawerZY.Width/2, gDrawerZY.Height/2);
     gDrawerXZ.Offset = new vec(gDrawerXZ.Width/2, gDrawerXZ.Height/2);
     gDrawer.Offset = new vec(gDrawer.Width/2, gDrawer.Height/2);
+    let eb = document.getElementsByTagName("body");
+    for (let item of eb) {
+        item.style.overflow = "hidden";
+    }
 }
 
 function drawGrid(g) {
