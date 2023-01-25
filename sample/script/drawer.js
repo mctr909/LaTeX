@@ -237,7 +237,7 @@ class Drawer {
 	 * @param {number} width
 	 * @param {number} alpha
 	 */
-	drawArrow(a, b, color = [0,0,0], width = 2, alpha=1) {
+	drawArrow(a, b, color = [0,0,0], width = 1, alpha = 1) {
 		this.#ctx.beginPath();
 		this.#drawLine(a, b, color, width, alpha);
 		this.#ctx.setLineDash([]);
@@ -250,13 +250,14 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
+	 * @param {number} alpha
 	 */
-	drawArrowD(a, b, color = [0,0,0], width = 2) {
+	drawArrowD(a, b, color = [0,0,0], width = 1, alpha = 1) {
 		this.#ctx.beginPath();
-		this.#drawLine(a, b, color, width);
+		this.#drawLine(a, b, color, width, alpha);
 		this.#ctx.setLineDash([width, width]);
 		this.#ctx.stroke();
-		this.#fillArrow(a, b, color);
+		this.#fillArrow(a, b, color, alpha);
 	}
 
 	/**

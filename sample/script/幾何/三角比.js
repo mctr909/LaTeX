@@ -52,14 +52,34 @@ function init() {
     gDrawer.Offset = new vec(gWaveBegin, gDrawer.Height/4);
 
     gLineList.push(new LineInfo(
-        -UNIT_RADIUS, 0,
+        -Math.max(UNIT_RADIUS, gCircleRadius), 0,
         gWaveBegin + WAVE_LENGTH, 0,
         1, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
         0, -gWaveBegin - WAVE_LENGTH,
-        0, UNIT_RADIUS,
+        0, Math.max(UNIT_RADIUS, gCircleRadius),
         1, AXIZ_COLOR
+    ));
+    gLineList.push(new LineInfo(
+        0, gCircleRadius,
+        gWaveBegin + WAVE_LENGTH, gCircleRadius,
+        0.5, SIN_COLOR
+    ));
+    gLineList.push(new LineInfo(
+        0, -gCircleRadius,
+        gWaveBegin + WAVE_LENGTH, -gCircleRadius,
+        0.5, SIN_COLOR
+    ));
+    gLineList.push(new LineInfo(
+        gCircleRadius, -gWaveBegin - WAVE_LENGTH,
+        gCircleRadius, 0,
+        0.5, COS_COLOR
+    ));
+    gLineList.push(new LineInfo(
+        -gCircleRadius, -gWaveBegin - WAVE_LENGTH,
+        -gCircleRadius, 0,
+        0.5, COS_COLOR
     ));
     for (let deg=0; deg<=360; deg += 15) {
         let x = gWaveBegin + WAVE_LENGTH * deg / 360.0;
@@ -129,7 +149,7 @@ function main() {
         }
     }
 
-    gDrawer.drawCircle(new vec(), UNIT_RADIUS, MEASURE_COLOR);
+    gDrawer.drawCircleD(new vec(), UNIT_RADIUS, MEASURE_COLOR);
     gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR);
 
     for (let i=0; i<gTanLines.length; i++) {
@@ -162,9 +182,9 @@ function main() {
     gDrawer.drawLineD(vp, wave_s, SIN_COLOR);
     gDrawer.drawLineD(vt, wave_t, TAN_COLOR);
     gDrawer.drawLine(new vec(), vt, TAN_COLOR);
-    gDrawer.drawLine(new vec(), vc, COS_COLOR, 3);
-    gDrawer.drawLine(vc, vp, SIN_COLOR, 3);
-    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 3);
+    gDrawer.drawLine(new vec(), vc, COS_COLOR, 4);
+    gDrawer.drawLine(vc, vp, SIN_COLOR, 4);
+    gDrawer.drawLine(new vec(), vp, CIRCLE_COLOR, 4);
     gDrawer.fillCircle(vp, 4, CIRCLE_COLOR);
     gDrawer.fillCircle(vt, 4, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 4, COS_COLOR);
@@ -175,7 +195,7 @@ function main() {
     if (dangle < 0) {
         dangle += 2*Math.PI;
     }
-    gDrawer.drawArc(new vec(), 24, 0, dangle, CIRCLE_COLOR);
+    gDrawer.drawArc(new vec(), 20, 0, dangle, CIRCLE_COLOR);
 
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblC = new vec(vc.X * 0.5, -5);

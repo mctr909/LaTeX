@@ -55,7 +55,7 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 3);
+    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 4);
 
     gDrawer.fillCircle(gO, 3, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.GREEN);
