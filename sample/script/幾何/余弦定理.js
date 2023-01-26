@@ -64,9 +64,9 @@ function main() {
     }
 
     gDrawer.drawArc(gO, 20, da.arg, dangle + da.arg, B_COLOR, 2);
-    gDrawer.drawLineV(gO, gA, A_COLOR, 1, 2);
-    gDrawer.drawLineV(gO, gB, B_COLOR, 1, 2);
-    gDrawer.drawLineV(gA, gB, C_COLOR, 1, 2);
+    gDrawer.drawLine(gO, gA, A_COLOR, 1, 2);
+    gDrawer.drawLine(gO, gB, B_COLOR, 1, 2);
+    gDrawer.drawLine(gA, gB, C_COLOR, 1, 2);
     gDrawer.fillCircle(gA, 5, A_COLOR);
     gDrawer.fillCircle(gB, 5, B_COLOR);
     gDrawer.fillCircle(gO, 5, O_COLOR);

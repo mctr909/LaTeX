@@ -39,9 +39,9 @@ class LineInfo {
 			}
 		} else {
 			if (this.isDot) {
-				drawer.drawLineVD(this.posA, this.posB, this.color, 1, this.width);
+				drawer.drawLineD(this.posA, this.posB, this.color, 1, this.width);
 			} else {
-				drawer.drawLineV(this.posA, this.posB, this.color, 1, this.width);
+				drawer.drawLine(this.posA, this.posB, this.color, 1, this.width);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ class Drawer {
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLine(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
+	drawLineXY(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
 		let x1 = this.#offset.X + ax;
 		let y1 = this.#offset.Y - ay;
 		let x2 = this.#offset.X + bx;
@@ -195,7 +195,7 @@ class Drawer {
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLineD(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
+	drawLineXYD(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
 		let x1 = this.#offset.X + ax;
 		let y1 = this.#offset.Y - ay;
 		let x2 = this.#offset.X + bx;
@@ -216,8 +216,8 @@ class Drawer {
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLineV(a, b, color = [0,0,0], alpha = 1, width = 1) {
-		this.drawLine(a.X, a.Y, b.X, b.Y, color, alpha, width);
+	drawLine(a, b, color = [0,0,0], alpha = 1, width = 1) {
+		this.drawLineXY(a.X, a.Y, b.X, b.Y, color, alpha, width);
 	}
 
 	/**
@@ -227,8 +227,8 @@ class Drawer {
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLineVD(a, b, color = [0,0,0], alpha = 1, width = 1) {
-		this.drawLineD(a.X, a.Y, b.X, b.Y, color, alpha, width);
+	drawLineD(a, b, color = [0,0,0], alpha = 1, width = 1) {
+		this.drawLineXYD(a.X, a.Y, b.X, b.Y, color, alpha, width);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Drawer {
 	 * @param {number} width
 	 */
 	drawArrow(a, b, color = [0,0,0], width = 1) {
-		this.drawLine(a.X, a.Y, b.X, b.Y, color, 1, width);
+		this.drawLineXY(a.X, a.Y, b.X, b.Y, color, 1, width);
 		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, 1);
 	}
 
@@ -249,7 +249,7 @@ class Drawer {
 	 * @param {number} width
 	 */
 	drawArrowD(a, b, color = [0,0,0], width = 1) {
-		this.drawLineD(a.X, a.Y, b.X, b.Y, color, 1, width);
+		this.drawLineXYD(a.X, a.Y, b.X, b.Y, color, 1, width);
 		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, 1);
 	}
 
@@ -358,16 +358,17 @@ class Drawer {
 	}
 
 	/**
-	 * @param {vec} center
+	 * @param {number} x
+	 * @param {number} y
 	 * @param {number} radius
 	 * @param {[number, number, number]} color
 	 * @param {number} alpha
 	 */
-	fillCircle(center, radius, color = [0,0,0], alpha=1) {
+	fillCircleXY(x, y, radius, color = [0,0,0], alpha = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
-			this.#offset.X + center.X,
-			this.#offset.Y - center.Y,
+			this.#offset.X + x,
+			this.#offset.Y - y,
 			radius,
 			0 * Math.PI / 180,
 			360 * Math.PI / 180,
@@ -375,6 +376,16 @@ class Drawer {
 		);
 		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
 		this.#ctx.fill();
+	}
+
+	/**
+	 * @param {vec} center
+	 * @param {number} radius
+	 * @param {[number, number, number]} color
+	 * @param {number} alpha
+	 */
+	fillCircle(center, radius, color = [0,0,0], alpha = 1) {
+		this.fillCircleXY(center.X, center.Y, radius, color, alpha);
 	}
 
 	/**
@@ -394,21 +405,32 @@ class Drawer {
 	}
 
 	/**
+	 * @param {vec} x
+	 * @param {vec} y
+	 * @param {string} value
+	 * @param {number} size
+	 * @param {[number, number, number]} color
+	 */
+	drawStringXY(x, y, value, size = 11, color = [0,0,0]) {
+		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
+		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
+		let px = this.#offset.X + x;
+		let py = this.#offset.Y - y;
+		let lines = value.split("\n");
+		for(let i=0; i<lines.length; i++) {
+			this.#ctx.fillText(lines[i], px, py);
+			py += size;
+		}
+	}
+
+	/**
 	 * @param {vec} p
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
 	 */
 	drawString(p, value, size = 11, color = [0,0,0]) {
-		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
-		let px = this.#offset.X + p.X;
-		let py = this.#offset.Y - p.Y;
-		let lines = value.split("\n");
-		for(let i=0; i<lines.length; i++) {
-			this.#ctx.fillText(lines[i], px, py);
-			py += size;
-		}
+		this.drawStringXY(p.X, p.Y, value, size, color);
 	}
 
 	/**
@@ -437,11 +459,11 @@ class Drawer {
 		for(let i = -20; i <= 20; i += 5) {
 			let r = i * 0.1;
 			if (0 == i % 10) {
-				this.drawLine(unit*r, unit*-2, unit*r, unit*2, Drawer.GRAY);
-				this.drawLine(unit*-2, unit*r, unit*2, unit*r, Drawer.GRAY);
+				this.drawLineXY(unit*r, unit*-2, unit*r, unit*2, Drawer.GRAY);
+				this.drawLineXY(unit*-2, unit*r, unit*2, unit*r, Drawer.GRAY);
 			} else {
-				this.drawLineD(unit*r, unit*-2, unit*r, unit*2, Drawer.GRAY);
-				this.drawLineD(unit*-2, unit*r, unit*2, unit*r, Drawer.GRAY);
+				this.drawLineXYD(unit*r, unit*-2, unit*r, unit*2, Drawer.GRAY);
+				this.drawLineXYD(unit*-2, unit*r, unit*2, unit*r, Drawer.GRAY);
 			}
 		}
 	}
