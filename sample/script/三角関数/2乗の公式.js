@@ -15,7 +15,9 @@ let gDrawer = [
     new Drawer("disp1", WAVE_LENGTH + 50, RADIUS * 9 / 4),
     new Drawer("disp2", WAVE_LENGTH + 50, RADIUS * 9 / 4),
     new Drawer("disp3", WAVE_LENGTH + 50, RADIUS * 9 / 4),
-    new Drawer("disp4", WAVE_LENGTH + 50, RADIUS * 9 / 4)
+    new Drawer("disp4", WAVE_LENGTH + 50, RADIUS * 9 / 4),
+    new Drawer("disp5", WAVE_LENGTH + 50, RADIUS * 9 / 4),
+    new Drawer("disp6", WAVE_LENGTH + 50, RADIUS * 9 / 4)
 ];
 let gTheta = Math.PI/6;
 /** @type{LineInfo[]} */
@@ -26,12 +28,16 @@ let gSinLine = [];
 let gCos2Line = [];
 let gSin2Line = [];
 let gTan2Lines = [];
+let gCSLine = [];
+let gSCLine = [];
 
 function init() {
     gDrawer[0].Offset = new vec(20, RADIUS+5);
     gDrawer[1].Offset = new vec(20, RADIUS+5);
     gDrawer[2].Offset = new vec(20, RADIUS*2-20);
     gDrawer[3].Offset = new vec(20, RADIUS*2-20);
+    gDrawer[4].Offset = new vec(20, RADIUS+15);
+    gDrawer[5].Offset = new vec(20, RADIUS+15);
 
     gLineList.push(new LineInfo(
         WAVE_BEGIN, 0,
@@ -80,6 +86,8 @@ function init() {
         gSinLine.push(new vec(x, s * RADIUS));
         gCos2Line.push(new vec(x, c*c * RADIUS));
         gSin2Line.push(new vec(x, s*s * RADIUS));
+        gCSLine.push(new vec(x, (c*c - s*s) * RADIUS));
+        gSCLine.push(new vec(x, (s*s - c*c) * RADIUS));
 
         let t = s*s / (c*c);
         if (t < -50 || t > 50) {
@@ -117,7 +125,7 @@ function main() {
     gDrawer[1].drawPolyline(gSin2Line, SIN_COLOR);
     gDrawer[2].drawPolyline(gCos2Line, COS_COLOR);
     gDrawer[2].drawPolyline(gSin2Line, SIN_COLOR);
-    gDrawer[2].drawLine(
+    gDrawer[2].drawLineV(
         new vec(WAVE_BEGIN, RADIUS),
         new vec(WAVE_BEGIN + WAVE_LENGTH, RADIUS),
         Drawer.ORANGE
@@ -127,6 +135,12 @@ function main() {
     for(let i=0; i<gTan2Lines.length; i++) {
         gDrawer[3].drawPolyline(gTan2Lines[i], TAN_COLOR);
     }
+    gDrawer[4].drawPolyline(gCos2Line, COS_COLOR);
+    gDrawer[4].drawPolyline(gSin2Line, SIN_COLOR);
+    gDrawer[4].drawPolyline(gCSLine, Drawer.ORANGE);
+    gDrawer[5].drawPolyline(gCos2Line, COS_COLOR);
+    gDrawer[5].drawPolyline(gSin2Line, SIN_COLOR);
+    gDrawer[5].drawPolyline(gSCLine, Drawer.ORANGE);
 
     for(let id=0; id<gDrawer.length; id++) {
         if (!gDrawer[id].isDrag) {
@@ -163,7 +177,7 @@ function main() {
         let v1 = new vec(px, pv * RADIUS);
         let v2 = new vec(px, pv * pv * RADIUS);
         d.drawLine(px, 0, v1.X, v1.Y);
-        d.drawLine(px, 0, v2.X, v1.Y);
+        d.drawLine(px, 0, v2.X, v2.Y);
         d.fillCircle(v1, 4);
         d.fillCircle(v2, 4, SIN_COLOR);
         let dv = parseInt(1000 * pv + Math.sign(pv) * 0.5) / 1000;
@@ -211,6 +225,46 @@ function main() {
         document.getElementById("lblDisp4a").innerHTML = ds;
         document.getElementById("lblDisp4b").innerHTML = dc;
         document.getElementById("lblDisp4c").innerHTML = parseInt(1000 * (ds / dc)) / 1000;
+    }
+    {
+        let d = gDrawer[4];
+        let px = gTheta * WAVE_LENGTH / Math.PI / 2 + WAVE_BEGIN;
+        let pc = Math.cos(gTheta) * Math.cos(gTheta);
+        let ps = Math.sin(gTheta) * Math.sin(gTheta);
+        let vc = new vec(px, pc * RADIUS);
+        let vs = new vec(px, ps * RADIUS);
+        let vcs = new vec(px, (pc - ps) * RADIUS);
+        d.drawLine(px, 0, vcs.X, vcs.Y);
+        d.drawLine(px, 0, vc.X, vc.Y);
+        d.drawLine(px, 0, vs.X, vs.Y);
+        d.fillCircle(vcs, 4, Drawer.ORANGE);
+        d.fillCircle(vc, 4, COS_COLOR);
+        d.fillCircle(vs, 4, SIN_COLOR);
+        let dc = parseInt(1000 * pc + 0.5) / 1000;
+        let ds = parseInt(1000 * ps + 0.5) / 1000;
+        document.getElementById("lblDisp5a").innerHTML = dc;
+        document.getElementById("lblDisp5b").innerHTML = ds;
+        document.getElementById("lblDisp5c").innerHTML = parseInt(1000 * (dc - ds)) / 1000;
+    }
+    {
+        let d = gDrawer[5];
+        let px = gTheta * WAVE_LENGTH / Math.PI / 2 + WAVE_BEGIN;
+        let pc = Math.cos(gTheta) * Math.cos(gTheta);
+        let ps = Math.sin(gTheta) * Math.sin(gTheta);
+        let vc = new vec(px, pc * RADIUS);
+        let vs = new vec(px, ps * RADIUS);
+        let vsc = new vec(px, (ps - pc) * RADIUS);
+        d.drawLine(px, 0, vsc.X, vsc.Y);
+        d.drawLine(px, 0, vc.X, vc.Y);
+        d.drawLine(px, 0, vs.X, vs.Y);
+        d.fillCircle(vsc, 4, Drawer.ORANGE);
+        d.fillCircle(vc, 4, COS_COLOR);
+        d.fillCircle(vs, 4, SIN_COLOR);
+        let dc = parseInt(1000 * pc + 0.5) / 1000;
+        let ds = parseInt(1000 * ps + 0.5) / 1000;
+        document.getElementById("lblDisp6a").innerHTML = ds;
+        document.getElementById("lblDisp6b").innerHTML = dc;
+        document.getElementById("lblDisp6c").innerHTML = parseInt(1000 * (ds - dc)) / 1000;
     }
 
     requestNextAnimationFrame(main);
