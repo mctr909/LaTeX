@@ -30,7 +30,7 @@ table, td {
         関係演算子<br/>
         <input type="button" value="≠" onclick="insertText(' \\neq ');"/>
         <input type="button" value="simeq" onclick="insertText(' \\simeq ');"/>
-        <input type="button" value="def" onclick="insertText(' \\stackrel{\\textrm{def}}{=} ');"/>
+        <input type="button" value="def" onclick="insertText(' \\stackrel{\\mathrm{def}}{=} ');"/>
     </td>
     <td>
         　<br/>
@@ -40,7 +40,8 @@ table, td {
     </td>
     <td>
         ベクトル・行列<br/>
-        <input type="button" value="→" onclick="insertText('\\overrightarrow{\\textrm{*}}');"/>
+        <input type="button" value="→" onclick="insertText('\\overrightarrow{\\mathrm{*}}');"/>
+        <input type="button" value="V" style="font-weight: bold;" onclick="insertText('\\mathbf{*}');"/>
         <input type="button" value="𝕍" onclick="insertText('\\mathbb{*}');"/>
         <input type="button" value="norm" onclick="insertText('\\lVert{*}\\rVert');"/>
         <br/>
@@ -49,8 +50,8 @@ table, td {
     </td>
     <td>
         図形<br/>
-        <input type="button" value="△" onclick="insertText('\\triangle\\textrm{*}');"/>
-        <input type="button" value="∠" onclick="insertText('\\angle\\textrm{*}');"/>
+        <input type="button" value="△" onclick="insertText('\\triangle\\mathrm{*}');"/>
+        <input type="button" value="∠" onclick="insertText('\\angle\\mathrm{*}');"/>
         <input type="button" value="°" onclick="insertText('*^{\\circ}');"/>
         <br/>
         <input type="button" value="//" onclick="insertText(' /\\!/ ');"/>
