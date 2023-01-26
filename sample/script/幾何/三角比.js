@@ -32,7 +32,7 @@ let gWaveBegin = gCircleRadius + GAP;
 
 let gDrawer = new Drawer("disp",
     gWaveBegin * 2 + WAVE_LENGTH + GAP,
-    (WAVE_LENGTH + gCircleRadius + GAP) * 1.66 + 10
+    (WAVE_LENGTH + gCircleRadius + GAP) * 1.5 + 10
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
@@ -60,7 +60,7 @@ function init() {
     gCircleRadius = UNIT_RADIUS * gRadius;
     gWaveBegin = gCircleRadius + GAP;
 
-    gDrawer.Offset = new vec(gWaveBegin, gDrawer.Height/4);
+    gDrawer.Offset = new vec(gWaveBegin, gDrawer.Height * 9 / 32);
 
     gLineList.push(new LineInfo(
         -Math.max(UNIT_RADIUS, gCircleRadius), 0,
@@ -171,8 +171,8 @@ function main() {
     }
     gDrawer.drawPolyline(gRCosLine, COS_COLOR, 0.5);
     gDrawer.drawPolyline(gRSinLine, SIN_COLOR, 0.5);
-    gDrawer.drawPolylineD(gCosLine, COS_COLOR, 0.5);
-    gDrawer.drawPolylineD(gSinLine, SIN_COLOR, 0.5);
+    gDrawer.drawPolylineD(gCosLine, Drawer.BLACK, 0.5);
+    gDrawer.drawPolylineD(gSinLine, Drawer.BLACK, 0.5);
 
     if (gDrawer.isDrag) {
         gTheta = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);

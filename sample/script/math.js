@@ -131,7 +131,13 @@ function to2d(v, focalLength=40) {
  * @returns {number}
  */
 function toAlpha(y, z) {
-    return (0.8 - 0.2 * y / UNIT) * (0.8 + 0.2 * z / UNIT);
+	let uy = 0.7 - 0.3 * y / UNIT;
+	let uz = 0.8 + 0.2 * z / UNIT;
+	let a = uy * uz;
+	if (a < 0.05) {
+		a = 0.05;
+	}
+	return a;
 }
 
 /**
