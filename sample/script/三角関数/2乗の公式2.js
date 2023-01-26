@@ -119,9 +119,9 @@ function main() {
         let vc = new vec(px, pc * RADIUS);
         let vs = new vec(px, ps * RADIUS);
         let vcs = new vec(px, (pc - ps) * RADIUS);
-        d.drawLine(new vec(px, 0), vcs);
-        d.drawLine(new vec(px, 0), vc);
-        d.drawLine(new vec(px, 0), vs);
+        d.drawLine(px, 0, vcs.X, vcs.Y);
+        d.drawLine(px, 0, vc.X, vc.Y);
+        d.drawLine(px, 0, vs.X, vs.Y);
         d.fillCircle(vcs, 4, Drawer.ORANGE);
         d.fillCircle(vc, 4, COS_COLOR);
         d.fillCircle(vs, 4, SIN_COLOR);
@@ -139,9 +139,9 @@ function main() {
         let vc = new vec(px, pc * RADIUS);
         let vs = new vec(px, ps * RADIUS);
         let vsc = new vec(px, (ps - pc) * RADIUS);
-        d.drawLine(new vec(px, 0), vsc);
-        d.drawLine(new vec(px, 0), vc);
-        d.drawLine(new vec(px, 0), vs);
+        d.drawLine(px, 0, vsc.X, vsc.Y);
+        d.drawLine(px, 0, vc.X, vc.Y);
+        d.drawLine(px, 0, vs.X, vs.Y);
         d.fillCircle(vsc, 4, Drawer.ORANGE);
         d.fillCircle(vc, 4, COS_COLOR);
         d.fillCircle(vs, 4, SIN_COLOR);

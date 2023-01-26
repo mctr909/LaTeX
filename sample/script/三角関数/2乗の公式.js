@@ -147,8 +147,8 @@ function main() {
         let pv = Math.cos(gTheta);
         let v1 = new vec(px, pv * RADIUS);
         let v2 = new vec(px, pv * pv * RADIUS);
-        d.drawLine(new vec(px, 0), v1);
-        d.drawLine(new vec(px, 0), v2);
+        d.drawLine(px, 0, v1.X, v1.Y);
+        d.drawLine(px, 0, v2.X, v2.Y);
         d.fillCircle(v1, 4);
         d.fillCircle(v2, 4, COS_COLOR);
         let dv = parseInt(1000 * pv + Math.sign(pv) * 0.5) / 1000;
@@ -162,8 +162,8 @@ function main() {
         let pv = Math.sin(gTheta);
         let v1 = new vec(px, pv * RADIUS);
         let v2 = new vec(px, pv * pv * RADIUS);
-        d.drawLine(new vec(px, 0), v1);
-        d.drawLine(new vec(px, 0), v2);
+        d.drawLine(px, 0, v1.X, v1.Y);
+        d.drawLine(px, 0, v2.X, v1.Y);
         d.fillCircle(v1, 4);
         d.fillCircle(v2, 4, SIN_COLOR);
         let dv = parseInt(1000 * pv + Math.sign(pv) * 0.5) / 1000;
@@ -179,9 +179,9 @@ function main() {
         let vc = new vec(px, pc * RADIUS);
         let vs = new vec(px, ps * RADIUS);
         let vcs = new vec(px, (pc + ps) * RADIUS);
-        d.drawLine(new vec(px, 0), vcs);
-        d.drawLine(new vec(px, 0), vc);
-        d.drawLine(new vec(px, 0), vs);
+        d.drawLine(px, 0, vcs.X, vcs.Y);
+        d.drawLine(px, 0, vc.X, vc.Y);
+        d.drawLine(px, 0, vs.X, vs.Y);
         d.fillCircle(vcs, 4, Drawer.ORANGE);
         d.fillCircle(vc, 4, COS_COLOR);
         d.fillCircle(vs, 4, SIN_COLOR);
@@ -200,9 +200,9 @@ function main() {
         let vs = new vec(px, ps * RADIUS);
         let vc = new vec(px, pc * RADIUS);
         let vt = new vec(px, pt * RADIUS);
-        d.drawLine(new vec(px, 0), vc);
-        d.drawLine(new vec(px, 0), vs);
-        d.drawLine(new vec(px, 0), vt);
+        d.drawLine(px, 0, vc.X, vc.Y);
+        d.drawLine(px, 0, vs.X, vs.Y);
+        d.drawLine(px, 0, vt.X, vt.Y);
         d.fillCircle(vt, 4, TAN_COLOR);
         d.fillCircle(vc, 4, COS_COLOR);
         d.fillCircle(vs, 4, SIN_COLOR);

@@ -35,20 +35,7 @@ function init() {
 }
 
 function drawGrid(g) {
-    g.drawLine(new vec(gO.X, UNIT*-2), new vec(gO.X, UNIT*2), Drawer.GRAY);
-    g.drawLine(new vec(UNIT, UNIT*-2), new vec(UNIT, UNIT*2), Drawer.GRAY);
-    g.drawLine(new vec(-UNIT, UNIT*-2), new vec(-UNIT, UNIT*2), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*0.5, UNIT*-2), new vec(UNIT*0.5, UNIT*2), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*-0.5, UNIT*-2), new vec(UNIT*-0.5, UNIT*2), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*1.5, UNIT*-2), new vec(UNIT*1.5, UNIT*2), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*-1.5, UNIT*-2), new vec(UNIT*-1.5, UNIT*2), Drawer.GRAY);
-    g.drawLine(new vec(UNIT*-2, gO.Y), new vec(UNIT*2, gO.Y), Drawer.GRAY);
-    g.drawLine(new vec(UNIT*-2, UNIT), new vec(UNIT*2, UNIT), Drawer.GRAY);
-    g.drawLine(new vec(UNIT*-2, -UNIT), new vec(UNIT*2, -UNIT), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*-2, UNIT*0.5), new vec(UNIT*2, UNIT*0.5), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*-2, UNIT*-0.5), new vec(UNIT*2, UNIT*-0.5), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*-2, UNIT*1.5), new vec(UNIT*2, UNIT*1.5), Drawer.GRAY);
-    g.drawLineD(new vec(UNIT*-2, UNIT*-1.5), new vec(UNIT*2, UNIT*-1.5), Drawer.GRAY);
+    g.drawGrid(UNIT);
     g.drawCircleD(gO, UNIT*0.5, Drawer.GRAY);
     g.drawCircle(gO, UNIT, Drawer.GRAY);
     g.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
@@ -156,11 +143,11 @@ function main() {
     axb.add(gO, oaxb);
 
     /* XY */
-    gDrawerXY.drawLine(gO, gA, Drawer.GREEN, 3);
-    gDrawerXY.drawLine(gO, gB, Drawer.BLUE, 3);
-    gDrawerXY.drawLineD(gB, ab, Drawer.GREEN, 1);
-    gDrawerXY.drawLineD(gA, ab, Drawer.BLUE, 1);
-    gDrawerXY.drawLine(gO, oaxb, Drawer.BLACK, 1);
+    gDrawerXY.drawLineV(gO, gA, Drawer.GREEN, 3);
+    gDrawerXY.drawLineV(gO, gB, Drawer.BLUE, 3);
+    gDrawerXY.drawLineVD(gB, ab, Drawer.GREEN, 1);
+    gDrawerXY.drawLineVD(gA, ab, Drawer.BLUE, 1);
+    gDrawerXY.drawLineV(gO, oaxb, Drawer.BLACK, 1);
 
     gDrawerXY.fillCircle(gO, 2, Drawer.BLACK);
     gDrawerXY.fillCircle(gA, 4, Drawer.GREEN);
@@ -172,11 +159,11 @@ function main() {
     gDrawerXY.drawString(gB, "b", 20);
 
     /* ZY */
-    gDrawerZY.drawLine(new vec(gO.Z, gO.Y), new vec(gA.Z, gA.Y), Drawer.GREEN, 3);
-    gDrawerZY.drawLine(new vec(gO.Z, gO.Y), new vec(gB.Z, gB.Y), Drawer.BLUE, 3);
-    gDrawerZY.drawLineD(new vec(gB.Z, gB.Y), new vec(ab.Z, ab.Y), Drawer.GREEN, 1);
-    gDrawerZY.drawLineD(new vec(gA.Z, gA.Y), new vec(ab.Z, ab.Y), Drawer.BLUE, 1);
-    gDrawerZY.drawLine(new vec(gO.Z, gO.Y), new vec(oaxb.Z, oaxb.Y), Drawer.BLACK, 1);
+    gDrawerZY.drawLineV(new vec(gO.Z, gO.Y), new vec(gA.Z, gA.Y), Drawer.GREEN, 3);
+    gDrawerZY.drawLineV(new vec(gO.Z, gO.Y), new vec(gB.Z, gB.Y), Drawer.BLUE, 3);
+    gDrawerZY.drawLineVD(new vec(gB.Z, gB.Y), new vec(ab.Z, ab.Y), Drawer.GREEN, 1);
+    gDrawerZY.drawLineVD(new vec(gA.Z, gA.Y), new vec(ab.Z, ab.Y), Drawer.BLUE, 1);
+    gDrawerZY.drawLineV(new vec(gO.Z, gO.Y), new vec(oaxb.Z, oaxb.Y), Drawer.BLACK, 1);
 
     gDrawerZY.fillCircle(new vec(gO.Z, gO.Y), 2, Drawer.BLACK);
     gDrawerZY.fillCircle(new vec(gA.Z, gA.Y), 4, Drawer.GREEN);
@@ -188,11 +175,11 @@ function main() {
     gDrawerZY.drawString(new vec(gB.Z, gB.Y), "b", 20);
 
     /* XZ */
-    gDrawerXZ.drawLine(new vec(gO.X, gO.Z), new vec(gA.X, gA.Z), Drawer.GREEN, 3);
-    gDrawerXZ.drawLine(new vec(gO.X, gO.Z), new vec(gB.X, gB.Z), Drawer.BLUE, 3);
-    gDrawerXZ.drawLineD(new vec(gB.X, gB.Z), new vec(ab.X, ab.Z), Drawer.GREEN, 1);
-    gDrawerXZ.drawLineD(new vec(gA.X, gA.Z), new vec(ab.X, ab.Z), Drawer.BLUE, 1);
-    gDrawerXZ.drawLine(new vec(gO.X, gO.Z), new vec(oaxb.X, oaxb.Z), Drawer.BLACK, 1);
+    gDrawerXZ.drawLineV(new vec(gO.X, gO.Z), new vec(gA.X, gA.Z), Drawer.GREEN, 3);
+    gDrawerXZ.drawLineV(new vec(gO.X, gO.Z), new vec(gB.X, gB.Z), Drawer.BLUE, 3);
+    gDrawerXZ.drawLineVD(new vec(gB.X, gB.Z), new vec(ab.X, ab.Z), Drawer.GREEN, 1);
+    gDrawerXZ.drawLineVD(new vec(gA.X, gA.Z), new vec(ab.X, ab.Z), Drawer.BLUE, 1);
+    gDrawerXZ.drawLineV(new vec(gO.X, gO.Z), new vec(oaxb.X, oaxb.Z), Drawer.BLACK, 1);
 
     gDrawerXZ.fillCircle(new vec(gO.X, gO.Z), 2, Drawer.BLACK);
     gDrawerXZ.fillCircle(new vec(gA.X, gA.Z), 4, Drawer.GREEN);
@@ -210,11 +197,11 @@ function main() {
         let vy_a = to2d(new vec(UNIT*-3, UNIT*r, 0));
         let vy_b = to2d(new vec(UNIT*3, UNIT*r, 0));
         if (0 < Math.abs(r - parseInt(r))) {
-            gDrawer.drawLineD(vx_a, vx_b, Drawer.GRAY);
-            gDrawer.drawLineD(vy_a, vy_b, Drawer.GRAY);
+            gDrawer.drawLineVD(vx_a, vx_b, Drawer.GRAY);
+            gDrawer.drawLineVD(vy_a, vy_b, Drawer.GRAY);
         } else {
-            gDrawer.drawLine(vx_a, vx_b, Drawer.GRAY);
-            gDrawer.drawLine(vy_a, vy_b, Drawer.GRAY);
+            gDrawer.drawLineV(vx_a, vx_b, Drawer.GRAY);
+            gDrawer.drawLineV(vy_a, vy_b, Drawer.GRAY);
         }
     }
 
@@ -230,11 +217,11 @@ function main() {
         toAlpha((gA.Y+gB.Y+ab.Y) / 3, (gA.Z+gB.Z+ab.Z) / 3)
     );
 
-    gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, 2, toAlpha(gA.Y, gA.Z));
-    gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, 2, toAlpha(gB.Y, gB.Z));
-    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.BLACK, 1, toAlpha(oaxb.Y, oaxb.Z));
-    gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, 1, toAlpha(ab.Y, ab.Z));
-    gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, 1, toAlpha(ab.Y, ab.Z));
+    gDrawer.drawLineV(to2d(gO), to2d(gA), Drawer.GREEN, 2, toAlpha(gA.Y, gA.Z));
+    gDrawer.drawLineV(to2d(gO), to2d(gB), Drawer.BLUE, 2, toAlpha(gB.Y, gB.Z));
+    gDrawer.drawLineV(to2d(gO), to2d(oaxb), Drawer.BLACK, 1, toAlpha(oaxb.Y, oaxb.Z));
+    gDrawer.drawLineVD(to2d(gB), to2d(ab), Drawer.GREEN, 1, toAlpha(ab.Y, ab.Z));
+    gDrawer.drawLineVD(to2d(gA), to2d(ab), Drawer.BLUE, 1, toAlpha(ab.Y, ab.Z));
 
     gDrawer.fillCircle(to2d(gO), 2, Drawer.BLACK);
     gDrawer.fillCircle(to2d(gA), 3, Drawer.GREEN, toAlpha(gA.Y, gA.Z));

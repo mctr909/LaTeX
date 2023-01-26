@@ -45,30 +45,20 @@ function main() {
     ona.scale(ona, 1/r);
     ona.add(gO, ona);
 
-    gDrawer.drawLine(new vec(gO.X, UNIT*-2), new vec(gO.X, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLine(new vec(UNIT, UNIT*-2), new vec(UNIT, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLine(new vec(-UNIT, UNIT*-2), new vec(-UNIT, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*0.5, UNIT*-2), new vec(UNIT*0.5, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*-0.5, UNIT*-2), new vec(UNIT*-0.5, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*1.5, UNIT*-2), new vec(UNIT*1.5, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*-1.5, UNIT*-2), new vec(UNIT*-1.5, UNIT*2), Drawer.GRAY);
-    gDrawer.drawLine(new vec(UNIT*-2, gO.Y), new vec(UNIT*2, gO.Y), Drawer.GRAY);
-    gDrawer.drawLine(new vec(UNIT*-2, UNIT), new vec(UNIT*2, UNIT), Drawer.GRAY);
-    gDrawer.drawLine(new vec(UNIT*-2, -UNIT), new vec(UNIT*2, -UNIT), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*-2, UNIT*0.5), new vec(UNIT*2, UNIT*0.5), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*-2, UNIT*-0.5), new vec(UNIT*2, UNIT*-0.5), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*-2, UNIT*1.5), new vec(UNIT*2, UNIT*1.5), Drawer.GRAY);
-    gDrawer.drawLineD(new vec(UNIT*-2, UNIT*-1.5), new vec(UNIT*2, UNIT*-1.5), Drawer.GRAY);
+    gDrawer.drawGrid(UNIT);
+
     gDrawer.drawCircleD(gO, UNIT*0.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
+    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
+    gDrawer.fillCircle(gA, 5, Drawer.GREEN);
+    gDrawer.fillCircle(ona, 5, Drawer.RED);
+
     gDrawer.drawArrow(gO, gA, Drawer.GREEN, 4);
     gDrawer.drawArrow(gO, ona, Drawer.RED);
-    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
-    gDrawer.fillCircle(gA, 4, Drawer.GREEN);
-    gDrawer.fillCircle(ona, 4, Drawer.RED);
+
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
 
