@@ -54,10 +54,10 @@ function main() {
     let q = new vec(ab.X * k + gA.X, ab.Y * k + gA.Y);
     let ak = new vec(ab.X * k*0.5 + gA.X, ab.Y * k*0.5 + gA.Y);
 
-    gDrawer.drawLineV(gA, gB, Drawer.GREEN, 3);
-    gDrawer.drawLineVD(gA, gP, Drawer.BLUE, 2);
-    gDrawer.drawLineVD(gP, q, Drawer.GRAY, 2);
-    gDrawer.drawLineVD(gA, q, Drawer.BLACK, 2);
+    gDrawer.drawLineV(gA, gB, Drawer.GREEN, 1, 3);
+    gDrawer.drawLineVD(gA, gP, Drawer.BLUE, 1, 2);
+    gDrawer.drawLineVD(gP, q, Drawer.GRAY);
+    gDrawer.drawLineVD(gA, q, Drawer.BLACK);
     gDrawer.fillCircle(gA, 4, Drawer.BLACK);
     gDrawer.fillCircle(gB, 4, Drawer.GREEN);
     gDrawer.fillCircle(gP, 4, Drawer.BLUE);

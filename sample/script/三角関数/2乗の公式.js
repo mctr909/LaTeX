@@ -125,9 +125,9 @@ function main() {
     gDrawer[1].drawPolyline(gSin2Line, SIN_COLOR);
     gDrawer[2].drawPolyline(gCos2Line, COS_COLOR);
     gDrawer[2].drawPolyline(gSin2Line, SIN_COLOR);
-    gDrawer[2].drawLineV(
-        new vec(WAVE_BEGIN, RADIUS),
-        new vec(WAVE_BEGIN + WAVE_LENGTH, RADIUS),
+    gDrawer[2].drawLine(
+        WAVE_BEGIN, RADIUS,
+        WAVE_BEGIN + WAVE_LENGTH, RADIUS,
         Drawer.ORANGE
     );
     gDrawer[3].drawPolyline(gCos2Line, COS_COLOR);

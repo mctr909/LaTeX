@@ -39,9 +39,9 @@ class LineInfo {
 			}
 		} else {
 			if (this.isDot) {
-				drawer.drawLineVD(this.posA, this.posB, this.color, this.width);
+				drawer.drawLineVD(this.posA, this.posB, this.color, 1, this.width);
 			} else {
-				drawer.drawLineV(this.posA, this.posB, this.color, this.width);
+				drawer.drawLineV(this.posA, this.posB, this.color, 1, this.width);
 			}
 		}
 	}
@@ -164,13 +164,59 @@ class Drawer {
 	}
 
 	/**
+	 * @param {number} ax
+	 * @param {number} ay
+	 * @param {number} bx
+	 * @param {number} by
+	 * @param {[number, number, number]} color
+	 * @param {number} alpha
+	 * @param {number} width
+	 */
+	drawLine(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
+		let x1 = this.#offset.X + ax;
+		let y1 = this.#offset.Y - ay;
+		let x2 = this.#offset.X + bx;
+		let y2 = this.#offset.Y - by;
+		this.#ctx.beginPath();
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
+		this.#ctx.lineWidth = width;
+		this.#ctx.moveTo(x1, y1);
+		this.#ctx.lineTo(x2, y2);
+		this.#ctx.setLineDash([]);
+		this.#ctx.stroke();
+	}
+
+	/**
+	 * @param {number} ax
+	 * @param {number} ay
+	 * @param {number} bx
+	 * @param {number} by
+	 * @param {[number, number, number]} color
+	 * @param {number} alpha
+	 * @param {number} width
+	 */
+	drawLineD(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
+		let x1 = this.#offset.X + ax;
+		let y1 = this.#offset.Y - ay;
+		let x2 = this.#offset.X + bx;
+		let y2 = this.#offset.Y - by;
+		this.#ctx.beginPath();
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
+		this.#ctx.lineWidth = width;
+		this.#ctx.moveTo(x1, y1);
+		this.#ctx.lineTo(x2, y2);
+		this.#ctx.setLineDash([3, 3]);
+		this.#ctx.stroke();
+	}
+
+	/**
 	 * @param {vec} a
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
-	 * @param {number} width
 	 * @param {number} alpha
+	 * @param {number} width
 	 */
-	drawLineV(a, b, color = [0,0,0], width = 1, alpha = 1) {
+	drawLineV(a, b, color = [0,0,0], alpha = 1, width = 1) {
 		this.drawLine(a.X, a.Y, b.X, b.Y, color, alpha, width);
 	}
 
@@ -178,10 +224,10 @@ class Drawer {
 	 * @param {vec} a
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
-	 * @param {number} width
 	 * @param {number} alpha
+	 * @param {number} width
 	 */
-	drawLineVD(a, b, color = [0,0,0], width = 1, alpha = 1) {
+	drawLineVD(a, b, color = [0,0,0], alpha = 1, width = 1) {
 		this.drawLineD(a.X, a.Y, b.X, b.Y, color, alpha, width);
 	}
 
@@ -190,11 +236,10 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
-	 * @param {number} alpha
 	 */
-	drawArrow(a, b, color = [0,0,0], width = 1, alpha = 1) {
-		this.drawLine(a.X, a.Y, b.X, b.Y, color, alpha, width);
-		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, alpha);
+	drawArrow(a, b, color = [0,0,0], width = 1) {
+		this.drawLine(a.X, a.Y, b.X, b.Y, color, 1, width);
+		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, 1);
 	}
 
 	/**
@@ -202,11 +247,10 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
 	 * @param {number} width
-	 * @param {number} alpha
 	 */
-	drawArrowD(a, b, color = [0,0,0], width = 1, alpha = 1) {
-		this.drawLineD(a.X, a.Y, b.X, b.Y, color, alpha, width);
-		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, alpha);
+	drawArrowD(a, b, color = [0,0,0], width = 1) {
+		this.drawLineD(a.X, a.Y, b.X, b.Y, color, 1, width);
+		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, 1);
 	}
 
 	/**
@@ -241,7 +285,7 @@ class Drawer {
 		}
 		this.#ctx.lineWidth = width;
 		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + alpha + ")";
-		this.#ctx.setLineDash([2, 2]);
+		this.#ctx.setLineDash([3, 3]);
 		this.#ctx.stroke();
 	}
 
@@ -270,6 +314,28 @@ class Drawer {
 	/**
 	 * @param {vec} center
 	 * @param {number} radius
+	 * @param {[number, number, number]} color
+	 * @param {number} width
+	 */
+	drawCircleD(center, radius, color = [0,0,0], width = 1) {
+		this.#ctx.beginPath();
+		this.#ctx.arc(
+			this.#offset.X + center.X,
+			this.#offset.Y - center.Y,
+			radius,
+			0 * Math.PI / 180,
+			360 * Math.PI / 180,
+			false
+		);
+		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
+		this.#ctx.lineWidth = width;
+		this.#ctx.setLineDash([3, 3]);
+		this.#ctx.stroke();
+	}
+
+	/**
+	 * @param {vec} center
+	 * @param {number} radius
 	 * @param {number} begin
 	 * @param {number} elapse
 	 * @param {[number, number, number]} color
@@ -288,28 +354,6 @@ class Drawer {
 		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
 		this.#ctx.lineWidth = width;
 		this.#ctx.setLineDash([]);
-		this.#ctx.stroke();
-	}
-
-	/**
-	 * @param {vec} center
-	 * @param {number} radius
-	 * @param {[number, number, number]} color
-	 * @param {number} width
-	 */
-	drawCircleD(center, radius, color = [0,0,0], width = 1) {
-		this.#ctx.beginPath();
-		this.#ctx.arc(
-			this.#offset.X + center.X,
-			this.#offset.Y - center.Y,
-			radius,
-			0 * Math.PI / 180,
-			360 * Math.PI / 180,
-			false
-		);
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
-		this.#ctx.lineWidth = width;
-		this.#ctx.setLineDash([2, 2]);
 		this.#ctx.stroke();
 	}
 
@@ -450,52 +494,6 @@ class Drawer {
 			b = 0;
 		}
 		return [r, g, b];
-	}
-
-	/**
-	 * @param {number} ax
-	 * @param {number} ay
-	 * @param {number} bx
-	 * @param {number} by
-	 * @param {[number, number, number]} color
-	 * @param {number} alpha
-	 * @param {number} width
-	 */
-	drawLine(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
-		let x1 = this.#offset.X + ax;
-		let y1 = this.#offset.Y - ay;
-		let x2 = this.#offset.X + bx;
-		let y2 = this.#offset.Y - by;
-		this.#ctx.beginPath();
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
-		this.#ctx.lineWidth = width;
-		this.#ctx.moveTo(x1, y1);
-		this.#ctx.lineTo(x2, y2);
-		this.#ctx.setLineDash([]);
-		this.#ctx.stroke();
-	}
-
-	/**
-	 * @param {number} ax
-	 * @param {number} ay
-	 * @param {number} bx
-	 * @param {number} by
-	 * @param {[number, number, number]} color
-	 * @param {number} alpha
-	 * @param {number} width
-	 */
-	drawLineD(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
-		let x1 = this.#offset.X + ax;
-		let y1 = this.#offset.Y - ay;
-		let x2 = this.#offset.X + bx;
-		let y2 = this.#offset.Y - by;
-		this.#ctx.beginPath();
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
-		this.#ctx.lineWidth = width;
-		this.#ctx.moveTo(x1, y1);
-		this.#ctx.lineTo(x2, y2);
-		this.#ctx.setLineDash([2, 2]);
-		this.#ctx.stroke();
 	}
 
 	/**

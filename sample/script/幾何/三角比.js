@@ -15,6 +15,10 @@ const GAP = 50;
 let gLineList = [];
 let gLabelList = [];
 /** @type{vec[]} */
+let gRSinLine = [];
+/** @type{vec[]} */
+let gRCosLine = [];
+/** @type{vec[]} */
 let gSinLine = [];
 /** @type{vec[]} */
 let gCosLine = [];
@@ -46,6 +50,8 @@ function init() {
 
     gLineList = [];
     gLabelList = [];
+    gRSinLine = [];
+    gRCosLine = [];
     gSinLine = [];
     gCosLine = [];
     gTanLines = [];
@@ -122,8 +128,10 @@ function init() {
     let tanList = [];
     for(let x=gWaveBegin; x<gWaveBegin + WAVE_LENGTH; x++) {
         let th = 2 * Math.PI * (x - gWaveBegin) / WAVE_LENGTH;
-        gCosLine.push(new vec(Math.cos(th) * gCircleRadius, -x));
-        gSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
+        gRCosLine.push(new vec(Math.cos(th) * gCircleRadius, -x));
+        gRSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
+        gCosLine.push(new vec(Math.cos(th) * UNIT_RADIUS, -x));
+        gSinLine.push(new vec(x, Math.sin(th) * UNIT_RADIUS));
         var t = Math.tan(th) * UNIT_RADIUS;
         if (t < -10 * UNIT_RADIUS || t > 10 * UNIT_RADIUS) {
             if (0 < tanList.length) {
@@ -161,8 +169,10 @@ function main() {
         let tanLine = gTanLines[i];
         gDrawer.drawPolyline(tanLine, TAN_COLOR, 0.5);
     }
-    gDrawer.drawPolyline(gCosLine, COS_COLOR, 0.5);
-    gDrawer.drawPolyline(gSinLine, SIN_COLOR, 0.5);
+    gDrawer.drawPolyline(gRCosLine, COS_COLOR, 0.5);
+    gDrawer.drawPolyline(gRSinLine, SIN_COLOR, 0.5);
+    gDrawer.drawPolylineD(gCosLine, COS_COLOR, 0.5);
+    gDrawer.drawPolylineD(gSinLine, SIN_COLOR, 0.5);
 
     if (gDrawer.isDrag) {
         gTheta = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);
@@ -187,10 +197,10 @@ function main() {
     gDrawer.drawLineVD(vp, wave_c, COS_COLOR);
     gDrawer.drawLineVD(vp, wave_s, SIN_COLOR);
     gDrawer.drawLineVD(vt, wave_t, TAN_COLOR);
-    gDrawer.drawLineV(vzero, vt, TAN_COLOR, 4);
-    gDrawer.drawLineV(vzero, vc, COS_COLOR, 4);
-    gDrawer.drawLineV(vc, vp, SIN_COLOR, 4);
-    gDrawer.drawLineV(vzero, vp, CIRCLE_COLOR, 4);
+    gDrawer.drawLineV(vzero, vt, TAN_COLOR, 1, 4);
+    gDrawer.drawLineV(vzero, vc, COS_COLOR, 1, 4);
+    gDrawer.drawLineV(vc, vp, SIN_COLOR, 1, 4);
+    gDrawer.drawLineV(vzero, vp, CIRCLE_COLOR, 1, 4);
     gDrawer.fillCircle(vp, 5, CIRCLE_COLOR);
     gDrawer.fillCircle(vt, 5, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 3, COS_COLOR);
