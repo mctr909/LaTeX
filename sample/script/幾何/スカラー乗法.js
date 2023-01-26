@@ -56,15 +56,14 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
-    gDrawer.fillCircle(gA, 5, Drawer.GREEN);
-    gDrawer.fillCircle(oka, 5, Drawer.BLUE);
-    gDrawer.fillCircle(oa_k, 5, Drawer.RED);
-
     gDrawer.drawArrow(gO, gA, Drawer.GREEN, 4);
     gDrawer.drawArrow(gO, oka, Drawer.BLUE);
     gDrawer.drawArrow(gO, oa_k, Drawer.RED);
 
+    gDrawer.fillCircle(gO, 2, Drawer.BLACK);
+    gDrawer.fillCircle(gA, 5, Drawer.GREEN);
+    gDrawer.fillCircle(oka, 5, Drawer.BLUE);
+    gDrawer.fillCircle(oa_k, 5, Drawer.RED);
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
 
