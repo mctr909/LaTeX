@@ -196,8 +196,8 @@ function main() {
     let lblC = new vec(vc.X * 0.5, -5);
     let lblS = new vec(vp.X + 3, vp.Y * 0.5 - 6);
     let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
-    let lblRS = new vec(wave_s.X + 2, wave_s.Y + 3);
-    let lblT = new vec(wave_t.X + 2, wave_t.Y + 3);
+    let lblRS = new vec(wave_s.X - 42, wave_s.Y + 3);
+    let lblT = new vec(wave_t.X - 33, wave_t.Y + 3);
     gDrawer.drawStringXY(16, 3, "θ", 20);
     gDrawer.drawString(lblR, "r", 24);
     gDrawer.drawStringC(lblC, "c", 24);
