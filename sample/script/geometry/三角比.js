@@ -181,7 +181,7 @@ function main() {
     gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 4);
     gDrawer.drawLine(vzero, vp, CIRCLE_COLOR, 1, 4);
     gDrawer.fillCircle(vp, 5, CIRCLE_COLOR);
-    gDrawer.fillCircle(vt, 5, TAN_COLOR);
+    gDrawer.fillCircle(vt, 3, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 3, COS_COLOR);
     gDrawer.fillCircle(wave_s, 3, SIN_COLOR);
     gDrawer.fillCircle(wave_t, 3, TAN_COLOR);
@@ -195,10 +195,16 @@ function main() {
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblC = new vec(vc.X * 0.5, -5);
     let lblS = new vec(vp.X + 3, vp.Y * 0.5 - 6);
+    let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
+    let lblRS = new vec(wave_s.X + 2, wave_s.Y + 3);
+    let lblT = new vec(wave_t.X + 2, wave_t.Y + 3);
     gDrawer.drawStringXY(16, 3, "θ", 20);
     gDrawer.drawString(lblR, "r", 24);
     gDrawer.drawStringC(lblC, "c", 24);
     gDrawer.drawString(lblS, "s", 24);
+    gDrawer.drawString(lblRC, "r cosθ", 16);
+    gDrawer.drawString(lblRS, "r sinθ", 16);
+    gDrawer.drawString(lblT, "tanθ", 16);
 
     var tan = round1d(Math.sin(gTheta) / Math.cos(gTheta), 1, 3);
     document.getElementById("lblR").innerHTML = gRadius;

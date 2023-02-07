@@ -54,10 +54,10 @@ class Drawer {
 	static BLACK = [0, 0, 0];
 	static GRAY = [167, 167, 167];
 	static WHITE = [211, 255, 255];
-	static RED = [255, 0, 0];
+	static RED = [231, 0, 0];
 	static GREEN = [0, 167, 0];
 	static BLUE = [0, 0, 255];
-	static ORANGE = [231, 147, 0];
+	static ORANGE = [221, 127, 0];
 	static PURPLE = [191, 0, 255];
 
 	/** @type {number} */
