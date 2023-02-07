@@ -2,15 +2,10 @@
 <html lang="ja">
 <meta charset="utf-8">
 <head>
+    <link href="style.css" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script type="text/javascript" src="../script/math.js"></script>
     <script type="text/javascript" src="../script/drawer.js"></script>
-    <style type="text/css">
-        span {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 20px;
-        }
-    </style>
 </head>
 <body>
 <table>
@@ -23,14 +18,14 @@
             &\theta = \cos^{-1}{\left( \frac{r^2+a^2-o^2}{2ra} \right)}
             \end{align}
         </span><br>
-        r(斜辺) = <span id="lblR" style="color:#0000FF;"></span><br>
-        a(隣辺) = <span id="lblA" style="color:#007F00;"></span><br>
-        o(対辺) = <span id="lblO" style="color:#DF0000;"></span><br>
-        θ = <span id="lblTheta" style="color:#000000;"></span><br>
-        cosθ = <span id="lblCos" style="color:#000000;"></span>
+        <span style="color:#00BF00;">r(斜辺) = </span><span id="lblR" style="color:#00BF00;"></span><br>
+        <span style="color:#0000FF;">a(隣辺) = </span><span id="lblA" style="color:#0000FF;"></span><br>
+        <span style="color:#DF0000;">o(対辺) = </span><span id="lblO" style="color:#DF0000;"></span><br>
+        <span style="color:#000000;">θ = </span><span id="lblTheta" style="color:#000000;"></span><br>
+        <span style="color:#000000;">cosθ = </span><span id="lblCos" style="color:#000000;"></span>
     </td>
     <td><canvas id="disp"></canvas></td>
 </tr>
 </table>
 </body>
-<script type="text/javascript" src="../script/幾何/余弦定理.js"></script>
+<script type="text/javascript" src="../script/geometry/余弦定理.js"></script>

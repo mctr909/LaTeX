@@ -7,7 +7,7 @@ const CIRCLE_COLOR = Drawer.GREEN;
 const COS_COLOR = Drawer.BLUE;
 const SIN_COLOR = Drawer.RED;
 const TAN_COLOR = Drawer.ORANGE;
-const UNIT_RADIUS = 75;
+const UNIT_RADIUS = 80;
 const WAVE_LENGTH = 360;
 const GAP = 50;
 
@@ -71,26 +71,6 @@ function init() {
         0, -gWaveBegin - WAVE_LENGTH,
         0, Math.max(UNIT_RADIUS, gCircleRadius),
         0.5, AXIZ_COLOR
-    ));
-    gLineList.push(new LineInfo(
-        0, gCircleRadius,
-        gWaveBegin + WAVE_LENGTH, gCircleRadius,
-        0.5, SIN_COLOR
-    ));
-    gLineList.push(new LineInfo(
-        0, -gCircleRadius,
-        gWaveBegin + WAVE_LENGTH, -gCircleRadius,
-        0.5, SIN_COLOR
-    ));
-    gLineList.push(new LineInfo(
-        gCircleRadius, -gWaveBegin - WAVE_LENGTH,
-        gCircleRadius, 0,
-        0.5, COS_COLOR
-    ));
-    gLineList.push(new LineInfo(
-        -gCircleRadius, -gWaveBegin - WAVE_LENGTH,
-        -gCircleRadius, 0,
-        0.5, COS_COLOR
     ));
     for (let deg=0; deg<=360; deg += 15) {
         let x = gWaveBegin + WAVE_LENGTH * deg / 360.0;
@@ -163,7 +143,6 @@ function main() {
     }
 
     gDrawer.drawCircleD(new vec(), UNIT_RADIUS, MEASURE_COLOR);
-    gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR);
 
     for (let i=0; i<gTanLines.length; i++) {
         let tanLine = gTanLines[i];
@@ -194,9 +173,9 @@ function main() {
     gDrawer.drawLine(vy, wave_c);
     gDrawer.drawLine(vx, wave_s);
     gDrawer.drawLine(vx, wave_t);
-    gDrawer.drawLineD(vp, wave_c, COS_COLOR);
-    gDrawer.drawLineD(vp, wave_s, SIN_COLOR);
-    gDrawer.drawLineD(vt, wave_t, TAN_COLOR);
+    gDrawer.drawLine(vp, wave_c, COS_COLOR);
+    gDrawer.drawLine(vp, wave_s, SIN_COLOR);
+    gDrawer.drawLine(vt, wave_t, TAN_COLOR);
     gDrawer.drawLine(vzero, vt, TAN_COLOR, 1, 4);
     gDrawer.drawLine(vzero, vc, COS_COLOR, 1, 4);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 4);

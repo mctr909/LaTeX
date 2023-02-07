@@ -2,10 +2,10 @@
 <html lang="ja">
 <meta charset="utf-8">
 <head>
-    <link href="style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
-    <script type="text/javascript" src="../script/math.js"></script>
-    <script type="text/javascript" src="../script/drawer.js"></script>
+    <script type="text/javascript" src="../../script/math.js"></script>
+    <script type="text/javascript" src="../../script/drawer.js"></script>
 </head>
 <body>
 <table>
@@ -14,7 +14,7 @@
 		\begin{align}
 		\overrightarrow{\mathrm{a}}&=(a_1, a_2, \cdots, a_n)\\
 		\overrightarrow{\mathrm{b}}&=(b_1, b_2, \cdots, b_n)\\
-		\Rightarrow \overrightarrow{\mathrm{a}} \cdot \overrightarrow{\mathrm{b}}&:=a_1 b_1 + a_2 b_2 + \cdots + a_n b_n
+		\Rightarrow \overrightarrow{\mathrm{a}}+\overrightarrow{\mathrm{b}}&:=(a_1+b_1, a_2+b_2, \cdots, a_n+b_n)
 		\end{align}
     </td>
 </tr>
@@ -27,14 +27,12 @@
     <td>(<span id="dispB"></span>)</td>
 </tr>
 <tr>
-    <td style="width:40px;">\begin{align}\overrightarrow{\mathrm{a}} \cdot \overrightarrow{\mathrm{b}}\end{align}</td>
-    <td><span id="dispAB"></span></td>
+    <td style="width:30px;">\begin{align}\overrightarrow{\mathrm{a}} + \overrightarrow{\mathrm{b}}\end{align}</td>
+    <td>(<span id="dispAB"></span>)</td>
 </tr>
 <tr>
-    <td colspan="2">
-        <canvas id="disp"></canvas>
-    </td>
+    <td colspan="2"><canvas id="disp"></canvas></td>
 </tr>
 </table>
 </body>
-<script type="text/javascript" src="../script/幾何/内積.js"></script>
+<script type="text/javascript" src="../../script/geometry/vector/加法.js"></script>

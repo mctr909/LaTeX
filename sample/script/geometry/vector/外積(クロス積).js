@@ -1,5 +1,6 @@
-/// <reference path="../math.js" />
-/// <reference path="../drawer.js" />
+/// <reference path="../../math.js" />
+/// <reference path="../../drawer.js" />
+
 const UNIT = 50;
 Drawer.CursorDiv = 5;
 let gDrawerXY = new Drawer("dispXY", 210, 210);

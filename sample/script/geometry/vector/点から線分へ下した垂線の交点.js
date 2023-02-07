@@ -1,7 +1,7 @@
-/// <reference path="../math.js" />
-/// <reference path="../drawer.js" />
-const UNIT = 200;
+/// <reference path="../../math.js" />
+/// <reference path="../../drawer.js" />
 
+const UNIT = 200;
 let gDrawer = new Drawer("disp", 450, 400);
 
 let gA = new vec(UNIT * 0.0, UNIT * 0.0);

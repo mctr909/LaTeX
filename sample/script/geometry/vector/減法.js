@@ -1,16 +1,16 @@
-/// <reference path="../math.js" />
-/// <reference path="../drawer.js" />
-const UNIT = 100;
+/// <reference path="../../math.js" />
+/// <reference path="../../drawer.js" />
 
+const UNIT = 100;
 let gDrawer = new Drawer("disp", 400, 400);
 
 let ofsX = 0.0 * UNIT;
 let ofsY = 0.0 * UNIT;
 let radiusA = 1.0 * UNIT;
-let radiusB = 1.5 * UNIT;
+let radiusB = 1.0 * UNIT;
 let gO = new vec(ofsX, ofsY);
-let gA = new vec(radiusA*Math.cos(Math.PI*30/180) + ofsX, radiusA*Math.sin(Math.PI*30/180) + ofsY);
-let gB = new vec(radiusB*Math.cos(Math.PI*150/180) + ofsX, radiusB*Math.sin(Math.PI*150/180) + ofsY);
+let gA = new vec(radiusA*Math.cos(Math.PI*15/180) + ofsX, radiusA*Math.sin(Math.PI*15/180) + ofsY);
+let gB = new vec(radiusB*Math.cos(Math.PI*240/180) + ofsX, radiusB*Math.sin(Math.PI*240/180) + ofsY);
 let gPaDrag = false;
 let gPbDrag = false;
 
@@ -49,6 +49,13 @@ function main() {
     roundVec(gA, gA, 2, UNIT, gO);
     roundVec(gB, gB, 2, UNIT, gO);
 
+    let ab = new vec();
+    let mb = new vec();
+    gA.sub(gB, ab);
+    ab.add(gO, ab);
+    gB.sub(gO, mb);
+    gO.sub(mb, mb);
+
     gDrawer.drawGrid(UNIT);
 
     gDrawer.drawCircleD(gO, UNIT*0.5, Drawer.GRAY);
@@ -57,24 +64,31 @@ function main() {
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
     gDrawer.fillCircle(gO, 2, Drawer.BLACK);
+    gDrawer.fillCircle(mb, 2, Drawer.BLACK);
     gDrawer.fillCircle(gA, 5, Drawer.GREEN);
     gDrawer.fillCircle(gB, 5, Drawer.BLUE);
+    gDrawer.fillCircle(ab, 5, Drawer.RED);
 
     gDrawer.drawArrow(gO, gA, Drawer.GREEN, 4);
     gDrawer.drawArrow(gO, gB, Drawer.BLUE, 4);
+    gDrawer.drawArrowD(gA, ab, Drawer.BLUE, 2);
+    gDrawer.drawArrowD(gO, mb, Drawer.BLUE, 2);
+    gDrawer.drawArrowD(mb, ab, Drawer.GREEN, 2);
 
     gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
     gDrawer.drawString(gB, "b", 20);
+    gDrawer.drawString(mb, "-b", 20);
 
     let oa = new vec();
     let ob = new vec();
     gA.sub(gO, oa);
     gB.sub(gO, ob);
+    ab.sub(gO, ab);
 
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round2d(ob, 1/UNIT);
-    document.getElementById("dispAB").innerHTML = round1d(oa.X*ob.X + oa.Y*ob.Y, 1/UNIT/UNIT);
+    document.getElementById("dispAB").innerHTML = round2d(ab, 1/UNIT);
 
     requestNextAnimationFrame(main);
 }

@@ -1,10 +1,10 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
+
 const UNIT = 200;
-const A_COLOR = Drawer.GREEN;
-const B_COLOR = Drawer.BLUE;
-const C_COLOR = Drawer.RED;
-const O_COLOR = Drawer.BLACK;
+const R_COLOR = Drawer.GREEN;
+const A_COLOR = Drawer.BLUE;
+const O_COLOR = Drawer.RED;
 
 let gDrawer = new Drawer("disp", 450, 400);
 
@@ -63,13 +63,13 @@ function main() {
         dangle += 2*Math.PI;
     }
 
-    gDrawer.drawArc(gO, 20, da.arg, dangle + da.arg, B_COLOR, 2);
+    gDrawer.drawArc(gO, 20, da.arg, dangle + da.arg, R_COLOR, 2);
     gDrawer.drawLine(gO, gA, A_COLOR, 1, 2);
-    gDrawer.drawLine(gO, gB, B_COLOR, 1, 2);
-    gDrawer.drawLine(gA, gB, C_COLOR, 1, 2);
+    gDrawer.drawLine(gO, gB, R_COLOR, 1, 2);
+    gDrawer.drawLine(gA, gB, O_COLOR, 1, 2);
     gDrawer.fillCircle(gA, 5, A_COLOR);
-    gDrawer.fillCircle(gB, 5, B_COLOR);
-    gDrawer.fillCircle(gO, 5, O_COLOR);
+    gDrawer.fillCircle(gB, 5, R_COLOR);
+    gDrawer.fillCircle(gO, 5);
 
     let lblA = new vec();
     let lblR = new vec();

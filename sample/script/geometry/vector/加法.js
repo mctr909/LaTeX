@@ -1,7 +1,7 @@
-/// <reference path="../math.js" />
-/// <reference path="../drawer.js" />
-const UNIT = 100;
+/// <reference path="../../math.js" />
+/// <reference path="../../drawer.js" />
 
+const UNIT = 100;
 let gDrawer = new Drawer("disp", 400, 400);
 
 let ofsX = 0.0 * UNIT;
