@@ -69,7 +69,6 @@ function main() {
     gDrawer.drawArrowD(gO, mb, Drawer.BLUE, 2);
     gDrawer.drawArrowD(mb, ab, Drawer.GREEN, 2);
 
-    gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
     gDrawer.drawString(gB, "b", 20);
     gDrawer.drawString(mb, "-b", 20);

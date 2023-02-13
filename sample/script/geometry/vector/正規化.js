@@ -55,7 +55,6 @@ function main() {
     gDrawer.drawArrow(gO, ona, Drawer.RED, 2);
     gDrawer.drawArrow(gO, gA, Drawer.GREEN, 2);
 
-    gDrawer.drawString(gO, "O", 20);
     gDrawer.drawString(gA, "a", 20);
 
     let oa = new vec();

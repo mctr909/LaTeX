@@ -209,11 +209,10 @@ function main() {
     gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, toAlpha(ab.Y, ab.Z));
     gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, toAlpha(ab.Y, ab.Z));
 
-    gDrawer.fillCircle(to2d(gO), 2, Drawer.BLACK);
     gDrawer.fillCircle(to2d(gA), 3, Drawer.GREEN, toAlpha(gA.Y, gA.Z));
     gDrawer.fillCircle(to2d(gB), 3, Drawer.BLUE, toAlpha(gB.Y, gB.Z));
     gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Y, ab.Z));
-    gDrawer.fillCircle(to2d(oaxb), 3, Drawer.BLACK, toAlpha(oaxb.Y, oaxb.Z));
+    gDrawer.fillCircle(to2d(oaxb), 3, Drawer.RED, toAlpha(oaxb.Y, oaxb.Z));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round3d(ob, 1/UNIT);
