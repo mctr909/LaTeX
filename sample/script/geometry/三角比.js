@@ -7,7 +7,7 @@ const CIRCLE_COLOR = Drawer.GREEN;
 const COS_COLOR = Drawer.BLUE;
 const SIN_COLOR = Drawer.RED;
 const TAN_COLOR = Drawer.ORANGE;
-const UNIT_RADIUS = 80;
+const UNIT_RADIUS = 100;
 const WAVE_LENGTH = 360;
 const GAP = 50;
 
@@ -102,7 +102,7 @@ function init() {
     gLineList.push(new LineInfo(
         UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
         UNIT_RADIUS, gWaveBegin + WAVE_LENGTH,
-        1, TAN_COLOR
+        3, TAN_COLOR
     ));
 
     let tanList = [];
@@ -181,7 +181,7 @@ function main() {
     gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 4);
     gDrawer.drawLine(vzero, vp, CIRCLE_COLOR, 1, 4);
     gDrawer.fillCircle(vp, 5, CIRCLE_COLOR);
-    gDrawer.fillCircle(vt, 3, TAN_COLOR);
+    gDrawer.fillCircle(vt, 5, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 3, COS_COLOR);
     gDrawer.fillCircle(wave_s, 3, SIN_COLOR);
     gDrawer.fillCircle(wave_t, 3, TAN_COLOR);
