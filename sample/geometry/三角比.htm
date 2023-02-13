@@ -2,7 +2,7 @@
 <html lang="ja">
 <meta charset="utf-8">
 <head>
-    <link href="style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script type="text/javascript" src="../script/math.js"></script>
     <script type="text/javascript" src="../script/drawer.js"></script>
@@ -20,10 +20,11 @@
             \end{align}
             [ 三平方の定理 ]
             \begin{align}
-            r^2 &= c^2 + s^2
+            r^2 &= c^2 + s^2\\
+            &= \left(r\cos{\theta}\right)^2 + \left(r\sin{\theta}\right)^2
             \end{align}
         </span>
-        <input type="range" id="trbR" min="50" max="200" value="200" style="width: 150px;" /><br><br>
+        <input type="range" id="trbR" min="50" max="200" value="200" style="width: 200px;" /><br>
         <span style="color:#00CF00;">r = </span><span id="lblR" style="color:#00CF00;"></span><br>
         <span style="color:#0000FF;">c = </span><span id="lblC" style="color:#0000FF;"></span><br>
         <span style="color:#FF0000;">s = </span><span id="lblS" style="color:#FF0000;"></span><br>

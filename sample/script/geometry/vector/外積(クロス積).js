@@ -144,50 +144,35 @@ function main() {
     axb.add(gO, oaxb);
 
     /* XY */
-    gDrawerXY.drawLine(gO, gA, Drawer.GREEN, 1, 3);
-    gDrawerXY.drawLine(gO, gB, Drawer.BLUE, 1, 3);
-    gDrawerXY.drawLine(gO, oaxb, Drawer.BLACK);
+    gDrawerXY.drawArrow(gO, gA, Drawer.GREEN, 1, 2);
+    gDrawerXY.drawArrow(gO, gB, Drawer.BLUE, 1, 2);
+    gDrawerXY.drawArrow(gO, oaxb, Drawer.RED);
     gDrawerXY.drawLineD(gB, ab, Drawer.GREEN);
     gDrawerXY.drawLineD(gA, ab, Drawer.BLUE);
 
-    gDrawerXY.fillCircle(gO, 2, Drawer.BLACK);
-    gDrawerXY.fillCircle(gA, 4, Drawer.GREEN);
-    gDrawerXY.fillCircle(gB, 4, Drawer.BLUE);
     gDrawerXY.fillCircle(ab, 2, Drawer.BLACK);
-    gDrawerXY.fillCircle(oaxb, 3, Drawer.BLACK);
-
     gDrawerXY.drawString(gA, "a", 20);
     gDrawerXY.drawString(gB, "b", 20);
 
     /* ZY */
-    gDrawerZY.drawLineXY(gO.Z, gO.Y, gA.Z, gA.Y, Drawer.GREEN, 1, 3);
-    gDrawerZY.drawLineXY(gO.Z, gO.Y, gB.Z, gB.Y, Drawer.BLUE, 1, 3);
-    gDrawerZY.drawLineXY(gO.Z, gO.Y, oaxb.Z, oaxb.Y, Drawer.BLACK, 1, 1);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gA.Z, gA.Y, Drawer.GREEN, 1, 2);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gB.Z, gB.Y, Drawer.BLUE, 1, 2);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, oaxb.Z, oaxb.Y, Drawer.RED, 1, 1);
     gDrawerZY.drawLineXYD(gB.Z, gB.Y, ab.Z, ab.Y, Drawer.GREEN);
     gDrawerZY.drawLineXYD(gA.Z, gA.Y, ab.Z, ab.Y, Drawer.BLUE);
 
-    gDrawerZY.fillCircleXY(gO.Z, gO.Y, 2, Drawer.BLACK);
-    gDrawerZY.fillCircleXY(gA.Z, gA.Y, 4, Drawer.GREEN);
-    gDrawerZY.fillCircleXY(gB.Z, gB.Y, 4, Drawer.BLUE);
     gDrawerZY.fillCircleXY(ab.Z, ab.Y, 2, Drawer.BLACK);
-    gDrawerZY.fillCircleXY(oaxb.Z, oaxb.Y, 3, Drawer.BLACK);
-
     gDrawerZY.drawStringXY(gA.Z, gA.Y, "a", 20);
     gDrawerZY.drawStringXY(gB.Z, gB.Y, "b", 20);
 
     /* XZ */
-    gDrawerXZ.drawLineXY(gO.X, gO.Z, gA.X, gA.Z, Drawer.GREEN, 1, 3);
-    gDrawerXZ.drawLineXY(gO.X, gO.Z, gB.X, gB.Z, Drawer.BLUE, 1, 3);
-    gDrawerXZ.drawLineXY(gO.X, gO.Z, oaxb.X, oaxb.Z, Drawer.BLACK, 1, 1);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gA.X, gA.Z, Drawer.GREEN, 1, 2);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gB.X, gB.Z, Drawer.BLUE, 1, 2);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, oaxb.X, oaxb.Z, Drawer.RED, 1, 1);
     gDrawerXZ.drawLineXYD(gB.X, gB.Z, ab.X, ab.Z, Drawer.GREEN);
     gDrawerXZ.drawLineXYD(gA.X, gA.Z, ab.X, ab.Z, Drawer.BLUE);
 
-    gDrawerXZ.fillCircleXY(gO.X, gO.Z, 2, Drawer.BLACK);
-    gDrawerXZ.fillCircleXY(gA.X, gA.Z, 4, Drawer.GREEN);
-    gDrawerXZ.fillCircleXY(gB.X, gB.Z, 4, Drawer.BLUE);
     gDrawerXZ.fillCircleXY(ab.X, ab.Z, 2, Drawer.BLACK);
-    gDrawerXZ.fillCircleXY(oaxb.X, oaxb.Z, 3, Drawer.BLACK);
-
     gDrawerXZ.drawStringXY(gA.X, gA.Z, "a", 20);
     gDrawerXZ.drawStringXY(gB.X, gB.Z, "b", 20);
 
@@ -220,7 +205,7 @@ function main() {
 
     gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, toAlpha(gA.Y, gA.Z), 2);
     gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, toAlpha(gB.Y, gB.Z), 2);
-    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.BLACK, toAlpha(oaxb.Y, oaxb.Z));
+    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.RED, toAlpha(oaxb.Y, oaxb.Z));
     gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, toAlpha(ab.Y, ab.Z));
     gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, toAlpha(ab.Y, ab.Z));
 

@@ -232,6 +232,19 @@ class Drawer {
 	}
 
 	/**
+	 * @param {vec} ax
+	 * @param {vec} ay
+	 * @param {vec} bx
+	 * @param {vec} by
+	 * @param {[number, number, number]} color
+	 * @param {number} width
+	 */
+	drawArrowXY(ax, ay, bx, by, color = [0,0,0], width = 1) {
+		this.drawLineXY(ax, ay, bx, by, color, 1, width);
+		this.#fillArrow(ax, ay, bx, by, color, 1);
+	}
+
+	/**
 	 * @param {vec} a
 	 * @param {vec} b
 	 * @param {[number, number, number]} color
@@ -527,7 +540,7 @@ class Drawer {
 	 * @param {number} alpha
 	 */
 	#fillArrow(ax, ay, bx, by, color, alpha) {
-		const SIZE = 15;
+		const SIZE = 13;
 		let polygon = [
 			new vec(0, 0),
 			new vec(-1, 0.33),
