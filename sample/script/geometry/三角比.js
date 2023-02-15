@@ -3,12 +3,12 @@
 
 const AXIZ_COLOR = Drawer.BLACK;
 const MEASURE_COLOR = Drawer.BLACK;
-const CIRCLE_COLOR = Drawer.GREEN;
-const COS_COLOR = Drawer.BLUE;
-const SIN_COLOR = Drawer.RED;
-const TAN_COLOR = Drawer.ORANGE;
+const CIRCLE_COLOR = Drawer.BLACK;
+const COS_COLOR = Drawer.BLACK;
+const SIN_COLOR = Drawer.BLACK;
+const TAN_COLOR = Drawer.BLACK;
 const UNIT_RADIUS = 80;
-const WAVE_LENGTH = 250;
+const WAVE_LENGTH = 240;
 const GAP = 50;
 
 /** @type{LineInfo[]} */
@@ -18,14 +18,8 @@ let gLabelList = [];
 let gRSinLine = [];
 /** @type{vec[]} */
 let gRCosLine = [];
-/** @type{vec[]} */
-let gSinLine = [];
-/** @type{vec[]} */
-let gCosLine = [];
 /** @type{Array<vec[]>} */
 let gTanLines = [];
-/** @type{Array<vec[]>} */
-let gTanDLines = [];
 let gRadius = 2;
 let gTheta = Math.PI / 4;
 
@@ -33,7 +27,7 @@ let gCircleRadius = UNIT_RADIUS * gRadius;
 let gWaveBegin = gCircleRadius + GAP;
 
 let gDrawer = new Drawer("disp",
-    gWaveBegin * 2 + WAVE_LENGTH + GAP,
+    gWaveBegin * 2 + WAVE_LENGTH,
     (WAVE_LENGTH + gCircleRadius + GAP) * 1.5 + 40
 );
 
@@ -54,25 +48,22 @@ function init() {
     gLabelList = [];
     gRSinLine = [];
     gRCosLine = [];
-    gSinLine = [];
-    gCosLine = [];
     gTanLines = [];
-    gTanDLines = [];
 
-    gRadius = document.getElementById("trbR").value / 100.0;
+    gRadius = document.getElementById("trbR").value / 4.0;
     gCircleRadius = UNIT_RADIUS * gRadius;
     gWaveBegin = UNIT_RADIUS * 2 + GAP;
 
-    gDrawer.Offset = new vec(gWaveBegin, gDrawer.Height * 9 / 32);
+    gDrawer.Offset = new vec(gWaveBegin - GAP + 5, gDrawer.Height / 4 + 40);
 
     gLineList.push(new LineInfo(
-        -Math.max(UNIT_RADIUS, gCircleRadius), 0,
+        -gCircleRadius, 0,
         gWaveBegin + WAVE_LENGTH, 0,
         0.5, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
         0, -gWaveBegin - WAVE_LENGTH,
-        0, Math.max(UNIT_RADIUS, gCircleRadius),
+        0, gCircleRadius,
         0.5, AXIZ_COLOR
     ));
     for (let deg=0; deg<=360; deg += 15) {
@@ -115,40 +106,28 @@ function init() {
     }
 
     gLineList.push(new LineInfo(
-        UNIT_RADIUS, -gWaveBegin - WAVE_LENGTH,
-        UNIT_RADIUS, gWaveBegin + WAVE_LENGTH,
-        0.5, Drawer.BLACK, true
-    ));
-    gLineList.push(new LineInfo(
-        gCircleRadius, -gWaveBegin - WAVE_LENGTH,
-        gCircleRadius, gWaveBegin + WAVE_LENGTH,
-        3, TAN_COLOR
+        gCircleRadius, -gDrawer.Height,
+        gCircleRadius, gDrawer.Height,
+        1, TAN_COLOR, true
     ));
 
     let tanList = [];
-    let tanDList = [];
     for(let x=gWaveBegin; x<gWaveBegin + WAVE_LENGTH; x++) {
         let th = 2 * Math.PI * (x - gWaveBegin) / WAVE_LENGTH;
         gRCosLine.push(new vec(Math.cos(th) * gCircleRadius, -x));
         gRSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
-        gCosLine.push(new vec(Math.cos(th) * UNIT_RADIUS, -x));
-        gSinLine.push(new vec(x, Math.sin(th) * UNIT_RADIUS));
         var t = Math.tan(th);
-        if (t < -10 || t > 10) {
+        if (t < -20 || t > 20) {
             if (0 < tanList.length) {
                 gTanLines.push(tanList);
-                gTanDLines.push(tanDList);
                 tanList = [];
-                tanDList = [];
             }
             continue;
         }
         tanList.push(new vec(x, t * gCircleRadius));
-        tanDList.push(new vec(x, t * UNIT_RADIUS));
     }
     if (0 < tanList.length) {
         gTanLines.push(tanList);
-        gTanDLines.push(tanDList);
     }
 }
 
@@ -167,19 +146,14 @@ function main() {
         }
     }
 
-    gDrawer.drawCircleD(new vec(), UNIT_RADIUS, MEASURE_COLOR, 0.5);
     gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR, 0.5);
 
     for (let i=0; i<gTanLines.length; i++) {
         let tanLine = gTanLines[i];
-        let tanDLine = gTanDLines[i];
-        gDrawer.drawPolyline(tanLine, TAN_COLOR, 1);
-        gDrawer.drawPolylineD(tanDLine, Drawer.BLACK, 0.25);
+        gDrawer.drawPolylineD(tanLine, TAN_COLOR, 1);
     }
     gDrawer.drawPolyline(gRCosLine, COS_COLOR, 0.5);
     gDrawer.drawPolyline(gRSinLine, SIN_COLOR, 0.5);
-    gDrawer.drawPolylineD(gCosLine, Drawer.BLACK, 0.25);
-    gDrawer.drawPolylineD(gSinLine, Drawer.BLACK, 0.25);
 
     if (gDrawer.isDrag) {
         gTheta = Math.atan2(gDrawer.cursor.Y, gDrawer.cursor.X);
@@ -198,13 +172,20 @@ function main() {
     let wave_c = new vec(vp.X, -x);
     let wave_s = new vec(x, vp.Y);
     let wave_t = new vec(x, vt.Y);
+
+    let dangle = vp.arg;
+    if (dangle < 0) {
+        dangle += 2*Math.PI;
+    }
+    gDrawer.drawArc(new vec(), 18, 0, dangle, CIRCLE_COLOR, 3);
+
     gDrawer.drawLine(vy, wave_c);
     gDrawer.drawLine(vx, wave_s);
     gDrawer.drawLine(vx, wave_t);
-    gDrawer.drawLine(vp, wave_c, COS_COLOR);
-    gDrawer.drawLine(vp, wave_s, SIN_COLOR);
-    gDrawer.drawLine(vt, wave_t, TAN_COLOR);
-    gDrawer.drawLine(vzero, vt, TAN_COLOR, 1, 4);
+    gDrawer.drawLine(vp, wave_c, COS_COLOR, 0.5);
+    gDrawer.drawLine(vp, wave_s, SIN_COLOR, 0.5);
+    gDrawer.drawLine(vt, wave_t, TAN_COLOR, 0.5);
+    gDrawer.drawLine(vzero, vt, TAN_COLOR, 1);
     gDrawer.drawLine(vzero, vc, COS_COLOR, 1, 4);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 4);
     gDrawer.drawLine(vzero, vp, CIRCLE_COLOR, 1, 4);
@@ -214,19 +195,17 @@ function main() {
     gDrawer.fillCircle(wave_s, 3, SIN_COLOR);
     gDrawer.fillCircle(wave_t, 3, TAN_COLOR);
 
-    let dangle = vp.arg;
-    if (dangle < 0) {
-        dangle += 2*Math.PI;
-    }
-    gDrawer.drawArc(new vec(), 16, 0, dangle, CIRCLE_COLOR, 2);
-
+    let lblP = new vec(vp.X - 6, vp.Y + 6);
+    let lblT = new vec(gCircleRadius - 6, wave_t.Y + 6);
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblX = new vec(vc.X * 0.5, -5);
-    let lblY = new vec(vp.X + 3, vp.Y * 0.5 - 6);
+    let lblY = new vec(vp.X + 3, vp.Y * 0.5 - 3);
     let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
-    let lblRS = new vec(wave_s.X - 50, wave_s.Y + 3);
-    let lblRT = new vec(wave_t.X - 52, wave_t.Y + 3);
-    gDrawer.drawStringXY(16, 3, "θ", 20);
+    let lblRS = new vec(wave_s.X - 54, wave_s.Y + 3);
+    let lblRT = new vec(wave_t.X - 56, wave_t.Y + 3);
+    gDrawer.drawStringXY(17, 3, "θ", 20);
+    gDrawer.drawString(lblP, "P", 20);
+    gDrawer.drawString(lblT, "T", 20);
     gDrawer.drawString(lblR, "r", 24);
     gDrawer.drawStringC(lblX, "x", 24);
     gDrawer.drawString(lblY, "y", 24);

@@ -15,17 +15,17 @@
         \begin{align}
         \cos{\theta} &= \frac{x}{r}\\
         \sin{\theta} &= \frac{y}{r}\\
-        \tan{\theta} &= \frac{y}{x}
+        \tan{\theta} &= \frac{y}{x}\\
+        &= \frac{y/r}{x/r} = \frac{\sin{\theta}}{\cos{\theta}}
         \end{align}
-        [ 三平方の定理 ]
         \begin{align}
-        r^2 &= x^2 + y^2\\
-        &= \left(r\cos{\theta}\right)^2 + \left(r\sin{\theta}\right)^2
+        &\mathrm{P}\left(x, y\right)=\left(r\cos{\theta}, r\sin{\theta}\right)\\
+        &\mathrm{T}\left(r, r\frac{y}{x}\right)=\left(r, r\tan{\theta}\right)
         \end{align}
-        <input type="range" id="trbR" min="50" max="200" value="200" style="width: 200px;" /><br>
-        <span style="color:#00CF00;">r = </span><span id="lblR" style="color:#00CF00;"></span><br>
-        <span style="color:#0000FF;">x = </span><span id="lblX" style="color:#0000FF;"></span><br>
-        <span style="color:#FF0000;">y = </span><span id="lblY" style="color:#FF0000;"></span><br>
+        <input type="range" id="trbR" min="2" max="8" value="8" style="width: 200px;" /><br>
+        <span>r = </span><span id="lblR"></span><br>
+        <span>x = </span><span id="lblX"></span><br>
+        <span>y = </span><span id="lblY"></span><br>
         <span>cosθ = </span><span id="lblCos"></span><br>
         <span>sinθ = </span><span id="lblSin"></span><br>
         <span>tanθ = </span><span id="lblTan"></span>
