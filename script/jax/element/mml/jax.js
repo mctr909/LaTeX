@@ -1,3 +1,4 @@
+///<reference path="../../../MathJax.js"/>
 MathJax.ElementJax.mml = MathJax.ElementJax(
     { mimeType: "jax/mml" },
     {

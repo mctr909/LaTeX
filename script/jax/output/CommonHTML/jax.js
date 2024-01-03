@@ -1,3 +1,4 @@
+///<reference path="../../../MathJax.js"/>
 (function(o, f, m, a) {
     var d;
     var g = MathJax.Object.isArray;
