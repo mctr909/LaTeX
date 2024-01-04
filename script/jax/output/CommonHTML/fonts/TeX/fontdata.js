@@ -466,7 +466,39 @@
             "\u20DB": "...",
             "\u20DC": "...."
         },
-        PLANE1MAP: [[119808, 119833, 65, c.VARIANT.BOLD], [119834, 119859, 97, c.VARIANT.BOLD], [119860, 119885, 65, c.VARIANT.ITALIC], [119886, 119911, 97, c.VARIANT.ITALIC], [119912, 119937, 65, c.VARIANT.BOLDITALIC], [119938, 119963, 97, c.VARIANT.BOLDITALIC], [119964, 119989, 65, c.VARIANT.SCRIPT], [120068, 120093, 65, c.VARIANT.FRAKTUR], [120094, 120119, 97, c.VARIANT.FRAKTUR], [120120, 120145, 65, c.VARIANT.DOUBLESTRUCK], [120172, 120197, 65, c.VARIANT.BOLDFRAKTUR], [120198, 120223, 97, c.VARIANT.BOLDFRAKTUR], [120224, 120249, 65, c.VARIANT.SANSSERIF], [120250, 120275, 97, c.VARIANT.SANSSERIF], [120276, 120301, 65, c.VARIANT.BOLDSANSSERIF], [120302, 120327, 97, c.VARIANT.BOLDSANSSERIF], [120328, 120353, 65, c.VARIANT.SANSSERIFITALIC], [120354, 120379, 97, c.VARIANT.SANSSERIFITALIC], [120432, 120457, 65, c.VARIANT.MONOSPACE], [120458, 120483, 97, c.VARIANT.MONOSPACE], [120488, 120513, 913, c.VARIANT.BOLD], [120546, 120570, 913, c.VARIANT.ITALIC], [120572, 120603, 945, c.VARIANT.ITALIC], [120604, 120628, 913, c.VARIANT.BOLDITALIC], [120630, 120661, 945, c.VARIANT.BOLDITALIC], [120662, 120686, 913, c.VARIANT.BOLDSANSSERIF], [120720, 120744, 913, c.VARIANT.SANSSERIFBOLDITALIC], [120782, 120791, 48, c.VARIANT.BOLD], [120802, 120811, 48, c.VARIANT.SANSSERIF], [120812, 120821, 48, c.VARIANT.BOLDSANSSERIF], [120822, 120831, 48, c.VARIANT.MONOSPACE]],
+        PLANE1MAP: [
+            [119808, 119833, 65, c.VARIANT.BOLD],
+            [119834, 119859, 97, c.VARIANT.BOLD],
+            [119860, 119885, 65, c.VARIANT.ITALIC],
+            [119886, 119911, 97, c.VARIANT.ITALIC],
+            [119912, 119937, 65, c.VARIANT.BOLDITALIC],
+            [119938, 119963, 97, c.VARIANT.BOLDITALIC],
+            [119964, 119989, 65, c.VARIANT.SCRIPT],
+            [120068, 120093, 65, c.VARIANT.FRAKTUR],
+            [120094, 120119, 97, c.VARIANT.FRAKTUR],
+            [120120, 120145, 65, c.VARIANT.DOUBLESTRUCK],
+            [120172, 120197, 65, c.VARIANT.BOLDFRAKTUR],
+            [120198, 120223, 97, c.VARIANT.BOLDFRAKTUR],
+            [120224, 120249, 65, c.VARIANT.SANSSERIF],
+            [120250, 120275, 97, c.VARIANT.SANSSERIF],
+            [120276, 120301, 65, c.VARIANT.BOLDSANSSERIF],
+            [120302, 120327, 97, c.VARIANT.BOLDSANSSERIF],
+            [120328, 120353, 65, c.VARIANT.SANSSERIFITALIC],
+            [120354, 120379, 97, c.VARIANT.SANSSERIFITALIC],
+            [120432, 120457, 65, c.VARIANT.MONOSPACE],
+            [120458, 120483, 97, c.VARIANT.MONOSPACE],
+            [120488, 120513, 913, c.VARIANT.BOLD],
+            [120546, 120570, 913, c.VARIANT.ITALIC],
+            [120572, 120603, 945, c.VARIANT.ITALIC],
+            [120604, 120628, 913, c.VARIANT.BOLDITALIC],
+            [120630, 120661, 945, c.VARIANT.BOLDITALIC],
+            [120662, 120686, 913, c.VARIANT.BOLDSANSSERIF],
+            [120720, 120744, 913, c.VARIANT.SANSSERIFBOLDITALIC],
+            [120782, 120791, 48, c.VARIANT.BOLD],
+            [120802, 120811, 48, c.VARIANT.SANSSERIF],
+            [120812, 120821, 48, c.VARIANT.BOLDSANSSERIF],
+            [120822, 120831, 48, c.VARIANT.MONOSPACE]
+        ],
         REMAPGREEK: {
             913: 65,
             914: 66,
@@ -1127,7 +1159,30 @@
         descent: 267,
         weight: "bold",
         file: "TeX/Main-Bold.js",
-        Extra: [160, 168, 172, [175, 177], 180, 215, 247, 305, 567, [710, 715], [728, 732], [768, 780], 824, [8194, 8198], 8201, 8202, 8211, 8212, 8216, 8217, 8220, 8221, 8224, 8225, 8230, 8242, 8407, [8463, 8467], 8472, 8476, 8501, [8592, 8601], 8614, 8617, 8618, 8636, 8637, 8640, 8641, 8652, [8656, 8661], [8704, 8715], [8722, 8730], [8733, 8736], [8739, 8764], 8768, 8771, 8773, 8776, 8781, 8784, 8800, 8801, 8804, 8805, 8810, 8811, 8826, 8827, 8834, 8835, 8838, 8839, 8846, [8849, 8857], [8866, 8869], 8872, [8900, 8904], [8942, 8945], [8968, 8971], 8994, 8995, 9651, 9657, 9661, 9667, 9711, [9824, 9827], [9837, 9839], 10216, 10217, [10229, 10236], 10815, 10927, 10928],
+        Extra: [
+            160, 168, 172, [175, 177],
+            180, 215, 247, 305,
+            567, [710, 715], [728, 732], [768, 780],
+            824, [8194, 8198], 8201, 8202,
+            8211, 8212, 8216, 8217,
+            8220, 8221, 8224, 8225,
+            8230, 8242, 8407, [8463, 8467],
+            8472, 8476, 8501, [8592, 8601],
+            8614, 8617, 8618, 8636,
+            8637, 8640, 8641, 8652,
+            [8656, 8661], [8704, 8715], [8722, 8730], [8733, 8736],
+            [8739, 8764], 8768, 8771, 8773,
+            8776, 8781, 8784, 8800,
+            8801, 8804, 8805, 8810,
+            8811, 8826, 8827, 8834,
+            8835, 8838, 8839, 8846,
+            [8849, 8857], [8866, 8869], 8872, [8900, 8904],
+            [8942, 8945], [8968, 8971], 8994, 8995,
+            9651, 9657, 9661, 9667,
+            9711, [9824, 9827], [9837, 9839], 10216,
+            10217, [10229, 10236], 10815, 10927,
+            10928
+        ],
         skew: {
             305: 0.0319,
             567: 0.0958,
@@ -2202,7 +2257,10 @@
                 w = {
                     "font-family": A + "w",
                     "src /*1*/": "url('" + t + "/" + u + "-" + y + ".eot')",
-                    "src /*2*/": ["url('" + D + "/" + u + "-" + y + ".woff') format('woff')", "url('" + B + "/" + u + "-" + y + ".otf') format('opentype')"].join(", ")
+                    "src /*2*/": [
+                        "url('" + D + "/" + u + "-" + y + ".woff') format('woff')",
+                        "url('" + B + "/" + u + "-" + y + ".otf') format('opentype')"
+                    ].join(", ")
                 };
                 x.push(w);
                 v += "," + A + "w";

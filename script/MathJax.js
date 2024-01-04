@@ -2,9 +2,9 @@ const NAME_TAG = "MathJax";
 const __TAG = "[" + NAME_TAG + "]";
 
 /** @type{MATHJAX} */
-var MathJax = null;
-var EMPTY = [];
-var CALLBACK = [];
+let MathJax = null;
+let EMPTY = [];
+let CALLBACK = [];
 
 class MATHJAX {
     constructor() {
@@ -2518,29 +2518,26 @@ class CallbackUtil {
     }
 }
 
+function createClass(src_class) {
+    var new_class = function () { };
+    for (var func in src_class) {
+        if (func !== "instance" && src_class.hasOwnProperty(func)) {
+            new_class[func] = src_class[func];
+        }
+    }
+    return new_class;
+}
 function createObject() {
     if (MathJax.Object) {
         return;
     }
-    var createClass = function(src_class) {
-        var new_class = function () { };
-        for (var func in src_class) {
-            if (func !== "instance" && src_class.hasOwnProperty(func)) {
-                new_class[func] = src_class[func];
-            }
-        }
-        return new_class;
-    };
     MathJax.Object = createClass({
         __SUPER: null,
         __Init: function (f) {
-            var g = this;
             if (f.length === 1 && f[0] === EMPTY) {
-                return g;
+                return this;
             }
-            if (!(g instanceof f.callee)) {
-                g = new f.callee(EMPTY);
-            }
+            var g = new f.callee(EMPTY);
             return g.__Init.apply(g, f) || g;
         },
         __Subclass: function (f, h) {
@@ -2584,12 +2581,10 @@ function createObject() {
                 f.__SUPER = this.__SUPER.prototype;
             }
         },
+        isArray: Array.isArray,
+        Array: Array,
         prototype: new MathJaxObjectProto()
     });
-    MathJax.Object.isArray = Array.isArray || function (f) {
-        return Object.prototype.toString.call(f) === "[object Array]";
-    };
-    MathJax.Object.Array = Array;
 }
 function createCallback() {
     CALLBACK = function (data) {
