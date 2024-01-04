@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+	<link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+<table>
+<tr>
+	<td>
+		[ 定理 ]
+		\begin{align}
+			e^{i n\theta} &= (e^{i\theta})^n \\
+			\therefore\cos{n\theta} + i\sin{n\theta} &= (\cos{\theta} + i\sin{\theta})^n
+		\end{align}
+	</td>
+</tr><tr>
+	<td>
+		n=2の場合を確認してみる
+		\begin{align}
+			e^{i 2\theta} &= (e^{i\theta})^2 \\
+			&=(\cos{\theta} + i\sin{\theta})^2 \\
+			&=     \cos{\theta} \cdot  \cos{\theta}
+				+  \cos{\theta} \cdot i\sin{\theta}
+				+ i\sin{\theta} \cdot  \cos{\theta}
+				+ i\sin{\theta} \cdot i\sin{\theta} \\
+			&=\cos^2{\theta} - \sin^2{\theta} + 2i\sin{\theta} \cdot \cos{\theta} \\
+			&=2\cos^2{\theta} - 1 + 2i\sin{\theta} \cdot \cos{\theta} \quad...[確認式]
+		\end{align}
+	</td>
+</tr><tr>
+	<td>
+		\begin{align}
+			\cos{2\theta} &= \frac{e^{i2\theta} + e^{-i2\theta}}{2} \\
+			&=    \frac{(\cos{\theta} + i\sin{\theta})^2}{2}
+				+ \frac{(\cos{\theta} - i\sin{\theta})^2}{2} \\
+			&=\frac{\cos{\theta} \cdot  \cos{\theta}
+				 +  \cos{\theta} \cdot i\sin{\theta}
+				 + i\sin{\theta} \cdot  \cos{\theta}
+				 + i\sin{\theta} \cdot i\sin{\theta}}{2} \\
+			&+\frac{\cos{\theta} \cdot  \cos{\theta}
+				 -  \cos{\theta} \cdot i\sin{\theta}
+				 - i\sin{\theta} \cdot  \cos{\theta}
+				 + i\sin{\theta} \cdot i\sin{\theta}}{2} \\
+			&=\frac{2\cos^2{\theta} - 2\sin^2{\theta}}{2} \\
+			&=\cos^2{\theta} - \sin^2{\theta} \\
+			&=2\cos^2{\theta} - 1 \quad...\cosの2倍角の公式
+		\end{align}
+		cosの2倍角の公式と確認式の実部が同じであることがわかる
+	</td>
+</tr><tr>
+	<td>
+		\begin{align}
+			\sin{2\theta}&=\frac{e^{i2\theta} - e^{-i2\theta}}{2i} \\
+			&=    \frac{(\cos{\theta} + i\sin{\theta})^2}{2i}
+				- \frac{(\cos{\theta} - i\sin{\theta})^2}{2i} \\
+			&=\frac{\cos{\theta} \cdot  \cos{\theta}
+				 +  \cos{\theta} \cdot i\sin{\theta}
+				 + i\sin{\theta} \cdot  \cos{\theta}
+				 + i\sin{\theta} \cdot i\sin{\theta}}{2i} \\
+			&-\frac{\cos{\theta} \cdot  \cos{\theta}
+				 -  \cos{\theta} \cdot i\sin{\theta}
+				 - i\sin{\theta} \cdot  \cos{\theta}
+				 + i\sin{\theta} \cdot i\sin{\theta}}{2i} \\
+			&=\frac{4i\sin{\theta} \cdot \cos{\theta}}{2i} \\
+			&=2\sin{\theta} \cdot \cos{\theta} \quad...\sinの2倍角の公式
+		\end{align}
+		sinの2倍角の公式と確認式の虚部が同じであることがわかる
+	</td>
+</tr>
+</table>
+</body>
+</html>
