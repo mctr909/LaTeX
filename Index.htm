@@ -13,7 +13,7 @@ table, td {
 }
 div {
     font-size:11pt;
-    width: 500px;
+    width: 600px;
     color: black;
     background-color: white;
 }
@@ -160,47 +160,50 @@ div {
                     基本<br/>
                     <input type="button" value="align" onclick="insertText('\\begin{align}\n*\r\n\\end{align}');"/>
                     <input type="button" value="cases" onclick="insertText('\\begin{cases}\n*\r\n\\end{cases}');"/>
-                    <br/>
+                </td>
+                <td>
+                    　<br/>
                     <input type="button" value="a/b" onclick="insertText('\\frac{*}{}');"/>
+                    　
                 </td>
             </tr>
             <tr>
                 <td>
                     関係演算子<br/>
                     <input type="button" value="≠" onclick="insertText(' \\neq ');"/>
-                    <input type="button" value="simeq" onclick="insertText(' \\simeq ');"/>
                     <input type="button" value="def" onclick="insertText(' \\stackrel{\\mathrm{def}}{=} ');"/>
+                    <input type="button" value="simeq" onclick="insertText(' \\simeq ');"/>
                     <br/>
-                    <input type="button" value=">" onclick="insertText(' \\gt ');"/>
-                    <input type="button" value="≥" onclick="insertText(' \\ge ');"/>
-                    <input type="button" value="<" onclick="insertText(' \\lt ');"/>
-                    <input type="button" value="≤" onclick="insertText(' \\le ');"/>
+                    <input type="button" value="＞" onclick="insertText(' \\gt ');"/>
+                    <input type="button" value="≧" onclick="insertText(' \\ge ');"/>
+                    <input type="button" value="＜" onclick="insertText(' \\lt ');"/>
+                    <input type="button" value="≦" onclick="insertText(' \\le ');"/>
                     <br/>
                     <input type="button" value="Λ" onclick="insertText(' \\land ');"/>
                     <input type="button" value="Ｖ" onclick="insertText(' \\lor ');"/>
-                </td>
-                <td>
-                    　<br/>
+                    <br/>
                     <input type="button" value="∴" onclick="insertText('\\therefore ');"/>
                     <input type="button" value="∵" onclick="insertText('\\because ');"/>
                     <input type="button" value="⇒" onclick="insertText('\\Rightarrow ');"/>
                 </td>
                 <td>
                     ベクトル・行列<br/>
-                    <input type="button" value="→" onclick="insertText('\\overrightarrow{\\mathrm{*}}');"/>
                     <input type="button" value="v" style="font-weight: bold;" onclick="insertText('\\mathbf{*}');"/>
-                    <input type="button" value="𝕍" onclick="insertText('\\mathbb{*}');"/>
+                    <input type="button" value="→" onclick="insertText('\\overrightarrow{*}');"/>
                     <br/>
-                    <input type="button" value="v/|v|" onclick="insertText('\\frac{*}{\\lvert{}\\rvert}');"/>
                     <input type="button" value="・" onclick="insertText(' \\cdot ');"/>
                     <input type="button" value="×" onclick="insertText(' \\times ');"/>
+                    <input type="button" value="Λ" onclick="insertText(' \\wedge ');"/>
                     <br/>
-                    <input type="button" value="norm1" onclick="insertText('\\lVert{*}\\rVert_1');"/>
-                    <input type="button" value="norm2" onclick="insertText('\\lVert{*}\\rVert_2');"/>
-                    <input type="button" value="norm∞" onclick="insertText('\\lVert{*}\\rVert_\\infty');"/>
+                    <input type="button" value="v/||v||" onclick="insertText('\\frac{\\mathbf{*}}{\\lVert{\\mathbf{*}}\\rVert_2}');"/>
+                    <input type="button" value="v/|v|" onclick="insertText('\\frac{\\overrightarrow{*}}{\\lvert{\\overrightarrow{*}}\\rvert}');"/>
                     <br/>
-                    <input type="button" value="[ ]" onclick="insertText('\\begin{bmatrix}\n*\r\n\\end{bmatrix}');"/>
-                    <input type="button" value="( )" onclick="insertText('\\begin{pmatrix}\n*\r\n\\end{pmatrix}');"/>
+                    <input type="button" value="L1" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_1');"/>
+                    <input type="button" value="L2" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_2');"/>
+                    <input type="button" value="L∞" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_\\infty');"/>
+                    <br/>
+                    <input type="button" value="[ ]" onclick="insertText('\\begin{bmatrix}\n* \\ * \\\\\n\\end{bmatrix}');"/>
+                    <input type="button" value="( )" onclick="insertText('\\begin{pmatrix}\n* \\ * \\\\\n\\end{pmatrix}');"/>
                 </td>
                 <td>
                     図形<br/>
@@ -243,22 +246,22 @@ div {
                     <input type="button" value="r′" onclick="insertText('^{\\prime}');"/>
                     <input type="button" value="r″" onclick="insertText('^{\\prime\\prime}');"/>
                     <br/>
-                    <input type="button" value="d" onclick="insertText('\\frac{d}{d*}');"/>
-                    <input type="button" value="d2" onclick="insertText('\\frac{d^2 }{d*^2}');"/>
+                    <input type="button" value="d" onclick="insertText('\\frac{d*}{d*}');"/>
+                    <input type="button" value="d2" onclick="insertText('\\frac{d^2 *}{d*^2}');"/>
                     <br/>
-                    <input type="button" value="∂" onclick="insertText('\\frac{\\partial }{\\partial *}');"/>
-                    <input type="button" value="∂2" onclick="insertText('\\frac{\\partial^2 }{\\partial *^2}');"/>
+                    <input type="button" value="∂" onclick="insertText('\\frac{\\partial *}{\\partial *}');"/>
+                    <input type="button" value="∂2" onclick="insertText('\\frac{\\partial^2 *}{\\partial *^2}');"/>
                     <br/>
                     <input type="button" value="∇" onclick="insertText('\\nabla');"/>
                     <input type="button" value="∇2" onclick="insertText('\\nabla^{2}');"/>
                     <input type="button" value="Δ" onclick="insertText('\\Delta');"/>
                     <br/>
+                    <input type="button" value="∫" onclick="insertText('\\int *f(x)dx');"/>
+                    <input type="button" value="∫ a~b" onclick="insertText('\\int^{*b}_{a}f(x)dx');"/>
+                    <br/>
                     <input type="button" value="Σ" onclick="insertText('\\sum_{*k=1}^{n}f(k)');"/>
                     <input type="button" value="Π" onclick="insertText('\\prod_{*k=1}^{n}f(k)');"/>
                     <input type="button" value="lim" onclick="insertText('\\lim_{*x \\to 0}f(x)');"/>
-                    <br/>
-                    <input type="button" value="∫" onclick="insertText('\\int *f(x)dx');"/>
-                    <input type="button" value="∫ a~b" onclick="insertText('\\int^{*b}_{a}f(x)dx');"/>
                     <br/>
                     <input type="button" value="∞" onclick="insertText('\\infty');"/>
                     <input type="button" value="π" onclick="insertText('\\pi');"/>
