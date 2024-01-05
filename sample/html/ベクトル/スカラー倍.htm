@@ -2,18 +2,18 @@
 <html lang="ja">
 <meta charset="utf-8">
 <head>
-    <link href="../../style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
-    <script type="text/javascript" src="../../../script/math.js"></script>
-    <script type="text/javascript" src="../../../script/drawer.js"></script>
+    <script type="text/javascript" src="../../script/math.js"></script>
+    <script type="text/javascript" src="../../script/drawer.js"></script>
 </head>
 <body>
 <table>
 <tr>
     <td colspan="2">
         \begin{align}
-        k\overrightarrow{\mathrm{a}} &:= (k{a_{1}}, k{a_{2}}, \cdots, k{a_{n}})\\
-        \frac{\overrightarrow{\mathrm{a}}}{k} &:=  (\frac{a_1}{k}, \frac{a_2}{k}, \cdots, \frac{a_n}{k})
+        k\mathbf{a} &:= (k{\mathbf{a}_1}, k{\mathbf{a}_2}, \cdots, k{\mathbf{a}_n})\\
+        \frac{\mathbf{a}}{k} &:= (\frac{\mathbf{a}_1}{k}, \frac{\mathbf{a}_2}{k}, \cdots, \frac{\mathbf{a}_n}{k})
         \end{align}
     </td>
 </tr>
@@ -22,15 +22,15 @@
     <td><span id="dispK"></span><br/><input type="range" id="rangeK" min="-20" max="20" value="20"/></td>
 </tr>
 <tr>
-    <td>\begin{align}\overrightarrow{\mathrm{a}}\end{align}</td>
+    <td>\begin{align}\mathbf{a}\end{align}</td>
     <td>(<span id="dispA"></span>)</td>
 </tr>
 <tr>
-    <td style="width:40px;">\begin{align}k\overrightarrow{\mathrm{a}}\end{align}</td>
+    <td style="width:40px;">\begin{align}k\mathbf{a}\end{align}</td>
     <td>(<span id="dispAn" style="color:#0000FF;"></span>)</td>
 </tr>
 <tr>
-    <td style="width:40px;">\begin{align}\frac{\overrightarrow{\mathrm{a}}}{k}\end{align}</td>
+    <td style="width:40px;">\begin{align}\frac{\mathbf{a}}{k}\end{align}</td>
     <td>(<span id="dispAk" style="color:#FF0000;"></span>)</td>
 </tr>
 <tr>
@@ -38,4 +38,4 @@
 </tr>
 </table>
 </body>
-<script type="text/javascript" src="../../../script/geometry/vector/スカラー乗法.js"></script>
+<script type="text/javascript" src="../../script/ベクトル/スカラー倍.js"></script>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../../script/math.js"></script>
+    <script type="text/javascript" src="../../script/drawer.js"></script>
+</head>
+<body>
+<table>
+<tr>
+    <td colspan="2">
+		\begin{align}
+		\mathbf{a}&= (\mathbf{a}_x, \mathbf{a}_y, \mathbf{a}_z)\\
+		\mathbf{b}&= (\mathbf{b}_x, \mathbf{b}_y, \mathbf{b}_z)\\
+		\Rightarrow \mathbf{a} \times \mathbf{b}&:= (
+            \mathbf{a}_y \mathbf{b}_z - \mathbf{a}_z \mathbf{b}_y,
+            \mathbf{a}_z \mathbf{b}_x - \mathbf{a}_x \mathbf{b}_z,
+            \mathbf{a}_x \mathbf{b}_y - \mathbf{a}_y \mathbf{b}_x
+        )
+		\end{align}
+    </td>
+</tr>
+<tr>
+    <td>\begin{align}\mathbf{a}\end{align}</td>
+    <td>(<span id="dispA"></span>)</td>
+</tr>
+<tr>
+    <td>\begin{align}\mathbf{b}\end{align}</td>
+    <td>(<span id="dispB"></span>)</td>
+</tr>
+<tr>
+    <td style="width:40px;">\begin{align}\mathbf{a} \times \mathbf{b}\end{align}</td>
+    <td>(<span id="dispAB"></span>)</td>
+</tr>
+<tr>
+    <td colspan="2">
+        <canvas id="dispXY"></canvas>
+        <canvas id="dispZY"></canvas><br/>
+        <canvas id="dispXZ"></canvas>
+        <canvas id="disp"></canvas>
+    </td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../../script/ベクトル/外積(クロス積).js"></script>
