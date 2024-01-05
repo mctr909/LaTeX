@@ -161,19 +161,26 @@ div {
                     <input type="button" value="align" onclick="insertText('\\begin{align}\n*\r\n\\end{align}');"/>
                     <input type="button" value="cases" onclick="insertText('\\begin{cases}\n*\r\n\\end{cases}');"/>
                     <input type="button" value="a/b" onclick="insertText('\\frac{*}{}');"/>
+                    <br/>
+                    <input type="button" value="空白" onclick="insertText(' \\quad ');"/>
+                    <input type="button" value="…" onclick="insertText(' \\cdots ');"/>
+                    <input type="button" value=":" onclick="insertText('\\vdots ');"/>
                 </td>
             </tr>
             <tr>
                 <td style="width: 200px;">
-                    関係演算子<br/>
+                    演算子<br/>
                     <input type="button" value="≠" onclick="insertText(' \\neq ');"/>
+                    <input type="button" value="≈" onclick="insertText(' \\approx ');"/>
                     <input type="button" value="def" onclick="insertText(' \\stackrel{\\mathrm{def}}{=} ');"/>
-                    <input type="button" value="simeq" onclick="insertText(' \\simeq ');"/>
                     <br/>
                     <input type="button" value="＞" onclick="insertText(' \\gt ');"/>
                     <input type="button" value="≧" onclick="insertText(' \\ge ');"/>
                     <input type="button" value="＜" onclick="insertText(' \\lt ');"/>
                     <input type="button" value="≦" onclick="insertText(' \\le ');"/>
+                    <br/>
+                    <input type="button" value="+-" onclick="insertText(' \\pm ');"/>
+                    <input type="button" value="-+" onclick="insertText(' \\mp ');"/>
                     <br/>
                     <input type="button" value="Λ" onclick="insertText(' \\land ');"/>
                     <input type="button" value="Ｖ" onclick="insertText(' \\lor ');"/>
@@ -190,6 +197,7 @@ div {
                     <input type="button" value="・" onclick="insertText(' \\cdot ');"/>
                     <input type="button" value="×" onclick="insertText(' \\times ');"/>
                     <input type="button" value="Λ" onclick="insertText(' \\wedge ');"/>
+                    <input type="button" value="(×)" onclick="insertText(' \\otimes ');"/>
                     <br/>
                     <input type="button" value="v/||v||" onclick="insertText('\\frac{\\mathbf{*}}{\\lVert{\\mathbf{*}}\\rVert_2}');"/>
                     <input type="button" value="v/|v|" onclick="insertText('\\frac{\\overrightarrow{*}}{\\lvert{\\overrightarrow{*}}\\rvert}');"/>
