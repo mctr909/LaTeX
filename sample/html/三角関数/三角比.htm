@@ -11,20 +11,17 @@
 <table>
 <tr>
     <td style="width: 300px; vertical-align: top;">
-        [ 三角比 ]
         \begin{align}
             \cos{\theta} &:= \cfrac{隣辺}{斜辺} = \frac{x}{r} \\
             \sin{\theta} &:= \cfrac{対辺}{斜辺} = \frac{y}{r} \\
-            \tan{\theta} &:= \cfrac{対辺}{隣辺} = \frac{y}{x}
-        \end{align}
-        \begin{align}
+            \tan{\theta} &:= \cfrac{対辺}{隣辺} = \frac{y}{x} \\
             \mathrm{P}(x, y) &= (r\cos{\theta}, r\sin{\theta}) \\
             \mathrm{T}(1, \frac{y}{x}) &= (1, \tan{\theta}) \\
             r\mathrm{T}(r, r\frac{y}{x}) &= (r, r\tan{\theta})
         \end{align}
-        円の半径が斜辺がとなる。<br>
+        斜辺が円の半径となる。<br>
         半径が1の円を単位円という。<br>
-        <input type="range" id="trbR" min="2" max="8" value="8" style="width: 200px;" /><br>
+        <input type="range" id="trbR" min="5" max="20" value="20" style="width: 250px;" /><br>
         <span>r = </span><span id="lblR"></span><br>
         <span>x = </span><span id="lblX"></span><br>
         <span>y = </span><span id="lblY"></span><br>

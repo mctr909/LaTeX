@@ -247,7 +247,11 @@ function crossedDivLine(o, a, b, returnValue) {
  */
 function toFrac(value, unit="", dispOne=true) {
 	if (0 == value) {
-		return "0";
+		if (dispOne && unit != "") {
+			return "0" + unit;
+		} else {
+			return "0";
+		}
 	}
 	if (0 == value - parseInt(value)) {
 		if (dispOne) {
@@ -261,8 +265,15 @@ function toFrac(value, unit="", dispOne=true) {
 		for(let c=0; c<1000; c++) {
 			let diff = c / m - value * sign;
 			if (0 == diff) {
-				let ret = (c * sign) + "/" + m;
-				return ret + unit;
+				if ("" != unit) {
+					if (c == 1) {
+						return ((sign == 1 ? "" : "-") + unit + "/") + m;
+					} else {
+						return (c * sign) + unit + "/" + m;
+					}
+				} else {
+					return (c * sign) + "/" + m + unit;
+				}
 			}
 		}
 	}

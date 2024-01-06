@@ -8,7 +8,8 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "file:///C:/Users/user/Desktop/VS project/LaTeX/Index.htm",
+            //"url": "${workspaceFolder}/Index.htm",
+            "url": "${workspaceFolder}/sample/index.htm",
             "webRoot": "${workspaceFolder}"
         }
     ]
