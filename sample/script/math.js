@@ -277,7 +277,7 @@ function toFrac(value, unit="", dispOne=true) {
 			}
 		}
 	}
-	return value + unit;
+	return parseInt(value * 1000) / 1000 + unit;
 }
 
 /**

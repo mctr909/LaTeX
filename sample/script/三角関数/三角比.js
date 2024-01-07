@@ -1,7 +1,7 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = Drawer.BLACK;
+const AXIZ_COLOR = Drawer.GRAY;
 const MEASURE_COLOR = Drawer.BLACK;
 const RULER_COLOR = Drawer.GRAY;
 const CIRCLE_COLOR = Drawer.BLACK;
@@ -11,8 +11,8 @@ const SIN_COLOR = Drawer.RED;
 const TAN_COLOR = Drawer.BLACK;
 const UNIT_RADIUS = 60;
 const WAVE_WIDTH = 300;
-const WAVE_HEIGHT = 240;
-const GAP = 40;
+const WAVE_HEIGHT = 180;
+const GAP = 60;
 
 /** @type{LineInfo[]} */
 let gLineList = [];
@@ -30,12 +30,15 @@ let gCircleRadius = UNIT_RADIUS * gRadius;
 let gWaveBegin = gCircleRadius + GAP;
 
 let gDrawer = new Drawer("disp",
-    gWaveBegin * 2 + WAVE_WIDTH,
-    (WAVE_HEIGHT + gCircleRadius + GAP) * 1.5 + 40
+    UNIT_RADIUS * 4 + GAP + WAVE_WIDTH + 60,
+    UNIT_RADIUS * 4 + GAP + WAVE_HEIGHT + 160
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
     init();
+});
+document.getElementById("trbTh").addEventListener("input", function(ev) {
+    gTheta = this.value * Math.PI / 180;
 });
 
 init();
@@ -57,51 +60,73 @@ function init() {
     gCircleRadius = UNIT_RADIUS * gRadius;
     gWaveBegin = UNIT_RADIUS * 2 + GAP;
 
-    gDrawer.Offset = new vec(gWaveBegin - GAP + 5, gDrawer.Height / 4 + 40);
+    gDrawer.Offset = new vec(gWaveBegin - GAP + 5, gDrawer.Height / 3 + 50);
 
     gLineList.push(new LineInfo(
         -gCircleRadius - 10, 0,
         gWaveBegin + WAVE_WIDTH, 0,
-        0.5, AXIZ_COLOR
+        1, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
         0, -gWaveBegin - WAVE_HEIGHT,
         0, gCircleRadius + 10,
-        0.5, AXIZ_COLOR
+        1, AXIZ_COLOR
     ));
     for (let deg=0; deg<=360; deg += 15) {
         let x = gWaveBegin + WAVE_WIDTH * deg / 360.0;
         let y = -gWaveBegin - WAVE_HEIGHT * deg / 360.0;
-        let h = deg % 90 == 0 ? 11 : deg % 45 == 0 ? 7 : 3;
+        let h = ((0 == deg % 45) ? 7 : 2.5);
         gLineList.push(new LineInfo(
             x, -h,
             x, h,
-            0.5, AXIZ_COLOR
+            1, AXIZ_COLOR
         ));
         gLineList.push(new LineInfo(
             -h, y,
             h, y,
-            0.5, AXIZ_COLOR
+            1, AXIZ_COLOR
         ));
         if (deg % 45 == 0) {
             gLabelList.push({
-                pos: new vec(x, -16),
+                pos: new vec(x, -12),
                 text: toFrac(deg / 180, "π", false),
                 center: true
             });
             gLabelList.push({
-                pos: new vec(x, -30),
-                text: toFrac(deg, "°"),
+                pos: new vec(x, 18),
+                text: toFrac(deg),
                 center: true
             });
             gLabelList.push({
-                pos: new vec(15, y+2),
+                pos: new vec(12, y-4),
                 text: toFrac(deg / 180, "π", false),
                 center: false
             });
             gLabelList.push({
-                pos: new vec(15, y-11),
-                text: toFrac(deg, "°"),
+                pos: new vec(-36, y-4),
+                text: toFrac(deg),
+                center: false
+            });
+        }
+        if (deg == 360) {
+            gLabelList.push({
+                pos: new vec(x+34, -12),
+                text: "[rad]",
+                center: true
+            });
+            gLabelList.push({
+                pos: new vec(x+34, 18),
+                text: "[deg]",
+                center: true
+            });
+            gLabelList.push({
+                pos: new vec(8, y-16),
+                text: "[rad]",
+                center: false
+            });
+            gLabelList.push({
+                pos: new vec(-36, y-16),
+                text: "[deg]",
                 center: false
             });
         }
@@ -110,7 +135,7 @@ function init() {
     gLineList.push(new LineInfo(
         UNIT_RADIUS, -gDrawer.Height,
         UNIT_RADIUS, gDrawer.Height,
-        0.5, TAN_COLOR, true
+        1, AXIZ_COLOR, true
     ));
     gLineList.push(new LineInfo(
         gCircleRadius, -gDrawer.Height,
@@ -147,7 +172,7 @@ function main() {
     for (let i=0; i<gLineList.length; i++) {
         gLineList[i].draw(gDrawer);
     }
-    gDrawer.drawCircleD(new vec(), UNIT_RADIUS, CIRCLE_COLOR, 0.5);
+    gDrawer.drawCircleD(new vec(), UNIT_RADIUS, AXIZ_COLOR);
     gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR);
 
     for (let i=0; i<gTanLines.length; i++) {
@@ -162,6 +187,9 @@ function main() {
         if (gTheta < 0) {
             gTheta += 2*Math.PI;
         }
+        let deg = parseInt(180 * gTheta / Math.PI);
+        gTheta = deg * Math.PI / 180;
+        document.getElementById("trbTh").value = deg;
     }
 
     let x = gWaveBegin + gTheta * WAVE_WIDTH / Math.PI / 2;
@@ -181,7 +209,7 @@ function main() {
     if (dangle < 0) {
         dangle += 2*Math.PI;
     }
-    gDrawer.drawArc(new vec(), 18, 0, dangle, CIRCLE_COLOR, 3);
+    gDrawer.drawArc(new vec(), 18, 0, dangle, CIRCLE_COLOR, 2);
 
     gDrawer.drawLine(vx, wave_t, RULER_COLOR);
     gDrawer.drawLine(vy, wave_c, RULER_COLOR);
@@ -191,9 +219,9 @@ function main() {
     gDrawer.drawLine(vp, wave_s, SIN_COLOR);
     gDrawer.drawLine(vo, vrt, TAN_COLOR, 1);
     gDrawer.drawLine(vo, vt, TAN_COLOR, 1);
-    gDrawer.drawLine(vo, vc, COS_COLOR, 1, 4);
-    gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 4);
-    gDrawer.drawLine(vo, vp, KNOB_COLOR, 1, 4);
+    gDrawer.drawLine(vo, vc, COS_COLOR, 1, 5);
+    gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 5);
+    gDrawer.drawLine(vo, vp, KNOB_COLOR, 1, 5);
     gDrawer.fillCircle(vp, 5, KNOB_COLOR);
     gDrawer.fillCircle(vrt, 3, TAN_COLOR);
     gDrawer.fillCircle(vt, 3, TAN_COLOR);
@@ -212,13 +240,13 @@ function main() {
 
     let lblrT = new vec(vrt.X - 8, vrt.Y + 6);
     let lblT = new vec(vt.X - 5, vt.Y + 6);
-    let lblP = new vec(vp.X - 6, vp.Y + 6);
+    let lblP = new vec(vp.X - 5, vp.Y + 6);
     let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
     let lblX = new vec(vc.X * 0.5, -5);
     let lblY = new vec(vp.X + 3, vp.Y * 0.5 - 3);
     let lblRT = new vec(wave_t.X - 46, wave_t.Y + 3);
     let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
-    let lblRS = new vec(wave_s.X - 44, wave_s.Y + 3);
+    let lblRS = new vec(wave_s.X + 2, wave_s.Y + 3);
     gDrawer.drawStringXY(18, 4, "θ", 16);
     gDrawer.drawString(lblrT, "rT", 16);
     gDrawer.drawString(lblT, "T", 16);
@@ -231,6 +259,7 @@ function main() {
     gDrawer.drawString(lblRS, "r sinθ", 16);
 
     var tan = round1d(Math.sin(gTheta) / Math.cos(gTheta), 1, 3);
+    document.getElementById("lblTheta").innerHTML = toFrac(gTheta / Math.PI, "π") + ("(" + parseInt(gTheta*180/Math.PI+0.5) + "°)");
     document.getElementById("lblR").innerHTML = gRadius;
     document.getElementById("lblX").innerHTML = round1d(Math.cos(gTheta) * gRadius, 1, 3);
     document.getElementById("lblY").innerHTML = round1d(Math.sin(gTheta) * gRadius, 1, 3);

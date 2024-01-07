@@ -52,7 +52,7 @@ class Drawer {
 	static FRAME_RATE = 60;
 
 	static BLACK = [0, 0, 0];
-	static GRAY = [167, 167, 167];
+	static GRAY = [147, 147, 147];
 	static WHITE = [211, 255, 255];
 	static RED = [231, 0, 0];
 	static GREEN = [0, 167, 0];
