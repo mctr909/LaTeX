@@ -13,9 +13,11 @@ table, td {
 }
 div {
     font-size:11pt;
-    width: 600px;
     color: black;
     background-color: white;
+    border-color: white;
+    border-width: 1px;
+    border-style: solid;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -26,10 +28,59 @@ div {
 <script type="text/javascript" src="script/config/MML.js"></script>
 <script type="text/javascript" src="script/config/Menu.js"></script>
 <script type="text/javascript">
-    let mChange = true;
+    const INPUT_MIN_WIDTH = 155 + 160 + 180 + 14;
+    const BUTTON_GROUP_HEIGHT = 450;
+    let mTextChange = true;
+    let mInputWidth = -1;
+    function resizeWindow() {
+        let tdDisp = document.getElementById("tdDisp");
+        let tdInput = document.getElementById("tdInput");
+        let tableButtons = document.getElementById("tableButtons");
+        let input = document.getElementById("input");
+        let width = (0 < mInputWidth) ? mInputWidth : window.innerWidth / 2 - 50;
+        if (INPUT_MIN_WIDTH <= width) {
+            tdDisp.style.width = (window.innerWidth - width) + "px";
+            tdInput.style.width = width + "px";
+            input.style.width = width + "px";
+        } else {
+            tdDisp.style.width = (window.innerWidth - INPUT_MIN_WIDTH) + "px";
+            tdInput.style.width = INPUT_MIN_WIDTH + "px";
+            input.style.width = INPUT_MIN_WIDTH + "px";
+        }
+        let height = window.innerHeight / 2;
+        if (BUTTON_GROUP_HEIGHT <= height) {
+            input.style.height = height + "px";
+            tableButtons.style.height = height + "px";
+        } else {
+            input.style.height = (window.innerHeight - BUTTON_GROUP_HEIGHT) + "px";
+            tableButtons.style.height = BUTTON_GROUP_HEIGHT + "px";
+        }
+    }
+    function resizeInput(width) {
+        let tdDisp = document.getElementById("tdDisp");
+        let tdInput = document.getElementById("tdInput");
+        let tableButtons = document.getElementById("tableButtons");
+        let input = document.getElementById("input");
+        if (INPUT_MIN_WIDTH <= width) {
+            tdDisp.style.width = (window.innerWidth - width) + "px";
+            tdInput.style.width = width + "px";
+            input.style.width = width + "px";
+        } else {
+            tdDisp.style.width = (window.innerWidth - INPUT_MIN_WIDTH) + "px";
+            tdInput.style.width = INPUT_MIN_WIDTH + "px";
+            input.style.width = INPUT_MIN_WIDTH + "px";
+        }
+        let inputHeight = input.style.height.replace("px", "") * 1;
+        let buttonGroupHeight = window.innerHeight - inputHeight;
+        if (buttonGroupHeight < BUTTON_GROUP_HEIGHT) {
+            input.style.maxHeight = (window.innerHeight - BUTTON_GROUP_HEIGHT - 14) + "px";
+        } else {
+            input.style.maxHeight = "";
+        }
+    }
     function textChanged(obj) {
         document.getElementById("disp").innerHTML = obj.value;
-        mChange = true;
+        mTextChange = true;
     }
     function insertText(value) {
         let obj = document.getElementById("input");
@@ -61,6 +112,7 @@ div {
         }
         switch(disp.style.backgroundColor) {
         case "white": {
+            disp.style.borderColor = "white";
             const opt1 = document.createElement('option');
             opt1.value = "black";
             opt1.textContent = "黒";
@@ -79,6 +131,7 @@ div {
             break;
         }
         case "black": {
+            disp.style.borderColor = "black";
             const opt1 = document.createElement('option');
             opt1.value = "white";
             opt1.textContent = "白";
@@ -92,6 +145,7 @@ div {
             break;
         }
         case "green": {
+            disp.style.borderColor = "green";
             const opt1 = document.createElement('option');
             opt1.value = "white";
             opt1.textContent = "白";
@@ -114,194 +168,210 @@ div {
     function saveImage() {
         let disp = document.getElementById("disp");
         let capture = document.querySelector("#disp");
-        html2canvas(capture, {useCORS: true}).then(canvas => {
+        html2canvas(capture, {
+            useCORS: true,
+            width: disp.offsetWidth,
+            height: disp.offsetHeight
+        }).then(canvas => {
             let base64 = canvas.toDataURL('image/png');
             $('#download').attr('href', base64);
             $('#download').attr('download', "latex.png");
             $('#download')[0].click();
         });
     }
+</script>
+<body onload="resizeWindow();">
+<table>
+    <tr>
+        <td id="tdInput">
+            <textarea onkeyup="textChanged(this);" id="input" style="width: 800px; height: 200px; min-width: 500px; min-height: 100px;"></textarea><br/>
+            <table id="tableButtons">
+                <tr>
+                    <td>
+                        基本<br/>
+                        <input type="button" value="align" onclick="insertText('\\begin{align}\n*\r\n\\end{align}');"/>
+                        <input type="button" value="cases" onclick="insertText('\\begin{cases}\n*\r\n\\end{cases}');"/>
+                        <input type="button" value="a/b" onclick="insertText('\\frac{*}{}');"/>
+                        <br/>
+                        <input type="button" value="空白" onclick="insertText(' \\quad ');"/>
+                        <input type="button" value="…" onclick="insertText(' \\cdots ');"/>
+                        <input type="button" value=":" onclick="insertText('\\vdots ');"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 155px;">
+                        演算子<br/>
+                        <input type="button" value="≠" onclick="insertText(' \\neq ');"/>
+                        <input type="button" value="≈" onclick="insertText(' \\approx ');"/>
+                        <input type="button" value="def" onclick="insertText(' \\stackrel{\\mathrm{def}}{=} ');"/>
+                        <br/>
+                        <input type="button" value="＞" onclick="insertText(' \\gt ');"/>
+                        <input type="button" value="≧" onclick="insertText(' \\ge ');"/>
+                        <input type="button" value="＜" onclick="insertText(' \\lt ');"/>
+                        <input type="button" value="≦" onclick="insertText(' \\le ');"/>
+                        <br/>
+                        <input type="button" value="+-" onclick="insertText(' \\pm ');"/>
+                        <input type="button" value="-+" onclick="insertText(' \\mp ');"/>
+                        <br/>
+                        <input type="button" value="Λ" onclick="insertText(' \\land ');"/>
+                        <input type="button" value="Ｖ" onclick="insertText(' \\lor ');"/>
+                        <br/>
+                        <input type="button" value="∴" onclick="insertText('\\therefore ');"/>
+                        <input type="button" value="∵" onclick="insertText('\\because ');"/>
+                        <input type="button" value="⇒" onclick="insertText('\\Rightarrow ');"/>
+                    </td>
+                    <td style="width: 160px;">
+                        ベクトル・行列<br/>
+                        <input type="button" value="v" style="font-weight: bold;" onclick="insertText('\\mathbf{*}');"/>
+                        <input type="button" value="→" onclick="insertText('\\overrightarrow{*}');"/>
+                        <br/>
+                        <input type="button" value="・" onclick="insertText(' \\cdot ');"/>
+                        <input type="button" value="×" onclick="insertText(' \\times ');"/>
+                        <input type="button" value="Λ" onclick="insertText(' \\wedge ');"/>
+                        <input type="button" value="(×)" onclick="insertText(' \\otimes ');"/>
+                        <br/>
+                        <input type="button" value="v/||v||" onclick="insertText('\\frac{\\mathbf{*}}{\\lVert{\\mathbf{*}}\\rVert_2}');"/>
+                        <input type="button" value="v/|v|" onclick="insertText('\\frac{\\overrightarrow{*}}{\\lvert{\\overrightarrow{*}}\\rvert}');"/>
+                        <br/>
+                        <input type="button" value="L1" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_1');"/>
+                        <input type="button" value="L2" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_2');"/>
+                        <input type="button" value="L∞" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_\\infty');"/>
+                        <br/>
+                        <input type="button" value="[ ]" onclick="insertText('\\begin{bmatrix}\n*\n\\end{bmatrix}');"/>
+                        <input type="button" value="( )" onclick="insertText('\\begin{pmatrix}\n*\n\\end{pmatrix}');"/>
+                    </td>
+                    <td style="width: 180px;">
+                        図形<br/>
+                        <input type="button" value="△" onclick="insertText('\\triangle\\mathrm{*}');"/>
+                        <input type="button" value="∠" onclick="insertText('\\angle\\mathrm{*}');"/>
+                        <input type="button" value="°" onclick="insertText('*^{\\circ}');"/>
+                        <br/>
+                        <input type="button" value="//" onclick="insertText(' /\\!/ ');"/>
+                        <input type="button" value="⊥" onclick="insertText(' \\perp ');"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        関数<br/>
+                        <input type="button" value="abs" onclick="insertText('\\lvert{*}\\rvert');"/>
+                        <br/>
+                        <input type="button" value="sqr" onclick="insertText('^{2}');"/>
+                        <input type="button" value="cube" onclick="insertText('^{3}');"/>
+                        <br/>
+                        <input type="button" value="sqrt" onclick="insertText('\\sqrt{*}');"/>
+                        <input type="button" value="cbrt" onclick="insertText('\\sqrt[3]{*}');"/>
+                        <br/>
+                        <input type="button" value="e" onclick="insertText('e^{*}');"/>
+                        <input type="button" value="ln" onclick="insertText('\\ln{*}');"/>
+                        <input type="button" value="log10" onclick="insertText('\\log_{10}{*}');"/>
+                        <br/>
+                        <input type="button" value="sin" onclick="insertText('\\sin{*}');"/>
+                        <input type="button" value="cos" onclick="insertText('\\cos{*}');"/>
+                        <input type="button" value="tan" onclick="insertText('\\tan{*}');"/>
+                        <br/>
+                        <input type="button" value="asin" onclick="insertText('\\sin^{-1}{*}');"/>
+                        <input type="button" value="acos" onclick="insertText('\\cos^{-1}{*}');"/>
+                        <input type="button" value="atan" onclick="insertText('\\tan^{-1}{*}');"/>
+                    </td>
+                    <td>
+                        微積・解析<br/>
+                        <input type="button" value="dot" onclick="insertText('\\dot{*}');"/>
+                        <input type="button" value="ddot" onclick="insertText('\\ddot{*}');"/>
+                        <br/>
+                        <input type="button" value="x′" onclick="insertText('^{\\prime}');"/>
+                        <input type="button" value="x″" onclick="insertText('^{\\prime\\prime}');"/>
+                        <br/>
+                        <input type="button" value="d" onclick="insertText('\\frac{d*}{d*}');"/>
+                        <input type="button" value="d2" onclick="insertText('\\frac{d^2 *}{d*^2}');"/>
+                        <br/>
+                        <input type="button" value="∂" onclick="insertText('\\frac{\\partial *}{\\partial *}');"/>
+                        <input type="button" value="∂2" onclick="insertText('\\frac{\\partial^2 *}{\\partial *^2}');"/>
+                        <br/>
+                        <input type="button" value="∇" onclick="insertText('\\nabla');"/>
+                        <input type="button" value="∇2" onclick="insertText('\\nabla^{2}');"/>
+                        <input type="button" value="Δ" onclick="insertText('\\Delta');"/>
+                        <br/>
+                        <input type="button" value="∫" onclick="insertText('\\int{*}dx');"/>
+                        <input type="button" value="∫ a~b" onclick="insertText('\\int^{b}_{a}{*}dx');"/>
+                        <br/>
+                        <input type="button" value="Σ" onclick="insertText('\\sum_{k*=1}^{n}{k}');"/>
+                        <input type="button" value="Π" onclick="insertText('\\prod_{k*=1}^{n}{k}');"/>
+                        <input type="button" value="lim" onclick="insertText('\\lim_{h* \\to 0}{h}');"/>
+                        <br/>
+                        <input type="button" value="∞" onclick="insertText('\\infty');"/>
+                        　
+                    </td>
+                    <td>
+                        文字<br/>
+                        <input type="button" value="α" onclick="insertText('\\alpha');"/>
+                        <input type="button" value="β" onclick="insertText('\\beta');"/>
+                        <input type="button" value="γ" onclick="insertText('\\gamma');"/>
+                        <input type="button" value="δ" onclick="insertText('\\delta');"/>
+                        <input type="button" value="ε" onclick="insertText('\\epsilon');"/>
+                        <br/>
+                        <input type="button" value="ζ" onclick="insertText('\\zeta');"/>
+                        <input type="button" value="η" onclick="insertText('\\eta');"/>
+                        <input type="button" value="ι" onclick="insertText('\\iota');"/>
+                        <input type="button" value="κ" onclick="insertText('\\kappa');"/>
+                        <input type="button" value="λ" onclick="insertText('\\lambda');"/>
+                        <br/>
+                        <input type="button" value="μ" onclick="insertText('\\mu');"/>
+                        <input type="button" value="ν" onclick="insertText('\\nu');"/>
+                        <input type="button" value="ξ" onclick="insertText('\\xi');"/>
+                        <input type="button" value="ρ" onclick="insertText('\\rho');"/>
+                        <input type="button" value="σ" onclick="insertText('\\sigma');"/>
+                        <br/>                   
+                        <input type="button" value="θ" onclick="insertText('\\theta');"/>
+                        <input type="button" value="φ" onclick="insertText('\\phi');"/>
+                        <input type="button" value="ψ" onclick="insertText('\\psi');"/>
+                        <input type="button" value="τ" onclick="insertText('\\tau');"/>
+                        <input type="button" value="ω" onclick="insertText('\\omega');"/>
+                        <br/>
+                        <input type="button" value="π" onclick="insertText('\\pi');"/>
+                        <input type="button" value="χ" onclick="insertText('\\chi');"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td id="tdDisp">
+            文字サイズ：<select onchange="setFontSize(this);">
+                <option>9</option>
+                <option selected>11</option>
+                <option>14</option>
+                <option>16</option>
+                <option>20</option>
+                <option>24</option>
+            </select>
+            背景色：<select onchange="setBGColor(this);">
+                <option value="white" selected>白</option>
+                <option value="black">黒</option>
+                <option value="green">緑</option>
+            </select>
+            文字色：<select onchange="setTextColor(this);" id="cmbTextColor">
+                <option value="black" selected>黒</option>
+                <option value="red">赤</option>
+                <option value="blue">青</option>
+            </select>
+            <input type="button" onclick="saveImage();" value="画像を保存"/>
+            <a id="download" href="#" download=""></a></div>
+            <div id="disp" name="disp"></div>
+        </td>
+    </tr>
+</table>
+</body>
+<script type="text/javascript">
+    window.addEventListener('resize', resizeWindow);
     setInterval(function() {
-        if(mChange) {
+        let input = document.getElementById("input");
+        let width = input.style.width.replace("px", "") * 1;
+        if (mInputWidth != width) {
+            resizeInput(width);
+            mInputWidth = width;
+        }
+        if(mTextChange) {
             loadScript();
-            mChange = false;
+            mTextChange = false;
         }
     }, 1);
 </script>
-<body>
-<table>
-    <tr><td>
-        文字サイズ：<select onchange="setFontSize(this);">
-            <option>9</option>
-            <option selected>11</option>
-            <option>14</option>
-            <option>16</option>
-            <option>20</option>
-            <option>24</option>
-        </select>
-        背景色：<select onchange="setBGColor(this);">
-            <option value="white" selected>白</option>
-            <option value="black">黒</option>
-            <option value="green">緑</option>
-        </select>
-        文字色：<select onchange="setTextColor(this);" id="cmbTextColor">
-            <option value="black" selected>黒</option>
-            <option value="red">赤</option>
-            <option value="blue">青</option>
-        </select>
-        <input type="button" onclick="saveImage();" value="画像を保存"/>
-        <a id="download" href="#" download=""></a></div>
-        <div id="disp" name="disp"></div>
-    </td><td>
-        <textarea onkeyup="textChanged(this);" id="input" style="width: 800px; height: 200px;"></textarea><br/>
-        <table>
-            <tr>
-                <td>
-                    基本<br/>
-                    <input type="button" value="align" onclick="insertText('\\begin{align}\n*\r\n\\end{align}');"/>
-                    <input type="button" value="cases" onclick="insertText('\\begin{cases}\n*\r\n\\end{cases}');"/>
-                    <input type="button" value="a/b" onclick="insertText('\\frac{*}{}');"/>
-                    <br/>
-                    <input type="button" value="空白" onclick="insertText(' \\quad ');"/>
-                    <input type="button" value="…" onclick="insertText(' \\cdots ');"/>
-                    <input type="button" value=":" onclick="insertText('\\vdots ');"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 200px;">
-                    演算子<br/>
-                    <input type="button" value="≠" onclick="insertText(' \\neq ');"/>
-                    <input type="button" value="≈" onclick="insertText(' \\approx ');"/>
-                    <input type="button" value="def" onclick="insertText(' \\stackrel{\\mathrm{def}}{=} ');"/>
-                    <br/>
-                    <input type="button" value="＞" onclick="insertText(' \\gt ');"/>
-                    <input type="button" value="≧" onclick="insertText(' \\ge ');"/>
-                    <input type="button" value="＜" onclick="insertText(' \\lt ');"/>
-                    <input type="button" value="≦" onclick="insertText(' \\le ');"/>
-                    <br/>
-                    <input type="button" value="+-" onclick="insertText(' \\pm ');"/>
-                    <input type="button" value="-+" onclick="insertText(' \\mp ');"/>
-                    <br/>
-                    <input type="button" value="Λ" onclick="insertText(' \\land ');"/>
-                    <input type="button" value="Ｖ" onclick="insertText(' \\lor ');"/>
-                    <br/>
-                    <input type="button" value="∴" onclick="insertText('\\therefore ');"/>
-                    <input type="button" value="∵" onclick="insertText('\\because ');"/>
-                    <input type="button" value="⇒" onclick="insertText('\\Rightarrow ');"/>
-                </td>
-                <td style="width: 200px;">
-                    ベクトル・行列<br/>
-                    <input type="button" value="v" style="font-weight: bold;" onclick="insertText('\\mathbf{*}');"/>
-                    <input type="button" value="→" onclick="insertText('\\overrightarrow{*}');"/>
-                    <br/>
-                    <input type="button" value="・" onclick="insertText(' \\cdot ');"/>
-                    <input type="button" value="×" onclick="insertText(' \\times ');"/>
-                    <input type="button" value="Λ" onclick="insertText(' \\wedge ');"/>
-                    <input type="button" value="(×)" onclick="insertText(' \\otimes ');"/>
-                    <br/>
-                    <input type="button" value="v/||v||" onclick="insertText('\\frac{\\mathbf{*}}{\\lVert{\\mathbf{*}}\\rVert_2}');"/>
-                    <input type="button" value="v/|v|" onclick="insertText('\\frac{\\overrightarrow{*}}{\\lvert{\\overrightarrow{*}}\\rvert}');"/>
-                    <br/>
-                    <input type="button" value="L1" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_1');"/>
-                    <input type="button" value="L2" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_2');"/>
-                    <input type="button" value="L∞" onclick="insertText('\\lVert{\\mathbf{*}}\\rVert_\\infty');"/>
-                    <br/>
-                    <input type="button" value="[ ]" onclick="insertText('\\begin{bmatrix}\n*\n\\end{bmatrix}');"/>
-                    <input type="button" value="( )" onclick="insertText('\\begin{pmatrix}\n*\n\\end{pmatrix}');"/>
-                </td>
-                <td style="width: 200px;">
-                    図形<br/>
-                    <input type="button" value="△" onclick="insertText('\\triangle\\mathrm{*}');"/>
-                    <input type="button" value="∠" onclick="insertText('\\angle\\mathrm{*}');"/>
-                    <input type="button" value="°" onclick="insertText('*^{\\circ}');"/>
-                    <br/>
-                    <input type="button" value="//" onclick="insertText(' /\\!/ ');"/>
-                    <input type="button" value="⊥" onclick="insertText(' \\perp ');"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    関数<br/>
-                    <input type="button" value="abs" onclick="insertText('\\lvert{*}\\rvert');"/>
-                    <br/>
-                    <input type="button" value="sqr" onclick="insertText('^{2}');"/>
-                    <input type="button" value="cube" onclick="insertText('^{3}');"/>
-                    <br/>
-                    <input type="button" value="sqrt" onclick="insertText('\\sqrt{*}');"/>
-                    <input type="button" value="cbrt" onclick="insertText('\\sqrt[3]{*}');"/>
-                    <br/>
-                    <input type="button" value="e" onclick="insertText('e^{*}');"/>
-                    <input type="button" value="ln" onclick="insertText('\\ln{*}');"/>
-                    <input type="button" value="log10" onclick="insertText('\\log_{10}{*}');"/>
-                    <br/>
-                    <input type="button" value="sin" onclick="insertText('\\sin{*}');"/>
-                    <input type="button" value="cos" onclick="insertText('\\cos{*}');"/>
-                    <input type="button" value="tan" onclick="insertText('\\tan{*}');"/>
-                    <br/>
-                    <input type="button" value="asin" onclick="insertText('\\sin^{-1}{*}');"/>
-                    <input type="button" value="acos" onclick="insertText('\\cos^{-1}{*}');"/>
-                    <input type="button" value="atan" onclick="insertText('\\tan^{-1}{*}');"/>
-                </td>
-                <td>
-                    微積・解析<br/>
-                    <input type="button" value="dot" onclick="insertText('\\dot{*}');"/>
-                    <input type="button" value="ddot" onclick="insertText('\\ddot{*}');"/>
-                    <br/>
-                    <input type="button" value="x′" onclick="insertText('^{\\prime}');"/>
-                    <input type="button" value="x″" onclick="insertText('^{\\prime\\prime}');"/>
-                    <br/>
-                    <input type="button" value="d" onclick="insertText('\\frac{d*}{d*}');"/>
-                    <input type="button" value="d2" onclick="insertText('\\frac{d^2 *}{d*^2}');"/>
-                    <br/>
-                    <input type="button" value="∂" onclick="insertText('\\frac{\\partial *}{\\partial *}');"/>
-                    <input type="button" value="∂2" onclick="insertText('\\frac{\\partial^2 *}{\\partial *^2}');"/>
-                    <br/>
-                    <input type="button" value="∇" onclick="insertText('\\nabla');"/>
-                    <input type="button" value="∇2" onclick="insertText('\\nabla^{2}');"/>
-                    <input type="button" value="Δ" onclick="insertText('\\Delta');"/>
-                    <br/>
-                    <input type="button" value="∫" onclick="insertText('\\int{*}dx');"/>
-                    <input type="button" value="∫ a~b" onclick="insertText('\\int^{b}_{a}{*}dx');"/>
-                    <br/>
-                    <input type="button" value="Σ" onclick="insertText('\\sum_{k*=1}^{n}{k}');"/>
-                    <input type="button" value="Π" onclick="insertText('\\prod_{k*=1}^{n}{k}');"/>
-                    <input type="button" value="lim" onclick="insertText('\\lim_{h* \\to 0}{h}');"/>
-                    <br/>
-                    <input type="button" value="∞" onclick="insertText('\\infty');"/>
-                    　
-                </td>
-                <td>
-                    文字<br/>
-                    <input type="button" value="α" onclick="insertText('\\alpha');"/>
-                    <input type="button" value="β" onclick="insertText('\\beta');"/>
-                    <input type="button" value="γ" onclick="insertText('\\gamma');"/>
-                    <input type="button" value="δ" onclick="insertText('\\delta');"/>
-                    <input type="button" value="ε" onclick="insertText('\\epsilon');"/>
-                    <br/>
-                    <input type="button" value="ζ" onclick="insertText('\\zeta');"/>
-                    <input type="button" value="η" onclick="insertText('\\eta');"/>
-                    <input type="button" value="ι" onclick="insertText('\\iota');"/>
-                    <input type="button" value="κ" onclick="insertText('\\kappa');"/>
-                    <input type="button" value="λ" onclick="insertText('\\lambda');"/>
-                    <br/>
-                    <input type="button" value="μ" onclick="insertText('\\mu');"/>
-                    <input type="button" value="ν" onclick="insertText('\\nu');"/>
-                    <input type="button" value="ξ" onclick="insertText('\\xi');"/>
-                    <input type="button" value="ρ" onclick="insertText('\\rho');"/>
-                    <input type="button" value="σ" onclick="insertText('\\sigma');"/>
-                    <br/>                   
-                    <input type="button" value="θ" onclick="insertText('\\theta');"/>
-                    <input type="button" value="φ" onclick="insertText('\\phi');"/>
-                    <input type="button" value="ψ" onclick="insertText('\\psi');"/>
-                    <input type="button" value="τ" onclick="insertText('\\tau');"/>
-                    <input type="button" value="ω" onclick="insertText('\\omega');"/>
-                    <br/>
-                    <input type="button" value="π" onclick="insertText('\\pi');"/>
-                    <input type="button" value="χ" onclick="insertText('\\chi');"/>
-                </td>
-            </tr>
-        </table>
-    </td></tr>
-</table>
-</body>
 </html>
