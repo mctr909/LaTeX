@@ -63,10 +63,10 @@ function main() {
         dangle += 2*Math.PI;
     }
 
-    gDrawer.drawArc(gO, 20, da.arg, dangle + da.arg, R_COLOR, 2);
-    gDrawer.drawLine(gO, gA, A_COLOR, 1, 2);
-    gDrawer.drawLine(gO, gB, R_COLOR, 1, 2);
-    gDrawer.drawLine(gA, gB, O_COLOR, 1, 2);
+    gDrawer.drawArc(gO, 20, da.arg, dangle + da.arg, Drawer.BLACK, 3);
+    gDrawer.drawLine(gO, gA, A_COLOR, 1, 5);
+    gDrawer.drawLine(gO, gB, R_COLOR, 1, 5);
+    gDrawer.drawLine(gA, gB, O_COLOR, 1, 5);
     gDrawer.fillCircle(gA, 5, A_COLOR);
     gDrawer.fillCircle(gB, 5, R_COLOR);
     gDrawer.fillCircle(gO, 5);
@@ -77,13 +77,14 @@ function main() {
     midPos(gO, gA, 0.5, lblA);
     midPos(gO, gB, 0.5, lblR);
     midPos(gA, gB, 0.5, lblO);
+
     lblA.Y -= 15;
     lblR.Y -= 15;
     lblO.Y -= 15;
     gDrawer.drawString(lblA, "a", 24);
     gDrawer.drawString(lblR, "r", 24);
     gDrawer.drawString(lblO, "o", 24);
-  
+
     let ta = da.abs / UNIT;
     let tr = dr.abs / UNIT;
     let to = dc.abs / UNIT;
@@ -92,7 +93,7 @@ function main() {
     document.getElementById("lblR").innerHTML = round1d(tr);
     document.getElementById("lblO").innerHTML = round1d(to);
     document.getElementById("lblTheta").innerHTML
-        = round1d(dangle, 1 / Math.PI, 2) + "π"
+        = toFrac(dangle / Math.PI, "π", false)
         + "(" + round1d(dangle, 180 / Math.PI, 1) + "°)";
     document.getElementById("lblCos").innerHTML = round1d(tcos);
 
