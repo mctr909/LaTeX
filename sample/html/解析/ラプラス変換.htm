@@ -2,13 +2,52 @@
 <html lang="ja">
 <head>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+	<link href="../style.css" rel="stylesheet" type="text/css" media="all">
 </head>
 <body>
-	<div id="disp" style="width: 0px;">
-	\begin{align}
-	&\mathfrak{L}(s) = \int^{\infty}_{0}f(t)e^{-st}dt \\
-	&s = c + i\omega
-	\end{align}
-	</div>
+	<table>
+		<tr><td>
+			[ ラプラス変換 ]
+			\begin{align}
+				\mathfrak{L}\left[f(t)\right] &:= \int^{\infty}_{0}f(t)e^{-st}dt \\
+			\end{align}
+		</td></tr>
+		<tr><td>
+			\begin{align}
+				\mathfrak{L}\left[e^{\alpha t}\right]&=\int^{\infty}_{0}{e^{\alpha t}}e^{-st}dt \\
+				&=\int^{\infty}_{0}{e^{(\alpha -s)t}}dt \\
+				&=-\cfrac{1}{s-\alpha}\left[e^{(\alpha-s)t}\right]^{\infty}_{0} \\
+				&=-\cfrac{1}{s-\alpha}\left(e^{(\alpha-s)\cdot \infty}-e^{(\alpha-s)\cdot0}\right) \\
+				&=-\cfrac{1}{s-\alpha}\left(0-1\right) \quad\cdots\mathrm{Re}\left(\alpha\right) \lt \mathrm{Re}\left(s\right)の場合 \\
+				&=\cfrac{1}{s-\alpha}
+			\end{align}
+		</td></tr>
+		<tr><td>
+			\begin{align}
+				\mathfrak{L}\left[\cos{\omega t}\right]&=\int^{\infty}_{0}{\cos(\omega t)}e^{-st}dt \\
+				&=\int^{\infty}_{0}{\cfrac{\left(e^{i\omega t}+e^{-i\omega t}\right)}{2}e^{-st}}dt \\
+				&=\frac{1}{2}\left(\int^{\infty}_{0}{e^{i\omega t}e^{-st}}dt + \int^{\infty}_{0}{e^{-i\omega t}e^{-st}}dt\right) \\
+				&=\frac{1}{2}\left(\mathfrak{L}\left[e^{i\omega t}\right] + \mathfrak{L}\left[e^{-i\omega t}\right]\right) \quad\cdots i\omega,-i\omegaを\mathfrak{L}\left[e^{\alpha t}\right]の\alphaに代入 \\
+				&=\frac{1}{2}\left(\cfrac{1}{s-i\omega} + \cfrac{1}{s+i\omega}\right) \\
+				&=\frac{1}{2}\left(\cfrac{s+i\omega}{(s-i\omega)(s+i\omega)} + \cfrac{s-i\omega}{(s+i\omega)(s-i\omega)}\right) \\
+				&=\frac{1}{2}\left(\cfrac{s+i\omega}{s^2+\omega^2} + \cfrac{s-i\omega}{s^2+\omega^2}\right) \\
+				&=\frac{1}{2}\left(\cfrac{2s}{s^2+\omega^2}\right) \\
+				&=\cfrac{s}{s^2+\omega^2}
+			\end{align}
+		</td></tr>
+		<tr><td>
+			\begin{align}
+				\mathfrak{L}\left[\sin{\omega t}\right]&=\int^{\infty}_{0}{\sin(\omega t)}e^{-st}dt \\
+				&=\int^{\infty}_{0}{\cfrac{\left(e^{i\omega t}-e^{-i\omega t}\right)}{2i}e^{-st}}dt \\
+				&=\frac{1}{2i}\left(\int^{\infty}_{0}{e^{i\omega t}e^{-st}}dt - \int^{\infty}_{0}{e^{-i\omega t}e^{-st}}dt\right) \\
+				&=\frac{1}{2i}\left(\mathfrak{L}\left[e^{i\omega t}\right] - \mathfrak{L}\left[e^{-i\omega t}\right]\right) \quad\cdots i\omega,-i\omegaを\mathfrak{L}\left[e^{\alpha t}\right]の\alphaに代入 \\
+				&=\frac{1}{2i}\left(\cfrac{1}{s-i\omega} - \cfrac{1}{s+i\omega}\right) \\
+				&=\frac{1}{2i}\left(\cfrac{s+i\omega}{(s-i\omega)(s+i\omega)} - \cfrac{s-i\omega}{(s+i\omega)(s-i\omega)}\right) \\
+				&=\frac{1}{2i}\left(\cfrac{s+i\omega}{s^2+\omega^2} - \cfrac{s-i\omega}{s^2+\omega^2}\right) \\
+				&=\frac{1}{2i}\left(\cfrac{2i\omega}{s^2+\omega^2}\right) \\
+				&=\cfrac{\omega}{s^2+\omega^2}
+			\end{align}
+		</td></tr>
+	</table>
 </body>
 </html>
