@@ -28,10 +28,12 @@ div {
 <script type="text/javascript" src="script/config/MML.js"></script>
 <script type="text/javascript" src="script/config/Menu.js"></script>
 <script type="text/javascript">
-    const INPUT_MIN_WIDTH = 155 + 160 + 180 + 14;
-    const BUTTON_GROUP_HEIGHT = 450;
-    let mTextChange = true;
+    const INPUT_MIN_WIDTH = 500;
+    const BUTTON_GROUP_HEIGHT = 480;
+    let mButtonGroupHeight = BUTTON_GROUP_HEIGHT;
     let mInputWidth = INPUT_MIN_WIDTH;
+    let mText = "";
+    let mTextChanged = false;
     function resizeWindow() {
         let tdDisp = document.getElementById("tdDisp");
         let tdInput = document.getElementById("tdInput");
@@ -47,13 +49,20 @@ div {
             tdInput.style.width = INPUT_MIN_WIDTH + "px";
             input.style.width = INPUT_MIN_WIDTH + "px";
         }
+        if (0 == mButtonGroupHeight) {
+            input.style.height = (window.innerHeight - 50) + "px";
+            tableButtons.hidden = true;
+            return;
+        } else {
+            tableButtons.hidden = false;
+        }
         let height = window.innerHeight / 2;
-        if (BUTTON_GROUP_HEIGHT <= height) {
-            input.style.height = height + "px";
+        if (mButtonGroupHeight <= height) {
+            input.style.height = window.innerHeight + "px";
             tableButtons.style.height = height + "px";
         } else {
-            input.style.height = (window.innerHeight - BUTTON_GROUP_HEIGHT) + "px";
-            tableButtons.style.height = BUTTON_GROUP_HEIGHT + "px";
+            input.style.height = (window.innerHeight - mButtonGroupHeight) + "px";
+            tableButtons.style.height = (mButtonGroupHeight - 50) + "px";
         }
     }
     function resizeInput(width) {
@@ -72,15 +81,29 @@ div {
         }
         let inputHeight = input.style.height.replace("px", "") * 1;
         let buttonGroupHeight = window.innerHeight - inputHeight;
-        if (buttonGroupHeight < BUTTON_GROUP_HEIGHT) {
-            input.style.maxHeight = (window.innerHeight - BUTTON_GROUP_HEIGHT - 14) + "px";
+        if (buttonGroupHeight < mButtonGroupHeight) {
+            input.style.maxHeight = (window.innerHeight - mButtonGroupHeight - 14) + "px";
         } else {
             input.style.maxHeight = "";
         }
     }
+    function btnButtonsEnable(obj) {
+        if (0 == mButtonGroupHeight) {
+            mButtonGroupHeight = BUTTON_GROUP_HEIGHT;
+            obj.value = "閉じる";
+        } else {
+            mButtonGroupHeight = 0;
+            obj.value = "開く";
+        }
+        resizeWindow();
+    }
     function textChanged(obj) {
+        if (mText == obj.value) {
+            return;
+        }
         document.getElementById("disp").innerHTML = obj.value;
-        mTextChange = true;
+        mText = obj.value;
+        mTextChanged = true;
     }
     function insertText(value) {
         let obj = document.getElementById("input");
@@ -184,7 +207,8 @@ div {
 <table>
     <tr>
         <td id="tdInput">
-            <textarea onkeyup="textChanged(this);" id="input" style="width: 800px; height: 200px; min-width: 500px; min-height: 100px;"></textarea><br/>
+            <textarea onkeyup="textChanged(this);" onblur="textChanged(this);" id="input" style="width: 800px; height: 150px; min-width: 500px; min-height: 100px;"></textarea><br/>
+            <input id="btnButtonsEnable" type="button" onclick="btnButtonsEnable(this);" value="閉じる" /><br>
             <table id="tableButtons">
                 <tr>
                     <td style="width: 155px;">
@@ -393,9 +417,9 @@ div {
             resizeInput(width);
             mInputWidth = width;
         }
-        if(mTextChange) {
+        if(mTextChanged) {
             loadScript();
-            mTextChange = false;
+            mTextChanged = false;
         }
     }, 1);
 </script>
