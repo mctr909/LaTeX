@@ -434,7 +434,8 @@ class Drawer {
 		for(let i=0; i<lines.length; i++) {
 			this.#ctx.translate(px, py);
 			this.#ctx.rotate(rot);
-			this.#ctx.fillText(lines[i], 0, 0);
+			let sz = this.#ctx.measureText(lines[i]);
+			this.#ctx.fillText(lines[i], -sz.width*0.5, 0);
 			this.#ctx.rotate(-rot);
 			this.#ctx.translate(-px, -py);
 			py += size;

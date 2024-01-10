@@ -98,12 +98,12 @@ function init() {
                 center: true
             });
             gLabelList.push({
-                pos: new vec(12, y-4),
+                pos: new vec(24, y-4),
                 text: toFrac(deg / 180, "π", false),
                 center: false
             });
             gLabelList.push({
-                pos: new vec(-36, y-4),
+                pos: new vec(-24, y-4),
                 text: toFrac(deg),
                 center: false
             });
@@ -125,7 +125,7 @@ function init() {
                 center: true
             });
             gLabelList.push({
-                pos: new vec(-39, y-14),
+                pos: new vec(-24, y-14),
                 text: "[deg]",
                 center: false
             });
@@ -135,7 +135,7 @@ function init() {
                 center: true
             });
             gLabelList.push({
-                pos: new vec(8, y-14),
+                pos: new vec(24, y-14),
                 text: "[rad]",
                 center: false
             });
@@ -251,19 +251,19 @@ function main() {
     let lblrT = new vec(vrt.X - 8, vrt.Y + 6);
     let lblT = new vec(vt.X - 5, vt.Y + 6);
     let lblP = new vec(vp.X - 5, vp.Y + 6);
-    let lblR = new vec(vp.X * 0.5 - 5, vp.Y * 0.5 + 5);
+    let lblR = new vec(vp.X * 0.5, vp.Y * 0.5);
     let lblX = new vec(vc.X * 0.5, -5);
-    let lblY = new vec(vp.X + 3, vp.Y * 0.5 - 3);
+    let lblY = new vec(vp.X + 8, vp.Y * 0.5 - 3);
     let lblRT = new vec(wave_t.X - 46, wave_t.Y + 3);
     let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
     let lblRS = new vec(wave_s.X + 2, wave_s.Y + 3);
-    gDrawer.drawStringXY(18, 4, "θ", 16);
+    gDrawer.drawStringXY(20, 4, "θ", 16);
     gDrawer.drawString(lblrT, "rT", 16);
     gDrawer.drawString(lblT, "T", 16);
     gDrawer.drawString(lblP, "P", 16);
-    gDrawer.drawString(lblR, "r", 18);
-    gDrawer.drawStringC(lblX, "x", 18);
-    gDrawer.drawString(lblY, "y", 18);
+    gDrawer.drawString(lblR, "r", 20, [0,0,0], Drawer.angleH(vo, vp));
+    gDrawer.drawStringC(lblX, "x", 20);
+    gDrawer.drawString(lblY, "y", 20);
     gDrawer.drawString(lblRT, "r tanθ", 16);
     gDrawer.drawString(lblRC, "r cosθ", 16);
     gDrawer.drawString(lblRS, "r sinθ", 16);

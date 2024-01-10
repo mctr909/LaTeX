@@ -10,7 +10,7 @@ let gDrawer = new Drawer("disp", 450, 400);
 
 let gA = new vec(UNIT * 0.8, UNIT * 0.2);
 let gB = new vec(UNIT * 0.0, UNIT * 0.7);
-let gO = new vec(UNIT * -0.3, UNIT * 0.0);
+let gO = new vec(UNIT * -0.8, UNIT * -0.2);
 let gPaDrag = false;
 let gPbDrag = false;
 let gPoDrag = false;
@@ -71,7 +71,7 @@ function main() {
     gDrawer.drawLine(gO, gA);
     gDrawer.drawLine(gO, gB);
     gDrawer.drawLine(gA, gB);
-    gDrawer.drawLineD(gB, c);
+    gDrawer.drawLineD(gB, c, GRIP_COLOR);
     gDrawer.drawLine(gO, c, LINE_COLOR, 1, 5);
     gDrawer.fillCircle(gA, 5, GRIP_COLOR);
     gDrawer.fillCircle(gB, 5, GRIP_COLOR);
@@ -85,14 +85,11 @@ function main() {
     midPos(gB, c, 0.5, lblS);
     midPos(gO, c, 0.5, lblC);
 
-    lblS.X -= 10;
-    lblS.Y -= 10;
-    lblC.Y += 5;
     gDrawer.drawString(lblR, "r", 24, TEXT_COLOR, Drawer.angleH(gO, gB));
     gDrawer.drawString(lblS, "s", 24, TEXT_COLOR, Drawer.angleV(gB, c));
-    gDrawer.drawString(lblC, "c", 24, LINE_COLOR, Drawer.angleH(gO, c));
+    gDrawer.drawString(lblC, "c", 24, TEXT_COLOR, Drawer.angleH(gO, c));
     gDrawer.drawString(gA, "A", 24, TEXT_COLOR, Drawer.angleH(gO, gA));
-    gDrawer.drawString(gB, "B", 24, TEXT_COLOR, Drawer.angleH(gO, gB));
+    gDrawer.drawString(gB, "B", 24, TEXT_COLOR, Drawer.angleH(gO, gA));
     gDrawer.drawString(gO, "O", 24, TEXT_COLOR, Drawer.angleH(gA, gO));
 
     let ta = oa.abs / UNIT;

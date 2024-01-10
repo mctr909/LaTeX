@@ -1,7 +1,7 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = [200, 200, 200];
+const AXIZ_COLOR = [191, 191, 191];
 const TEXT_COLOR = Drawer.BLACK;
 const LINE_COLOR = Drawer.GRAY;
 const RULER_COLOR = Drawer.BLACK;
@@ -42,7 +42,7 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelList.push({
-            pos: new vec(ofsX-40, WAVE_HEIGHT+10),
+            pos: new vec(ofsX-24, WAVE_HEIGHT+10),
             text: "[deg]",
             center: false,
             color: TEXT_COLOR
@@ -54,7 +54,7 @@ function init() {
             color: TEXT_COLOR
         });
         gLabelList.push({
-            pos: new vec(ofsX+8, WAVE_HEIGHT+10),
+            pos: new vec(ofsX+24, WAVE_HEIGHT+10),
             text: "[rad]",
             center: false,
             color: TEXT_COLOR
@@ -75,13 +75,13 @@ function init() {
             ));
             if (deg % 45 == 0) {
                 gLabelList.push({
-                    pos: new vec(ofsX+12, y-4),
+                    pos: new vec(ofsX+24, y-4),
                     text: toFrac(deg / 180, "π", false),
                     center: false,
                     color: TEXT_COLOR
                 });
                 gLabelList.push({
-                    pos: new vec(ofsX-36, y-4),
+                    pos: new vec(ofsX-24, y-4),
                     text: toFrac(deg),
                     center: false,
                     color: TEXT_COLOR
@@ -146,7 +146,7 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelList.push({
-            pos: new vec(ofsX-40, WAVE_HEIGHT+10),
+            pos: new vec(ofsX-24, WAVE_HEIGHT+10),
             text: "[deg]",
             center: false,
             color: TEXT_COLOR
@@ -158,7 +158,7 @@ function init() {
             color: TEXT_COLOR
         });
         gLabelList.push({
-            pos: new vec(ofsX+8, WAVE_HEIGHT+10),
+            pos: new vec(ofsX+24, WAVE_HEIGHT+10),
             text: "[rad]",
             center: false,
             color: TEXT_COLOR
@@ -179,13 +179,13 @@ function init() {
             ));
             if (deg % 45 == 0) {
                 gLabelList.push({
-                    pos: new vec(ofsX+12, y-4),
+                    pos: new vec(ofsX+24, y-4),
                     text: toFrac(deg / 180, "π", false),
                     center: false,
                     color: TEXT_COLOR
                 });
                 gLabelList.push({
-                    pos: new vec(ofsX-36, y-4),
+                    pos: new vec(ofsX-24, y-4),
                     text: toFrac(deg),
                     center: false,
                     color: TEXT_COLOR
@@ -253,7 +253,7 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelList.push({
-            pos: new vec(ofsX-40, ofsY+WAVE_HEIGHT+10),
+            pos: new vec(ofsX-24, ofsY+WAVE_HEIGHT+10),
             text: "[deg]",
             center: false,
             color: TEXT_COLOR
@@ -265,7 +265,7 @@ function init() {
             color: TEXT_COLOR
         });
         gLabelList.push({
-            pos: new vec(ofsX+8, ofsY+WAVE_HEIGHT+10),
+            pos: new vec(ofsX+24, ofsY+WAVE_HEIGHT+10),
             text: "[rad]",
             center: false,
             color: TEXT_COLOR
@@ -286,13 +286,13 @@ function init() {
             ));
             if (deg % 45 == 0) {
                 gLabelList.push({
-                    pos: new vec(ofsX+12, ofsY+y-4),
+                    pos: new vec(ofsX+24, ofsY+y-4),
                     text: toFrac(deg / 180, "π", false),
                     center: false,
                     color: TEXT_COLOR
                 });
                 gLabelList.push({
-                    pos: new vec(ofsX-36, ofsY+y-4),
+                    pos: new vec(ofsX-24, ofsY+y-4),
                     text: toFrac(deg),
                     center: false,
                     color: TEXT_COLOR
