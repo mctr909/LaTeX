@@ -423,15 +423,20 @@ class Drawer {
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
+	 * @param {number} rot
 	 */
-	drawStringXY(x, y, value, size = 11, color = [0,0,0]) {
+	drawStringXY(x, y, value, size = 11, color = [0,0,0], rot = 0) {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
+		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)";
 		let px = this.#offset.X + x;
 		let py = this.#offset.Y - y;
 		let lines = value.split("\n");
 		for(let i=0; i<lines.length; i++) {
-			this.#ctx.fillText(lines[i], px, py);
+			this.#ctx.translate(px, py);
+			this.#ctx.rotate(rot);
+			this.#ctx.fillText(lines[i], 0, 0);
+			this.#ctx.rotate(-rot);
+			this.#ctx.translate(-px, -py);
 			py += size;
 		}
 	}
@@ -441,9 +446,10 @@ class Drawer {
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
+	 * @param {number} rot
 	 */
-	drawString(p, value, size = 11, color = [0,0,0]) {
-		this.drawStringXY(p.X, p.Y, value, size, color);
+	drawString(p, value, size = 11, color = [0,0,0], rot = 0) {
+		this.drawStringXY(p.X, p.Y, value, size, color, rot);
 	}
 
 	/**
@@ -564,5 +570,27 @@ class Drawer {
 	#roundCursor(x, y) {
 		this.cursor.X = parseInt(x / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv - this.#offset.X;
 		this.cursor.Y = this.#offset.Y - parseInt(y / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv;
+	}
+
+	/**
+	 * @param {vec} a
+	 * @param {vec} b
+	 * @returns {number}
+	 */
+	static angleV(a, b) {
+		let sx = a.X - b.X;
+		let sy = a.Y - b.Y;
+		return Math.atan2(sx, sy);
+	}
+
+	/**
+	 * @param {vec} a
+	 * @param {vec} b
+	 * @returns {number}
+	 */
+	static angleH(a, b) {
+		let sx = b.X - a.X;
+		let sy = a.Y - b.Y;
+		return Math.atan2(sy, sx);
 	}
 }

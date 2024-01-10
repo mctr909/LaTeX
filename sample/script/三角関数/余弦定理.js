@@ -2,14 +2,14 @@
 /// <reference path="../drawer.js" />
 
 const UNIT = 200;
-const R_COLOR = Drawer.GREEN;
-const A_COLOR = Drawer.BLUE;
-const O_COLOR = Drawer.RED;
+const GRIP_COLOR = [167, 167, 167];
+const LINE_COLOR = Drawer.GREEN;
+const TEXT_COLOR = Drawer.BLACK;
 
 let gDrawer = new Drawer("disp", 450, 400);
 
-let gA = new vec(UNIT * 0.5, UNIT * 0.0);
-let gB = new vec(UNIT * 0.5, UNIT * 0.7);
+let gA = new vec(UNIT * 0.8, UNIT * 0.2);
+let gB = new vec(UNIT * 0.0, UNIT * 0.7);
 let gO = new vec(UNIT * -0.3, UNIT * 0.0);
 let gPaDrag = false;
 let gPbDrag = false;
@@ -49,13 +49,13 @@ function main() {
         gDrawer.cursor.copy(gO);
     }
 
-    let da = new vec();
-    let dr = new vec();
-    let dc = new vec();
-    gA.sub(gO, da);
-    gB.sub(gO, dr);
-    gA.sub(gB, dc);  
-    let dangle = dr.arg - da.arg;
+    let oa = new vec();
+    let ob = new vec();
+    let ba = new vec();
+    gA.sub(gO, oa);
+    gB.sub(gO, ob);
+    gA.sub(gB, ba);  
+    let dangle = ob.arg - oa.arg;
     if (2*Math.PI < dangle) {
         dangle -= 2*Math.PI;
     }
@@ -63,31 +63,41 @@ function main() {
         dangle += 2*Math.PI;
     }
 
-    gDrawer.drawArc(gO, 20, da.arg, dangle + da.arg, Drawer.BLACK, 3);
-    gDrawer.drawLine(gO, gA, A_COLOR, 1, 5);
-    gDrawer.drawLine(gO, gB, R_COLOR, 1, 5);
-    gDrawer.drawLine(gA, gB, O_COLOR, 1, 5);
-    gDrawer.fillCircle(gA, 5, A_COLOR);
-    gDrawer.fillCircle(gB, 5, R_COLOR);
-    gDrawer.fillCircle(gO, 5);
+    let oaL2 = oa.X*oa.X + oa.Y*oa.Y;
+    let k = (oa.X * ob.X + oa.Y*ob.Y) / oaL2;
+    let c = new vec(oa.X * k + gO.X, oa.Y * k + gO.Y);
 
-    let lblA = new vec();
+    gDrawer.drawArc(gO, 20, oa.arg, dangle + oa.arg, Drawer.BLACK, 3);
+    gDrawer.drawLine(gO, gA);
+    gDrawer.drawLine(gO, gB);
+    gDrawer.drawLine(gA, gB);
+    gDrawer.drawLineD(gB, c);
+    gDrawer.drawLine(gO, c, LINE_COLOR, 1, 5);
+    gDrawer.fillCircle(gA, 5, GRIP_COLOR);
+    gDrawer.fillCircle(gB, 5, GRIP_COLOR);
+    gDrawer.fillCircle(gO, 5, GRIP_COLOR);
+    gDrawer.fillCircle(c, 5, LINE_COLOR);
+
     let lblR = new vec();
-    let lblO = new vec();
-    midPos(gO, gA, 0.5, lblA);
+    let lblS = new vec();
+    let lblC = new vec();
     midPos(gO, gB, 0.5, lblR);
-    midPos(gA, gB, 0.5, lblO);
+    midPos(gB, c, 0.5, lblS);
+    midPos(gO, c, 0.5, lblC);
 
-    lblA.Y -= 15;
-    lblR.Y -= 15;
-    lblO.Y -= 15;
-    gDrawer.drawString(lblA, "a", 24);
-    gDrawer.drawString(lblR, "r", 24);
-    gDrawer.drawString(lblO, "o", 24);
+    lblS.X -= 10;
+    lblS.Y -= 10;
+    lblC.Y += 5;
+    gDrawer.drawString(lblR, "r", 24, TEXT_COLOR, Drawer.angleH(gO, gB));
+    gDrawer.drawString(lblS, "s", 24, TEXT_COLOR, Drawer.angleV(gB, c));
+    gDrawer.drawString(lblC, "c", 24, LINE_COLOR, Drawer.angleH(gO, c));
+    gDrawer.drawString(gA, "A", 24, TEXT_COLOR, Drawer.angleH(gO, gA));
+    gDrawer.drawString(gB, "B", 24, TEXT_COLOR, Drawer.angleH(gO, gB));
+    gDrawer.drawString(gO, "O", 24, TEXT_COLOR, Drawer.angleH(gA, gO));
 
-    let ta = da.abs / UNIT;
-    let tr = dr.abs / UNIT;
-    let to = dc.abs / UNIT;
+    let ta = oa.abs / UNIT;
+    let tr = ob.abs / UNIT;
+    let to = ba.abs / UNIT;
     let tcos = (ta*ta + tr*tr - to*to) / (2*ta*tr);
     document.getElementById("lblA").innerHTML = round1d(ta);
     document.getElementById("lblR").innerHTML = round1d(tr);
