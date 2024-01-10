@@ -1,7 +1,7 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = [191, 191, 191];
+const AXIZ_COLOR = [200, 200, 200];
 const TEXT_COLOR = Drawer.BLACK;
 const LINE_COLOR = Drawer.GRAY;
 const RULER_COLOR = Drawer.BLACK;
@@ -343,8 +343,9 @@ function init() {
         for(let y=0; y<WAVE_HEIGHT; y++) {
             let th = Math.PI * (y / WAVE_HEIGHT + 0.5);
             let tan = Math.tan(th);
-            tan = Math.min(amp, Math.max(-amp, tan)) * (0==y ? -1 : 1);
-            gaTanLine.push(new vec(ofsX + tan*width/amp, ofsY+y));
+            if (-amp*1.2 <= tan && tan <= amp*1.2) {
+                gaTanLine.push(new vec(ofsX + tan*width/amp, ofsY+y));
+            }
         }
     }
 }
