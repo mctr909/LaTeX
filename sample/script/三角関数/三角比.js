@@ -110,23 +110,33 @@ function init() {
         }
         if (deg == 360) {
             gLabelList.push({
-                pos: new vec(x+34, -12),
-                text: "[rad]",
-                center: true
-            });
-            gLabelList.push({
-                pos: new vec(x+34, 18),
+                pos: new vec(x+32, 18),
                 text: "[deg]",
                 center: true
             });
             gLabelList.push({
-                pos: new vec(8, y-16),
+                pos: new vec(x+25, 3),
+                text: "[θ]",
+                center: true
+            });
+            gLabelList.push({
+                pos: new vec(x+32, -12),
                 text: "[rad]",
+                center: true
+            });
+            gLabelList.push({
+                pos: new vec(-39, y-14),
+                text: "[deg]",
                 center: false
             });
             gLabelList.push({
-                pos: new vec(-36, y-16),
-                text: "[deg]",
+                pos: new vec(0, y-7),
+                text: "[θ]",
+                center: true
+            });
+            gLabelList.push({
+                pos: new vec(8, y-14),
+                text: "[rad]",
                 center: false
             });
         }
