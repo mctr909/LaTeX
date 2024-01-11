@@ -8,19 +8,31 @@ const RULER_COLOR = Drawer.BLACK;
 const CIRCLE_COLOR = Drawer.BLACK;
 const KNOB_COLOR = Drawer.GREEN;
 
-const WAVE_WIDTH = 150;
+const WAVE_WIDTH = 200;
 const WAVE_HEIGHT = 300;
 const GAP = 25;
 
-let gDrawer = new Drawer("disp",
-    WAVE_WIDTH * 4 + GAP * 4.5,
-    WAVE_HEIGHT * 2 + GAP * 5
+let gDrawerC = new Drawer("dispC",
+    WAVE_WIDTH * 2 + GAP * 2,
+    WAVE_HEIGHT + GAP * 2
 );
-let gLineList = [];
-let gLabelList = [];
-let gaCosLine = [];
-let gaSinLine = [];
-let gaTanLine = [];
+let gDrawerS = new Drawer("dispS",
+    WAVE_WIDTH * 2 + GAP * 2,
+    WAVE_HEIGHT + GAP * 2
+);
+let gDrawerT = new Drawer("dispT",
+    WAVE_WIDTH * 4 + GAP * 4,
+    WAVE_HEIGHT + GAP * 2
+);
+let gAxisListC = [];
+let gAxisListS = [];
+let gAxisListT = [];
+let gLabelListC = [];
+let gLabelListS = [];
+let gLabelListT = [];
+let gLineC = [];
+let gLineS = [];
+let gLineT = [];
 
 init();
 requestNextAnimationFrame(main);
@@ -31,52 +43,54 @@ function init() {
         item.style.overflow = "hidden";
     }
 
-    gDrawer.Offset = new vec(0, WAVE_HEIGHT + GAP);
+    gDrawerC.Offset = new vec(0, WAVE_HEIGHT + GAP);
+    gDrawerS.Offset = new vec(0, WAVE_HEIGHT + GAP);
+    gDrawerT.Offset = new vec(0, WAVE_HEIGHT + GAP);
 
     {
-        let ofsX = WAVE_WIDTH + GAP/2;
+        let ofsX = WAVE_WIDTH + GAP/2 + 2;
         let div = 10;
-        gLineList.push(new LineInfo(
+        gAxisListC.push(new LineInfo(
             ofsX, 0,
             ofsX, WAVE_HEIGHT,
             1, AXIZ_COLOR
         ));
-        gLabelList.push({
-            pos: new vec(ofsX-24, WAVE_HEIGHT+17),
+        gLabelListC.push({
+            pos: new vec(ofsX-28, WAVE_HEIGHT+17),
             text: "[deg]"
         });
-        gLabelList.push({
+        gLabelListC.push({
             pos: new vec(ofsX, WAVE_HEIGHT+17),
             text: "[θ]"
         });
-        gLabelList.push({
-            pos: new vec(ofsX+24, WAVE_HEIGHT+17),
+        gLabelListC.push({
+            pos: new vec(ofsX+28, WAVE_HEIGHT+17),
             text: "[rad]"
         });
-        gLabelList.push({
-            pos: new vec(ofsX+WAVE_WIDTH+15, 4),
+        gLabelListC.push({
+            pos: new vec(ofsX+WAVE_WIDTH+18, 4),
             text: "[x/r]"
         });
         for (let deg=0; deg<=180; deg += 15) {
             let y = WAVE_HEIGHT * (180 - deg) / 180.0;
             let h = ((0 == deg % 45) ? 7 : 2.5);
-            gLineList.push(new LineInfo(
+            gAxisListC.push(new LineInfo(
                 ofsX-h, y,
                 ofsX+h, y,
                 1, AXIZ_COLOR
             ));
-            if (deg % 45 == 0) {
-                gLabelList.push({
-                    pos: new vec(ofsX+24, y+3),
+            if (deg % 15 == 0) {
+                gLabelListC.push({
+                    pos: new vec(ofsX+28, y+3),
                     text: toFrac(deg / 180, "π", false)
                 });
-                gLabelList.push({
-                    pos: new vec(ofsX-24, y+3),
+                gLabelListC.push({
+                    pos: new vec(ofsX-28, y+3),
                     text: toFrac(deg)
                 });
             }
         }
-        gLineList.push(new LineInfo(
+        gAxisListC.push(new LineInfo(
             ofsX-WAVE_WIDTH, 0,
             ofsX+WAVE_WIDTH, 0,
             1, AXIZ_COLOR
@@ -92,13 +106,13 @@ function init() {
                 h = 2.5; break;
             }
             let x = v * WAVE_WIDTH / div;
-            gLineList.push(new LineInfo(
+            gAxisListC.push(new LineInfo(
                 ofsX+x, -h,
                 ofsX+x, h,
                 1, AXIZ_COLOR
             ));
             if(0 == Math.abs(v*2) % 10) {
-                gLabelList.push({
+                gLabelListC.push({
                     pos: new vec(ofsX+x, -15),
                     text: v/div + ""
                 });
@@ -106,53 +120,53 @@ function init() {
         }
         for(let y=0; y<WAVE_HEIGHT; y++) {
             let th = Math.PI * y / WAVE_HEIGHT;
-            gaCosLine.push(new vec(ofsX-Math.cos(th) * WAVE_WIDTH, y));
+            gLineC.push(new vec(ofsX-Math.cos(th) * WAVE_WIDTH, y));
         }
     }
     {
-        let ofsX = WAVE_WIDTH*3 + GAP*3;
+        let ofsX = WAVE_WIDTH + GAP/2 + 2;
         let div = 10;
-        gLineList.push(new LineInfo(
+        gAxisListS.push(new LineInfo(
             ofsX, 0,
             ofsX, WAVE_HEIGHT,
             1, AXIZ_COLOR
         ));
-        gLabelList.push({
-            pos: new vec(ofsX-24, WAVE_HEIGHT+17),
+        gLabelListS.push({
+            pos: new vec(ofsX-28, WAVE_HEIGHT+17),
             text: "[deg]"
         });
-        gLabelList.push({
+        gLabelListS.push({
             pos: new vec(ofsX, WAVE_HEIGHT+17),
             text: "[θ]"
         });
-        gLabelList.push({
-            pos: new vec(ofsX+24, WAVE_HEIGHT+17),
+        gLabelListS.push({
+            pos: new vec(ofsX+28, WAVE_HEIGHT+17),
             text: "[rad]"
         });
-        gLabelList.push({
-            pos: new vec(ofsX+WAVE_WIDTH+15, 4),
+        gLabelListS.push({
+            pos: new vec(ofsX+WAVE_WIDTH+18, 4),
             text: "[y/r]"
         });
         for (let deg=-90; deg<=90; deg += 15) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
             let h = ((0 == deg % 45) ? 7 : 2.5);
-            gLineList.push(new LineInfo(
+            gAxisListS.push(new LineInfo(
                 ofsX-h, y,
                 ofsX+h, y,
                 1, AXIZ_COLOR
             ));
-            if (deg % 45 == 0) {
-                gLabelList.push({
-                    pos: new vec(ofsX+24, y+3),
+            if (deg % 15 == 0) {
+                gLabelListS.push({
+                    pos: new vec(ofsX+28, y+3),
                     text: toFrac(deg / 180, "π", false)
                 });
-                gLabelList.push({
-                    pos: new vec(ofsX-24, y+3),
+                gLabelListS.push({
+                    pos: new vec(ofsX-28, y+3),
                     text: toFrac(deg)
                 });
             }
         }
-        gLineList.push(new LineInfo(
+        gAxisListS.push(new LineInfo(
             ofsX-WAVE_WIDTH, 0,
             ofsX+WAVE_WIDTH, 0,
             1, AXIZ_COLOR
@@ -168,13 +182,13 @@ function init() {
                 h = 2.5; break;
             }
             let x = v * WAVE_WIDTH / div;
-            gLineList.push(new LineInfo(
+            gAxisListS.push(new LineInfo(
                 ofsX+x, -h,
                 ofsX+x, h,
                 1, AXIZ_COLOR
             ));
             if(0 == Math.abs(v*2) % 10) {
-                gLabelList.push({
+                gLabelListS.push({
                     pos: new vec(ofsX+x, -15),
                     text: v/div + ""
                 });
@@ -182,51 +196,51 @@ function init() {
         }
         for(let y=0; y<WAVE_HEIGHT; y++) {
             let th = Math.PI * (y / WAVE_HEIGHT - 0.5);
-            gaSinLine.push(new vec(ofsX+Math.sin(th) * WAVE_WIDTH, y));
+            gLineS.push(new vec(ofsX+Math.sin(th) * WAVE_WIDTH, y));
         }
     }
     {
         let width = WAVE_WIDTH*2;
-        let ofsX = width + GAP/2;
-        let ofsY = -WAVE_HEIGHT-GAP*3;
+        let ofsX = width + GAP*2;
+        let ofsY = 0;
         let amp = 10;
         let div = 10;
-        gLineList.push(new LineInfo(
+        gAxisListT.push(new LineInfo(
             ofsX, ofsY,
             ofsX, ofsY+WAVE_HEIGHT,
             1, AXIZ_COLOR
         ));
-        gLabelList.push({
-            pos: new vec(ofsX-24, ofsY+WAVE_HEIGHT+17),
+        gLabelListT.push({
+            pos: new vec(ofsX-28, ofsY+WAVE_HEIGHT+17),
             text: "[deg]"
         });
-        gLabelList.push({
+        gLabelListT.push({
             pos: new vec(ofsX, ofsY+WAVE_HEIGHT+17),
             text: "[θ]"
         });
-        gLabelList.push({
-            pos: new vec(ofsX+24, ofsY+WAVE_HEIGHT+17),
+        gLabelListT.push({
+            pos: new vec(ofsX+28, ofsY+WAVE_HEIGHT+17),
             text: "[rad]"
         });
-        gLabelList.push({
-            pos: new vec(ofsX+width+16, ofsY+4),
+        gLabelListT.push({
+            pos: new vec(ofsX+width+18, ofsY+4),
             text: "[y/x]"
         });
         for (let deg=-90; deg<=90; deg += 15) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
             let h = ((0 == deg % 45) ? 7 : 2.5);
-            gLineList.push(new LineInfo(
+            gAxisListT.push(new LineInfo(
                 ofsX-h, ofsY+y,
                 ofsX+h, ofsY+y,
                 1, AXIZ_COLOR
             ));
-            if (deg % 45 == 0) {
-                gLabelList.push({
-                    pos: new vec(ofsX+24, ofsY+y+3),
+            if (deg % 15 == 0) {
+                gLabelListT.push({
+                    pos: new vec(ofsX+28, ofsY+y+3),
                     text: toFrac(deg / 180, "π", false)
                 });
-                gLabelList.push({
-                    pos: new vec(ofsX-24, ofsY+y+3),
+                gLabelListT.push({
+                    pos: new vec(ofsX-28, ofsY+y+3),
                     text: toFrac(deg)
                 });
             }
@@ -242,14 +256,14 @@ function init() {
                 h = 2.5; break;
             }
             let x = v * width / (amp * div);
-            gLineList.push(new LineInfo(
+            gAxisListT.push(new LineInfo(
                 ofsX+x, ofsY-h,
                 ofsX+x, ofsY+h,
                 1, AXIZ_COLOR
             ));
             switch(Math.abs(v)%10) {
             case 0:
-                gLabelList.push({
+                gLabelListT.push({
                     pos: new vec(ofsX+x, ofsY-15),
                     text: v*0.1 + ""
                 });
@@ -260,23 +274,42 @@ function init() {
             let th = Math.PI * (y / WAVE_HEIGHT + 0.5);
             let tan = Math.tan(th);
             if (-amp*1.2 <= tan && tan <= amp*1.2) {
-                gaTanLine.push(new vec(ofsX + tan*width/amp, ofsY+y));
+                gLineT.push(new vec(ofsX + tan*width/amp, ofsY+y));
             }
         }
     }
 }
 
 function main() {
-    gDrawer.clear();
-    for (let i=0; i<gLineList.length; i++) {
-        gLineList[i].draw(gDrawer);
+    gDrawerC.clear();
+    for (let i=0; i<gAxisListC.length; i++) {
+        gAxisListC[i].draw(gDrawerC);
     }
-    gDrawer.drawPolyline(gaCosLine, LINE_COLOR, 1);
-    gDrawer.drawPolyline(gaSinLine, LINE_COLOR, 1);
-    gDrawer.drawPolyline(gaTanLine, LINE_COLOR, 1);
-    for (let i=0; i<gLabelList.length; i++) {
-        let lbl = gLabelList[i];
-        gDrawer.drawStringC(lbl.pos, lbl.text, 14);
+    gDrawerC.drawPolyline(gLineC, LINE_COLOR, 1);
+    for (let i=0; i<gLabelListC.length; i++) {
+        let lbl = gLabelListC[i];
+        gDrawerC.drawStringC(lbl.pos, lbl.text, 14);
     }
+
+    gDrawerS.clear();
+    for (let i=0; i<gAxisListS.length; i++) {
+        gAxisListS[i].draw(gDrawerS);
+    }
+    gDrawerS.drawPolyline(gLineS, LINE_COLOR, 1);
+    for (let i=0; i<gLabelListS.length; i++) {
+        let lbl = gLabelListS[i];
+        gDrawerS.drawStringC(lbl.pos, lbl.text, 14);
+    }
+
+    gDrawerT.clear();
+    for (let i=0; i<gAxisListT.length; i++) {
+        gAxisListT[i].draw(gDrawerT);
+    }
+    gDrawerT.drawPolyline(gLineT, LINE_COLOR, 1);
+    for (let i=0; i<gLabelListT.length; i++) {
+        let lbl = gLabelListT[i];
+        gDrawerT.drawStringC(lbl.pos, lbl.text, 14);
+    }
+
     requestNextAnimationFrame(main);
 }

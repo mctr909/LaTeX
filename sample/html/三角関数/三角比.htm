@@ -10,16 +10,52 @@
 <body>
 <table>
 <tr>
-    <td style="vertical-align: top;">
-        \begin{align}
-            \cos{\theta} &:= \cfrac{隣辺}{斜辺} = \frac{x}{r} \\
-            \sin{\theta} &:= \cfrac{対辺}{斜辺} = \frac{y}{r} \\
-            \tan{\theta} &:= \cfrac{対辺}{隣辺} = \frac{y}{x} \\
-            \mathrm{rad} &= \frac{\pi\mathrm{deg}}{180} \\
-            \mathrm{P}(x, y) &= (r\cos{\theta}, r\sin{\theta}) \\
-            \mathrm{T}(1, \frac{y}{x}) &= (1, \tan{\theta}) \\
-            r\mathrm{T}(r, r\frac{y}{x}) &= (r, r\tan{\theta})
-        \end{align}
+    <td>
+        <span style="font-size:14pt;">[ 三角比 ]</span>
+        <span style="font-size:14pt;">
+            \begin{align}
+                \cos{\theta} &:= \cfrac{隣辺}{斜辺} = \frac{x}{r} \\
+                \sin{\theta} &:= \cfrac{対辺}{斜辺} = \frac{y}{r} \\
+                \tan{\theta} &:= \cfrac{対辺}{隣辺} = \frac{y}{x}
+            \end{align}
+        </span>
+    </td>
+    <td rowspan="4">
+        <input type="range" id="trbR" min="5" max="20" value="20" style="width: 250px;" />r<br>
+        <input type="range" id="trbTh" min="0" max="360" value="45" style="width: 250px;" />θ<br>
+        <canvas id="disp"></canvas>
+    </td>
+</tr>
+<tr>
+    <td>
+        <span style="font-size:14pt;">[ 弧度法と度数法の関係 ]</span>
+        <span style="font-size:14pt;">
+            \begin{align}
+                \mathrm{rad} = \frac{\mathrm{deg}}{180}\pi
+            \end{align}
+        </span>
+        <span style="font-size:11pt;">
+            \begin{align}
+                \mathrm{rad}(ラジアン) &= 弧度\\
+                \mathrm{deg}(ディグリー) &= 度数
+            \end{align}
+        </span>
+    </td>
+</tr>
+<tr>
+    <td>
+        <span style="font-size:14pt;">[ 各点の座標 ]</span>
+        <span style="font-size:12pt;">
+            \begin{align}
+                \mathrm{P}(x, y) &= (r\cos{\theta}, r\sin{\theta}) \\
+                \mathrm{T}(1, \frac{y}{x}) &= (1, \tan{\theta}) \\
+                r\mathrm{T}(r, r\frac{y}{x}) &= (r, r\tan{\theta})
+            \end{align}
+        </span>
+    </td>
+</tr>
+<tr>
+    <td>
         <span>θ = </span><span id="lblTheta"></span><br>
         <span>r = </span><span id="lblR"></span><br>
         <span>x = </span><span id="lblX"></span><br>
@@ -27,11 +63,6 @@
         <span>cosθ = </span><span id="lblCos"></span><br>
         <span>sinθ = </span><span id="lblSin"></span><br>
         <span>tanθ = </span><span id="lblTan"></span>
-    </td>
-    <td rowspan="2">
-        <input type="range" id="trbR" min="5" max="20" value="20" style="width: 250px;" />r<br>
-        <input type="range" id="trbTh" min="0" max="360" value="45" style="width: 250px;" />θ<br>
-        <canvas id="disp"></canvas>
     </td>
 </tr>
 </table>

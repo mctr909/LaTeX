@@ -10,21 +10,43 @@
 <body>
 <table>
 <tr>
-    <td style="width:150px;">
-        <span>
+    <td rowspan="2" style="width:150px;">
+        <span style="font-size:14pt;">[ 余弦定理 ]</span><br>
+        <span style="font-size:11pt;">
             \begin{align}
-            &o^2 = r^2+a^2-2ra\cos{\theta} \\
-            &\cos{\theta} = \frac{r^2+a^2-o^2}{2ra} \\
-            &\theta = \cos^{-1}{\left( \frac{r^2+a^2-o^2}{2ra} \right)}
+                ・&点\mathrm{A}から辺bに垂線を下してその足を点\mathrm{H}とすると \\
+                &\triangle\mathrm{AOH}と\triangle\mathrm{ABH}の直角三角形が2つ出来る \\
+                ・&辺\mathrm{OH}は三角比からa\cos\thetaとなり、 \\
+                &辺\mathrm{BH}はb-a\cos\thetaとなる \\
+                ・&三平方の定理をつかって\triangle\mathrm{AOH}と\triangle\mathrm{ABH}をまとめると、 \\
             \end{align}
-        </span><br>
-        <span>r(斜辺) = </span><span id="lblR"></span><br>
-        <span>a(隣辺) = </span><span id="lblA"></span><br>
-        <span>o(対辺) = </span><span id="lblO"></span><br>
+        </span>
+        \begin{align}
+            \mathrm{AH}^2 &= \mathrm{OA}^2 - \mathrm{OH}^2 \\
+            &= a^2 - (a\cos\theta)^2 \\
+            \mathrm{AH}^2 &= \mathrm{BA}^2 - \mathrm{BH}^2 \\
+            &= o^2 - (b - a\cos\theta)^2 \\
+            \therefore \quad &o^2 - (b - a\cos\theta)^2 = a^2 - (a\cos\theta)^2 \\
+            &o^2 = a^2 - (a\cos\theta)^2 + (b - a\cos\theta)^2 \\
+            &o^2 = a^2 + b^2 - 2ab\cos\theta \\
+            &余弦定理が得られる \\
+            \\
+            &変形すると角度を求められる \\
+            &\theta = \cos^{-1}{\left(\frac{a^2+b^2-o^2}{2ab}\right)}
+        \end{align}
+    </td>
+    <td>
+        <span>a(斜辺) = </span><span id="lblA"></span><br>
+        <span>b(隣辺) = </span><span id="lblB"></span><br>
+        <span>o(対辺) = </span><span id="lblO"></span>
+    </td>
+    <td style="width:200px;">
         <span>θ = </span><span id="lblTheta"></span><br>
         <span>cosθ = </span><span id="lblCos"></span>
     </td>
-    <td><canvas id="disp"></canvas></td>
+</tr>
+<tr>
+    <td colspan="2"><canvas id="disp"></canvas></td>
 </tr>
 </table>
 </body>

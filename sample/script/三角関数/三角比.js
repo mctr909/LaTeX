@@ -31,7 +31,7 @@ let gWaveBegin = gCircleRadius + GAP;
 
 let gDrawer = new Drawer("disp",
     UNIT_RADIUS * 4 + GAP + WAVE_WIDTH + 60,
-    UNIT_RADIUS * 4 + GAP + WAVE_HEIGHT + 160
+    UNIT_RADIUS * 4 + GAP + WAVE_HEIGHT + 165
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
@@ -118,15 +118,15 @@ function init() {
                 text: "[rad]"
             });
             gLabelList.push({
-                pos: new vec(-24, y-7),
+                pos: new vec(-24, y-8),
                 text: "[deg]"
             });
             gLabelList.push({
-                pos: new vec(0, y-7),
+                pos: new vec(0, y-8),
                 text: "[θ]"
             });
             gLabelList.push({
-                pos: new vec(24, y-7),
+                pos: new vec(24, y-8),
                 text: "[rad]"
             });
         }
@@ -223,11 +223,11 @@ function main() {
     gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 1, 5);
     gDrawer.fillCircle(vp, 5, KNOB_COLOR);
-    gDrawer.fillCircle(vrt, 3, TAN_COLOR);
-    gDrawer.fillCircle(vt, 3, TAN_COLOR);
-    gDrawer.fillCircle(wave_t, 3, TAN_COLOR);
-    gDrawer.fillCircle(wave_c, 3, COS_COLOR);
-    gDrawer.fillCircle(wave_s, 3, SIN_COLOR);
+    gDrawer.fillCircle(vrt, 5, TAN_COLOR);
+    gDrawer.fillCircle(vt, 5, TAN_COLOR);
+    gDrawer.fillCircle(wave_t, 2.5, TAN_COLOR);
+    gDrawer.fillCircle(wave_c, 2.5, COS_COLOR);
+    gDrawer.fillCircle(wave_s, 2.5, SIN_COLOR);
 
     for (let i=0; i<gLabelList.length; i++) {
         let lbl = gLabelList[i];
@@ -243,10 +243,10 @@ function main() {
     let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
     let lblRS = new vec(wave_s.X + 2, wave_s.Y + 3);
     gDrawer.drawStringXY(20, 4, "θ", 16);
-    gDrawer.drawString(lblrT, "rT", 16);
-    gDrawer.drawString(lblT, "T", 16);
-    gDrawer.drawString(lblP, "P", 16);
-    gDrawer.drawStringH(vo, vp, "r", 20, [0,0,0], new vec(0, 5, 0.5));
+    gDrawer.drawString(lblrT, "rT", 18);
+    gDrawer.drawString(lblT, "T", 18);
+    gDrawer.drawString(lblP, "P", 18);
+    gDrawer.drawStringH(vo, vp, "r", 22, [0,0,0], new vec(0, 5, 0.5));
     gDrawer.drawStringC(lblX, "x", 20);
     gDrawer.drawString(lblY, "y", 20);
     gDrawer.drawString(lblRT, "r tanθ", 16);
