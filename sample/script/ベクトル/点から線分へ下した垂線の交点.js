@@ -1,5 +1,5 @@
-/// <reference path="../../math.js" />
-/// <reference path="../../drawer.js" />
+/// <reference path="../math.js" />
+/// <reference path="../drawer.js" />
 
 const UNIT = 200;
 let gDrawer = new Drawer("disp", 450, 400);

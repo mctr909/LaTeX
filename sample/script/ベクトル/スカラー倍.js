@@ -1,5 +1,5 @@
-/// <reference path="../../math.js" />
-/// <reference path="../../drawer.js" />
+/// <reference path="../math.js" />
+/// <reference path="../drawer.js" />
 
 const UNIT = 100;
 let gDrawer = new Drawer("disp", 400, 400);
@@ -44,10 +44,6 @@ function main() {
     gA.sub(gO, oka);
     oka.scale(oka, k);
     oka.add(gO, oka);
-    let oa_k = new vec();
-    gA.sub(gO, oa_k);
-    oa_k.scale(oa_k, 1/k);
-    oa_k.add(gO, oa_k);
 
     gDrawer.drawGrid(UNIT);
 
@@ -56,21 +52,23 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.drawArrow(gO, oka, Drawer.BLUE, 2);
-    gDrawer.drawArrow(gO, oa_k, Drawer.RED, 2);
-    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 2);
+    gDrawer.drawArrow(gO, oka, [191,191,191], 5);
+    gDrawer.drawArrow(gO, gA, Drawer.BLACK, 2);
 
-    gDrawer.drawString(gA, "a", 20);
+    gDrawer.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(5,-4,1));
+    if (k < 0) {
+        gDrawer.drawStringH(oka, gO, "ka", 20, [0,0,0], new vec(-7,-4,0));
+    } else {
+        gDrawer.drawStringH(gO, oka, "ka", 20, [0,0,0], new vec(7,-4,1));
+    }
 
     let oa = new vec();
     gA.sub(gO, oa);
     oka.sub(gO, oka);
-    oa_k.sub(gO, oa_k);
 
     document.getElementById("dispK").innerHTML = round1d(k);
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispAn").innerHTML = round2d(oka, 1/UNIT);
-    document.getElementById("dispAk").innerHTML = round2d(oa_k, 1/UNIT);
 
     requestNextAnimationFrame(main);
 }

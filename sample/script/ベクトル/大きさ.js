@@ -1,5 +1,5 @@
-/// <reference path="../../math.js" />
-/// <reference path="../../drawer.js" />
+/// <reference path="../math.js" />
+/// <reference path="../drawer.js" />
 
 const UNIT = 100;
 let gDrawer = new Drawer("disp", 400, 400);
@@ -49,9 +49,9 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 2);
+    gDrawer.drawArrow(gO, gA, Drawer.BLACK, 2);
 
-    gDrawer.drawString(gA, "a", 20);
+    gDrawer.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(0,3,0.5));
 
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispAn").innerHTML = round1d(oa.abs, 1/UNIT);

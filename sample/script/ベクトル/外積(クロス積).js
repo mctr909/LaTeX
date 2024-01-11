@@ -1,5 +1,5 @@
-/// <reference path="../../math.js" />
-/// <reference path="../../drawer.js" />
+/// <reference path="../math.js" />
+/// <reference path="../drawer.js" />
 
 const UNIT = 50;
 Drawer.CursorDiv = 5;
@@ -144,37 +144,34 @@ function main() {
     axb.add(gO, oaxb);
 
     /* XY */
-    gDrawerXY.drawArrow(gO, gA, Drawer.GREEN, 1, 2);
-    gDrawerXY.drawArrow(gO, gB, Drawer.BLUE, 1, 2);
+    gDrawerXY.drawArrow(gO, gA, Drawer.BLACK, 1, 2);
+    gDrawerXY.drawArrow(gO, gB, Drawer.GREEN, 1, 2);
     gDrawerXY.drawArrow(gO, oaxb, Drawer.RED);
-    gDrawerXY.drawLineD(gB, ab, Drawer.GREEN);
-    gDrawerXY.drawLineD(gA, ab, Drawer.BLUE);
+    gDrawerXY.drawLineD(gB, ab, Drawer.BLACK);
+    gDrawerXY.drawLineD(gA, ab, Drawer.GREEN);
 
-    gDrawerXY.fillCircle(ab, 2, Drawer.BLACK);
-    gDrawerXY.drawString(gA, "a", 20);
-    gDrawerXY.drawString(gB, "b", 20);
+    gDrawerXY.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(7,-4,1));
+    gDrawerXY.drawStringH(gO, gB, "b", 20, [0,0,0], new vec(7,-4,1));
 
     /* ZY */
-    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gA.Z, gA.Y, Drawer.GREEN, 1, 2);
-    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gB.Z, gB.Y, Drawer.BLUE, 1, 2);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gA.Z, gA.Y, Drawer.BLACK, 1, 2);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gB.Z, gB.Y, Drawer.GREEN, 1, 2);
     gDrawerZY.drawArrowXY(gO.Z, gO.Y, oaxb.Z, oaxb.Y, Drawer.RED, 1, 1);
     gDrawerZY.drawLineXYD(gB.Z, gB.Y, ab.Z, ab.Y, Drawer.GREEN);
     gDrawerZY.drawLineXYD(gA.Z, gA.Y, ab.Z, ab.Y, Drawer.BLUE);
 
-    gDrawerZY.fillCircleXY(ab.Z, ab.Y, 2, Drawer.BLACK);
-    gDrawerZY.drawStringXY(gA.Z, gA.Y, "a", 20);
-    gDrawerZY.drawStringXY(gB.Z, gB.Y, "b", 20);
+    gDrawerZY.drawStringH(gO, new vec(gA.Z, gA.Y), "a", 20, [0,0,0], new vec(7,-4,1));
+    gDrawerZY.drawStringH(gO, new vec(gB.Z, gB.Y), "b", 20, [0,0,0], new vec(7,-4,1));
 
     /* XZ */
-    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gA.X, gA.Z, Drawer.GREEN, 1, 2);
-    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gB.X, gB.Z, Drawer.BLUE, 1, 2);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gA.X, gA.Z, Drawer.BLACK, 1, 2);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gB.X, gB.Z, Drawer.GREEN, 1, 2);
     gDrawerXZ.drawArrowXY(gO.X, gO.Z, oaxb.X, oaxb.Z, Drawer.RED, 1, 1);
     gDrawerXZ.drawLineXYD(gB.X, gB.Z, ab.X, ab.Z, Drawer.GREEN);
-    gDrawerXZ.drawLineXYD(gA.X, gA.Z, ab.X, ab.Z, Drawer.BLUE);
+    gDrawerXZ.drawLineXYD(gA.X, gA.Z, ab.X, ab.Z, Drawer.BLACK);
 
-    gDrawerXZ.fillCircleXY(ab.X, ab.Z, 2, Drawer.BLACK);
-    gDrawerXZ.drawStringXY(gA.X, gA.Z, "a", 20);
-    gDrawerXZ.drawStringXY(gB.X, gB.Z, "b", 20);
+    gDrawerXZ.drawStringH(gO, new vec(gA.X, gA.Z), "a", 20, [0,0,0], new vec(7,-4,1));
+    gDrawerXZ.drawStringH(gO, new vec(gB.X, gB.Z), "b", 20, [0,0,0], new vec(7,-4,1));
 
     /* view */
     for(let r=-3.0; r<=3.0; r+=0.5) {
@@ -203,15 +200,14 @@ function main() {
         toAlpha((gA.Y+gB.Y+ab.Y) / 3, (gA.Z+gB.Z+ab.Z) / 3)
     );
 
-    gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.GREEN, toAlpha(gA.Y, gA.Z), 2);
-    gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.BLUE, toAlpha(gB.Y, gB.Z), 2);
-    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.RED, toAlpha(oaxb.Y, oaxb.Z));
-    gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.GREEN, toAlpha(ab.Y, ab.Z));
-    gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.BLUE, toAlpha(ab.Y, ab.Z));
+    gDrawer.drawLine(to2d(gO), to2d(gA), Drawer.BLACK, toAlpha(gA.Y, gA.Z), 2);
+    gDrawer.drawLine(to2d(gO), to2d(gB), Drawer.GREEN, toAlpha(gB.Y, gB.Z), 2);
+    gDrawer.drawLine(to2d(gO), to2d(oaxb), Drawer.RED, toAlpha(oaxb.Y, oaxb.Z), 2);
+    gDrawer.drawLineD(to2d(gB), to2d(ab), Drawer.BLACK, toAlpha(ab.Y, ab.Z), 2);
+    gDrawer.drawLineD(to2d(gA), to2d(ab), Drawer.GREEN, toAlpha(ab.Y, ab.Z), 2);
 
-    gDrawer.fillCircle(to2d(gA), 3, Drawer.GREEN, toAlpha(gA.Y, gA.Z));
-    gDrawer.fillCircle(to2d(gB), 3, Drawer.BLUE, toAlpha(gB.Y, gB.Z));
-    gDrawer.fillCircle(to2d(ab), 2, Drawer.BLACK, toAlpha(ab.Y, ab.Z));
+    gDrawer.fillCircle(to2d(gA), 3, Drawer.BLACK, toAlpha(gA.Y, gA.Z));
+    gDrawer.fillCircle(to2d(gB), 3, Drawer.GREEN, toAlpha(gB.Y, gB.Z));
     gDrawer.fillCircle(to2d(oaxb), 3, Drawer.RED, toAlpha(oaxb.Y, oaxb.Z));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);

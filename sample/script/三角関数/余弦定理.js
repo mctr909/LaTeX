@@ -2,14 +2,13 @@
 /// <reference path="../drawer.js" />
 
 const UNIT = 200;
-const GRIP_COLOR = [167, 167, 167];
-const LINE_COLOR = Drawer.GREEN;
 const TEXT_COLOR = Drawer.BLACK;
+const AUX_COLOR = Drawer.GREEN;
 
 let gDrawer = new Drawer("disp", 450, 400);
 
 let gA = new vec(UNIT * 0.8, UNIT * 0.2);
-let gB = new vec(UNIT * 0.0, UNIT * 0.7);
+let gB = new vec(UNIT * -0.3, UNIT * 0.7);
 let gO = new vec(UNIT * -0.8, UNIT * -0.2);
 let gPaDrag = false;
 let gPbDrag = false;
@@ -71,26 +70,21 @@ function main() {
     gDrawer.drawLine(gO, gA);
     gDrawer.drawLine(gO, gB);
     gDrawer.drawLine(gA, gB);
-    gDrawer.drawLineD(gB, c, GRIP_COLOR);
-    gDrawer.drawLine(gO, c, LINE_COLOR, 1, 5);
-    gDrawer.fillCircle(gA, 5, GRIP_COLOR);
-    gDrawer.fillCircle(gB, 5, GRIP_COLOR);
-    gDrawer.fillCircle(gO, 5, GRIP_COLOR);
-    gDrawer.fillCircle(c, 5, LINE_COLOR);
+    gDrawer.drawLineD(gB, c, AUX_COLOR);
+    gDrawer.drawLine(gO, c, AUX_COLOR, 1, 5);
+    gDrawer.fillCircle(gA, 5);
+    gDrawer.fillCircle(gB, 5);
+    gDrawer.fillCircle(gO, 5);
+    gDrawer.fillCircle(c, 5, AUX_COLOR);
 
-    let lblR = new vec();
-    let lblS = new vec();
-    let lblC = new vec();
-    midPos(gO, gB, 0.5, lblR);
-    midPos(gB, c, 0.5, lblS);
-    midPos(gO, c, 0.5, lblC);
-
-    gDrawer.drawString(lblR, "r", 24, TEXT_COLOR, Drawer.angleH(gO, gB));
-    gDrawer.drawString(lblS, "s", 24, TEXT_COLOR, Drawer.angleV(gB, c));
-    gDrawer.drawString(lblC, "c", 24, TEXT_COLOR, Drawer.angleH(gO, c));
-    gDrawer.drawString(gA, "A", 24, TEXT_COLOR, Drawer.angleH(gO, gA));
-    gDrawer.drawString(gB, "B", 24, TEXT_COLOR, Drawer.angleH(gO, gA));
-    gDrawer.drawString(gO, "O", 24, TEXT_COLOR, Drawer.angleH(gA, gO));
+    gDrawer.drawStringH(gO, gA, "O", 24, TEXT_COLOR, new vec(-12,-8,0));
+    gDrawer.drawStringH(gO, gA, "A", 24, TEXT_COLOR, new vec(12,-8,1));
+    gDrawer.drawStringV(c, gB, "B", 24, TEXT_COLOR, new vec(0,12,1));
+    gDrawer.drawStringH(gO, gB, "r", 24, TEXT_COLOR, new vec(0,4,0.5));
+    gDrawer.drawStringH(gO, gA, "a", 24, TEXT_COLOR, new vec(0,-16,0.5));
+    gDrawer.drawStringV(gA, gB, "o", 24, TEXT_COLOR, new vec(8,0,0.5));
+    gDrawer.drawStringV(c, gB, "s", 24, AUX_COLOR, new vec(8,0,0.5));
+    gDrawer.drawStringH(gO, c, "c", 24, AUX_COLOR, new vec(0,5,0.5));
 
     let ta = oa.abs / UNIT;
     let tr = ob.abs / UNIT;

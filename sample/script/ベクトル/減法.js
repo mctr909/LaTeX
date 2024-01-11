@@ -1,5 +1,5 @@
-/// <reference path="../../math.js" />
-/// <reference path="../../drawer.js" />
+/// <reference path="../math.js" />
+/// <reference path="../drawer.js" />
 
 const UNIT = 100;
 let gDrawer = new Drawer("disp", 400, 400);
@@ -10,7 +10,7 @@ let radiusA = 1.0 * UNIT;
 let radiusB = 1.0 * UNIT;
 let gO = new vec(ofsX, ofsY);
 let gA = new vec(radiusA*Math.cos(Math.PI*15/180) + ofsX, radiusA*Math.sin(Math.PI*15/180) + ofsY);
-let gB = new vec(radiusB*Math.cos(Math.PI*240/180) + ofsX, radiusB*Math.sin(Math.PI*240/180) + ofsY);
+let gB = new vec(radiusB*Math.cos(Math.PI*75/180) + ofsX, radiusB*Math.sin(Math.PI*75/180) + ofsY);
 let gPaDrag = false;
 let gPbDrag = false;
 
@@ -63,15 +63,15 @@ function main() {
     gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
     gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
 
-    gDrawer.drawArrow(gO, gA, Drawer.GREEN, 2);
-    gDrawer.drawArrow(gO, gB, Drawer.BLUE, 2);
-    gDrawer.drawArrowD(gA, ab, Drawer.BLUE, 2);
-    gDrawer.drawArrowD(gO, mb, Drawer.BLUE, 2);
-    gDrawer.drawArrowD(mb, ab, Drawer.GREEN, 2);
+    gDrawer.drawArrow(gO, gA, Drawer.BLACK, 2);
+    gDrawer.drawArrow(gO, gB, Drawer.GREEN, 2);
+    gDrawer.drawArrowD(gA, ab, Drawer.GREEN, 2);
+    gDrawer.drawArrowD(gO, mb, Drawer.GREEN, 2);
+    gDrawer.drawArrowD(mb, ab, Drawer.BLACK, 2);
 
-    gDrawer.drawString(gA, "a", 20);
-    gDrawer.drawString(gB, "b", 20);
-    gDrawer.drawString(mb, "-b", 20);
+    gDrawer.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(0,3,0.5));
+    gDrawer.drawStringH(gO, gB, "b", 20, [0,0,0], new vec(0,3,0.5));
+    gDrawer.drawStringH(mb, gO, "-b", 20, [0,0,0], new vec(0,3,0.5));
 
     let oa = new vec();
     let ob = new vec();

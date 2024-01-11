@@ -42,28 +42,20 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelList.push({
-            pos: new vec(ofsX-24, WAVE_HEIGHT+10),
-            text: "[deg]",
-            center: false,
-            color: TEXT_COLOR
+            pos: new vec(ofsX-24, WAVE_HEIGHT+17),
+            text: "[deg]"
         });
         gLabelList.push({
             pos: new vec(ofsX, WAVE_HEIGHT+17),
-            text: "[θ]",
-            center: true,
-            color: TEXT_COLOR
+            text: "[θ]"
         });
         gLabelList.push({
-            pos: new vec(ofsX+24, WAVE_HEIGHT+10),
-            text: "[rad]",
-            center: false,
-            color: TEXT_COLOR
+            pos: new vec(ofsX+24, WAVE_HEIGHT+17),
+            text: "[rad]"
         });
         gLabelList.push({
             pos: new vec(ofsX+WAVE_WIDTH+15, 4),
-            text: "[x/r]",
-            center: true,
-            color: TEXT_COLOR
+            text: "[x/r]"
         });
         for (let deg=0; deg<=180; deg += 15) {
             let y = WAVE_HEIGHT * (180 - deg) / 180.0;
@@ -75,30 +67,12 @@ function init() {
             ));
             if (deg % 45 == 0) {
                 gLabelList.push({
-                    pos: new vec(ofsX+24, y-4),
-                    text: toFrac(deg / 180, "π", false),
-                    center: false,
-                    color: TEXT_COLOR
+                    pos: new vec(ofsX+24, y+3),
+                    text: toFrac(deg / 180, "π", false)
                 });
                 gLabelList.push({
-                    pos: new vec(ofsX-24, y-4),
-                    text: toFrac(deg),
-                    center: false,
-                    color: TEXT_COLOR
-                });
-            }
-            if (deg == 360) {
-                gLabelList.push({
-                    pos: new vec(ofsX+8, y-16),
-                    text: "[rad]",
-                    center: false,
-                    color: TEXT_COLOR
-                });
-                gLabelList.push({
-                    pos: new vec(ofsX-36, y-16),
-                    text: "[deg]",
-                    center: false,
-                    color: TEXT_COLOR
+                    pos: new vec(ofsX-24, y+3),
+                    text: toFrac(deg)
                 });
             }
         }
@@ -126,9 +100,7 @@ function init() {
             if(0 == Math.abs(v*2) % 10) {
                 gLabelList.push({
                     pos: new vec(ofsX+x, -15),
-                    text: v/div + "",
-                    center: true,
-                    color: TEXT_COLOR
+                    text: v/div + ""
                 });
             }
         }
@@ -146,28 +118,20 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelList.push({
-            pos: new vec(ofsX-24, WAVE_HEIGHT+10),
-            text: "[deg]",
-            center: false,
-            color: TEXT_COLOR
+            pos: new vec(ofsX-24, WAVE_HEIGHT+17),
+            text: "[deg]"
         });
         gLabelList.push({
             pos: new vec(ofsX, WAVE_HEIGHT+17),
-            text: "[θ]",
-            center: true,
-            color: TEXT_COLOR
+            text: "[θ]"
         });
         gLabelList.push({
-            pos: new vec(ofsX+24, WAVE_HEIGHT+10),
-            text: "[rad]",
-            center: false,
-            color: TEXT_COLOR
+            pos: new vec(ofsX+24, WAVE_HEIGHT+17),
+            text: "[rad]"
         });
         gLabelList.push({
             pos: new vec(ofsX+WAVE_WIDTH+15, 4),
-            text: "[y/r]",
-            center: true,
-            color: TEXT_COLOR
+            text: "[y/r]"
         });
         for (let deg=-90; deg<=90; deg += 15) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
@@ -179,30 +143,12 @@ function init() {
             ));
             if (deg % 45 == 0) {
                 gLabelList.push({
-                    pos: new vec(ofsX+24, y-4),
-                    text: toFrac(deg / 180, "π", false),
-                    center: false,
-                    color: TEXT_COLOR
+                    pos: new vec(ofsX+24, y+3),
+                    text: toFrac(deg / 180, "π", false)
                 });
                 gLabelList.push({
-                    pos: new vec(ofsX-24, y-4),
-                    text: toFrac(deg),
-                    center: false,
-                    color: TEXT_COLOR
-                });
-            }
-            if (deg == 360) {
-                gLabelList.push({
-                    pos: new vec(ofsX+8, y-16),
-                    text: "[rad]",
-                    center: false,
-                    color: AXIZ_COLOR
-                });
-                gLabelList.push({
-                    pos: new vec(ofsX-36, y-16),
-                    text: "[deg]",
-                    center: false,
-                    color: AXIZ_COLOR
+                    pos: new vec(ofsX-24, y+3),
+                    text: toFrac(deg)
                 });
             }
         }
@@ -230,9 +176,7 @@ function init() {
             if(0 == Math.abs(v*2) % 10) {
                 gLabelList.push({
                     pos: new vec(ofsX+x, -15),
-                    text: v/div + "",
-                    center: true,
-                    color: TEXT_COLOR
+                    text: v/div + ""
                 });
             }
         }
@@ -253,28 +197,20 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelList.push({
-            pos: new vec(ofsX-24, ofsY+WAVE_HEIGHT+10),
-            text: "[deg]",
-            center: false,
-            color: TEXT_COLOR
+            pos: new vec(ofsX-24, ofsY+WAVE_HEIGHT+17),
+            text: "[deg]"
         });
         gLabelList.push({
             pos: new vec(ofsX, ofsY+WAVE_HEIGHT+17),
-            text: "[θ]",
-            center: true,
-            color: TEXT_COLOR
+            text: "[θ]"
         });
         gLabelList.push({
-            pos: new vec(ofsX+24, ofsY+WAVE_HEIGHT+10),
-            text: "[rad]",
-            center: false,
-            color: TEXT_COLOR
+            pos: new vec(ofsX+24, ofsY+WAVE_HEIGHT+17),
+            text: "[rad]"
         });
         gLabelList.push({
             pos: new vec(ofsX+width+16, ofsY+4),
-            text: "[y/x]",
-            center: true,
-            color: TEXT_COLOR
+            text: "[y/x]"
         });
         for (let deg=-90; deg<=90; deg += 15) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
@@ -286,30 +222,12 @@ function init() {
             ));
             if (deg % 45 == 0) {
                 gLabelList.push({
-                    pos: new vec(ofsX+24, ofsY+y-4),
-                    text: toFrac(deg / 180, "π", false),
-                    center: false,
-                    color: TEXT_COLOR
+                    pos: new vec(ofsX+24, ofsY+y+3),
+                    text: toFrac(deg / 180, "π", false)
                 });
                 gLabelList.push({
-                    pos: new vec(ofsX-24, ofsY+y-4),
-                    text: toFrac(deg),
-                    center: false,
-                    color: TEXT_COLOR
-                });
-            }
-            if (deg == 360) {
-                gLabelList.push({
-                    pos: new vec(ofsX+8, ofsY+y-16),
-                    text: "[rad]",
-                    center: false,
-                    color: TEXT_COLOR
-                });
-                gLabelList.push({
-                    pos: new vec(ofsX-36, ofsY+y-16),
-                    text: "[deg]",
-                    center: false,
-                    color: TEXT_COLOR
+                    pos: new vec(ofsX-24, ofsY+y+3),
+                    text: toFrac(deg)
                 });
             }
         }
@@ -333,9 +251,7 @@ function init() {
             case 0:
                 gLabelList.push({
                     pos: new vec(ofsX+x, ofsY-15),
-                    text: v*0.1 + "",
-                    center: true,
-                    color: TEXT_COLOR
+                    text: v*0.1 + ""
                 });
                 break;
             }
@@ -360,11 +276,7 @@ function main() {
     gDrawer.drawPolyline(gaTanLine, LINE_COLOR, 1);
     for (let i=0; i<gLabelList.length; i++) {
         let lbl = gLabelList[i];
-        if (lbl.center) {
-            gDrawer.drawStringC(lbl.pos, lbl.text, 14, lbl.color);
-        } else {
-            gDrawer.drawString(lbl.pos, lbl.text, 14, lbl.color);
-        }
+        gDrawer.drawStringC(lbl.pos, lbl.text, 14);
     }
     requestNextAnimationFrame(main);
 }

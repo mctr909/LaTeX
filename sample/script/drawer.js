@@ -251,7 +251,13 @@ class Drawer {
 	 * @param {number} width
 	 */
 	drawArrow(a, b, color = [0,0,0], width = 1) {
-		this.drawLineXY(a.X, a.Y, b.X, b.Y, color, 1, width);
+		var sx = b.X - a.X;
+		var sy = b.Y - a.Y;
+		var th = Math.atan2(sy, sx);
+		var r = Math.sqrt(sx*sx + sy*sy) - width * 1.5;
+		var px = a.X + r * Math.cos(th);
+		var py = a.Y + r * Math.sin(th);
+		this.drawLineXY(a.X, a.Y, px, py, color, 1, width);
 		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, 1);
 	}
 
@@ -423,23 +429,36 @@ class Drawer {
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
-	 * @param {number} rot
 	 */
-	drawStringXY(x, y, value, size = 11, color = [0,0,0], rot = 0) {
+	drawStringXY(x, y, value, size = 11, color = [0,0,0]) {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
 		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)";
 		let px = this.#offset.X + x;
 		let py = this.#offset.Y - y;
 		let lines = value.split("\n");
 		for(let i=0; i<lines.length; i++) {
-			this.#ctx.translate(px, py);
-			this.#ctx.rotate(rot);
-			let sz = this.#ctx.measureText(lines[i]);
-			this.#ctx.fillText(lines[i], -sz.width*0.5, 0);
-			this.#ctx.rotate(-rot);
-			this.#ctx.translate(-px, -py);
+			this.#ctx.fillText(lines[i], px, py);
 			py += size;
 		}
+	}
+
+	/**
+	 * @param {vec} x
+	 * @param {vec} y
+	 * @param {number} rot
+	 * @param {string} value
+	 * @param {number} size
+	 * @param {[number, number, number]} color
+	 */
+	drawStringRot(x, y, rot, value, size = 11, color = [0,0,0]) {
+		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
+		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)";
+		this.#ctx.translate(x, y);
+		this.#ctx.rotate(rot);
+		let sz = this.#ctx.measureText(value);
+		this.#ctx.fillText(value, -sz.width*0.5, 0);
+		this.#ctx.rotate(-rot);
+		this.#ctx.translate(-x, -y);
 	}
 
 	/**
@@ -447,10 +466,9 @@ class Drawer {
 	 * @param {string} value
 	 * @param {number} size
 	 * @param {[number, number, number]} color
-	 * @param {number} rot
 	 */
-	drawString(p, value, size = 11, color = [0,0,0], rot = 0) {
-		this.drawStringXY(p.X, p.Y, value, size, color, rot);
+	drawString(p, value, size = 11, color = [0,0,0]) {
+		this.drawStringXY(p.X, p.Y, value, size, color);
 	}
 
 	/**
@@ -470,6 +488,45 @@ class Drawer {
 			this.#ctx.fillText(lines[i], px - met.width / 2, py);
 			py += size;
 		}
+	}
+
+	/**
+	 * @param {vec} a
+	 * @param {vec} b
+	 * @param {string} value
+	 * @param {number} size
+	 * @param {[number, number, number]} color
+	 * @param {vec} offset
+	 */
+	drawStringH(a, b, value, size = 11, color = [0,0,0], offset = new vec(0,0,0.5)) {
+		let sx = b.X - a.X;
+		let sy = a.Y - b.Y;
+		let rot = Math.atan2(sy, sx);
+		let ox = offset.X*Math.cos(rot) + offset.Y*Math.sin(rot);
+		let oy = offset.X*Math.sin(rot) - offset.Y*Math.cos(rot);
+		let px = this.#offset.X + ox + a.X + sx * offset.Z;
+		let py = this.#offset.Y + oy - a.Y + sy * offset.Z;
+		this.drawStringRot(px, py, rot, value, size, color);
+	}
+
+	/**
+	 * @param {vec} a
+	 * @param {vec} b
+	 * @param {string} value
+	 * @param {number} size
+	 * @param {[number, number, number]} color
+	 * @param {vec} offset
+	 */
+	drawStringV(a, b, value, size = 11, color = [0,0,0], offset = new vec(0,0,0.5)) {
+		let sx = b.X - a.X;
+		let sy = b.Y - a.Y;
+		let rot = Math.atan2(sx, sy);
+		offset.Y -= size * 0.25;
+		let ox = offset.X*Math.cos(rot) + offset.Y*Math.sin(rot);
+		let oy = offset.X*Math.sin(rot) - offset.Y*Math.cos(rot);
+		let px = this.#offset.X + ox + a.X + sx * offset.Z;
+		let py = this.#offset.Y + oy - a.Y - sy * offset.Z;
+		this.drawStringRot(px, py, rot, value, size, color);
 	}
 
 	/**
@@ -571,27 +628,5 @@ class Drawer {
 	#roundCursor(x, y) {
 		this.cursor.X = parseInt(x / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv - this.#offset.X;
 		this.cursor.Y = this.#offset.Y - parseInt(y / Drawer.CursorDiv + Math.sign(x) * 0.5) * Drawer.CursorDiv;
-	}
-
-	/**
-	 * @param {vec} a
-	 * @param {vec} b
-	 * @returns {number}
-	 */
-	static angleV(a, b) {
-		let sx = a.X - b.X;
-		let sy = a.Y - b.Y;
-		return Math.atan2(sx, sy);
-	}
-
-	/**
-	 * @param {vec} a
-	 * @param {vec} b
-	 * @returns {number}
-	 */
-	static angleH(a, b) {
-		let sx = b.X - a.X;
-		let sy = a.Y - b.Y;
-		return Math.atan2(sy, sx);
 	}
 }
