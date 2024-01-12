@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../../script/math.js"></script>
+    <script type="text/javascript" src="../../script/drawer.js"></script>
+</head>
+<body>
+<table>
+<tr>
+    <td rowspan="2" style="width:150px;">
+        <span style="font-size:14pt;">[ 正弦定理 ]</span><br>
+        \begin{align}
+            \cfrac{b}{\sin\alpha}=\cfrac{a}{\sin\beta}=\cfrac{c}{\sin\theta}
+        \end{align}
+    </td>
+    <td>
+        <span>a = </span><span id="lblA"></span><br>
+        <span>b = </span><span id="lblB"></span><br>
+        <span>c = </span><span id="lblC"></span><br>
+        <span>α = </span><span id="lblAlpha"></span><br>
+        <span>β = </span><span id="lblBeta"></span><br>
+        <span>θ = </span><span id="lblTheta"></span>
+    </td>
+    <td style="width:200px;">
+        <span>sinα = </span><span id="lblSAlpha"></span><br>
+        <span>sinβ = </span><span id="lblSBeta"></span><br>
+        <span>sinθ = </span><span id="lblSTheta"></span>
+    </td>
+</tr>
+<tr>
+    <td colspan="2"><canvas id="disp"></canvas></td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../../script/三角関数/正弦定理.js"></script>
