@@ -10,14 +10,34 @@
 <body>
 <table>
 <tr>
-    <td>
-        [ 周期性 ]<br/>
+    <td colspan="2">
+        <table style="border-style: none; border-width: 0px;">
+            <tr>
+                <td>
+                    <span style="position: absolute; top:-12px; left: 10px;">
+                        \begin{align}\cos\theta\end{align}
+                    </span>
+                    <canvas id="dispCycleC"></canvas>
+                </td>
+                <td rowspan="2">
+                    <span style="position: absolute; top:-12px; left: 300px;">
+                        \begin{align}\tan\theta\end{align}
+                    </span>
+                    <canvas id="dispCycleT"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td colsspan="2">
+                    <span style="position: absolute; top:115px; left: 10px;">
+                        \begin{align}\sin\theta\end{align}
+                    </span>
+                    <canvas id="dispCycleS"></canvas>
+                </td>
+            </tr>
+        </table>
     </td>
-    <td>
-        [ 対称性 ]<br/>
-    </td>
-    <td>
-        [ 2乗の公式 ]<br/>
+    <td rowspan="3">
+        [ 2乗の公式 ]<br>
         <span style="font-size:11pt;">
             \begin{align}
                 三平方の定理の両辺を斜辺で割ると \\
@@ -41,12 +61,58 @@
             \begin{align}
                 \cos^2{\theta} &= 1 - \sin^2{\theta} \\
                 \sin^2{\theta} &= 1 - \cos^2{\theta} \\
-                \tan^2{\theta} &= \frac{\sin^2{\theta}}{\cos^2{\theta}}\\
+                \tan^2{\theta} &= \frac{\sin^2{\theta}}{\cos^2{\theta}} \\
                     &= \frac{1-\cos^2{\theta}}{\cos^2{\theta}} \\
-                    &= \frac{1}{\cos^2{\theta}} - 1
+                    &= \frac{1}{\cos^2{\theta}} - 1 \\
+                \cfrac{1}{\tan^2{\theta}} &= \frac{\cos^2{\theta}}{\sin^2{\theta}} \\
+                    &= \frac{1-\sin^2{\theta}}{\sin^2{\theta}} \\
+                    &= \frac{1}{\sin^2{\theta}} - 1
+            \end{align}
+        </span>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        [ 周期性と対称性 ]<br>
+        <span>
+            \begin{align}
+                \cos\left(\pm\theta+2n{\pi}\right) &= \cos\theta \\
+                \sin\left(\pm\theta+2n{\pi}\right) &= \pm\sin\theta
+            \end{align}
+            \begin{align}
+                \cos\left(\pm\theta+{\left(2n+1\right)\pi}\right) &= -\cos\theta \\
+                \sin\left(\pm\theta+{\left(2n+1\right)\pi}\right) &= \mp\sin\theta
+            \end{align}
+            \begin{align}
+                \tan\left(\pm\theta+n{\pi}\right) = \pm\tan\theta
+            \end{align}
+        </span>
+    </td>
+</tr>
+<tr>
+    <td>
+        [ 余角の公式 ]<br>
+        <span>
+            \begin{align}
+                \cos\left(\pm\cfrac{\pi}{2}-\theta\right) &= \pm\sin\theta \\
+                \sin\left(\pm\cfrac{\pi}{2}-\theta\right) &= \pm\cos\theta \\
+                \tan\left(\pm\cfrac{\pi}{2}-\theta\right) &= \cfrac{\sin\left(\pm\cfrac{\pi}{2}-\theta\right)}{\cos\left(\pm\cfrac{\pi}{2}-\theta\right)} \\
+                = \cfrac{\pm\cos\theta}{\pm\sin\theta} &= \cfrac{1}{\tan\theta}
+            \end{align}
+        </span>
+    </td>
+    <td>
+        <br>
+        <span>
+            \begin{align}
+                \cos\left(\theta\pm\cfrac{\pi}{2}\right) &= \mp\sin\theta \\
+                \sin\left(\theta\pm\cfrac{\pi}{2}\right) &= \pm\cos\theta \\
+                \tan\left(\theta\pm\cfrac{\pi}{2}\right) &= \cfrac{\sin\left(\theta\pm\cfrac{\pi}{2}\right)}{\cos\left(\theta\pm\cfrac{\pi}{2}\right)} \\
+                = \cfrac{\pm\cos\theta}{\mp\sin\theta} &= -\cfrac{1}{\tan\theta}
             \end{align}
         </span>
     </td>
 </tr>
 </table>
 </body>
+<script type="text/javascript" src="../../script/三角関数/相互関係.js"></script>

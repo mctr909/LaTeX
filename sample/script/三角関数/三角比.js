@@ -144,11 +144,13 @@ function init() {
     ));
 
     let tanList = [];
-    for(let y=gWaveBegin; y<gWaveBegin + WAVE_HEIGHT; y++) {
+    let advHeight = WAVE_HEIGHT/12;
+    for(let y=gWaveBegin - advHeight; y<gWaveBegin + advHeight + WAVE_HEIGHT; y++) {
         let th = 2 * Math.PI * (y - gWaveBegin) / WAVE_HEIGHT;
         gRCosLine.push(new vec(Math.cos(th) * gCircleRadius, -y));
     }
-    for(let x=gWaveBegin; x<gWaveBegin + WAVE_WIDTH; x++) {
+    let advWidth = WAVE_WIDTH/12;
+    for(let x=gWaveBegin - advWidth; x<gWaveBegin + advWidth + WAVE_WIDTH; x++) {
         let th = 2 * Math.PI * (x - gWaveBegin) / WAVE_WIDTH;
         gRSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
         let t = Math.tan(th);
@@ -234,24 +236,39 @@ function main() {
         gDrawer.drawStringC(lbl.pos, lbl.text, 14);
     }
 
-    let lblrT = new vec(vrt.X - 8, vrt.Y + 6);
-    let lblT = new vec(vt.X - 5, vt.Y + 6);
-    let lblP = new vec(vp.X - 5, vp.Y + 6);
-    let lblX = new vec(vc.X * 0.5, -5);
-    let lblY = new vec(vp.X + 4, vp.Y * 0.5 - 3);
-    let lblRT = new vec(wave_t.X - 46, wave_t.Y + 3);
-    let lblRC = new vec(wave_c.X + 2, wave_c.Y - 11);
-    let lblRS = new vec(wave_s.X + 2, wave_s.Y + 3);
     gDrawer.drawStringXY(20, 4, "θ", 16);
-    gDrawer.drawString(lblrT, "rT", 18);
-    gDrawer.drawString(lblT, "T", 18);
-    gDrawer.drawString(lblP, "P", 18);
-    gDrawer.drawStringH(vo, vp, "r", 22, [0,0,0], new vec(0, 5, 0.5));
-    gDrawer.drawStringC(lblX, "x", 20);
-    gDrawer.drawString(lblY, "y", 20);
-    gDrawer.drawString(lblRT, "r tanθ", 16);
-    gDrawer.drawString(lblRC, "r cosθ", 16);
-    gDrawer.drawString(lblRS, "r sinθ", 16);
+    gDrawer.drawStringXY(vrt.X - 8, vrt.Y + 6, "rT", 18);
+    gDrawer.drawStringXY(vt.X - 5, vt.Y + 6, "T", 18);
+    gDrawer.drawStringXY(vp.X - 5, vp.Y + 6, "P", 18);
+
+    let signX = Math.cos(gTheta);
+    let signY = Math.sin(gTheta);
+    if (signX * signY < 0) {
+        gDrawer.drawStringH(vp, vo, "r", 22, [0,0,0], new vec(0, 5, 0.5));
+    } else {
+        gDrawer.drawStringH(vo, vp, "r", 22, [0,0,0], new vec(0, 5, 0.5));
+    }
+    if (signX < 0) {
+        if (signY < 0) {
+            gDrawer.drawStringH(vc, vo, "x", 20, [0,0,0], new vec(0,5,0.5));
+            gDrawer.drawStringV(vp, vc, "y", 20, [0,0,0], new vec(-10,3,0.5));
+        } else {
+            gDrawer.drawStringH(vc, vo, "x", 20, [0,0,0], new vec(0,-15,0.5));
+            gDrawer.drawStringV(vc, vp, "y", 20, [0,0,0], new vec(-10,3,0.5));
+        }
+    } else {
+        if (signY < 0) {
+            gDrawer.drawStringH(vo, vc, "x", 20, [0,0,0], new vec(0,5,0.5));
+            gDrawer.drawStringV(vp, vc, "y", 20, [0,0,0], new vec(10,3,0.5));
+        } else {
+            gDrawer.drawStringH(vo, vc, "x", 20, [0,0,0], new vec(0,-15,0.5));
+            gDrawer.drawStringV(vc, vp, "y", 20, [0,0,0], new vec(10,3,0.5));
+        }
+    }
+
+    gDrawer.drawStringXY(wave_t.X - 46, wave_t.Y + 3, "r tanθ", 16);
+    gDrawer.drawStringXY(wave_c.X + 2, wave_c.Y - 11, "r cosθ", 16);
+    gDrawer.drawStringXY(wave_s.X + 2, wave_s.Y + 3, "r sinθ", 16);
 
     var tan = round1d(Math.sin(gTheta) / Math.cos(gTheta), 1, 3);
     document.getElementById("lblTheta").innerHTML = toFrac(gTheta / Math.PI, "π") + ("(" + parseInt(gTheta*180/Math.PI+0.5) + "°)");
