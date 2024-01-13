@@ -222,9 +222,9 @@ function main() {
     gDrawer.drawLine(vo, vc, COS_COLOR, 1, 5);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 1, 5);
-    gDrawer.fillCircle(vp, 5, KNOB_COLOR);
-    gDrawer.fillCircle(vrt, 5, TAN_COLOR);
-    gDrawer.fillCircle(vt, 5, TAN_COLOR);
+    gDrawer.fillCircle(vp, 7, KNOB_COLOR);
+    gDrawer.fillCircle(vrt, 5);
+    gDrawer.fillCircle(vt, 5);
     gDrawer.fillCircle(wave_t, 2.5, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 2.5, COS_COLOR);
     gDrawer.fillCircle(wave_s, 2.5, SIN_COLOR);

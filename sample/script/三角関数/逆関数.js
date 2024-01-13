@@ -3,12 +3,12 @@
 
 const AXIZ_COLOR = [191, 191, 191];
 const TEXT_COLOR = Drawer.BLACK;
-const LINE_COLOR = Drawer.GRAY;
+const LINE_COLOR = [95, 95, 95];
 const RULER_COLOR = Drawer.BLACK;
 const CIRCLE_COLOR = Drawer.BLACK;
 const KNOB_COLOR = Drawer.GREEN;
 
-const WAVE_WIDTH = 200;
+const WAVE_WIDTH = 160;
 const WAVE_HEIGHT = 300;
 const GAP = 25;
 
