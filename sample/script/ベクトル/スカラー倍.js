@@ -47,19 +47,19 @@ function main() {
 
     gDrawer.drawGrid(UNIT);
 
-    gDrawer.drawCircleD(gO, UNIT*0.5, Drawer.GRAY);
-    gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
-    gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
-    gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
+    gDrawer.drawCircleD(gO, UNIT*0.5, Color.GRAY);
+    gDrawer.drawCircle(gO, UNIT, Color.GRAY);
+    gDrawer.drawCircleD(gO, UNIT*1.5, Color.GRAY);
+    gDrawer.drawCircle(gO, UNIT*2, Color.GRAY);
 
-    gDrawer.drawArrow(gO, oka, [191,191,191], 5);
-    gDrawer.drawArrow(gO, gA, Drawer.BLACK, 2);
+    gDrawer.drawArrow(gO, oka, Color.GRAY75, 5);
+    gDrawer.drawArrow(gO, gA, Color.BLACK, 2);
 
-    gDrawer.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(5,-4,1));
+    gDrawer.drawStringH(gO, gA, "a", 20, Color.BLACK, new vec(5,-4,1));
     if (k < 0) {
-        gDrawer.drawStringH(oka, gO, "ka", 20, [0,0,0], new vec(-7,-4,0));
+        gDrawer.drawStringH(oka, gO, "ka", 20, Color.BLACK, new vec(-7,-4,0));
     } else {
-        gDrawer.drawStringH(gO, oka, "ka", 20, [0,0,0], new vec(7,-4,1));
+        gDrawer.drawStringH(gO, oka, "ka", 20, Color.BLACK, new vec(7,-4,1));
     }
 
     let oa = new vec();

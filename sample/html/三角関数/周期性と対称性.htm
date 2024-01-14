@@ -15,23 +15,14 @@
         <table>
             <tr>
                 <td>
-                    <span style="position: absolute; top:18px; left: 10px;">
-                        \begin{align}\cos\theta\end{align}
-                    </span>
                     <canvas id="dispCycleC"></canvas>
                 </td>
                 <td rowspan="2">
-                    <span style="position: absolute; top:18px; left: 300px;">
-                        \begin{align}\tan\theta\end{align}
-                    </span>
                     <canvas id="dispCycleT"></canvas>
                 </td>
             </tr>
             <tr>
                 <td colsspan="2">
-                    <span style="position: absolute; top:144px; left: 10px;">
-                        \begin{align}\sin\theta\end{align}
-                    </span>
                     <canvas id="dispCycleS"></canvas>
                 </td>
             </tr>
@@ -47,30 +38,37 @@
                     <canvas id="dispSymmetry"></canvas>
                 </td>
                 <td>
+                    <canvas id="dispPhase180"></canvas>
+                </td>
+                <td>
                     <canvas id="dispSymmetry180"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    \begin{align}
+                        \cos\left(\pm\theta+2n{\pi}\right) &= \cos\theta \\
+                        \sin\left(\pm\theta+2n{\pi}\right) &= \pm\sin\theta
+                    \end{align}
+                </td>
+                <td colspan="2">
+                    \begin{align}
+                        \cos\left(\pm\theta+{\left(2n+1\right)\pi}\right) &= -\cos\theta \\
+                        \sin\left(\pm\theta+{\left(2n+1\right)\pi}\right) &= \mp\sin\theta
+                    \end{align}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    \begin{align}
+                        \tan\left(\pm\theta+n{\pi}\right) = \pm\tan\theta
+                    \end{align}
                 </td>
             </tr>
         </table>
     </td>
 </tr>
-<tr>
-    <td>
-        [ 周期性と対称性の公式 ]<br>
-        <span>
-            \begin{align}
-                \cos\left(\pm\theta+2n{\pi}\right) &= \cos\theta \\
-                \sin\left(\pm\theta+2n{\pi}\right) &= \pm\sin\theta
-            \end{align}
-            \begin{align}
-                \cos\left(\pm\theta+{\left(2n+1\right)\pi}\right) &= -\cos\theta \\
-                \sin\left(\pm\theta+{\left(2n+1\right)\pi}\right) &= \mp\sin\theta
-            \end{align}
-            \begin{align}
-                \tan\left(\pm\theta+n{\pi}\right) = \pm\tan\theta
-            \end{align}
-        </span>
-    </td>
-</tr>
+
 </table>
 </body>
 <script type="text/javascript" src="../../script/三角関数/周期性と対称性.js"></script>

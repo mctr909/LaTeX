@@ -47,15 +47,15 @@ function main() {
 
     gDrawer.drawGrid(UNIT);
 
-    gDrawer.drawCircleD(gO, UNIT*0.5, Drawer.GRAY);
-    gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
-    gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
-    gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
+    gDrawer.drawCircleD(gO, UNIT*0.5, Color.GRAY);
+    gDrawer.drawCircle(gO, UNIT, Color.GRAY);
+    gDrawer.drawCircleD(gO, UNIT*1.5, Color.GRAY);
+    gDrawer.drawCircle(gO, UNIT*2, Color.GRAY);
 
-    gDrawer.drawArrow(gO, ona, Drawer.GREEN, 7);
-    gDrawer.drawArrow(gO, gA, Drawer.BLACK, 2);
+    gDrawer.drawArrow(gO, ona, Color.GREEN, 7);
+    gDrawer.drawArrow(gO, gA, Color.BLACK, 2);
 
-    gDrawer.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(5,-4,1));
+    gDrawer.drawStringH(gO, gA, "a", 20, Color.BLACK, new vec(5,-4,1));
 
     let oa = new vec();
     gA.sub(gO, oa);

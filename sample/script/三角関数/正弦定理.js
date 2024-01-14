@@ -2,8 +2,8 @@
 /// <reference path="../drawer.js" />
 
 const UNIT = 200;
-const TEXT_COLOR = Drawer.BLACK;
-const AUX_COLOR = Drawer.GREEN;
+const TEXT_COLOR = Color.BLACK;
+const AUX_COLOR = Color.GREEN;
 
 let gDrawer = new Drawer("disp", 400, 400);
 
@@ -80,9 +80,9 @@ function main() {
     let k = (ab.X * ao.X + ab.Y*ao.Y) / obL2;
     let c = new vec(ab.X * k + gA.X, ab.Y * k + gA.Y);
 
-    gDrawer.drawArc(gA, 20, ab.arg, angleA + ab.arg, Drawer.BLACK, 3);
-    gDrawer.drawArc(gB, 20, ab.arg - Math.PI - angleB, ab.arg - Math.PI, Drawer.BLACK, 3);
-    gDrawer.drawArc(gO, 20, ao.arg - Math.PI, bo.arg - Math.PI, Drawer.BLACK, 3);
+    gDrawer.drawArc(gA, 20, ab.arg, angleA + ab.arg, Color.BLACK, 3);
+    gDrawer.drawArc(gB, 20, ab.arg - Math.PI - angleB, ab.arg - Math.PI, Color.BLACK, 3);
+    gDrawer.drawArc(gO, 20, ao.arg - Math.PI, bo.arg - Math.PI, Color.BLACK, 3);
 
     gDrawer.drawLine(gA, gO);
     gDrawer.drawLine(gA, gB);

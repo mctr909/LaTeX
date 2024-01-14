@@ -1,12 +1,12 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = [191, 191, 191];
-const TEXT_COLOR = Drawer.BLACK;
-const LINE_COLOR = [95, 95, 95];
-const RULER_COLOR = Drawer.BLACK;
-const CIRCLE_COLOR = Drawer.BLACK;
-const KNOB_COLOR = Drawer.GREEN;
+const AXIZ_COLOR = Color.GRAY75;
+const TEXT_COLOR = Color.BLACK;
+const LINE_COLOR = Color.GRAY37;
+const RULER_COLOR = Color.BLACK;
+const CIRCLE_COLOR = Color.BLACK;
+const KNOB_COLOR = Color.GREEN;
 
 const WAVE_WIDTH = 160;
 const WAVE_HEIGHT = 300;

@@ -1,25 +1,55 @@
-/// <reference path="Math.js" />
+/// <reference path="math.js" />
+
+class Color {
+	static BLACK = new Color(0, 0, 0);
+	static GRAY37 = new Color(95, 95, 95);
+	static GRAY = new Color(127, 127, 127);
+	static GRAY75 = new Color(191, 191, 191);
+	static WHITE = new Color(255, 255, 255);
+	static RED = new Color(231, 0, 0);
+	static GREEN = new Color(0, 167, 0);
+	static BLUE = new Color(0, 0, 255);
+	static CYAN = new Color(0, 191, 211);
+	static ORANGE = new Color(221, 127, 0);
+	static PURPLE = new Color(191, 0, 255);
+	R = 0;
+	G = 0;
+	B = 0;
+	A = 1;
+	/**
+	 * @param {number} r
+	 * @param {number} g
+	 * @param {number} b
+	 * @param {number} a
+	 */
+	constructor(r=0, g=0, b=0, a=1) {
+		this.R = r;
+		this.G = g;
+		this.B = b;
+		this.A = a;
+	}
+}
 
 class LineInfo {
-    /** @type{vec} */
-    posA;
-    /** @type{vec} */
-    posB;
+	/** @type{vec} */
+	posA;
+	/** @type{vec} */
+	posB;
 	width = 1;
-    isDot = false;
+	isDot = false;
 	isArrow = false;
-	color = Drawer.BLACK;
+	color = Color.BLACK;
 	/**
 	 * @param {number} ax
 	 * @param {number} ay
 	 * @param {number} bx
 	 * @param {number} by
 	 * @param {number} width
-	 * @param {number[]} color
+	 * @param {Color} color
 	 * @param {boolean} isDot
 	 * @param {boolean} isArrow
 	 */
-	constructor(ax, ay, bx, by, width=1, color=Drawer.BLACK, isDot=false, isArrow=false) {
+	constructor(ax, ay, bx, by, width=1, color=Color.BLACK, isDot=false, isArrow=false) {
 		this.posA = new vec(ax, ay);
 		this.posB = new vec(bx, by);
 		this.width = width;
@@ -50,15 +80,6 @@ class LineInfo {
 class Drawer {
 	static #FONT_NAME = "Cambria Math";
 	static FRAME_RATE = 60;
-
-	static BLACK = [0, 0, 0];
-	static GRAY = [147, 147, 147];
-	static WHITE = [211, 255, 255];
-	static RED = [231, 0, 0];
-	static GREEN = [0, 167, 0];
-	static BLUE = [0, 0, 255];
-	static ORANGE = [221, 127, 0];
-	static PURPLE = [191, 0, 255];
 
 	/** @type {number} */
 	static CursorDiv = 2;
@@ -168,17 +189,21 @@ class Drawer {
 	 * @param {number} ay
 	 * @param {number} bx
 	 * @param {number} by
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLineXY(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
+	drawLineXY(ax, ay, bx, by, color = Color.BLACK, alpha = 1, width = 1) {
 		let x1 = this.#offset.X + ax;
 		let y1 = this.#offset.Y - ay;
 		let x2 = this.#offset.X + bx;
 		let y2 = this.#offset.Y - by;
 		this.#ctx.beginPath();
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ alpha + ")";
 		this.#ctx.lineWidth = width;
 		this.#ctx.moveTo(x1, y1);
 		this.#ctx.lineTo(x2, y2);
@@ -191,17 +216,21 @@ class Drawer {
 	 * @param {number} ay
 	 * @param {number} bx
 	 * @param {number} by
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLineXYD(ax, ay, bx, by, color = [0,0,0], alpha = 1, width = 1) {
+	drawLineXYD(ax, ay, bx, by, color = Color.BLACK, alpha = 1, width = 1) {
 		let x1 = this.#offset.X + ax;
 		let y1 = this.#offset.Y - ay;
 		let x2 = this.#offset.X + bx;
 		let y2 = this.#offset.Y - by;
 		this.#ctx.beginPath();
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ alpha + ")";
 		this.#ctx.lineWidth = width;
 		this.#ctx.moveTo(x1, y1);
 		this.#ctx.lineTo(x2, y2);
@@ -212,22 +241,22 @@ class Drawer {
 	/**
 	 * @param {vec} a
 	 * @param {vec} b
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLine(a, b, color = [0,0,0], alpha = 1, width = 1) {
+	drawLine(a, b, color = Color.BLACK, alpha = 1, width = 1) {
 		this.drawLineXY(a.X, a.Y, b.X, b.Y, color, alpha, width);
 	}
 
 	/**
 	 * @param {vec} a
 	 * @param {vec} b
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 * @param {number} width
 	 */
-	drawLineD(a, b, color = [0,0,0], alpha = 1, width = 1) {
+	drawLineD(a, b, color = Color.BLACK, alpha = 1, width = 1) {
 		this.drawLineXYD(a.X, a.Y, b.X, b.Y, color, alpha, width);
 	}
 
@@ -236,10 +265,10 @@ class Drawer {
 	 * @param {vec} ay
 	 * @param {vec} bx
 	 * @param {vec} by
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 */
-	drawArrowXY(ax, ay, bx, by, color = [0,0,0], width = 1) {
+	drawArrowXY(ax, ay, bx, by, color = Color.BLACK, width = 1) {
 		this.drawLineXY(ax, ay, bx, by, color, 1, width);
 		this.#fillArrow(ax, ay, bx, by, color, 1);
 	}
@@ -247,10 +276,10 @@ class Drawer {
 	/**
 	 * @param {vec} a
 	 * @param {vec} b
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 */
-	drawArrow(a, b, color = [0,0,0], width = 1) {
+	drawArrow(a, b, color = Color.BLACK, width = 1) {
 		var sx = b.X - a.X;
 		var sy = b.Y - a.Y;
 		var th = Math.atan2(sy, sx);
@@ -264,46 +293,54 @@ class Drawer {
 	/**
 	 * @param {vec} a
 	 * @param {vec} b
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 */
-	drawArrowD(a, b, color = [0,0,0], width = 1) {
+	drawArrowD(a, b, color = Color.BLACK, width = 1) {
 		this.drawLineXYD(a.X, a.Y, b.X, b.Y, color, 1, width);
 		this.#fillArrow(a.X, a.Y, b.X, b.Y, color, 1);
 	}
 
 	/**
 	 * @param {Array<vec>} points
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 * @param {number} alpha
 	 */
-	drawPolyline(points, color = [0,0,0], width = 1, alpha=1) {
+	drawPolyline(points, color = Color.BLACK, width = 1, alpha=1) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(this.#offset.X + points[0].X, this.#offset.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
 			this.#ctx.lineTo(this.#offset.X + points[i].X, this.#offset.Y - points[i].Y);
 		}
 		this.#ctx.lineWidth = width;
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + alpha + ")";
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ alpha + ")";
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
 	}
 
 	/**
 	 * @param {Array<vec>} points
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 * @param {number} alpha
 	 */
-	drawPolylineD(points, color = [0,0,0], width = 1, alpha=1) {
+	drawPolylineD(points, color = Color.BLACK, width = 1, alpha=1) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(this.#offset.X + points[0].X, this.#offset.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
 			this.#ctx.lineTo(this.#offset.X + points[i].X, this.#offset.Y - points[i].Y);
 		}
 		this.#ctx.lineWidth = width;
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + alpha + ")";
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ alpha + ")";
 		this.#ctx.setLineDash([3, 3]);
 		this.#ctx.stroke();
 	}
@@ -311,10 +348,10 @@ class Drawer {
 	/**
 	 * @param {vec} center
 	 * @param {number} radius
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 */
-	drawCircle(center, radius, color = [0,0,0], width = 1) {
+	drawCircle(center, radius, color = Color.BLACK, width = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
 			this.#offset.X + center.X,
@@ -324,7 +361,11 @@ class Drawer {
 			360 * Math.PI / 180,
 			false
 		);
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ "0.8)";
 		this.#ctx.lineWidth = width;
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
@@ -333,10 +374,10 @@ class Drawer {
 	/**
 	 * @param {vec} center
 	 * @param {number} radius
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 */
-	drawCircleD(center, radius, color = [0,0,0], width = 1) {
+	drawCircleD(center, radius, color = Color.BLACK, width = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
 			this.#offset.X + center.X,
@@ -357,10 +398,10 @@ class Drawer {
 	 * @param {number} radius
 	 * @param {number} begin
 	 * @param {number} elapse
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} width
 	 */
-	drawArc(center, radius, begin = 0, elapse = 2 * Math.PI, color = [0,0,0], width = 1) {
+	drawArc(center, radius, begin = 0, elapse = 2 * Math.PI, color = Color.BLACK, width = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
 			this.#offset.X + center.X,
@@ -370,7 +411,11 @@ class Drawer {
 			-elapse,
 			true
 		);
-		this.#ctx.strokeStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",0.8)" ;
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ "0.8)";
 		this.#ctx.lineWidth = width;
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
@@ -380,10 +425,10 @@ class Drawer {
 	 * @param {number} x
 	 * @param {number} y
 	 * @param {number} radius
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 */
-	fillCircleXY(x, y, radius, color = [0,0,0], alpha = 1) {
+	fillCircleXY(x, y, radius, color = Color.BLACK, alpha = 1) {
 		this.#ctx.beginPath();
 		this.#ctx.arc(
 			this.#offset.X + x,
@@ -393,33 +438,41 @@ class Drawer {
 			360 * Math.PI / 180,
 			false
 		);
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")" ;
+		this.#ctx.fillStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ alpha + ")";
 		this.#ctx.fill();
 	}
 
 	/**
 	 * @param {vec} center
 	 * @param {number} radius
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 */
-	fillCircle(center, radius, color = [0,0,0], alpha = 1) {
+	fillCircle(center, radius, color = Color.BLACK, alpha = 1) {
 		this.fillCircleXY(center.X, center.Y, radius, color, alpha);
 	}
 
 	/**
 	 * @param {Array<vec>} points
 	 * @param {vec} ofs
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {number} alpha
 	 */
-	fillPolygon(points, ofs = new vec(), color = [0,0,0], alpha=0.66) {
+	fillPolygon(points, ofs = new vec(), color = Color.BLACK, alpha=0.66) {
 		this.#ctx.beginPath();
 		this.#ctx.moveTo(ofs.X + points[0].X, ofs.Y - points[0].Y);
 		for (let i=1; i<points.length; i++) {
 			this.#ctx.lineTo(ofs.X + points[i].X, ofs.Y - points[i].Y);
 		}
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ", " + alpha + ")";
+		this.#ctx.fillStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ alpha + ")";
 		this.#ctx.fill();
 	}
 
@@ -428,11 +481,15 @@ class Drawer {
 	 * @param {vec} y
 	 * @param {string} value
 	 * @param {number} size
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 */
-	drawStringXY(x, y, value, size = 11, color = [0,0,0]) {
+	drawStringXY(x, y, value, size = 11, color = Color.BLACK) {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)";
+		this.#ctx.fillStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ color.A + ")";
 		let px = this.#offset.X + x;
 		let py = this.#offset.Y - y;
 		let lines = value.split("\n");
@@ -448,11 +505,15 @@ class Drawer {
 	 * @param {number} rot
 	 * @param {string} value
 	 * @param {number} size
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 */
-	drawStringRot(x, y, rot, value, size = 11, color = [0,0,0]) {
+	drawStringRot(x, y, rot, value, size = 11, color = Color.BLACK) {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)";
+		this.#ctx.fillStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ color.A + ")";
 		this.#ctx.translate(x, y);
 		this.#ctx.rotate(rot);
 		let sz = this.#ctx.measureText(value);
@@ -465,9 +526,9 @@ class Drawer {
 	 * @param {vec} p
 	 * @param {string} value
 	 * @param {number} size
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 */
-	drawString(p, value, size = 11, color = [0,0,0]) {
+	drawString(p, value, size = 11, color = Color.BLACK) {
 		this.drawStringXY(p.X, p.Y, value, size, color);
 	}
 
@@ -475,11 +536,15 @@ class Drawer {
 	 * @param {vec} p
 	 * @param {string} value
 	 * @param {number} size
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 */
-	drawStringC(p, value, size = 11, color = [0,0,0]) {
+	drawStringC(p, value, size = 11, color = Color.BLACK) {
 		this.#ctx.font = size + "px " + Drawer.#FONT_NAME;
-		this.#ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + ",1)" ;
+		this.#ctx.fillStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ color.A + ")";
 		let lines = value.split("\n");
 		let px = this.#offset.X + p.X;
 		let py = this.#offset.Y - p.Y + size / 2;
@@ -495,10 +560,10 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {string} value
 	 * @param {number} size
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {vec} offset
 	 */
-	drawStringH(a, b, value, size = 11, color = [0,0,0], offset = new vec(0,0,0.5)) {
+	drawStringH(a, b, value, size = 11, color = Color.BLACK, offset = new vec(0,0,0.5)) {
 		let sx = b.X - a.X;
 		let sy = a.Y - b.Y;
 		let rot = Math.atan2(sy, sx);
@@ -514,10 +579,10 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {string} value
 	 * @param {number} size
-	 * @param {[number, number, number]} color
+	 * @param {Color} color
 	 * @param {vec} offset
 	 */
-	drawStringV(a, b, value, size = 11, color = [0,0,0], offset = new vec(0,0,0.5)) {
+	drawStringV(a, b, value, size = 11, color = Color.BLACK, offset = new vec(0,0,0.5)) {
 		let sx = b.X - a.X;
 		let sy = b.Y - a.Y;
 		let rot = Math.atan2(sx, sy);
@@ -530,17 +595,44 @@ class Drawer {
 	}
 
 	/**
+	 * @param {vec} a
+	 * @param {vec} o
+	 * @param {vec} b
+	 * @param {string} value
+	 * @param {number} size
+	 * @param {Color} color
+	 * @param {vec} offset
+	 */
+	drawStringA(a, o, b, value, size = 11, color = Color.BLACK, offset = new vec(0,0,1)) {
+		let oaX = o.X - a.X;
+		let oaY = o.Y - a.Y;
+		let obX = o.X - b.X;
+		let obY = o.Y - b.Y;
+		let oaR = Math.sqrt(oaX*oaX + oaY*oaY);
+		let obR = Math.sqrt(obX*obX + obY*obY);
+		let abX = (oaX / oaR + obX / obR) / 2;
+		let abY = (oaY / oaR + obY / obR) / 2;
+		let angle = Math.atan2(abY, abX) + Math.PI;
+		if (angle < 0) {
+			angle += Math.PI;
+		}
+		let p = new vec(Math.cos(angle) * offset.Z, Math.sin(angle) * offset.Z);
+		offset.Z = 1;
+		this.drawStringH(o, p, value, size, color, offset);
+	}
+
+	/**
 	 * @param {number} unit 
 	 */
 	drawGrid(unit) {
 		for(let i = -20; i <= 20; i += 5) {
 			let r = i * 0.1;
 			if (0 == i % 10) {
-				this.drawLineXY(unit*r, unit*-2, unit*r, unit*2, Drawer.GRAY);
-				this.drawLineXY(unit*-2, unit*r, unit*2, unit*r, Drawer.GRAY);
+				this.drawLineXY(unit*r, unit*-2, unit*r, unit*2, Color.GRAY);
+				this.drawLineXY(unit*-2, unit*r, unit*2, unit*r, Color.GRAY);
 			} else {
-				this.drawLineXYD(unit*r, unit*-2, unit*r, unit*2, Drawer.GRAY);
-				this.drawLineXYD(unit*-2, unit*r, unit*2, unit*r, Drawer.GRAY);
+				this.drawLineXYD(unit*r, unit*-2, unit*r, unit*2, Color.GRAY);
+				this.drawLineXYD(unit*-2, unit*r, unit*2, unit*r, Color.GRAY);
 			}
 		}
 	}

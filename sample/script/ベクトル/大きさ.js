@@ -44,14 +44,14 @@ function main() {
 
     gDrawer.drawGrid(UNIT);
 
-    gDrawer.drawCircleD(gO, UNIT*0.5, Drawer.GRAY);
-    gDrawer.drawCircle(gO, UNIT, Drawer.GRAY);
-    gDrawer.drawCircleD(gO, UNIT*1.5, Drawer.GRAY);
-    gDrawer.drawCircle(gO, UNIT*2, Drawer.GRAY);
+    gDrawer.drawCircleD(gO, UNIT*0.5, Color.GRAY);
+    gDrawer.drawCircle(gO, UNIT, Color.GRAY);
+    gDrawer.drawCircleD(gO, UNIT*1.5, Color.GRAY);
+    gDrawer.drawCircle(gO, UNIT*2, Color.GRAY);
 
-    gDrawer.drawArrow(gO, gA, Drawer.BLACK, 2);
+    gDrawer.drawArrow(gO, gA, Color.BLACK, 2);
 
-    gDrawer.drawStringH(gO, gA, "a", 20, [0,0,0], new vec(0,3,0.5));
+    gDrawer.drawStringH(gO, gA, "a", 20, Color.BLACK, new vec(0,3,0.5));
 
     document.getElementById("dispA").innerHTML = round2d(oa, 1/UNIT);
     document.getElementById("dispAn").innerHTML = round1d(oa.abs, 1/UNIT);

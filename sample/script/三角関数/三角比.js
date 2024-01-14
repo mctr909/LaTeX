@@ -1,14 +1,14 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = Drawer.GRAY;
-const MEASURE_COLOR = Drawer.BLACK;
-const RULER_COLOR = Drawer.GRAY;
-const CIRCLE_COLOR = Drawer.BLACK;
-const KNOB_COLOR = Drawer.GREEN;
-const COS_COLOR = Drawer.BLUE;
-const SIN_COLOR = Drawer.RED;
-const TAN_COLOR = Drawer.BLACK;
+const AXIZ_COLOR = Color.GRAY;
+const MEASURE_COLOR = Color.BLACK;
+const RULER_COLOR = Color.GRAY;
+const CIRCLE_COLOR = Color.BLACK;
+const KNOB_COLOR = Color.GREEN;
+const COS_COLOR = Color.BLUE;
+const SIN_COLOR = Color.RED;
+const TAN_COLOR = Color.BLACK;
 const UNIT_RADIUS = 60;
 const WAVE_WIDTH = 300;
 const WAVE_HEIGHT = 180;
@@ -236,7 +236,7 @@ function main() {
         gDrawer.drawStringC(lbl.pos, lbl.text, 14);
     }
 
-    gDrawer.drawStringXY(20, 4, "θ", 16);
+    gDrawer.drawStringXY(20, 4, "θ", 20);
     gDrawer.drawStringXY(vrt.X - 8, vrt.Y + 6, "rT", 18);
     gDrawer.drawStringXY(vt.X - 5, vt.Y + 6, "T", 18);
     gDrawer.drawStringXY(vp.X - 5, vp.Y + 6, "P", 18);
@@ -244,25 +244,25 @@ function main() {
     let signX = Math.cos(gTheta);
     let signY = Math.sin(gTheta);
     if (signX * signY < 0) {
-        gDrawer.drawStringH(vp, vo, "r", 22, [0,0,0], new vec(0, 5, 0.5));
+        gDrawer.drawStringH(vp, vo, "r", 22, Color.BLACK, new vec(0, 5, 0.5));
     } else {
-        gDrawer.drawStringH(vo, vp, "r", 22, [0,0,0], new vec(0, 5, 0.5));
+        gDrawer.drawStringH(vo, vp, "r", 22, Color.BLACK, new vec(0, 5, 0.5));
     }
     if (signX < 0) {
         if (signY < 0) {
-            gDrawer.drawStringH(vc, vo, "x", 20, [0,0,0], new vec(0,5,0.5));
-            gDrawer.drawStringV(vp, vc, "y", 20, [0,0,0], new vec(-10,3,0.5));
+            gDrawer.drawStringH(vc, vo, "x", 20, Color.BLACK, new vec(0,5,0.5));
+            gDrawer.drawStringV(vp, vc, "y", 20, Color.BLACK, new vec(-10,3,0.5));
         } else {
-            gDrawer.drawStringH(vc, vo, "x", 20, [0,0,0], new vec(0,-15,0.5));
-            gDrawer.drawStringV(vc, vp, "y", 20, [0,0,0], new vec(-10,3,0.5));
+            gDrawer.drawStringH(vc, vo, "x", 20, Color.BLACK, new vec(0,-15,0.5));
+            gDrawer.drawStringV(vc, vp, "y", 20, Color.BLACK, new vec(-10,3,0.5));
         }
     } else {
         if (signY < 0) {
-            gDrawer.drawStringH(vo, vc, "x", 20, [0,0,0], new vec(0,5,0.5));
-            gDrawer.drawStringV(vp, vc, "y", 20, [0,0,0], new vec(10,3,0.5));
+            gDrawer.drawStringH(vo, vc, "x", 20, Color.BLACK, new vec(0,5,0.5));
+            gDrawer.drawStringV(vp, vc, "y", 20, Color.BLACK, new vec(10,3,0.5));
         } else {
-            gDrawer.drawStringH(vo, vc, "x", 20, [0,0,0], new vec(0,-15,0.5));
-            gDrawer.drawStringV(vc, vp, "y", 20, [0,0,0], new vec(10,3,0.5));
+            gDrawer.drawStringH(vo, vc, "x", 20, Color.BLACK, new vec(0,-15,0.5));
+            gDrawer.drawStringV(vc, vp, "y", 20, Color.BLACK, new vec(10,3,0.5));
         }
     }
 
