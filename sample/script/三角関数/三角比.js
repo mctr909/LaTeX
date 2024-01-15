@@ -11,7 +11,7 @@ const SIN_COLOR = Color.RED;
 const TAN_COLOR = Color.BLACK;
 const UNIT_RADIUS = 60;
 const WAVE_WIDTH = 300;
-const WAVE_HEIGHT = 200;
+const WAVE_HEIGHT = 240;
 const GAP = 60;
 
 /** @type{LineInfo[]} */
@@ -32,7 +32,7 @@ let gWaveVBegin = gCircleRadius + GAP/4;
 
 let gDrawer = new Drawer("disp",
     UNIT_RADIUS * 4 + GAP + WAVE_WIDTH + 60,
-    UNIT_RADIUS * 4 + GAP/2 + WAVE_HEIGHT + 140
+    UNIT_RADIUS * 4 + GAP + WAVE_HEIGHT + 140
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
