@@ -14,15 +14,15 @@ const WAVE_HEIGHT = 100;
 const UNIT_RADIUS = 100;
 const GAP = 30;
 
-let gDrawerCycleC = new Drawer("dispCycleC",
+let gDrawerC = new Drawer("dispC",
     WAVE_WIDTH + GAP * 2,
     WAVE_HEIGHT + GAP
 );
-let gDrawerCycleS = new Drawer("dispCycleS",
+let gDrawerS = new Drawer("dispS",
     WAVE_WIDTH + GAP * 2,
     WAVE_HEIGHT + GAP
 );
-let gDrawerCycleT = new Drawer("dispCycleT",
+let gDrawerT = new Drawer("dispT",
     WAVE_WIDTH + GAP * 2,
     WAVE_HEIGHT * 2 + GAP * 2
 );
@@ -60,7 +60,7 @@ function init() {
     for (let item of eb) {
         item.style.overflow = "hidden";
     }
-    gDrawerCycleC.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP/2); {
+    gDrawerC.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP/2); {
         gAxisListC.push(new LineInfo(
             0, -WAVE_HEIGHT*1.1/2,
             0, WAVE_HEIGHT*1.1/2,
@@ -116,7 +116,7 @@ function init() {
             gLineC.push(new vec(x, Math.cos(th) * WAVE_HEIGHT/2));
         }
     }
-    gDrawerCycleS.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP/2); {
+    gDrawerS.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP/2); {
         gAxisListS.push(new LineInfo(
             0, -WAVE_HEIGHT*1.1/2,
             0, WAVE_HEIGHT*1.1/2,
@@ -172,7 +172,7 @@ function init() {
             gLineS.push(new vec(x, Math.sin(th) * WAVE_HEIGHT/2));
         }
     }
-    gDrawerCycleT.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT + GAP); {
+    gDrawerT.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT + GAP); {
         gAxisListT.push(new LineInfo(
             0, -WAVE_HEIGHT-GAP,
             0, WAVE_HEIGHT+GAP,
@@ -260,40 +260,38 @@ function init() {
 }
 
 function main() {
-    gDrawerCycleC.clear(); {
+    gDrawerC.clear(); {
         for (let i=0; i<gAxisListC.length; i++) {
-            gAxisListC[i].draw(gDrawerCycleC);
+            gAxisListC[i].draw(gDrawerC);
         }
-        gDrawerCycleC.drawPolyline(gLineC, LINE_COLOR, 1);
+        gDrawerC.drawPolyline(gLineC, LINE_COLOR, 1);
         for (let i=0; i<gLabelListC.length; i++) {
             let lbl = gLabelListC[i];
-            gDrawerCycleC.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
+            gDrawerC.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
         }
-        gDrawerCycleC.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT/2-3, "cosθ", 24);
+        gDrawerC.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT/2-3, "cosθ", 24);
     }
-
-    gDrawerCycleS.clear(); {
+    gDrawerS.clear(); {
         for (let i=0; i<gAxisListS.length; i++) {
-            gAxisListS[i].draw(gDrawerCycleS);
+            gAxisListS[i].draw(gDrawerS);
         }
-        gDrawerCycleS.drawPolyline(gLineS, LINE_COLOR, 1);
+        gDrawerS.drawPolyline(gLineS, LINE_COLOR, 1);
         for (let i=0; i<gLabelListS.length; i++) {
             let lbl = gLabelListS[i];
-            gDrawerCycleS.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
+            gDrawerS.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
         }
-        gDrawerCycleS.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT/2-3, "sinθ", 24);
+        gDrawerS.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT/2-3, "sinθ", 24);
     }
-
-    gDrawerCycleT.clear(); {
+    gDrawerT.clear(); {
         for (let i=0; i<gAxisListT.length; i++) {
-            gAxisListT[i].draw(gDrawerCycleT);
+            gAxisListT[i].draw(gDrawerT);
         }
-        gDrawerCycleT.drawPolyline(gLineT, LINE_COLOR, 1);
+        gDrawerT.drawPolyline(gLineT, LINE_COLOR, 1);
         for (let i=0; i<gLabelListT.length; i++) {
             let lbl = gLabelListT[i];
-            gDrawerCycleT.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
+            gDrawerT.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
         }
-        gDrawerCycleT.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT+12, "tanθ", 24);
+        gDrawerT.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT+12, "tanθ", 24);
     }
 
     gDrawerSymmetry.clear(); {
@@ -331,8 +329,8 @@ function main() {
         gDrawerSymmetry.fillCircle(vpm, 4, CIRCLE_COLOR);
         gDrawerSymmetry.fillCircle(vp_t, 4);
         gDrawerSymmetry.fillCircle(vpm_t, 4);
-        gDrawerSymmetry.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerSymmetry.drawArc(new vec(), 34, vpm.arg, 0, CIRCLE_COLOR, 2);
+        gDrawerSymmetry.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerSymmetry.drawArc(new vec(), 34, vpm.arg, 0, CIRCLE_COLOR, 3);
 
         let fA, fB;
         let rA, rB;
@@ -353,7 +351,6 @@ function main() {
         gDrawerSymmetry.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
         gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 20, TEXT_COLOR, new vec(0, -7, 45));
     }
-
     gDrawerPhase180.clear(); {
         gDrawerPhase180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+(2n+1)π", 24);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
@@ -390,8 +387,8 @@ function main() {
         gDrawerPhase180.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerPhase180.fillCircle(vp180, 4, CIRCLE_COLOR);
         gDrawerPhase180.fillCircle(vp180_t, 4);
-        gDrawerPhase180.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerPhase180.drawArc(new vec(), 36, vp.arg, vp180.arg, CIRCLE_COLOR, 2);
+        gDrawerPhase180.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerPhase180.drawArc(new vec(), 36, vp.arg, vp180.arg, CIRCLE_COLOR, 3);
 
         let fA, fB;
         if (vp.arg < 0) {
@@ -405,7 +402,6 @@ function main() {
         }
         gDrawerPhase180.drawStringH(vp180, vp, "π", 20, TEXT_COLOR, new vec(0, 40, 0.5));
     }
-
     gDrawerSymmetry180.clear(); {
         gDrawerSymmetry180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "(2n+1)π－θ", 24);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
@@ -432,7 +428,7 @@ function main() {
         let vpm180 = new vec(Math.cos(theta) * UNIT_RADIUS, Math.sin(theta) * UNIT_RADIUS);
         let vpm180_t = new vec(UNIT_RADIUS, limitTan(Math.tan(theta)) * UNIT_RADIUS);
         let vpm180_c = new vec(vpm180.X, 0);
-        gDrawerSymmetry180.fillPolygon([vo, vpm180, vpm180_c], gDrawerPhase180.Offset, Color.GRAY75);
+        gDrawerSymmetry180.fillPolygon([vo, vpm180, vpm180_c], gDrawerSymmetry180.Offset, Color.GRAY75);
         gDrawerSymmetry180.drawLine(vo, vp_t, RADIUS_COLOR, 3);
         gDrawerSymmetry180.drawLine(vo, vpm180_t, CIRCLE_COLOR, 3);
         gDrawerSymmetry180.drawLine(vo, vp_c, COS_COLOR, 3);
@@ -446,9 +442,9 @@ function main() {
         gDrawerSymmetry180.fillCircle(vpm180, 4, CIRCLE_COLOR);
         gDrawerSymmetry180.fillCircle(vp_t, 4);
         gDrawerSymmetry180.fillCircle(vpm180_t, 4);
-        gDrawerSymmetry180.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerSymmetry180.drawArc(new vec(), 34, vpm.arg, 0, CIRCLE_COLOR, 2);
-        gDrawerSymmetry180.drawArc(new vec(), 60, vpm.arg, vpm180.arg, CIRCLE_COLOR, 2);
+        gDrawerSymmetry180.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerSymmetry180.drawArc(new vec(), 34, vpm.arg, 0, CIRCLE_COLOR, 3);
+        gDrawerSymmetry180.drawArc(new vec(), 60, vpm.arg, vpm180.arg, CIRCLE_COLOR, 3);
 
         let fA, fB;
         let rA, rB;

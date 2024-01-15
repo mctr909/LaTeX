@@ -22,12 +22,6 @@ let gRSinLine = [];
 let gRCosLine = [];
 /** @type{vec[]} */
 let gRTanLines = [];
-/** @type{vec[]} */
-let gSinLine = [];
-/** @type{vec[]} */
-let gCosLine = [];
-/** @type{vec[]} */
-let gTanLines = [];
 
 let gRadius = 2;
 let gTheta = Math.PI / 4;
@@ -62,9 +56,6 @@ function init() {
     gRSinLine = [];
     gRCosLine = [];
     gRTanLines = [];
-    gSinLine = [];
-    gCosLine = [];
-    gTanLines = [];
 
     gRadius = document.getElementById("trbR").value / 10.0;
     gCircleRadius = UNIT_RADIUS * gRadius;
@@ -157,31 +148,24 @@ function init() {
     for(let y=gWaveVBegin - advHeight; y<gWaveVBegin + advHeight + WAVE_HEIGHT; y++) {
         let th = 2 * Math.PI * (y - gWaveVBegin) / WAVE_HEIGHT;
         gRCosLine.push(new vec(Math.cos(th) * gCircleRadius, -y));
-        gCosLine.push(new vec(Math.cos(th) * UNIT_RADIUS, -y));
     }
     let rTanList = [];
-    let tanList = [];
     let advWidth = WAVE_WIDTH/12;
     for(let x=gWaveHBegin - advWidth; x<gWaveHBegin + advWidth + WAVE_WIDTH; x++) {
         let th = 2 * Math.PI * (x - gWaveHBegin) / WAVE_WIDTH;
         gRSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
-        gSinLine.push(new vec(x, Math.sin(th) * UNIT_RADIUS));
         let t = Math.tan(th);
         if (t < -20 || t > 20) {
             if (0 < rTanList.length) {
                 gRTanLines.push(rTanList);
-                gTanLines.push(tanList);
                 rTanList = [];
-                tanList = [];
             }
             continue;
         }
         rTanList.push(new vec(x, t * gCircleRadius));
-        tanList.push(new vec(x, t * UNIT_RADIUS));
     }
     if (0 < rTanList.length) {
         gRTanLines.push(rTanList);
-        gTanLines.push(tanList);
     }
 }
 
@@ -239,7 +223,9 @@ function main() {
     gDrawer.drawLine(vo, vc, COS_COLOR, 5);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
-    gDrawer.drawArc(new vec(), 18, 0, dangle, KNOB_COLOR, 2);
+
+    gDrawer.drawArc(new vec(), 18, 0, dangle, KNOB_COLOR, 3);
+
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
     gDrawer.fillCircle(vt, 5);
     gDrawer.fillCircle(vrt, 5);

@@ -9,17 +9,15 @@ const RADIUS_COLOR = Color.GREEN;
 const SIN_COLOR = Color.RED;
 const COS_COLOR = Color.BLUE;
 
-const WAVE_WIDTH = 280;
-const WAVE_HEIGHT = 100;
 const UNIT_RADIUS = 100;
-const GAP = 30;
+const GAP = 20;
 
 let gDrawer = new Drawer("disp",
     UNIT_RADIUS * 2 + GAP,
     UNIT_RADIUS * 2 + GAP
 );
 let gAxisListSymmetry = [];
-let gTheta = Math.PI / 3;
+let gTheta = Math.PI / 6;
 
 init();
 requestNextAnimationFrame(main);
@@ -62,11 +60,24 @@ function main() {
         let vo = new vec();
         let vp = new vec(Math.cos(gTheta) * UNIT_RADIUS, Math.sin(gTheta) * UNIT_RADIUS);
         let vp_c = new vec(vp.X, 0);
+        let theta = -gTheta;
+        theta += Math.PI/2;
+        let vpm90 = new vec(Math.cos(theta) * UNIT_RADIUS, Math.sin(theta) * UNIT_RADIUS);
+        let vpm90_c = new vec(vpm90.X);
+        let vpm90_s = new vec(0, vpm90.Y);
+        gDrawer.fillPolygon([vo, vpm90, vpm90_s], gDrawer.Offset, Color.GRAY75);
+        gDrawer.drawLineD(vo, vpm90_s, COS_COLOR, 3);
+        gDrawer.drawLineD(vpm90_s, vpm90, SIN_COLOR, 3);
+        gDrawer.drawLine(vo, vpm90_c, COS_COLOR, 3);
+        gDrawer.drawLine(vpm90_c, vpm90, SIN_COLOR, 3);
+        gDrawer.drawLine(vo, vpm90, CIRCLE_COLOR, 3);
         gDrawer.drawLine(vo, vp_c, COS_COLOR, 3);
         gDrawer.drawLine(vp_c, vp, SIN_COLOR, 3);
         gDrawer.drawLine(vo, vp, RADIUS_COLOR, 3);
         gDrawer.fillCircle(vp, 7, RADIUS_COLOR);
-        gDrawer.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 2);
+        gDrawer.fillCircle(vpm90, 4, CIRCLE_COLOR);
+        gDrawer.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawer.drawArc(new vec(), 34, vpm90.arg, Math.PI/2, CIRCLE_COLOR, 3);
 
         let fA, fB;
         if (vp.arg < 0) {
