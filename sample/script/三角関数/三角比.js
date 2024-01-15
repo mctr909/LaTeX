@@ -2,7 +2,6 @@
 /// <reference path="../drawer.js" />
 
 const AXIZ_COLOR = Color.GRAY66;
-const MEASURE_COLOR = Color.BLACK;
 const RULER_COLOR = Color.GRAY;
 const CIRCLE_COLOR = Color.BLACK;
 const KNOB_COLOR = Color.GREEN;
@@ -21,8 +20,15 @@ let gLabelList = [];
 let gRSinLine = [];
 /** @type{vec[]} */
 let gRCosLine = [];
-/** @type{Array<vec[]>} */
+/** @type{vec[]} */
+let gRTanLines = [];
+/** @type{vec[]} */
+let gSinLine = [];
+/** @type{vec[]} */
+let gCosLine = [];
+/** @type{vec[]} */
 let gTanLines = [];
+
 let gRadius = 2;
 let gTheta = Math.PI / 4;
 
@@ -55,6 +61,9 @@ function init() {
     gLabelList = [];
     gRSinLine = [];
     gRCosLine = [];
+    gRTanLines = [];
+    gSinLine = [];
+    gCosLine = [];
     gTanLines = [];
 
     gRadius = document.getElementById("trbR").value / 10.0;
@@ -144,27 +153,34 @@ function init() {
         1, TAN_COLOR
     ));
 
-    let tanList = [];
     let advHeight = WAVE_HEIGHT/12;
     for(let y=gWaveVBegin - advHeight; y<gWaveVBegin + advHeight + WAVE_HEIGHT; y++) {
         let th = 2 * Math.PI * (y - gWaveVBegin) / WAVE_HEIGHT;
         gRCosLine.push(new vec(Math.cos(th) * gCircleRadius, -y));
+        gCosLine.push(new vec(Math.cos(th) * UNIT_RADIUS, -y));
     }
+    let rTanList = [];
+    let tanList = [];
     let advWidth = WAVE_WIDTH/12;
     for(let x=gWaveHBegin - advWidth; x<gWaveHBegin + advWidth + WAVE_WIDTH; x++) {
         let th = 2 * Math.PI * (x - gWaveHBegin) / WAVE_WIDTH;
         gRSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
+        gSinLine.push(new vec(x, Math.sin(th) * UNIT_RADIUS));
         let t = Math.tan(th);
         if (t < -20 || t > 20) {
-            if (0 < tanList.length) {
+            if (0 < rTanList.length) {
+                gRTanLines.push(rTanList);
                 gTanLines.push(tanList);
+                rTanList = [];
                 tanList = [];
             }
             continue;
         }
-        tanList.push(new vec(x, t * gCircleRadius));
+        rTanList.push(new vec(x, t * gCircleRadius));
+        tanList.push(new vec(x, t * UNIT_RADIUS));
     }
-    if (0 < tanList.length) {
+    if (0 < rTanList.length) {
+        gRTanLines.push(rTanList);
         gTanLines.push(tanList);
     }
 }
@@ -178,9 +194,8 @@ function main() {
     gDrawer.drawCircleD(new vec(), UNIT_RADIUS, AXIZ_COLOR);
     gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR);
 
-    for (let i=0; i<gTanLines.length; i++) {
-        let tanLine = gTanLines[i];
-        gDrawer.drawPolyline(tanLine, TAN_COLOR, 1);
+    for (let i=0; i<gRTanLines.length; i++) {
+        gDrawer.drawPolyline(gRTanLines[i], TAN_COLOR, 1);
     }
     gDrawer.drawPolyline(gRCosLine, COS_COLOR, 1);
     gDrawer.drawPolyline(gRSinLine, SIN_COLOR, 1);
@@ -226,8 +241,8 @@ function main() {
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
     gDrawer.drawArc(new vec(), 18, 0, dangle, KNOB_COLOR, 2);
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
-    gDrawer.fillCircle(vrt, 5);
     gDrawer.fillCircle(vt, 5);
+    gDrawer.fillCircle(vrt, 5);
     gDrawer.fillCircle(wave_t, 2.5, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 2.5, COS_COLOR);
     gDrawer.fillCircle(wave_s, 2.5, SIN_COLOR);
@@ -239,15 +254,15 @@ function main() {
 
     gDrawer.drawStringXY(20, 4, "θ", 20);
     gDrawer.drawStringXY(vrt.X - 8, vrt.Y + 6, "rT", 18);
-    gDrawer.drawStringXY(vt.X - 5, vt.Y + 6, "T", 18);
-    gDrawer.drawStringXY(vp.X - 5, vp.Y + 6, "P", 18);
+    gDrawer.drawStringXY(vt.X - 5, vt.Y - 20, "T", 18);
+    gDrawer.drawStringXY(vp.X - 5, vp.Y + 8, "P", 18);
 
     let signX = Math.cos(gTheta);
     let signY = Math.sin(gTheta);
     if (signX * signY < 0) {
-        gDrawer.drawStringH(vp, vo, "r", 22, Color.BLACK, new vec(0, 5, 0.5));
+        gDrawer.drawStringH(vp, vo, "r", 22, Color.BLACK, new vec(0, 7, 0.5));
     } else {
-        gDrawer.drawStringH(vo, vp, "r", 22, Color.BLACK, new vec(0, 5, 0.5));
+        gDrawer.drawStringH(vo, vp, "r", 22, Color.BLACK, new vec(0, 7, 0.5));
     }
     if (signX < 0) {
         if (signY < 0) {
