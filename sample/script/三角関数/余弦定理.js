@@ -71,7 +71,7 @@ function main() {
     gDrawer.drawLine(gO, gB);
     gDrawer.drawLine(gB, gA);
     gDrawer.drawLineD(gA, c);
-    gDrawer.drawLine(gO, c, AUX_COLOR, 1, 5);
+    gDrawer.drawLine(gO, c, AUX_COLOR, 5);
     gDrawer.fillCircle(gA, 5);
     gDrawer.fillCircle(gB, 5);
     gDrawer.fillCircle(gO, 5);

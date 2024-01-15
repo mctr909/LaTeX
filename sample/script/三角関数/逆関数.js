@@ -85,8 +85,8 @@ function init() {
                     text: toFrac(deg / 180, "π", false)
                 });
                 gLabelListC.push({
-                    pos: new vec(ofsX-28, y+3),
-                    text: toFrac(deg)
+                    pos: new vec(ofsX-25, y+3),
+                    text: toFrac(deg, "°")
                 });
             }
         }
@@ -161,8 +161,8 @@ function init() {
                     text: toFrac(deg / 180, "π", false)
                 });
                 gLabelListS.push({
-                    pos: new vec(ofsX-28, y+3),
-                    text: toFrac(deg)
+                    pos: new vec(ofsX-25, y+3),
+                    text: toFrac(deg, "°")
                 });
             }
         }
@@ -240,8 +240,8 @@ function init() {
                     text: toFrac(deg / 180, "π", false)
                 });
                 gLabelListT.push({
-                    pos: new vec(ofsX-28, ofsY+y+3),
-                    text: toFrac(deg)
+                    pos: new vec(ofsX-25, ofsY+y+3),
+                    text: toFrac(deg, "°")
                 });
             }
         }

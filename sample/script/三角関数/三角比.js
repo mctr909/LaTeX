@@ -11,7 +11,7 @@ const SIN_COLOR = Color.RED;
 const TAN_COLOR = Color.BLACK;
 const UNIT_RADIUS = 60;
 const WAVE_WIDTH = 300;
-const WAVE_HEIGHT = 180;
+const WAVE_HEIGHT = 200;
 const GAP = 60;
 
 /** @type{LineInfo[]} */
@@ -27,11 +27,12 @@ let gRadius = 2;
 let gTheta = Math.PI / 4;
 
 let gCircleRadius = UNIT_RADIUS * gRadius;
-let gWaveBegin = gCircleRadius + GAP;
+let gWaveHBegin = gCircleRadius + GAP;
+let gWaveVBegin = gCircleRadius + GAP/4;
 
 let gDrawer = new Drawer("disp",
     UNIT_RADIUS * 4 + GAP + WAVE_WIDTH + 60,
-    UNIT_RADIUS * 4 + GAP + WAVE_HEIGHT + 165
+    UNIT_RADIUS * 4 + GAP/2 + WAVE_HEIGHT + 140
 );
 
 document.getElementById("trbR").addEventListener("input", function(ev) {
@@ -58,23 +59,23 @@ function init() {
 
     gRadius = document.getElementById("trbR").value / 10.0;
     gCircleRadius = UNIT_RADIUS * gRadius;
-    gWaveBegin = UNIT_RADIUS * 2 + GAP;
+    gWaveHBegin = UNIT_RADIUS * 2 + GAP;
 
-    gDrawer.Offset = new vec(gWaveBegin - GAP + 5, gDrawer.Height / 3 + 50);
+    gDrawer.Offset = new vec(gWaveHBegin - GAP + 5, gDrawer.Height / 3 + 50);
 
     gLineList.push(new LineInfo(
         -gCircleRadius - 10, 0,
-        gWaveBegin + WAVE_WIDTH, 0,
+        gWaveHBegin + WAVE_WIDTH, 0,
         1, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
-        0, -gWaveBegin - WAVE_HEIGHT,
+        0, -gWaveVBegin - WAVE_HEIGHT,
         0, gCircleRadius + 10,
         1, AXIZ_COLOR
     ));
     for (let deg=0; deg<=360; deg += 15) {
-        let x = gWaveBegin + WAVE_WIDTH * deg / 360.0;
-        let y = -gWaveBegin - WAVE_HEIGHT * deg / 360.0;
+        let x = gWaveHBegin + WAVE_WIDTH * deg / 360.0;
+        let y = -gWaveVBegin - WAVE_HEIGHT * deg / 360.0;
         let h = ((0 == deg % 45) ? 7 : 2.5);
         gLineList.push(new LineInfo(
             x, -h,
@@ -92,16 +93,16 @@ function init() {
                 text: toFrac(deg / 180, "π", false)
             });
             gLabelList.push({
-                pos: new vec(x, 18),
-                text: toFrac(deg)
+                pos: new vec(x+2, 18),
+                text: toFrac(deg, "°")
             });
             gLabelList.push({
                 pos: new vec(24, y+3),
                 text: toFrac(deg / 180, "π", false)
             });
             gLabelList.push({
-                pos: new vec(-24, y+3),
-                text: toFrac(deg)
+                pos: new vec(-22, y+3),
+                text: toFrac(deg, "°")
             });
         }
         if (deg == 360) {
@@ -145,13 +146,13 @@ function init() {
 
     let tanList = [];
     let advHeight = WAVE_HEIGHT/12;
-    for(let y=gWaveBegin - advHeight; y<gWaveBegin + advHeight + WAVE_HEIGHT; y++) {
-        let th = 2 * Math.PI * (y - gWaveBegin) / WAVE_HEIGHT;
+    for(let y=gWaveVBegin - advHeight; y<gWaveVBegin + advHeight + WAVE_HEIGHT; y++) {
+        let th = 2 * Math.PI * (y - gWaveVBegin) / WAVE_HEIGHT;
         gRCosLine.push(new vec(Math.cos(th) * gCircleRadius, -y));
     }
     let advWidth = WAVE_WIDTH/12;
-    for(let x=gWaveBegin - advWidth; x<gWaveBegin + advWidth + WAVE_WIDTH; x++) {
-        let th = 2 * Math.PI * (x - gWaveBegin) / WAVE_WIDTH;
+    for(let x=gWaveHBegin - advWidth; x<gWaveHBegin + advWidth + WAVE_WIDTH; x++) {
+        let th = 2 * Math.PI * (x - gWaveHBegin) / WAVE_WIDTH;
         gRSinLine.push(new vec(x, Math.sin(th) * gCircleRadius));
         let t = Math.tan(th);
         if (t < -20 || t > 20) {
@@ -194,8 +195,8 @@ function main() {
         document.getElementById("trbTh").value = deg;
     }
 
-    let x = gWaveBegin + gTheta * WAVE_WIDTH / Math.PI / 2;
-    let y = -gWaveBegin - gTheta * WAVE_HEIGHT / Math.PI / 2;
+    let x = gWaveHBegin + gTheta * WAVE_WIDTH / Math.PI / 2;
+    let y = -gWaveVBegin - gTheta * WAVE_HEIGHT / Math.PI / 2;
     let vx = new vec(x, 0);
     let vy = new vec(0, y);
     let vo = new vec();
@@ -219,11 +220,11 @@ function main() {
     gDrawer.drawLine(vrt, wave_t, TAN_COLOR);
     gDrawer.drawLine(vp, wave_c, COS_COLOR);
     gDrawer.drawLine(vp, wave_s, SIN_COLOR);
-    gDrawer.drawLine(vo, vrt, TAN_COLOR, 1);
-    gDrawer.drawLine(vo, vt, TAN_COLOR, 1);
-    gDrawer.drawLine(vo, vc, COS_COLOR, 1, 5);
-    gDrawer.drawLine(vc, vp, SIN_COLOR, 1, 5);
-    gDrawer.drawLine(vo, vp, KNOB_COLOR, 1, 5);
+    gDrawer.drawLine(vo, vrt, TAN_COLOR, 5);
+    gDrawer.drawLine(vo, vt, TAN_COLOR);
+    gDrawer.drawLine(vo, vc, COS_COLOR, 5);
+    gDrawer.drawLine(vc, vp, SIN_COLOR, 5);
+    gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
     gDrawer.fillCircle(vrt, 5);
     gDrawer.fillCircle(vt, 5);

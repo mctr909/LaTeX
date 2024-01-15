@@ -144,8 +144,8 @@ function main() {
     axb.add(gO, oaxb);
 
     /* XY */
-    gDrawerXY.drawArrow(gO, gA, Color.BLACK, 1, 2);
-    gDrawerXY.drawArrow(gO, gB, Color.GREEN, 1, 2);
+    gDrawerXY.drawArrow(gO, gA, Color.BLACK, 2);
+    gDrawerXY.drawArrow(gO, gB, Color.GREEN, 2);
     gDrawerXY.drawArrow(gO, oaxb, Color.RED);
     gDrawerXY.drawLineD(gB, ab, Color.BLACK);
     gDrawerXY.drawLineD(gA, ab, Color.GREEN);
@@ -154,9 +154,9 @@ function main() {
     gDrawerXY.drawStringH(gO, gB, "b", 20, Color.BLACK, new vec(7,-4,1));
 
     /* ZY */
-    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gA.Z, gA.Y, Color.BLACK, 1, 2);
-    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gB.Z, gB.Y, Color.GREEN, 1, 2);
-    gDrawerZY.drawArrowXY(gO.Z, gO.Y, oaxb.Z, oaxb.Y, Color.RED, 1, 1);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gA.Z, gA.Y, Color.BLACK, 2);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, gB.Z, gB.Y, Color.GREEN, 2);
+    gDrawerZY.drawArrowXY(gO.Z, gO.Y, oaxb.Z, oaxb.Y, Color.RED, 1);
     gDrawerZY.drawLineXYD(gB.Z, gB.Y, ab.Z, ab.Y, Color.GREEN);
     gDrawerZY.drawLineXYD(gA.Z, gA.Y, ab.Z, ab.Y, Color.BLUE);
 
@@ -164,9 +164,9 @@ function main() {
     gDrawerZY.drawStringH(gO, new vec(gB.Z, gB.Y), "b", 20, Color.BLACK, new vec(7,-4,1));
 
     /* XZ */
-    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gA.X, gA.Z, Color.BLACK, 1, 2);
-    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gB.X, gB.Z, Color.GREEN, 1, 2);
-    gDrawerXZ.drawArrowXY(gO.X, gO.Z, oaxb.X, oaxb.Z, Color.RED, 1, 1);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gA.X, gA.Z, Color.BLACK, 2);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, gB.X, gB.Z, Color.GREEN, 2);
+    gDrawerXZ.drawArrowXY(gO.X, gO.Z, oaxb.X, oaxb.Z, Color.RED, 1);
     gDrawerXZ.drawLineXYD(gB.X, gB.Z, ab.X, ab.Z, Color.GREEN);
     gDrawerXZ.drawLineXYD(gA.X, gA.Z, ab.X, ab.Z, Color.BLACK);
 
@@ -200,15 +200,15 @@ function main() {
         toAlpha((gA.Y+gB.Y+ab.Y) / 3, (gA.Z+gB.Z+ab.Z) / 3)
     );
 
-    gDrawer.drawLine(to2d(gO), to2d(gA), Color.BLACK, toAlpha(gA.Y, gA.Z), 2);
-    gDrawer.drawLine(to2d(gO), to2d(gB), Color.GREEN, toAlpha(gB.Y, gB.Z), 2);
-    gDrawer.drawLine(to2d(gO), to2d(oaxb), Color.RED, toAlpha(oaxb.Y, oaxb.Z), 2);
-    gDrawer.drawLineD(to2d(gB), to2d(ab), Color.BLACK, toAlpha(ab.Y, ab.Z), 2);
-    gDrawer.drawLineD(to2d(gA), to2d(ab), Color.GREEN, toAlpha(ab.Y, ab.Z), 2);
+    gDrawer.drawLine(to2d(gO), to2d(gA), Color.Transparent(Color.BLACK, toAlpha(gA.Y, gA.Z)), 2);
+    gDrawer.drawLine(to2d(gO), to2d(gB), Color.Transparent(Color.GREEN, toAlpha(gB.Y, gB.Z)), 2);
+    gDrawer.drawLine(to2d(gO), to2d(oaxb), Color.Transparent(Color.RED, toAlpha(oaxb.Y, oaxb.Z)), 2);
+    gDrawer.drawLineD(to2d(gB), to2d(ab), Color.Transparent(Color.BLACK, toAlpha(ab.Y, ab.Z)), 2);
+    gDrawer.drawLineD(to2d(gA), to2d(ab), Color.Transparent(Color.GREEN, toAlpha(ab.Y, ab.Z)), 2);
 
-    gDrawer.fillCircle(to2d(gA), 3, Color.BLACK, toAlpha(gA.Y, gA.Z));
-    gDrawer.fillCircle(to2d(gB), 3, Color.GREEN, toAlpha(gB.Y, gB.Z));
-    gDrawer.fillCircle(to2d(oaxb), 3, Color.RED, toAlpha(oaxb.Y, oaxb.Z));
+    gDrawer.fillCircle(to2d(gA), 3, Color.Transparent(Color.BLACK, toAlpha(gA.Y, gA.Z)));
+    gDrawer.fillCircle(to2d(gB), 3, Color.Transparent(Color.GREEN, toAlpha(gB.Y, gB.Z)));
+    gDrawer.fillCircle(to2d(oaxb), 3, Color.Transparent(Color.RED, toAlpha(oaxb.Y, oaxb.Z)));
 
     document.getElementById("dispA").innerHTML = round3d(oa, 1/UNIT);
     document.getElementById("dispB").innerHTML = round3d(ob, 1/UNIT);
