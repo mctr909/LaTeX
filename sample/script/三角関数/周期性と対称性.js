@@ -2,7 +2,7 @@
 /// <reference path="../drawer.js" />
 
 const TEXT_COLOR = Color.BLACK;
-const AXIZ_COLOR = Color.GRAY;
+const AXIZ_COLOR = Color.GRAY66;
 const LINE_COLOR = Color.GRAY37;
 const CIRCLE_COLOR = Color.BLACK;
 const RADIUS_COLOR = Color.GREEN;

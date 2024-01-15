@@ -1,7 +1,7 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = Color.GRAY;
+const AXIZ_COLOR = Color.GRAY66;
 const MEASURE_COLOR = Color.BLACK;
 const RULER_COLOR = Color.GRAY;
 const CIRCLE_COLOR = Color.BLACK;
@@ -212,7 +212,6 @@ function main() {
     if (dangle < 0) {
         dangle += 2*Math.PI;
     }
-    gDrawer.drawArc(new vec(), 18, 0, dangle, CIRCLE_COLOR, 2);
 
     gDrawer.drawLine(vx, wave_t, RULER_COLOR);
     gDrawer.drawLine(vy, wave_c, RULER_COLOR);
@@ -225,6 +224,7 @@ function main() {
     gDrawer.drawLine(vo, vc, COS_COLOR, 5);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
+    gDrawer.drawArc(new vec(), 18, 0, dangle, KNOB_COLOR, 2);
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
     gDrawer.fillCircle(vrt, 5);
     gDrawer.fillCircle(vt, 5);

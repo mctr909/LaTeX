@@ -1,7 +1,7 @@
 /// <reference path="../math.js" />
 /// <reference path="../drawer.js" />
 
-const AXIZ_COLOR = Color.GRAY75;
+const AXIZ_COLOR = Color.GRAY66;
 const TEXT_COLOR = Color.BLACK;
 const LINE_COLOR = Color.GRAY37;
 const RULER_COLOR = Color.BLACK;
@@ -9,7 +9,7 @@ const CIRCLE_COLOR = Color.BLACK;
 const KNOB_COLOR = Color.GREEN;
 
 const WAVE_WIDTH = 160;
-const WAVE_HEIGHT = 300;
+const WAVE_HEIGHT = 360;
 const GAP = 25;
 
 let gDrawerC = new Drawer("dispC",
@@ -56,24 +56,20 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelListC.push({
-            pos: new vec(ofsX-28, WAVE_HEIGHT+17),
-            text: "[deg]"
-        });
-        gLabelListC.push({
             pos: new vec(ofsX, WAVE_HEIGHT+17),
             text: "[θ]"
         });
         gLabelListC.push({
-            pos: new vec(ofsX+28, WAVE_HEIGHT+17),
+            pos: new vec(ofsX+25, WAVE_HEIGHT+17),
             text: "[rad]"
         });
         gLabelListC.push({
             pos: new vec(ofsX+WAVE_WIDTH+18, 4),
             text: "[x/r]"
         });
-        for (let deg=0; deg<=180; deg += 15) {
+        for (let deg=0; deg<=180; deg += 5) {
             let y = WAVE_HEIGHT * (180 - deg) / 180.0;
-            let h = ((0 == deg % 45) ? 7 : 2.5);
+            let h = ((0 == deg % 45) ? 10 : (0 == deg % 15) ? 5 : 2.5);
             gAxisListC.push(new LineInfo(
                 ofsX-h, y,
                 ofsX+h, y,
@@ -81,12 +77,8 @@ function init() {
             ));
             if (deg % 15 == 0) {
                 gLabelListC.push({
-                    pos: new vec(ofsX+28, y+3),
+                    pos: new vec(ofsX+25, y+3),
                     text: toFrac(deg / 180, "π", false)
-                });
-                gLabelListC.push({
-                    pos: new vec(ofsX-25, y+3),
-                    text: toFrac(deg, "°")
                 });
             }
         }
@@ -132,24 +124,20 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelListS.push({
-            pos: new vec(ofsX-28, WAVE_HEIGHT+17),
-            text: "[deg]"
-        });
-        gLabelListS.push({
             pos: new vec(ofsX, WAVE_HEIGHT+17),
             text: "[θ]"
         });
         gLabelListS.push({
-            pos: new vec(ofsX+28, WAVE_HEIGHT+17),
+            pos: new vec(ofsX+25, WAVE_HEIGHT+17),
             text: "[rad]"
         });
         gLabelListS.push({
             pos: new vec(ofsX+WAVE_WIDTH+18, 4),
             text: "[y/r]"
         });
-        for (let deg=-90; deg<=90; deg += 15) {
+        for (let deg=-90; deg<=90; deg += 5) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
-            let h = ((0 == deg % 45) ? 7 : 2.5);
+            let h = ((0 == deg % 45) ? 10 : (0 == deg % 15) ? 5 : 2.5);
             gAxisListS.push(new LineInfo(
                 ofsX-h, y,
                 ofsX+h, y,
@@ -157,12 +145,8 @@ function init() {
             ));
             if (deg % 15 == 0) {
                 gLabelListS.push({
-                    pos: new vec(ofsX+28, y+3),
+                    pos: new vec(ofsX+25, y+3),
                     text: toFrac(deg / 180, "π", false)
-                });
-                gLabelListS.push({
-                    pos: new vec(ofsX-25, y+3),
-                    text: toFrac(deg, "°")
                 });
             }
         }
@@ -211,24 +195,20 @@ function init() {
             1, AXIZ_COLOR
         ));
         gLabelListT.push({
-            pos: new vec(ofsX-28, ofsY+WAVE_HEIGHT+17),
-            text: "[deg]"
-        });
-        gLabelListT.push({
             pos: new vec(ofsX, ofsY+WAVE_HEIGHT+17),
             text: "[θ]"
         });
         gLabelListT.push({
-            pos: new vec(ofsX+28, ofsY+WAVE_HEIGHT+17),
+            pos: new vec(ofsX+25, ofsY+WAVE_HEIGHT+17),
             text: "[rad]"
         });
         gLabelListT.push({
             pos: new vec(ofsX+width+18, ofsY+4),
             text: "[y/x]"
         });
-        for (let deg=-90; deg<=90; deg += 15) {
+        for (let deg=-90; deg<=90; deg += 5) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
-            let h = ((0 == deg % 45) ? 7 : 2.5);
+            let h = ((0 == deg % 45) ? 10 : (0 == deg % 15) ? 5 : 2.5);
             gAxisListT.push(new LineInfo(
                 ofsX-h, ofsY+y,
                 ofsX+h, ofsY+y,
@@ -236,12 +216,8 @@ function init() {
             ));
             if (deg % 15 == 0) {
                 gLabelListT.push({
-                    pos: new vec(ofsX+28, ofsY+y+3),
+                    pos: new vec(ofsX+25, ofsY+y+3),
                     text: toFrac(deg / 180, "π", false)
-                });
-                gLabelListT.push({
-                    pos: new vec(ofsX-25, ofsY+y+3),
-                    text: toFrac(deg, "°")
                 });
             }
         }

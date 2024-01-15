@@ -4,6 +4,7 @@ class Color {
 	static BLACK = new Color(0, 0, 0);
 	static GRAY37 = new Color(95, 95, 95);
 	static GRAY = new Color(127, 127, 127);
+	static GRAY66 = new Color(167, 167, 167);
 	static GRAY75 = new Color(191, 191, 191);
 	static WHITE = new Color(255, 255, 255);
 	static RED = new Color(231, 0, 0);
