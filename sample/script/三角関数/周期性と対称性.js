@@ -300,7 +300,6 @@ function main() {
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerSymmetry);
         }
-        gDrawerSymmetry.drawCircle(new vec(), UNIT_RADIUS, CIRCLE_COLOR);
 
         if (gDrawerSymmetry.isDrag) {
             gTheta = Math.atan2(gDrawerSymmetry.cursor.Y, gDrawerSymmetry.cursor.X);
@@ -311,12 +310,14 @@ function main() {
             gTheta = deg * Math.PI / 180;
         }
 
-        let vo = new vec();
+        let vo = vec.zero;
         let vp = new vec(Math.cos(gTheta) * UNIT_RADIUS, Math.sin(gTheta) * UNIT_RADIUS);
         let vp_t = new vec(UNIT_RADIUS, limitTan(Math.tan(gTheta)) * UNIT_RADIUS);
         let vp_c = new vec(vp.X, 0);
         let vpm = new vec(Math.cos(-gTheta) * UNIT_RADIUS, Math.sin(-gTheta) * UNIT_RADIUS);
         let vpm_t = new vec(UNIT_RADIUS, limitTan(Math.tan(-gTheta)) * UNIT_RADIUS);
+
+        gDrawerSymmetry.drawCircle(vo, UNIT_RADIUS, CIRCLE_COLOR);
         gDrawerSymmetry.fillPolygon([vo, vpm, vp_c], gDrawerSymmetry.Offset, Color.GRAY75);
         gDrawerSymmetry.drawLine(vo, vp_c, COS_COLOR, 3);
         gDrawerSymmetry.drawLine(vp_c, vp, SIN_COLOR, 3);
@@ -329,8 +330,8 @@ function main() {
         gDrawerSymmetry.fillCircle(vpm, 4, CIRCLE_COLOR);
         gDrawerSymmetry.fillCircle(vp_t, 4);
         gDrawerSymmetry.fillCircle(vpm_t, 4);
-        gDrawerSymmetry.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
-        gDrawerSymmetry.drawArc(new vec(), 34, vpm.arg, 0, CIRCLE_COLOR, 3);
+        gDrawerSymmetry.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerSymmetry.drawArc(vo, 34, vpm.arg, 0, CIRCLE_COLOR, 3);
 
         let fA, fB;
         let rA, rB;
@@ -356,7 +357,6 @@ function main() {
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerPhase180);
         }
-        gDrawerPhase180.drawCircle(new vec(), UNIT_RADIUS, CIRCLE_COLOR);
 
         if (gDrawerPhase180.isDrag) {
             gTheta = Math.atan2(gDrawerPhase180.cursor.Y, gDrawerPhase180.cursor.X);
@@ -367,7 +367,7 @@ function main() {
             gTheta = deg * Math.PI / 180;
         }
 
-        let vo = new vec();
+        let vo = vec.zero;
         let vp = new vec(Math.cos(gTheta) * UNIT_RADIUS, Math.sin(gTheta) * UNIT_RADIUS);
         let vp_t = new vec(UNIT_RADIUS, limitTan(Math.tan(gTheta)) * UNIT_RADIUS);
         let vp_c = new vec(vp.X, 0);
@@ -375,6 +375,8 @@ function main() {
         let vp180 = new vec(Math.cos(theta) * UNIT_RADIUS, Math.sin(theta) * UNIT_RADIUS);
         let vp180_t = new vec(UNIT_RADIUS, limitTan(Math.tan(theta)) * UNIT_RADIUS);
         let vp180_c = new vec(vp180.X, 0);
+
+        gDrawerPhase180.drawCircle(vo, UNIT_RADIUS, CIRCLE_COLOR);
         gDrawerPhase180.fillPolygon([vo, vp180, vp180_c], gDrawerPhase180.Offset, Color.GRAY75);
         gDrawerPhase180.drawLine(vo, vp_c, COS_COLOR, 3);
         gDrawerPhase180.drawLine(vp_c, vp, SIN_COLOR, 3);
@@ -387,8 +389,8 @@ function main() {
         gDrawerPhase180.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerPhase180.fillCircle(vp180, 4, CIRCLE_COLOR);
         gDrawerPhase180.fillCircle(vp180_t, 4);
-        gDrawerPhase180.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
-        gDrawerPhase180.drawArc(new vec(), 36, vp.arg, vp180.arg, CIRCLE_COLOR, 3);
+        gDrawerPhase180.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerPhase180.drawArc(vo, 36, vp.arg, vp180.arg, CIRCLE_COLOR, 3);
 
         let fA, fB;
         if (vp.arg < 0) {
@@ -407,7 +409,6 @@ function main() {
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerSymmetry180);
         }
-        gDrawerSymmetry180.drawCircle(new vec(), UNIT_RADIUS, CIRCLE_COLOR);
 
         if (gDrawerSymmetry180.isDrag) {
             gTheta = Math.atan2(gDrawerSymmetry180.cursor.Y, gDrawerSymmetry180.cursor.X);
@@ -418,7 +419,7 @@ function main() {
             gTheta = deg * Math.PI / 180;
         }
 
-        let vo = new vec();
+        let vo = vec.zero;
         let vp = new vec(Math.cos(gTheta) * UNIT_RADIUS, Math.sin(gTheta) * UNIT_RADIUS);
         let vp_t = new vec(UNIT_RADIUS, limitTan(Math.tan(gTheta)) * UNIT_RADIUS);
         let vp_c = new vec(vp.X, 0);
@@ -428,6 +429,8 @@ function main() {
         let vpm180 = new vec(Math.cos(theta) * UNIT_RADIUS, Math.sin(theta) * UNIT_RADIUS);
         let vpm180_t = new vec(UNIT_RADIUS, limitTan(Math.tan(theta)) * UNIT_RADIUS);
         let vpm180_c = new vec(vpm180.X, 0);
+
+        gDrawerSymmetry180.drawCircle(vo, UNIT_RADIUS, CIRCLE_COLOR);
         gDrawerSymmetry180.fillPolygon([vo, vpm180, vpm180_c], gDrawerSymmetry180.Offset, Color.GRAY75);
         gDrawerSymmetry180.drawLine(vo, vp_t, RADIUS_COLOR, 3);
         gDrawerSymmetry180.drawLine(vo, vpm180_t, CIRCLE_COLOR, 3);
@@ -442,9 +445,9 @@ function main() {
         gDrawerSymmetry180.fillCircle(vpm180, 4, CIRCLE_COLOR);
         gDrawerSymmetry180.fillCircle(vp_t, 4);
         gDrawerSymmetry180.fillCircle(vpm180_t, 4);
-        gDrawerSymmetry180.drawArc(new vec(), 18, 0, vp.arg, RADIUS_COLOR, 3);
-        gDrawerSymmetry180.drawArc(new vec(), 34, vpm.arg, 0, CIRCLE_COLOR, 3);
-        gDrawerSymmetry180.drawArc(new vec(), 60, vpm.arg, vpm180.arg, CIRCLE_COLOR, 3);
+        gDrawerSymmetry180.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerSymmetry180.drawArc(vo, 34, vpm.arg, 0, CIRCLE_COLOR, 3);
+        gDrawerSymmetry180.drawArc(vo, 60, vpm.arg, vpm180.arg, CIRCLE_COLOR, 3);
 
         let fA, fB;
         let rA, rB;

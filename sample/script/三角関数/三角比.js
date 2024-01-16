@@ -175,9 +175,6 @@ function main() {
     for (let i=0; i<gLineList.length; i++) {
         gLineList[i].draw(gDrawer);
     }
-    gDrawer.drawCircleD(new vec(), UNIT_RADIUS, AXIZ_COLOR);
-    gDrawer.drawCircle(new vec(), gCircleRadius, CIRCLE_COLOR);
-
     for (let i=0; i<gRTanLines.length; i++) {
         gDrawer.drawPolyline(gRTanLines[i], TAN_COLOR, 1);
     }
@@ -198,7 +195,7 @@ function main() {
     let y = -gWaveVBegin - gTheta * WAVE_HEIGHT / Math.PI / 2;
     let vx = new vec(x, 0);
     let vy = new vec(0, y);
-    let vo = new vec();
+    let vo = vec.zero;
     let vp = new vec(Math.cos(gTheta) * gCircleRadius, Math.sin(gTheta) * gCircleRadius);
     let vt = new vec(UNIT_RADIUS, UNIT_RADIUS * Math.tan(gTheta));
     let vrt = new vec(gCircleRadius, gCircleRadius * Math.tan(gTheta));
@@ -207,10 +204,13 @@ function main() {
     let wave_s = new vec(x, vp.Y);
     let wave_t = new vec(x, vrt.Y);
 
-    let dangle = vp.arg;
-    if (dangle < 0) {
-        dangle += 2*Math.PI;
+    let angle = vp.arg;
+    if (angle < 0) {
+        angle += 2*Math.PI;
     }
+
+    gDrawer.drawCircleD(vo, UNIT_RADIUS, AXIZ_COLOR);
+    gDrawer.drawCircle(vo, gCircleRadius, CIRCLE_COLOR);
 
     gDrawer.drawLine(vx, wave_t, RULER_COLOR);
     gDrawer.drawLine(vy, wave_c, RULER_COLOR);
@@ -224,7 +224,7 @@ function main() {
     gDrawer.drawLine(vc, vp, SIN_COLOR, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
 
-    gDrawer.drawArc(new vec(), 18, 0, dangle, KNOB_COLOR, 3);
+    gDrawer.drawArc(vo, 18, 0, angle, KNOB_COLOR, 3);
 
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
     gDrawer.fillCircle(vt, 5);

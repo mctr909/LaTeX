@@ -10,19 +10,10 @@
 <body>
 <table>
 <tr>
-    <td>
-        <span style="font-size:14pt;">[ 余角の公式 ]</span><br>
-        <canvas id="disp"></canvas>
-        <span>
-            \begin{align}
-                \cos\left(\cfrac{\pi}{2}-\theta\right) &= \sin\theta \\
-                \sin\left(\cfrac{\pi}{2}-\theta\right) &= \cos\theta \\
-                \tan\left(\cfrac{\pi}{2}-\theta\right) &= \cfrac{\sin\left(\cfrac{\pi}{2}-\theta\right)}{\cos\left(\cfrac{\pi}{2}-\theta\right)} \\
-                = \cfrac{\cos\theta}{\sin\theta} &= \cfrac{1}{\tan\theta}
-            \end{align}
-        </span>
+    <td colspan="2" style="font-size:14pt;">
+        [ 余角の公式 ]
     </td>
-    <td>
+    <td rowspan="3">
         <span style="font-size:14pt;">[ 平方関係 ]</span><br>
         <span style="font-size:11pt;">
             \begin{align}
@@ -40,7 +31,7 @@
         </span>
         <span style="font-size:11pt;">
             \begin{align}
-                変形して\cos,\sin,\tanについてまとめると
+                変形して\cos^2,\sin^2,\tan^2についてまとめると、
             \end{align}
         </span>
         <span>
@@ -50,9 +41,73 @@
                 \tan^2{\theta} &= \frac{\sin^2{\theta}}{\cos^2{\theta}} \\
                     &= \frac{1-\cos^2{\theta}}{\cos^2{\theta}} \\
                     &= \frac{1}{\cos^2{\theta}} - 1 \\
+                \\
+                \frac{1}{\cos^2{\theta}} &= \tan^2{\theta} + 1 \\
                 \cfrac{1}{\tan^2{\theta}} &= \frac{\cos^2{\theta}}{\sin^2{\theta}} \\
                     &= \frac{1-\sin^2{\theta}}{\sin^2{\theta}} \\
                     &= \frac{1}{\sin^2{\theta}} - 1
+            \end{align}
+        </span>
+    </td>
+</tr>
+<tr>
+    <td>
+        <table>
+            <tr>
+                <td><canvas id="dispP90R"></canvas></td>
+                <td><canvas id="dispN90R"></canvas></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    \begin{align}
+                        \cos\left(\pm\cfrac{\pi}{2}-\theta\right)&=\pm\sin\theta \\
+                        \sin\left(\pm\cfrac{\pi}{2}-\theta\right)&=\pm\cos\theta
+                    \end{align}
+                </td>
+            </tr>
+        </table>
+    </td>
+    <td>
+        <table>
+            <tr>
+                <td><canvas id="dispP90F"></canvas></td>
+                <td><canvas id="dispN90F"></canvas></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    \begin{align}
+                        \cos\left(\theta\pm\cfrac{\pi}{2}\right)&=\mp\sin\theta \\
+                        \sin\left(\theta\pm\cfrac{\pi}{2}\right)&=\pm\cos\theta
+                    \end{align}
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        <span style="font-size:11pt;">
+            \begin{align}
+                \left(\pm\cfrac{\pi}{2}-\theta\right)と\left(\theta\pm\cfrac{\pi}{2}\right)についてまとめると、
+            \end{align}
+        </span>
+        <span>
+            \begin{align}
+                \cos\left({\pm_t}\theta{\pm_\phi}\cfrac{\pi}{2}\right)&=\begin{cases}
+                    {\mp_\phi}\sin\theta &{\pm_t}\cdots正\\
+                    {\pm_\phi}\sin\theta &{\pm_t}\cdots負
+                \end{cases} \\
+                \sin\left({\pm_t}\theta{\pm_\phi}\cfrac{\pi}{2}\right)&=\begin{cases}
+                    {\pm_\phi}\cos\theta &{\pm_t}\cdots正負によらない
+                \end{cases} \\
+                \tan\left({\pm_t}\theta{\pm_\phi}\cfrac{\pi}{2}\right)&=\begin{cases}
+                    -\cfrac{1}{\tan\theta} &{\pm_t}\cdots正\\
+                    \cfrac{1}{\tan\theta} &{\pm_t}\cdots負
+                \end{cases} \\
+                &\because\frac{\sin\left({\pm_t}\theta{\pm_\phi}\cfrac{\pi}{2}\right)}{\cos\left({\pm_t}\theta{\pm_\phi}\cfrac{\pi}{2}\right)}=\begin{cases}
+                    \cfrac{{\pm_\phi}\cos\theta}{{\mp_\phi}\sin\theta} &{\pm_t}\cdots正\\
+                    \cfrac{{\pm_\phi}\cos\theta}{{\pm_\phi}\sin\theta} &{\pm_t}\cdots負
+                \end{cases}
             \end{align}
         </span>
     </td>

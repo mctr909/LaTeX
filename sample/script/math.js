@@ -3,6 +3,8 @@ class vec {
 	Y = 0.0;
 	Z = 0.0;
 
+	static zero = new vec();
+
 	get abs() { return Math.sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z); }
 	get arg() { return Math.atan2(this.Y, this.X); }
 	get azimuth() { return Math.atan2(this.Z, this.X); }
