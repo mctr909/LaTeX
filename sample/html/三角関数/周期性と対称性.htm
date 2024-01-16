@@ -26,6 +26,38 @@
                     <canvas id="dispS"></canvas>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <span style="font-size:11pt;">
+                        \begin{align}
+                            {\large\theta}を{\large 0\le\phi\lt2\pi}の範囲に収める場合
+                        \end{align}
+                    </span>
+                    <span style="font-size:12pt;">
+                        \begin{align}
+                            n &= \cfrac{\theta}{2\pi} \cdots{\small整数部分を得る} \\
+                            \phi &= \theta - 2n\pi
+                        \end{align}
+                    </span>
+                </td>
+                <td>
+                    <span style="font-size:11pt;">
+                        \begin{align}
+                            {\large\theta}を{\large -\pi\le\phi\lt\pi}の範囲に収める場合
+                        \end{align}
+                    </span>
+                    <span style="font-size:12pt;">
+                        \begin{align}
+                            n &= \cfrac{\theta}{2\pi} \cdots{\small整数部分を得る} \\
+                            \alpha &= \theta - 2n\pi \\
+                            \phi &= \begin{cases}
+                                \alpha & (\alpha\lt\pi) \\
+                                \alpha - 2\pi & (\alpha\ge\pi)
+                            \end{cases}
+                        \end{align}
+                    </span>
+                </td>
+            </tr>
         </table>
     </td>
 </tr>
@@ -51,15 +83,15 @@
                             複号同順でまとめると
                         \end{align}
                     </span>
-                    <span></span>
+                    <span style="font-size:12pt;">
                         \begin{align}
                             \cos\left(\pm\theta+n\pi\right) &= \begin{cases}
-                                \quad\cos\theta{\quad}n{\cdots}偶数 \\
-                                -\cos\theta{\quad}n{\cdots}奇数
-                            \end{cases} \\
+                                \quad\cos\theta&(n{\cdots}{\small偶数}) \\
+                                -\cos\theta&(n{\cdots}{\small奇数})
+                            \end{cases} \ (\pm\cdots{\small正負によらない})\\
                             \sin\left(\pm\theta+n\pi\right) &= \begin{cases}
-                                \pm\sin\theta{\quad}n{\cdots}偶数 \\
-                                \mp\sin\theta{\quad}n{\cdots}奇数
+                                \pm\sin\theta&(n{\cdots}{\small偶数}) \\
+                                \mp\sin\theta&(n{\cdots}{\small奇数})
                             \end{cases} \\
                             \tan\left(\pm\theta+n\pi\right) &= \pm\tan\theta
                         \end{align}

@@ -9,9 +9,9 @@ const RADIUS_COLOR = Color.GREEN;
 const SIN_COLOR = Color.RED;
 const COS_COLOR = Color.BLUE;
 
-const WAVE_WIDTH = 280;
-const WAVE_HEIGHT = 100;
-const UNIT_RADIUS = 100;
+const WAVE_WIDTH = 220;
+const WAVE_HEIGHT = 60;
+const UNIT_RADIUS = 80;
 const GAP = 30;
 
 let gDrawerC = new Drawer("dispC",
@@ -295,8 +295,8 @@ function main() {
     }
 
     gDrawerSymmetry.clear(); {
-        gDrawerSymmetry.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+2nπ", 24);
-        gDrawerSymmetry.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-26, "2nπ－θ", 24);
+        gDrawerSymmetry.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+2nπ", 20);
+        gDrawerSymmetry.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-26, "2nπ－θ", 20);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerSymmetry);
         }
@@ -353,7 +353,7 @@ function main() {
         gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 20, TEXT_COLOR, new vec(0, -7, 45));
     }
     gDrawerPhase180.clear(); {
-        gDrawerPhase180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+(2n+1)π", 24);
+        gDrawerPhase180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+(2n+1)π", 20);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerPhase180);
         }
@@ -404,7 +404,7 @@ function main() {
         }
     }
     gDrawerSymmetry180.clear(); {
-        gDrawerSymmetry180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "(2n+1)π－θ", 24);
+        gDrawerSymmetry180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "(2n+1)π－θ", 20);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerSymmetry180);
         }
