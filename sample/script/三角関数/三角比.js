@@ -64,13 +64,13 @@ function init() {
     gDrawer.Offset = new vec(gWaveHBegin - GAP + 5, gDrawer.Height / 3 + 50);
 
     gLineList.push(new LineInfo(
-        -gCircleRadius - 10, 0,
+        -UNIT_RADIUS * 2 - 10, 0,
         gWaveHBegin + WAVE_WIDTH, 0,
         1, AXIZ_COLOR
     ));
     gLineList.push(new LineInfo(
         0, -gWaveVBegin - WAVE_HEIGHT,
-        0, gCircleRadius + 10,
+        0, UNIT_RADIUS * 2 + 10,
         1, AXIZ_COLOR
     ));
     for (let deg=0; deg<=360; deg += 15) {
@@ -197,7 +197,6 @@ function main() {
     let vy = new vec(0, y);
     let vo = vec.zero;
     let vp = new vec(Math.cos(gTheta) * gCircleRadius, Math.sin(gTheta) * gCircleRadius);
-    let vt = new vec(UNIT_RADIUS, UNIT_RADIUS * Math.tan(gTheta));
     let vrt = new vec(gCircleRadius, gCircleRadius * Math.tan(gTheta));
     let vc = new vec(vp.X, 0);
     let wave_c = new vec(vp.X, y);
@@ -219,7 +218,6 @@ function main() {
     gDrawer.drawLine(vp, wave_c, COS_COLOR);
     gDrawer.drawLine(vp, wave_s, SIN_COLOR);
     gDrawer.drawLine(vo, vrt, TAN_COLOR, 5);
-    gDrawer.drawLine(vo, vt, TAN_COLOR);
     gDrawer.drawLine(vo, vc, COS_COLOR, 5);
     gDrawer.drawLine(vc, vp, SIN_COLOR, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
@@ -227,7 +225,6 @@ function main() {
     gDrawer.drawArc(vo, 18, 0, angle, KNOB_COLOR, 3);
 
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
-    gDrawer.fillCircle(vt, 5);
     gDrawer.fillCircle(vrt, 5);
     gDrawer.fillCircle(wave_t, 2.5, TAN_COLOR);
     gDrawer.fillCircle(wave_c, 2.5, COS_COLOR);
@@ -239,8 +236,7 @@ function main() {
     }
 
     gDrawer.drawStringXY(20, 4, "θ", 20);
-    gDrawer.drawStringXY(vrt.X - 8, vrt.Y + 6, "rT", 18);
-    gDrawer.drawStringXY(vt.X - 5, vt.Y - 20, "T", 18);
+    gDrawer.drawStringXY(vrt.X - 5, vrt.Y + 6, "T", 18);
     gDrawer.drawStringXY(vp.X - 5, vp.Y + 8, "P", 18);
 
     let signX = Math.cos(gTheta);
@@ -279,7 +275,7 @@ function main() {
     document.getElementById("lblY").innerHTML = round1d(Math.sin(gTheta) * gRadius, 1, 3);
     document.getElementById("lblCos").innerHTML = round1d(Math.cos(gTheta), 1, 3);
     document.getElementById("lblSin").innerHTML = round1d(Math.sin(gTheta), 1, 3);
-    document.getElementById("lblTan").innerHTML = 1000 < tan ? "∞" : (tan < -1000 ? "-∞" : tan);
+    document.getElementById("lblTan").innerHTML = (tan < -1000 || 1000 < tan) ? "∞, -∞" : tan;
 
     requestNextAnimationFrame(main);
 }
