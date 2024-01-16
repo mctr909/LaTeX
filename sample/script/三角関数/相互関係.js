@@ -94,10 +94,10 @@ function main() {
         let fA, fB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
-            fB = new vec(-1);
+            fB = vec.unitXr;
         } else {
             fA = vp;
-            fB = new vec(1);
+            fB = vec.unitX;
         }
         gDrawerP90F.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
     }
@@ -139,10 +139,10 @@ function main() {
         let fA, fB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
-            fB = new vec(-1);
+            fB = vec.unitXr;
         } else {
             fA = vp;
-            fB = new vec(1);
+            fB = vec.unitX;
         }
         gDrawerN90F.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
     }
@@ -184,10 +184,10 @@ function main() {
         let fA, fB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
-            fB = new vec(-1);
+            fB = vec.unitXr;
         } else {
             fA = vp;
-            fB = new vec(1);
+            fB = vec.unitX;
         }
         gDrawerP90R.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
     }
@@ -229,10 +229,10 @@ function main() {
         let fA, fB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
-            fB = new vec(-1);
+            fB = vec.unitXr;
         } else {
             fA = vp;
-            fB = new vec(1);
+            fB = vec.unitX;
         }
         gDrawerN90R.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
     }

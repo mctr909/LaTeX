@@ -4,6 +4,12 @@ class vec {
 	Z = 0.0;
 
 	static zero = new vec();
+	static unitX = new vec(1,0,0);
+	static unitY = new vec(0,1,0);
+	static unitZ = new vec(0,0,1);
+	static unitXr = new vec(-1,0,0);
+	static unitYr = new vec(0,-1,0);
+	static unitZr = new vec(0,0,-1);
 
 	get abs() { return Math.sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z); }
 	get arg() { return Math.atan2(this.Y, this.X); }

@@ -596,10 +596,12 @@ class Drawer {
 		let sx = b.X - a.X;
 		let sy = a.Y - b.Y;
 		let rot = Math.atan2(sy, sx);
+		rot += offset.Z < 0 ? Math.PI : 0;
 		let ox = offset.X*Math.cos(rot) + offset.Y*Math.sin(rot);
 		let oy = offset.X*Math.sin(rot) - offset.Y*Math.cos(rot);
-		let px = this.#offset.X + ox + a.X + sx * offset.Z;
-		let py = this.#offset.Y + oy - a.Y + sy * offset.Z;
+		let r = Math.abs(offset.Z);
+		let px = this.#offset.X + ox + a.X + sx * r;
+		let py = this.#offset.Y + oy - a.Y + sy * r;
 		this.drawStringRot(px, py, rot, value, size, color);
 	}
 
@@ -645,8 +647,9 @@ class Drawer {
 		if (angle < 0) {
 			angle += Math.PI;
 		}
-		let p = new vec(Math.cos(angle) * offset.Z, Math.sin(angle) * offset.Z);
-		offset.Z = 1;
+		var r = Math.abs(offset.Z);
+		let p = new vec(Math.cos(angle) * r, Math.sin(angle) * r);
+		offset.Z = Math.sign(offset.Z);
 		this.drawStringH(o, p, value, size, color, offset);
 	}
 
