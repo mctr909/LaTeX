@@ -191,7 +191,7 @@ function main() {
     gDrawer.drawLine(vc, vp, SIN_COLOR, 5);
     gDrawer.drawLine(vo, vp, KNOB_COLOR, 5);
 
-    gDrawer.drawArc(vo, 18, 0, angle, KNOB_COLOR, 3);
+    gDrawer.drawArc(vo, 20, 0, angle, KNOB_COLOR, 3);
 
     gDrawer.fillCircle(vp, 7, KNOB_COLOR);
     gDrawer.fillCircle(vrt, 5);

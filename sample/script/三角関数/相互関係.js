@@ -9,7 +9,7 @@ const RADIUS_COLOR = Color.GREEN;
 const SIN_COLOR = Color.RED;
 const COS_COLOR = Color.BLUE;
 
-const UNIT_RADIUS = 60;
+const UNIT_RADIUS = 70;
 const GAP = 20;
 
 let gDrawerP90F = new Drawer("dispP90F",
@@ -29,7 +29,7 @@ let gDrawerN90R = new Drawer("dispN90R",
     UNIT_RADIUS * 2 + GAP * 1.5
 );
 let gAxisListSymmetry = [];
-let gTheta = Math.PI / 6;
+let gTheta = Math.PI / 5;
 
 init();
 requestNextAnimationFrame(main);
@@ -85,13 +85,14 @@ function main() {
         gDrawerP90F.drawLine(vo, vp90_c, COS_COLOR, 3);
         gDrawerP90F.drawLine(vp90_c, vp90, SIN_COLOR, 3);
         gDrawerP90F.drawLine(vo, vp90, CIRCLE_COLOR, 3);
-        gDrawerP90F.drawLine(vo, vp, RADIUS_COLOR, 3);
+        gDrawerP90F.drawLine(vo, vp, RADIUS_COLOR, 2);
         gDrawerP90F.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerP90F.fillCircle(vp90, 4, CIRCLE_COLOR);
-        gDrawerP90F.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerP90F.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
         gDrawerP90F.drawArc(vo, 34, Math.PI/2, vp90.arg, CIRCLE_COLOR, 3);
 
         let fA, fB;
+        let rA, rB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
             fB = vec.unitXr;
@@ -99,7 +100,15 @@ function main() {
             fA = vp;
             fB = vec.unitX;
         }
-        gDrawerP90F.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
+        if (vp90.X < 0) {
+            rA = vec.unitY;
+            rB = vp90;
+        } else {
+            rA = new vec(-vp90.X, -vp90.Y);
+            rB = vec.unitYr;
+        }
+        gDrawerP90F.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
+        gDrawerP90F.drawStringA(rA, vo, rB, "θ", 18, TEXT_COLOR, new vec(0, -7, 42));
     }
     gDrawerN90F.clear(); {
         gDrawerN90F.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "θ－π/2", 20);
@@ -130,13 +139,14 @@ function main() {
         gDrawerN90F.drawLine(vo, vp90_c, COS_COLOR, 3);
         gDrawerN90F.drawLine(vp90_c, vp90, SIN_COLOR, 3);
         gDrawerN90F.drawLine(vo, vp90, CIRCLE_COLOR, 3);
-        gDrawerN90F.drawLine(vo, vp, RADIUS_COLOR, 3);
+        gDrawerN90F.drawLine(vo, vp, RADIUS_COLOR, 2);
         gDrawerN90F.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerN90F.fillCircle(vp90, 4, CIRCLE_COLOR);
-        gDrawerN90F.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerN90F.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
         gDrawerN90F.drawArc(vo, 34, -Math.PI/2, vp90.arg, CIRCLE_COLOR, 3);
 
         let fA, fB;
+        let rA, rB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
             fB = vec.unitXr;
@@ -144,7 +154,15 @@ function main() {
             fA = vp;
             fB = vec.unitX;
         }
-        gDrawerN90F.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
+        if (vp90.X < 0) {
+            rA = vec.unitY;
+            rB = new vec(-vp90.X, -vp90.Y);
+        } else {
+            rA = vp90;
+            rB = vec.unitYr;
+        }
+        gDrawerN90F.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
+        gDrawerN90F.drawStringA(rA, vo, rB, "θ", 18, TEXT_COLOR, new vec(0, -7, 42));
     }
     gDrawerP90R.clear(); {
         gDrawerP90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "π/2－θ", 20);
@@ -175,13 +193,14 @@ function main() {
         gDrawerP90R.drawLine(vo, vpm90_c, COS_COLOR, 3);
         gDrawerP90R.drawLine(vpm90_c, vpm90, SIN_COLOR, 3);
         gDrawerP90R.drawLine(vo, vpm90, CIRCLE_COLOR, 3);
-        gDrawerP90R.drawLine(vo, vp, RADIUS_COLOR, 3);
+        gDrawerP90R.drawLine(vo, vp, RADIUS_COLOR, 2);
         gDrawerP90R.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerP90R.fillCircle(vpm90, 4, CIRCLE_COLOR);
-        gDrawerP90R.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerP90R.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
         gDrawerP90R.drawArc(vo, 34, vpm90.arg, Math.PI/2, CIRCLE_COLOR, 3);
 
         let fA, fB;
+        let rA, rB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
             fB = vec.unitXr;
@@ -189,7 +208,15 @@ function main() {
             fA = vp;
             fB = vec.unitX;
         }
-        gDrawerP90R.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
+        if (vpm90.X < 0) {
+            rA = vec.unitYr;
+            rB = new vec(-vpm90.X, -vpm90.Y);
+        } else {
+            rA = vpm90;
+            rB = vec.unitY;
+        }
+        gDrawerP90R.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
+        gDrawerP90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, -45));
     }
     gDrawerN90R.clear(); {
         gDrawerN90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "－π/2－θ", 20);
@@ -220,13 +247,14 @@ function main() {
         gDrawerN90R.drawLine(vo, vpm90_c, COS_COLOR, 3);
         gDrawerN90R.drawLine(vpm90_c, vpm90, SIN_COLOR, 3);
         gDrawerN90R.drawLine(vo, vpm90, CIRCLE_COLOR, 3);
-        gDrawerN90R.drawLine(vo, vp, RADIUS_COLOR, 3);
+        gDrawerN90R.drawLine(vo, vp, RADIUS_COLOR, 2);
         gDrawerN90R.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerN90R.fillCircle(vpm90, 4, CIRCLE_COLOR);
-        gDrawerN90R.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
+        gDrawerN90R.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
         gDrawerN90R.drawArc(vo, 34, vpm90.arg, -Math.PI/2, CIRCLE_COLOR, 3);
 
         let fA, fB;
+        let rA, rB;
         if (vp.arg < 0) {
             fA = new vec(-vp.X, -vp.Y);
             fB = vec.unitXr;
@@ -234,7 +262,15 @@ function main() {
             fA = vp;
             fB = vec.unitX;
         }
-        gDrawerN90R.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
+        if (vpm90.X < 0) {
+            rA = vec.unitYr;
+            rB = vpm90;
+        } else {
+            rA = new vec(-vpm90.X, -vpm90.Y);
+            rB = vec.unitY;
+        }
+        gDrawerN90R.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
+        gDrawerN90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, -45));
     }
     requestNextAnimationFrame(main);
 }

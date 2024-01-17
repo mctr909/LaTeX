@@ -2,7 +2,6 @@
 
 class Color {
 	static BLACK = new Color(0, 0, 0);
-	static GRAY25 = new Color(63, 63, 63);
 	static GRAY33 = new Color(85, 85, 85);
 	static GRAY = new Color(127, 127, 127);
 	static GRAY66 = new Color(170, 170, 170);
@@ -258,7 +257,7 @@ class Drawer {
 		this.#ctx.lineWidth = width;
 		this.#ctx.moveTo(x1, y1);
 		this.#ctx.lineTo(x2, y2);
-		this.#ctx.setLineDash([3, 3]);
+		this.#ctx.setLineDash([3, 2]);
 		this.#ctx.stroke();
 	}
 

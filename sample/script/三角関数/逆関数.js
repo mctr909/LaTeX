@@ -9,7 +9,7 @@ const CIRCLE_COLOR = Color.BLACK;
 const KNOB_COLOR = Color.GREEN;
 
 const WAVE_WIDTH = 160;
-const WAVE_HEIGHT = 360;
+const WAVE_HEIGHT = 250;
 const GAP = 25;
 
 let gDrawerC = new Drawer("dispC",

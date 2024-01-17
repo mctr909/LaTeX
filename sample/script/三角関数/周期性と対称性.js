@@ -3,7 +3,7 @@
 
 const TEXT_COLOR = Color.BLACK;
 const AXIZ_COLOR = Color.GRAY66;
-const LINE_COLOR = Color.GRAY33;
+const LINE_COLOR = Color.GRAY;
 const CIRCLE_COLOR = Color.BLACK;
 const RADIUS_COLOR = Color.GREEN;
 const SIN_COLOR = Color.RED;
@@ -74,7 +74,7 @@ function init() {
             20, false
         );
         gDrawerC.pushString(WAVE_WIDTH/2+17, 4, "[θ]");
-        gDrawerC.pushString(WAVE_WIDTH/2+23, -14, "[rad]");
+        gDrawerC.pushString(WAVE_WIDTH/2+23, -10, "[rad]");
         let div = 8;
         for(let v=-div; v<=div; v++) {
             let x = v * WAVE_WIDTH * 0.5 / div;
@@ -84,13 +84,13 @@ function init() {
             case 0:
             case 4:
             case 8:
-                h = 12;
-                gDrawerC.pushString(x, -15, toFrac(v/2, "π", false));
+                h = 10;
+                gDrawerC.pushString(x, -10, toFrac(v/2, "π", false));
                 break;
             case 2:
             case 6:
                 h = 5;
-                gDrawerC.pushString(x, -15, toFrac(v/2, "π", false));
+                gDrawerC.pushString(x, -10, toFrac(v/2, "π", false));
                 break;
             default:
                 h = 5; break;
@@ -123,7 +123,7 @@ function init() {
             20, false
         );
         gDrawerS.pushString(WAVE_WIDTH/2+17, 4, "[θ]");
-        gDrawerS.pushString(WAVE_WIDTH/2+23, -14, "[rad]");
+        gDrawerS.pushString(WAVE_WIDTH/2+23, -10, "[rad]");
         let div = 8;
         for(let v=-div; v<=div; v++) {
             let x = v * WAVE_WIDTH * 0.5 / div;
@@ -133,13 +133,13 @@ function init() {
             case 0:
             case 4:
             case 8:
-                h = 12;
-                gDrawerS.pushString(x, -15, toFrac(v/2, "π", false));
+                h = 10;
+                gDrawerS.pushString(x, -10, toFrac(v/2, "π", false));
                 break;
             case 2:
             case 6:
                 h = 5;
-                gDrawerS.pushString(x, -15, toFrac(v/2, "π", false));
+                gDrawerS.pushString(x, -10, toFrac(v/2, "π", false));
                 break;
             default:
                 h = 5; break;
@@ -172,7 +172,7 @@ function init() {
             20, false
         );
         gDrawerT.pushString(WAVE_WIDTH/2+17, 4, "[θ]");
-        gDrawerT.pushString(WAVE_WIDTH/2+23, -14, "[rad]");
+        gDrawerT.pushString(WAVE_WIDTH/2+23, -12, "[rad]");
         let div = 4;
         for(let v=-div; v<=div; v++) {
             let x = v * WAVE_WIDTH * 0.5 / div;
@@ -181,12 +181,12 @@ function init() {
             switch (m) {
             case 0:
             case 4:
-                h = 12;
-                gDrawerT.pushString(x, -15, toFrac(v/2, "π", false));
+                h = 10;
+                gDrawerT.pushString(x, -12, toFrac(v/2, "π", false));
                 break;
             case 2:
                 h = 5;
-                gDrawerT.pushString(x, -15, toFrac(v/2, "π", false));
+                gDrawerT.pushString(x, -12, toFrac(v/2, "π", false));
                 break;
             default:
                 h = 5; break;
