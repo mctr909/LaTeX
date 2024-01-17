@@ -54,19 +54,16 @@ function main() {
     gG.sub(gA, ag);
     gA.sub(gB, ba);
     gB.sub(gG, gb);
-    let abM = new vec((gA.X + gB.X)*0.5, (gA.Y + gB.Y)*0.5);
-    let agM = new vec((gA.X + gG.X)*0.5, (gA.Y + gG.Y)*0.5);
-    let gbM = new vec((gG.X + gB.X)*0.5, (gG.Y + gB.Y)*0.5);
-    let abC = new vec(abM.X - ba.Y, abM.Y + ba.X);
-    let agC = new vec(agM.X - ag.Y, agM.Y + ag.X);
-    let gbC = new vec(gbM.X - gb.Y, gbM.Y + gb.X);
-    gDrawer.drawLine(abM, abC, Color.GRAY75);
-    gDrawer.drawLine(agM, agC, Color.GRAY75);
-    gDrawer.drawLine(gbM, gbC, Color.GRAY75);
+    let abH = new vec((gA.X + gB.X)*0.5, (gA.Y + gB.Y)*0.5);
+    let agH = new vec((gA.X + gG.X)*0.5, (gA.Y + gG.Y)*0.5);
+    let abC = new vec(abH.X - ba.Y, abH.Y + ba.X);
+    let agC = new vec(agH.X - ag.Y, agH.Y + ag.X);
+    gDrawer.drawLine(abH, abC, Color.GRAY75);
+    gDrawer.drawLine(agH, agC, Color.GRAY75);
 
     let angleA = angleLimit(ba.arg - ag.arg - Math.PI);
-    let angleG = angleLimit(ag.arg - gb.arg + Math.PI);
     let angleB = angleLimit(gb.arg - ba.arg - Math.PI);
+    let angleG = angleLimit(ag.arg - gb.arg + Math.PI);
 
     let agL2 = ag.X*ag.X + ag.Y*ag.Y;
     let k = (ag.X * ba.X + ag.Y*ba.Y) / agL2;
