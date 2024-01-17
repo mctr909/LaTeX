@@ -29,7 +29,7 @@ let gDrawerN90R = new Drawer("dispN90R",
     UNIT_RADIUS * 2 + GAP * 1.5
 );
 let gAxisListSymmetry = [];
-let gTheta = Math.PI / 5;
+let gTheta = Math.PI / 6;
 
 init();
 requestNextAnimationFrame(main);
@@ -57,7 +57,7 @@ function init() {
 
 function main() {
     gDrawerP90F.clear(); {
-        gDrawerP90F.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "θ+π/2", 20);
+        gDrawerP90F.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+5, "θ+π/2", 18);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerP90F);
         }
@@ -111,7 +111,7 @@ function main() {
         gDrawerP90F.drawStringA(rA, vo, rB, "θ", 18, TEXT_COLOR, new vec(0, -7, 42));
     }
     gDrawerN90F.clear(); {
-        gDrawerN90F.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "θ－π/2", 20);
+        gDrawerN90F.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+5, "θ－π/2", 18);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerN90F);
         }
@@ -165,7 +165,7 @@ function main() {
         gDrawerN90F.drawStringA(rA, vo, rB, "θ", 18, TEXT_COLOR, new vec(0, -7, 42));
     }
     gDrawerP90R.clear(); {
-        gDrawerP90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "π/2－θ", 20);
+        gDrawerP90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+5, "π/2－θ", 18);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerP90R);
         }
@@ -219,7 +219,7 @@ function main() {
         gDrawerP90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, -45));
     }
     gDrawerN90R.clear(); {
-        gDrawerN90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+2, "－π/2－θ", 20);
+        gDrawerN90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+5, "－π/2－θ", 18);
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerN90R);
         }

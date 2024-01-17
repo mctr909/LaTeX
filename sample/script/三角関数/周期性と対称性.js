@@ -28,15 +28,15 @@ let gDrawerT = new Drawer("dispT",
 );
 let gDrawerSymmetry = new Drawer("dispSymmetry",
     UNIT_RADIUS * 2 + GAP,
-    UNIT_RADIUS * 3 + GAP
+    UNIT_RADIUS * 2 + GAP
 );
 let gDrawerPhase180 = new Drawer("dispPhase180",
     UNIT_RADIUS * 2 + GAP,
-    UNIT_RADIUS * 3 + GAP
+    UNIT_RADIUS * 2 + GAP
 );
 let gDrawerSymmetry180 = new Drawer("dispSymmetry180",
     UNIT_RADIUS * 2 + GAP,
-    UNIT_RADIUS * 3 + GAP
+    UNIT_RADIUS * 2 + GAP
 );
 
 let gAxisListC = [];
@@ -45,9 +45,9 @@ let gAxisListT = [];
 let gAxisListSymmetry = [];
 let gLineC = [];
 let gLineS = [];
-let gLineT = [];
+let gLinesT = [];
 
-let gTheta = Math.PI * 5 / 16;
+let gTheta = Math.PI * 7 / 32;
 
 init();
 requestNextAnimationFrame(main);
@@ -202,21 +202,20 @@ function init() {
             let th = 4*Math.PI * x / WAVE_WIDTH;
             let t = Math.tan(th);
             if (overflowTan(t)) {
-                for (let i = 0; i < tanList.length; i++) {
-                    gLineT.push(tanList[i]);
+                if (0 < tanList.length) {
+                    gLinesT.push(tanList);
                 }
                 tanList = [];
             } else {
                 tanList.push(new vec(x, t * WAVE_HEIGHT/4));
             }
         }
-        for (let i = 0; i < tanList.length; i++) {
-            gLineT.push(tanList[i]);
+        if (0 < tanList.length) {
+            gLinesT.push(tanList);
         }
     }
-    gDrawerSymmetry.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2); {
-        gDrawerSymmetry.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-2, "θ+2nπ", 20, false);
-        gDrawerSymmetry.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-22, "2nπ－θ", 20, false);
+    gDrawerSymmetry.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS + GAP*0.75); {
+        gDrawerSymmetry.pushString(-UNIT_RADIUS-12, UNIT_RADIUS+8, "2nπ－θ", 18, false);
         gAxisListSymmetry.push(new LineInfo(
             0, -UNIT_RADIUS*1.1,
             0, UNIT_RADIUS*1.1,
@@ -233,11 +232,11 @@ function init() {
             1, CIRCLE_COLOR
         ));
     }
-    gDrawerPhase180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2); {
-        gDrawerPhase180.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-2, "θ+(2n+1)π", 20, false);
+    gDrawerPhase180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS + GAP*0.75); {
+        gDrawerPhase180.pushString(-UNIT_RADIUS-12, UNIT_RADIUS+8, "θ+(2n+1)π", 18, false);
     }
-    gDrawerSymmetry180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2); {
-        gDrawerSymmetry180.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-2, "(2n+1)π－θ", 20, false);
+    gDrawerSymmetry180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS + GAP*0.75); {
+        gDrawerSymmetry180.pushString(-UNIT_RADIUS-12, UNIT_RADIUS+8, "(2n+1)π－θ", 18, false);
     }
 }
 
@@ -260,7 +259,9 @@ function main() {
         for (let i=0; i<gAxisListT.length; i++) {
             gAxisListT[i].draw(gDrawerT);
         }
-        gDrawerT.drawPolyline(gLineT, LINE_COLOR, 1);
+        for (let i=0; i<gLinesT.length; i++) {
+            gDrawerT.drawPolyline(gLinesT[i], LINE_COLOR, 1);
+        }
         gDrawerT.drawStringList();
     }
 
@@ -318,8 +319,8 @@ function main() {
             rA = new vec(-vpm.X, -vpm.Y);
             rB = vec.unitXr;
         }
-        gDrawerSymmetry.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
-        gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 20, TEXT_COLOR, new vec(0, -7, 45));
+        gDrawerSymmetry.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
+        gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, 45));
     }
     gDrawerPhase180.clear(); {
         gDrawerPhase180.drawStringList();
@@ -362,14 +363,14 @@ function main() {
         gDrawerPhase180.drawArc(vo, 36, Math.PI, vp180.arg, CIRCLE_COLOR, 3);
 
         if (vp.arg < 0) {
-            gDrawerPhase180.drawStringV(vp180, vp, "θ", 20, TEXT_COLOR, new vec(25, -4, 0.5));
+            gDrawerPhase180.drawStringV(vp180, vp, "θ", 18, TEXT_COLOR, new vec(25, -4, 0.5));
         } else {
-            gDrawerPhase180.drawStringA(vp, vo, vec.unitX, "θ", 20, TEXT_COLOR, new vec(-15, -8, 40));
+            gDrawerPhase180.drawStringA(vp, vo, vec.unitX, "θ", 18, TEXT_COLOR, new vec(-15, -8, 40));
         }
         if (vp180.arg < 0) {
-            gDrawerPhase180.drawStringA(vp180, vo, vec.unitXr, "θ", 20, TEXT_COLOR, new vec(-15, -8, 60));
+            gDrawerPhase180.drawStringA(vp180, vo, vec.unitXr, "θ", 18, TEXT_COLOR, new vec(-15, -8, 60));
         } else {
-            gDrawerPhase180.drawStringV(vp, vp180, "θ", 20, TEXT_COLOR, new vec(45, -4, 0.5));
+            gDrawerPhase180.drawStringV(vp, vp180, "θ", 18, TEXT_COLOR, new vec(45, -4, 0.5));
         }
     }
     gDrawerSymmetry180.clear(); {
@@ -429,18 +430,18 @@ function main() {
             rA = vpm180;
             rB = vec.unitXr;
         }
-        gDrawerSymmetry180.drawStringA(fA, vo, fB, "θ", 20, TEXT_COLOR, new vec(0, -7, 25));
-        gDrawerSymmetry180.drawStringA(rA, vo, rB, "-θ", 20, TEXT_COLOR, new vec(0, -7, -45));
+        gDrawerSymmetry180.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
+        gDrawerSymmetry180.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, -45));
     }
 
     requestNextAnimationFrame(main);
 }
 
 function overflowTan(v) {
-    if (100 < v) {
+    if (10 < v) {
         return true;
     }
-    if (v < -100) {
+    if (v < -10) {
         return true;
     }
     return false;
