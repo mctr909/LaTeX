@@ -2,17 +2,18 @@
 
 class Color {
 	static BLACK = new Color(0, 0, 0);
-	static GRAY37 = new Color(95, 95, 95);
+	static GRAY25 = new Color(63, 63, 63);
+	static GRAY33 = new Color(85, 85, 85);
 	static GRAY = new Color(127, 127, 127);
-	static GRAY66 = new Color(167, 167, 167);
+	static GRAY66 = new Color(170, 170, 170);
 	static GRAY75 = new Color(191, 191, 191);
 	static WHITE = new Color(255, 255, 255);
-	static RED = new Color(231, 0, 0);
+	static RED = new Color(211, 0, 0);
 	static GREEN = new Color(0, 167, 0);
 	static BLUE = new Color(0, 0, 255);
-	static CYAN = new Color(0, 191, 211);
-	static ORANGE = new Color(221, 127, 0);
-	static PURPLE = new Color(191, 0, 255);
+	static CYAN = new Color(0, 191, 191);
+	static YELLOW = new Color(211, 211, 0);
+	static MAGENTA = new Color(191, 0, 167);
 	static #transparent = new Color();
 	R = 0;
 	G = 0;
@@ -24,7 +25,7 @@ class Color {
 	 * @param {number} b
 	 * @param {number} a
 	 */
-	constructor(r=0, g=0, b=0, a=1) {
+	constructor(r, g, b, a=1) {
 		this.R = r;
 		this.G = g;
 		this.B = b;
@@ -91,6 +92,14 @@ class LineInfo {
 	}
 }
 
+class TextInfo {
+	pos = new vec();
+	value = "";
+	size = 9;
+	center = true;
+	color = Color.BLACK;
+}
+
 class Drawer {
 	static #FONT_NAME = "Cambria Math";
 	static FRAME_RATE = 60;
@@ -103,6 +112,9 @@ class Drawer {
 	/** @type {HTMLCanvasElement} */
 	#element;
 	#offset = new vec();
+	/** @type {TextInfo[]} */
+	#textList = [];
+
 	cursor = new vec();
 	isDrag = false;
 
@@ -503,6 +515,39 @@ class Drawer {
 			+ color.B + ","
 			+ alpha + ")";
 		this.#ctx.fill();
+	}
+
+	/**
+	 * @param {number} x
+	 * @param {number} y
+	 * @param {string} value
+	 * @param {number} size
+	 * @param {boolean} center
+	 * @param {Color} color
+	 */
+	pushString(x, y, value, size = 14, center = true, color = Color.BLACK) {
+		let text = new TextInfo();
+		text.pos = new vec(x, y);
+		text.value = value;
+		text.size = size;
+		text.center = center;
+		text.color = color;
+		this.#textList.push(text);
+	}
+
+	clearStringList() {
+		this.#textList = [];
+	}
+
+	drawStringList() {
+		for (let i=0; i<this.#textList.length; i++) {
+			let text = this.#textList[i];
+			if (text.center) {
+				this.drawStringC(text.pos, text.value, text.size, text.color);
+			} else {
+				this.drawString(text.pos, text.value, text.size, text.color);
+			}
+		}
 	}
 
 	/**

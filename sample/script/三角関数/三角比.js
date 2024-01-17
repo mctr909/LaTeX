@@ -15,7 +15,6 @@ const GAP = 60;
 
 /** @type{LineInfo[]} */
 let gLineList = [];
-let gLabelList = [];
 /** @type{vec[]} */
 let gRSinLine = [];
 /** @type{vec[]} */
@@ -52,7 +51,6 @@ function init() {
     }
 
     gLineList = [];
-    gLabelList = [];
     gRSinLine = [];
     gRCosLine = [];
     gRTanLines = [];
@@ -62,6 +60,7 @@ function init() {
     gWaveHBegin = UNIT_RADIUS * 2 + GAP;
 
     gDrawer.Offset = new vec(gWaveHBegin - GAP + 5, gDrawer.Height / 3 + 50);
+    gDrawer.clearStringList();
 
     gLineList.push(new LineInfo(
         -UNIT_RADIUS * 2 - 10, 0,
@@ -88,48 +87,18 @@ function init() {
             1, AXIZ_COLOR
         ));
         if (deg % 45 == 0) {
-            gLabelList.push({
-                pos: new vec(x, -12),
-                text: toFrac(deg / 180, "π", false)
-            });
-            gLabelList.push({
-                pos: new vec(x+2, 18),
-                text: toFrac(deg, "°")
-            });
-            gLabelList.push({
-                pos: new vec(24, y+3),
-                text: toFrac(deg / 180, "π", false)
-            });
-            gLabelList.push({
-                pos: new vec(-22, y+3),
-                text: toFrac(deg, "°")
-            });
+            gDrawer.pushString(x, -12, toFrac(deg / 180, "π", false));
+            gDrawer.pushString(x+2, 18, toFrac(deg, "°"));
+            gDrawer.pushString(24, y+3, toFrac(deg / 180, "π", false));
+            gDrawer.pushString(-22, y+3, toFrac(deg, "°"));
         }
         if (deg == 360) {
-            gLabelList.push({
-                pos: new vec(x+32, 18),
-                text: "[deg]"
-            });
-            gLabelList.push({
-                pos: new vec(x+25, 3),
-                text: "[θ]"
-            });
-            gLabelList.push({
-                pos: new vec(x+32, -12),
-                text: "[rad]"
-            });
-            gLabelList.push({
-                pos: new vec(-24, y-8),
-                text: "[deg]"
-            });
-            gLabelList.push({
-                pos: new vec(0, y-8),
-                text: "[θ]"
-            });
-            gLabelList.push({
-                pos: new vec(24, y-8),
-                text: "[rad]"
-            });
+            gDrawer.pushString(x+32, 18, "[deg]");
+            gDrawer.pushString(x+25, 3, "[θ]");
+            gDrawer.pushString(x+32, -12, "[rad]");
+            gDrawer.pushString(-24, y-8, "[deg]");
+            gDrawer.pushString(0, y-8, "[θ]");
+            gDrawer.pushString(24, y-8, "[rad]");
         }
     }
 
@@ -230,10 +199,7 @@ function main() {
     gDrawer.fillCircle(wave_c, 2.5, COS_COLOR);
     gDrawer.fillCircle(wave_s, 2.5, SIN_COLOR);
 
-    for (let i=0; i<gLabelList.length; i++) {
-        let lbl = gLabelList[i];
-        gDrawer.drawStringC(lbl.pos, lbl.text, 14);
-    }
+    gDrawer.drawStringList();
 
     gDrawer.drawStringXY(20, 4, "θ", 20);
     gDrawer.drawStringXY(vrt.X - 5, vrt.Y + 6, "T", 18);

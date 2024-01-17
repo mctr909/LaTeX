@@ -3,14 +3,14 @@
 
 const TEXT_COLOR = Color.BLACK;
 const AXIZ_COLOR = Color.GRAY66;
-const LINE_COLOR = Color.GRAY37;
+const LINE_COLOR = Color.GRAY33;
 const CIRCLE_COLOR = Color.BLACK;
 const RADIUS_COLOR = Color.GREEN;
 const SIN_COLOR = Color.RED;
 const COS_COLOR = Color.BLUE;
 
 const WAVE_WIDTH = 220;
-const WAVE_HEIGHT = 60;
+const WAVE_HEIGHT = 50;
 const UNIT_RADIUS = 80;
 const GAP = 30;
 
@@ -43,9 +43,6 @@ let gAxisListC = [];
 let gAxisListS = [];
 let gAxisListT = [];
 let gAxisListSymmetry = [];
-let gLabelListC = [];
-let gLabelListS = [];
-let gLabelListT = [];
 let gLineC = [];
 let gLineS = [];
 let gLineT = [];
@@ -60,7 +57,7 @@ function init() {
     for (let item of eb) {
         item.style.overflow = "hidden";
     }
-    gDrawerC.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP/2); {
+    gDrawerC.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP*3/4); {
         gAxisListC.push(new LineInfo(
             0, -WAVE_HEIGHT*1.1/2,
             0, WAVE_HEIGHT*1.1/2,
@@ -71,14 +68,13 @@ function init() {
             +WAVE_WIDTH/2, 0,
             1, AXIZ_COLOR
         ));
-        gLabelListC.push({
-            pos: new vec(WAVE_WIDTH/2+17, 4),
-            text: "[θ]"
-        });
-        gLabelListC.push({
-            pos: new vec(WAVE_WIDTH/2+23, -14),
-            text: "[rad]"
-        });
+        gDrawerC.pushString(
+            -WAVE_WIDTH/2-13, WAVE_HEIGHT/2+8,
+            "cosθ",
+            20, false
+        );
+        gDrawerC.pushString(WAVE_WIDTH/2+17, 4, "[θ]");
+        gDrawerC.pushString(WAVE_WIDTH/2+23, -14, "[rad]");
         let div = 8;
         for(let v=-div; v<=div; v++) {
             let x = v * WAVE_WIDTH * 0.5 / div;
@@ -89,18 +85,12 @@ function init() {
             case 4:
             case 8:
                 h = 12;
-                gLabelListC.push({
-                    pos: new vec(x, -15),
-                    text: toFrac(v/2, "π", false) + ""
-                });
+                gDrawerC.pushString(x, -15, toFrac(v/2, "π", false));
                 break;
             case 2:
             case 6:
                 h = 5;
-                gLabelListC.push({
-                    pos: new vec(x, -15),
-                    text: toFrac(v/2, "π", false) + ""
-                });
+                gDrawerC.pushString(x, -15, toFrac(v/2, "π", false));
                 break;
             default:
                 h = 5; break;
@@ -116,7 +106,7 @@ function init() {
             gLineC.push(new vec(x, Math.cos(th) * WAVE_HEIGHT/2));
         }
     }
-    gDrawerS.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP/2); {
+    gDrawerS.Offset = new vec(WAVE_WIDTH/2 + GAP/2, WAVE_HEIGHT/2 + GAP*3/4); {
         gAxisListS.push(new LineInfo(
             0, -WAVE_HEIGHT*1.1/2,
             0, WAVE_HEIGHT*1.1/2,
@@ -127,14 +117,13 @@ function init() {
             +WAVE_WIDTH/2, 0,
             1, AXIZ_COLOR
         ));
-        gLabelListS.push({
-            pos: new vec(WAVE_WIDTH/2+17, 4),
-            text: "[θ]"
-        });
-        gLabelListS.push({
-            pos: new vec(WAVE_WIDTH/2+23, -14),
-            text: "[rad]"
-        });
+        gDrawerS.pushString(
+            -WAVE_WIDTH/2-13, WAVE_HEIGHT/2+8,
+            "sinθ",
+            20, false
+        );
+        gDrawerS.pushString(WAVE_WIDTH/2+17, 4, "[θ]");
+        gDrawerS.pushString(WAVE_WIDTH/2+23, -14, "[rad]");
         let div = 8;
         for(let v=-div; v<=div; v++) {
             let x = v * WAVE_WIDTH * 0.5 / div;
@@ -145,18 +134,12 @@ function init() {
             case 4:
             case 8:
                 h = 12;
-                gLabelListS.push({
-                    pos: new vec(x, -15),
-                    text: toFrac(v/2, "π", false) + ""
-                });
+                gDrawerS.pushString(x, -15, toFrac(v/2, "π", false));
                 break;
             case 2:
             case 6:
                 h = 5;
-                gLabelListS.push({
-                    pos: new vec(x, -15),
-                    text: toFrac(v/2, "π", false) + ""
-                });
+                gDrawerS.pushString(x, -15, toFrac(v/2, "π", false));
                 break;
             default:
                 h = 5; break;
@@ -183,14 +166,13 @@ function init() {
             +WAVE_WIDTH/2, 0,
             1, AXIZ_COLOR
         ));
-        gLabelListT.push({
-            pos: new vec(WAVE_WIDTH/2+17, 4),
-            text: "[θ]"
-        });
-        gLabelListT.push({
-            pos: new vec(WAVE_WIDTH/2+23, -14),
-            text: "[rad]"
-        });
+        gDrawerT.pushString(
+            -WAVE_WIDTH/2-13, WAVE_HEIGHT+15,
+            "tanθ",
+            20, false
+        );
+        gDrawerT.pushString(WAVE_WIDTH/2+17, 4, "[θ]");
+        gDrawerT.pushString(WAVE_WIDTH/2+23, -14, "[rad]");
         let div = 4;
         for(let v=-div; v<=div; v++) {
             let x = v * WAVE_WIDTH * 0.5 / div;
@@ -200,17 +182,11 @@ function init() {
             case 0:
             case 4:
                 h = 12;
-                gLabelListT.push({
-                    pos: new vec(x, -15),
-                    text: toFrac(v/2, "π", false) + ""
-                });
+                gDrawerT.pushString(x, -15, toFrac(v/2, "π", false));
                 break;
             case 2:
                 h = 5;
-                gLabelListT.push({
-                    pos: new vec(x, -15),
-                    text: toFrac(v/2, "π", false) + ""
-                });
+                gDrawerT.pushString(x, -15, toFrac(v/2, "π", false));
                 break;
             default:
                 h = 5; break;
@@ -239,6 +215,8 @@ function init() {
         }
     }
     gDrawerSymmetry.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2); {
+        gDrawerSymmetry.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-2, "θ+2nπ", 20, false);
+        gDrawerSymmetry.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-22, "2nπ－θ", 20, false);
         gAxisListSymmetry.push(new LineInfo(
             0, -UNIT_RADIUS*1.1,
             0, UNIT_RADIUS*1.1,
@@ -255,8 +233,12 @@ function init() {
             1, CIRCLE_COLOR
         ));
     }
-    gDrawerPhase180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2);
-    gDrawerSymmetry180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2);
+    gDrawerPhase180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2); {
+        gDrawerPhase180.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-2, "θ+(2n+1)π", 20, false);
+    }
+    gDrawerSymmetry180.Offset = new vec(UNIT_RADIUS + GAP/2, UNIT_RADIUS*1.5 + GAP/2); {
+        gDrawerSymmetry180.pushString(-UNIT_RADIUS-12, UNIT_RADIUS*1.5-2, "(2n+1)π－θ", 20, false);
+    }
 }
 
 function main() {
@@ -265,38 +247,25 @@ function main() {
             gAxisListC[i].draw(gDrawerC);
         }
         gDrawerC.drawPolyline(gLineC, LINE_COLOR, 1);
-        for (let i=0; i<gLabelListC.length; i++) {
-            let lbl = gLabelListC[i];
-            gDrawerC.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
-        }
-        gDrawerC.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT/2-3, "cosθ", 24);
+        gDrawerC.drawStringList();
     }
     gDrawerS.clear(); {
         for (let i=0; i<gAxisListS.length; i++) {
             gAxisListS[i].draw(gDrawerS);
         }
         gDrawerS.drawPolyline(gLineS, LINE_COLOR, 1);
-        for (let i=0; i<gLabelListS.length; i++) {
-            let lbl = gLabelListS[i];
-            gDrawerS.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
-        }
-        gDrawerS.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT/2-3, "sinθ", 24);
+        gDrawerS.drawStringList();
     }
     gDrawerT.clear(); {
         for (let i=0; i<gAxisListT.length; i++) {
             gAxisListT[i].draw(gDrawerT);
         }
         gDrawerT.drawPolyline(gLineT, LINE_COLOR, 1);
-        for (let i=0; i<gLabelListT.length; i++) {
-            let lbl = gLabelListT[i];
-            gDrawerT.drawStringC(lbl.pos, lbl.text, 14, TEXT_COLOR);
-        }
-        gDrawerT.drawStringXY(-WAVE_WIDTH/2, WAVE_HEIGHT+12, "tanθ", 24);
+        gDrawerT.drawStringList();
     }
 
     gDrawerSymmetry.clear(); {
-        gDrawerSymmetry.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+2nπ", 20);
-        gDrawerSymmetry.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-26, "2nπ－θ", 20);
+        gDrawerSymmetry.drawStringList();
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerSymmetry);
         }
@@ -353,7 +322,7 @@ function main() {
         gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 20, TEXT_COLOR, new vec(0, -7, 45));
     }
     gDrawerPhase180.clear(); {
-        gDrawerPhase180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "θ+(2n+1)π", 20);
+        gDrawerPhase180.drawStringList();
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerPhase180);
         }
@@ -404,7 +373,7 @@ function main() {
         }
     }
     gDrawerSymmetry180.clear(); {
-        gDrawerSymmetry180.drawStringXY(-UNIT_RADIUS-15, UNIT_RADIUS*1.5-5, "(2n+1)π－θ", 20);
+        gDrawerSymmetry180.drawStringList();
         for (let i=0; i<gAxisListSymmetry.length; i++) {
             gAxisListSymmetry[i].draw(gDrawerSymmetry180);
         }

@@ -3,7 +3,7 @@
 
 const TEXT_COLOR = Color.BLACK;
 const AXIZ_COLOR = Color.GRAY66;
-const LINE_COLOR = Color.GRAY37;
+const LINE_COLOR = Color.GRAY33;
 const CIRCLE_COLOR = Color.BLACK;
 const RADIUS_COLOR = Color.GREEN;
 const SIN_COLOR = Color.RED;

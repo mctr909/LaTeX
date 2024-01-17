@@ -3,7 +3,7 @@
 
 const AXIZ_COLOR = Color.GRAY66;
 const TEXT_COLOR = Color.BLACK;
-const LINE_COLOR = Color.GRAY37;
+const LINE_COLOR = Color.GRAY33;
 const RULER_COLOR = Color.BLACK;
 const CIRCLE_COLOR = Color.BLACK;
 const KNOB_COLOR = Color.GREEN;
@@ -27,9 +27,6 @@ let gDrawerT = new Drawer("dispT",
 let gAxisListC = [];
 let gAxisListS = [];
 let gAxisListT = [];
-let gLabelListC = [];
-let gLabelListS = [];
-let gLabelListT = [];
 let gLineC = [];
 let gLineS = [];
 let gLineT = [];
@@ -55,18 +52,9 @@ function init() {
             ofsX, WAVE_HEIGHT,
             1, AXIZ_COLOR
         ));
-        gLabelListC.push({
-            pos: new vec(ofsX, WAVE_HEIGHT+17),
-            text: "[θ]"
-        });
-        gLabelListC.push({
-            pos: new vec(ofsX+25, WAVE_HEIGHT+17),
-            text: "[rad]"
-        });
-        gLabelListC.push({
-            pos: new vec(ofsX+WAVE_WIDTH+18, 4),
-            text: "[x/r]"
-        });
+        gDrawerC.pushString(ofsX, WAVE_HEIGHT+17, "[θ]");
+        gDrawerC.pushString(ofsX+25, WAVE_HEIGHT+17, "[rad]");
+        gDrawerC.pushString(ofsX+WAVE_WIDTH+18, 4, "[x/r]");
         for (let deg=0; deg<=180; deg += 5) {
             let y = WAVE_HEIGHT * (180 - deg) / 180.0;
             let h = ((0 == deg % 45) ? 10 : (0 == deg % 15) ? 5 : 2.5);
@@ -76,10 +64,7 @@ function init() {
                 1, AXIZ_COLOR
             ));
             if (deg % 15 == 0) {
-                gLabelListC.push({
-                    pos: new vec(ofsX+25, y+3),
-                    text: toFrac(deg / 180, "π", false)
-                });
+                gDrawerC.pushString(ofsX+25, y+3, toFrac(deg / 180, "π", false));
             }
         }
         gAxisListC.push(new LineInfo(
@@ -104,10 +89,7 @@ function init() {
                 1, AXIZ_COLOR
             ));
             if(0 == Math.abs(v*2) % 10) {
-                gLabelListC.push({
-                    pos: new vec(ofsX+x, -15),
-                    text: v/div + ""
-                });
+                gDrawerC.pushString(ofsX+x, -15, v/div + "");
             }
         }
         for(let y=0; y<WAVE_HEIGHT; y++) {
@@ -123,18 +105,9 @@ function init() {
             ofsX, WAVE_HEIGHT,
             1, AXIZ_COLOR
         ));
-        gLabelListS.push({
-            pos: new vec(ofsX, WAVE_HEIGHT+17),
-            text: "[θ]"
-        });
-        gLabelListS.push({
-            pos: new vec(ofsX+25, WAVE_HEIGHT+17),
-            text: "[rad]"
-        });
-        gLabelListS.push({
-            pos: new vec(ofsX+WAVE_WIDTH+18, 4),
-            text: "[y/r]"
-        });
+        gDrawerS.pushString(ofsX, WAVE_HEIGHT+17, "[θ]");
+        gDrawerS.pushString(ofsX+25, WAVE_HEIGHT+17, "[rad]");
+        gDrawerS.pushString(ofsX+WAVE_WIDTH+18, 4, "[y/r]");
         for (let deg=-90; deg<=90; deg += 5) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
             let h = ((0 == deg % 45) ? 10 : (0 == deg % 15) ? 5 : 2.5);
@@ -144,10 +117,7 @@ function init() {
                 1, AXIZ_COLOR
             ));
             if (deg % 15 == 0) {
-                gLabelListS.push({
-                    pos: new vec(ofsX+25, y+3),
-                    text: toFrac(deg / 180, "π", false)
-                });
+                gDrawerS.pushString(ofsX+25, y+3, toFrac(deg / 180, "π", false));
             }
         }
         gAxisListS.push(new LineInfo(
@@ -172,10 +142,7 @@ function init() {
                 1, AXIZ_COLOR
             ));
             if(0 == Math.abs(v*2) % 10) {
-                gLabelListS.push({
-                    pos: new vec(ofsX+x, -15),
-                    text: v/div + ""
-                });
+                gDrawerS.pushString(ofsX+x, -15, v/div + "");
             }
         }
         for(let y=0; y<WAVE_HEIGHT; y++) {
@@ -194,18 +161,9 @@ function init() {
             ofsX, ofsY+WAVE_HEIGHT,
             1, AXIZ_COLOR
         ));
-        gLabelListT.push({
-            pos: new vec(ofsX, ofsY+WAVE_HEIGHT+17),
-            text: "[θ]"
-        });
-        gLabelListT.push({
-            pos: new vec(ofsX+25, ofsY+WAVE_HEIGHT+17),
-            text: "[rad]"
-        });
-        gLabelListT.push({
-            pos: new vec(ofsX+width+18, ofsY+4),
-            text: "[y/x]"
-        });
+        gDrawerT.pushString(ofsX, ofsY+WAVE_HEIGHT+17, "[θ]");
+        gDrawerT.pushString(ofsX+25, ofsY+WAVE_HEIGHT+17, "[rad]");
+        gDrawerT.pushString(ofsX+width+18, ofsY+4, "[y/x]");
         for (let deg=-90; deg<=90; deg += 5) {
             let y = WAVE_HEIGHT * (deg + 90) / 180.0;
             let h = ((0 == deg % 45) ? 10 : (0 == deg % 15) ? 5 : 2.5);
@@ -215,10 +173,7 @@ function init() {
                 1, AXIZ_COLOR
             ));
             if (deg % 15 == 0) {
-                gLabelListT.push({
-                    pos: new vec(ofsX+25, ofsY+y+3),
-                    text: toFrac(deg / 180, "π", false)
-                });
+                gDrawerT.pushString(ofsX+25, ofsY+y+3, toFrac(deg / 180, "π", false));
             }
         }
         for(let v=-amp*div; v<=amp*div; v++) {
@@ -239,10 +194,7 @@ function init() {
             ));
             switch(Math.abs(v)%10) {
             case 0:
-                gLabelListT.push({
-                    pos: new vec(ofsX+x, ofsY-15),
-                    text: v*0.1 + ""
-                });
+                gDrawerT.pushString(ofsX+x, ofsY-15, v*0.1 + "");
                 break;
             }
         }
@@ -262,30 +214,21 @@ function main() {
         gAxisListC[i].draw(gDrawerC);
     }
     gDrawerC.drawPolyline(gLineC, LINE_COLOR, 1);
-    for (let i=0; i<gLabelListC.length; i++) {
-        let lbl = gLabelListC[i];
-        gDrawerC.drawStringC(lbl.pos, lbl.text, 14);
-    }
+    gDrawerC.drawStringList();
 
     gDrawerS.clear();
     for (let i=0; i<gAxisListS.length; i++) {
         gAxisListS[i].draw(gDrawerS);
     }
     gDrawerS.drawPolyline(gLineS, LINE_COLOR, 1);
-    for (let i=0; i<gLabelListS.length; i++) {
-        let lbl = gLabelListS[i];
-        gDrawerS.drawStringC(lbl.pos, lbl.text, 14);
-    }
+    gDrawerS.drawStringList();
 
     gDrawerT.clear();
     for (let i=0; i<gAxisListT.length; i++) {
         gAxisListT[i].draw(gDrawerT);
     }
     gDrawerT.drawPolyline(gLineT, LINE_COLOR, 1);
-    for (let i=0; i<gLabelListT.length; i++) {
-        let lbl = gLabelListT[i];
-        gDrawerT.drawStringC(lbl.pos, lbl.text, 14);
-    }
+    gDrawerT.drawStringList();
 
     requestNextAnimationFrame(main);
 }
