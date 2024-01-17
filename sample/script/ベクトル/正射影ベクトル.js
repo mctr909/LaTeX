@@ -5,8 +5,8 @@ const UNIT = 200;
 let gDrawer = new Drawer("disp", 450, 400);
 
 let gA = new vec(UNIT * -0.8, UNIT * -0.4);
-let gB = new vec(UNIT * 1.0, UNIT * 0.1);
-let gP = new vec(UNIT * 0.5, UNIT * 0.75);
+let gB = new vec(UNIT * 0.7, UNIT * 0.0);
+let gP = new vec(UNIT * 0.0, UNIT * 0.5);
 let gPaDrag = false;
 let gPbDrag = false;
 let gPpDrag = false;
@@ -22,11 +22,11 @@ function main() {
     gDrawer.clear();
 
     if (gDrawer.isDrag) {
-        if (!gPbDrag && !gPpDrag && distance(gDrawer.cursor, gA) <= 10) {
+        if (!gPbDrag && !gPpDrag && distance(gDrawer.cursor, gA) <= 24) {
             gPaDrag = true;
-        } else if (!gPpDrag && !gPaDrag && distance(gDrawer.cursor, gB) <= 10) {
+        } else if (!gPpDrag && !gPaDrag && distance(gDrawer.cursor, gB) <= 24) {
             gPbDrag = true;
-        } else if (!gPbDrag && !gPaDrag && distance(gDrawer.cursor, gP) <= 10) {
+        } else if (!gPbDrag && !gPaDrag && distance(gDrawer.cursor, gP) <= 24) {
             gPpDrag = true;
         }
     } else {
@@ -53,17 +53,14 @@ function main() {
     let k = (ab.X * ap.X + ab.Y*ap.Y) / abL2;
     let h = new vec(ab.X * k + gA.X, ab.Y * k + gA.Y);
 
-    gDrawer.drawLine(gA, gB, Color.GREEN, 3);
-    gDrawer.drawLine(gP, h, Color.BLACK, 3);
-    gDrawer.drawLineD(gA, gP, Color.BLUE, 3);
-    gDrawer.drawLineD(gA, h, Color.BLACK, 3);
-    gDrawer.fillCircle(gA, 6, Color.GREEN);
-    gDrawer.fillCircle(gB, 6, Color.GREEN);
-    gDrawer.fillCircle(gP, 6, Color.BLACK);
-    gDrawer.fillCircle(h, 4, Color.BLACK);
+    gDrawer.drawArrow(gA, gB, Color.BLACK, 3);
+    gDrawer.drawLineD(gP, h, Color.BLACK, 2);
+    gDrawer.drawArrow(gA, gP, Color.BLACK, 3);
+    gDrawer.drawArrow(gA, h, Color.GREEN, 5);
+    gDrawer.fillCircle(gA, 4);
     gDrawer.drawStringH(gA, gB, "A", 20, Color.BLACK, new vec(-12,-6,0));
-    gDrawer.drawStringH(gA, gB, "B", 20, Color.BLACK, new vec(12,-6,1));
-    gDrawer.drawStringV(h, gP, "P", 20, Color.BLACK, new vec(0,12,1));
+    gDrawer.drawStringH(gA, gB, "B", 20, Color.BLACK, new vec(8,-6,1));
+    gDrawer.drawStringV(h, gP, "P", 20, Color.BLACK, new vec(0,8,1));
     gDrawer.drawStringH(gA, h, "H", 20, Color.BLACK, new vec(0,-20,1));
     gDrawer.drawStringH(gA, h, "kAB", 20, Color.BLACK, new vec(0,4,0.5));
 

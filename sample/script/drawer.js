@@ -297,7 +297,7 @@ class Drawer {
 		var px = ax + r * Math.cos(th);
 		var py = ay + r * Math.sin(th);
 		this.drawLineXY(ax, ay, px, py, color, width);
-		this.#fillArrow(ax, ay, bx, by, color);
+		this.#fillArrow(ax, ay, bx, by, color, width);
 	}
 
 	/**
@@ -326,7 +326,7 @@ class Drawer {
 		var px = ax + r * Math.cos(th);
 		var py = ay + r * Math.sin(th);
 		this.drawLineXYD(ax, ay, px, py, color, width);
-		this.#fillArrow(ax, ay, bx, by, color);
+		this.#fillArrow(ax, ay, bx, by, color, width);
 	}
 
 	/**
@@ -769,13 +769,15 @@ class Drawer {
 	 * @param {number} bx
 	 * @param {number} by
 	 * @param {Color} color
+	 * @param {number} width
 	 */
-	#fillArrow(ax, ay, bx, by, color) {
+	#fillArrow(ax, ay, bx, by, color, width = 1) {
 		const SIZE = 13;
+		let w = Math.sqrt(width) * 0.22;
 		let polygon = [
 			new vec(0, 0),
-			new vec(-1, 0.33),
-			new vec(-1, -0.33),
+			new vec(-1, w),
+			new vec(-1, -w),
 			new vec(0, 0)
 		];
 		let th = Math.atan2(by - ay, bx - ax);
