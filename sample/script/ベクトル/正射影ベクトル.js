@@ -54,7 +54,7 @@ function main() {
     let h = new vec(ab.X * k + gA.X, ab.Y * k + gA.Y);
 
     gDrawer.drawArrow(gA, gB, Color.BLACK, 3);
-    gDrawer.drawLineD(gP, h, Color.BLACK, 2);
+    gDrawer.drawLineD(gP, h, Color.BLACK);
     gDrawer.drawArrow(gA, gP, Color.BLACK, 3);
     gDrawer.drawArrow(gA, h, Color.GREEN, 5);
     gDrawer.fillCircle(gA, 4);
@@ -62,7 +62,6 @@ function main() {
     gDrawer.drawStringH(gA, gB, "B", 20, Color.BLACK, new vec(8,-6,1));
     gDrawer.drawStringV(h, gP, "P", 20, Color.BLACK, new vec(0,8,1));
     gDrawer.drawStringH(gA, h, "H", 20, Color.BLACK, new vec(0,-20,1));
-    gDrawer.drawStringH(gA, h, "kAB", 20, Color.BLACK, new vec(0,4,0.5));
 
     document.getElementById("dispA").innerHTML = round2d(gA, 1/UNIT);
     document.getElementById("dispB").innerHTML = round2d(gB, 1/UNIT);

@@ -54,24 +54,24 @@ function main() {
 
         // AO = sAB + tAC
 
-        // ①           AO・AB = AL・AB
-        //     (sAB + tAC)・AB = (AB/2)・AB
-        //   sAB・AB + tAB・AC = AB・AB/2
-        // ②           AO・AC = AM・AC
-        //     (sAB + tAC)・AC = (AC/2)・AC
-        //   sAB・AC + tAC・AC = AC・AC/2
+        //               AO・AB = AL・AB
+        //      (sAB + tAC)・AB = (AB/2)・AB
+        // ① sAB・AB + tAB・AC = AB・AB/2
+        //               AO・AC = AM・AC
+        //      (sAB + tAC)・AC = (AC/2)・AC
+        // ② sAB・AC + tAC・AC = AC・AC/2
 
-        // a = AB・AB, b = AB・AC, c = AC・AC
-        // ① as + tb = a/2
-        // ② bs + tc = c/2
-        // s = -c(a - b) / 2(b^2 - ac)
-        // t = a(b - c) / 2(b^2 - ac)
+        // a = AB・AB, b = AB・AC, c = AC・AC, d = 1/2
+        // ① as + bt = ad
+        // ② bs + ct = cd
+        // s = cd(b - a) / (b^2 - ac)
+        // t = ad(b - c) / (b^2 - ac)
 
         let a = ab.dot(ab);
         let b = ab.dot(ac);
         let c = ac.dot(ac);
-        let m = 2*(b*b - a*c);
-        let s = -c*(a - b) / m;
+        let m = (b*b - a*c)*2;
+        let s = c*(b - a) / m;
         let t = a*(b - c) / m;
 
         let s_ab = new vec();

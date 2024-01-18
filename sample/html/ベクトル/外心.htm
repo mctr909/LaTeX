@@ -10,14 +10,121 @@
 <body>
 <table>
 <tr>
-    <td style="width:150px;">
-        <span>
-        </span><br>
+    <td rowspan="2" style="width:150px;">
+        <span style="font-size: 11pt;">
+            \begin{align}
+                {\small\overrightarrow{\mathrm{AB}}と\overrightarrow{\mathrm{AC}}によって\overrightarrow{\mathrm{AO}}}&{\smallを作るように設定} \\
+                {\small\overrightarrow{\mathrm{AO}}} = s{\small\overrightarrow{\mathrm{AB}}} &+ t{\small\overrightarrow{\mathrm{AC}}}
+            \end{align}
+            \begin{align}
+                {\small\overrightarrow{\mathrm{LO}}\cdot\overrightarrow{\mathrm{AB}}} &= 0 \\
+                \because {\small\overrightarrow{\mathrm{LO}}{\perp}\overrightarrow{\mathrm{AB}}}&
+            \end{align}
+            \begin{align}
+                &{\small上式の原点をそろえる} \\
+                &{\small\left(\overrightarrow{\mathrm{AO}}-\overrightarrow{\mathrm{AL}}\right)\cdot\overrightarrow{\mathrm{AB}}} = 0
+            \end{align}
+            \begin{align}
+                {\small\overrightarrow{\mathrm{AO}}\cdot\overrightarrow{\mathrm{AB}}}
+                    &= {\small\overrightarrow{\mathrm{AL}}\cdot\overrightarrow{\mathrm{AB}}} \\
+                \left(s{\small\overrightarrow{\mathrm{AB}}} + t{\small\overrightarrow{\mathrm{AC}}}\right){\small\cdot\overrightarrow{\mathrm{AB}}}
+                    &= {\small\cfrac{\overrightarrow{\mathrm{AB}}}{2}\cdot\overrightarrow{\mathrm{AB}}} \\
+                s{\small\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AB}}} + t{\small\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AC}}}
+                    &= {\small\cfrac{1}{2}\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AB}}}
+            \end{align}
+            \begin{align}
+                {\small\overrightarrow{\mathrm{MO}}\cdot\overrightarrow{\mathrm{AC}}} &= 0 \\
+                \because {\small\overrightarrow{\mathrm{MO}}{\perp}\overrightarrow{\mathrm{AC}}}&
+            \end{align}
+            \begin{align}
+                &{\small上式の原点をそろえる} \\
+                &{\small\left(\overrightarrow{\mathrm{AO}}-\overrightarrow{\mathrm{AM}}\right)\cdot\overrightarrow{\mathrm{AC}}} = 0
+            \end{align}
+            \begin{align}
+                {\small\overrightarrow{\mathrm{AO}}\cdot\overrightarrow{\mathrm{AC}}}
+                    &= {\small\overrightarrow{\mathrm{AM}}\cdot\overrightarrow{\mathrm{AC}}} \\
+                \left(s{\small\overrightarrow{\mathrm{AB}}} + t{\small\overrightarrow{\mathrm{AC}}}\right){\small\cdot\overrightarrow{\mathrm{AC}}}
+                    &= {\small\cfrac{\overrightarrow{\mathrm{AC}}}{2}\cdot\overrightarrow{\mathrm{AC}}} \\
+                s{\small\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AC}}} + t{\small\overrightarrow{\mathrm{AC}}\cdot\overrightarrow{\mathrm{AC}}}
+                    &= {\small\cfrac{1}{2}\overrightarrow{\mathrm{AC}}\cdot\overrightarrow{\mathrm{AC}}}
+            \end{align}
+            \begin{align}
+                {\small右の}s{\smallと}t{\smallの連立方程式を解いて}
+            \end{align}
+            \begin{align}
+                s&=\cfrac{c(b-a)}{2(b^2-ac)} \\
+                t&=\cfrac{a(b-c)}{2(b^2-ac)}
+            \end{align}
+            \begin{align}
+                s{\smallと}t{\smallの式の}a,b,c{\smallにそれぞれ代入して}
+            \end{align}
+            \begin{align}
+                a&={\small\overrightarrow{\mathrm{AB}}}\cdot{\small\overrightarrow{\mathrm{AB}}}
+                &&b={\small\overrightarrow{\mathrm{AB}}}\cdot{\small\overrightarrow{\mathrm{AC}}} \\
+                c&={\small\overrightarrow{\mathrm{AC}}}\cdot{\small\overrightarrow{\mathrm{AC}}}
+            \end{align}
+            \begin{align}
+                &\mathrm{O} = s{\small\overrightarrow{\mathrm{AB}}} + t{\small\overrightarrow{\mathrm{AC}}} + \mathrm{A} \\
+                &{\small外心が得られる}
+            \end{align}
+        </span>
+    </td>
+    <td rowspan="2" style="width:150px;">
+        <span style="font-size: 11pt;">
+            \begin{align}
+                &{\small連立方程式を解く} \\
+                &\begin{cases}
+                    {\small s\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AB}}}
+                        + {\small t\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AC}}}
+                        &=\cfrac{1}{2}{\small\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AB}}} \\
+                    {\small s\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AC}}}
+                        + {\small t\overrightarrow{\mathrm{AC}}\cdot\overrightarrow{\mathrm{AC}}}
+                        &=\cfrac{1}{2}{\small\overrightarrow{\mathrm{AC}}\cdot\overrightarrow{\mathrm{AC}}}
+                \end{cases}
+            \end{align}
+            \begin{align}
+                &{\small単純化のためにベクトルの内積を} \\
+                &{\small以下の通りにおいておく}
+            \end{align}
+            \begin{align}
+                a&={\small\overrightarrow{\mathrm{AB}}}\cdot{\small\overrightarrow{\mathrm{AB}}}
+                &&b={\small\overrightarrow{\mathrm{AB}}}\cdot{\small\overrightarrow{\mathrm{AC}}} \\
+                c&={\small\overrightarrow{\mathrm{AC}}}\cdot{\small\overrightarrow{\mathrm{AC}}}
+            \end{align}
+            \begin{align}
+                &\begin{cases}
+                    as+bt=\cfrac{a}{2} &&\cdots\times-\cfrac{b}{a} \\
+                    bs+ct=\cfrac{c}{2}
+                \end{cases} \\
+                &\begin{cases}
+                    as+bt&=\cfrac{a}{2} \\
+                    0s+\left(\cfrac{-b^2+ac}{a}\right)t&=\cfrac{-b+c}{2}
+                \end{cases} \\
+                &\begin{cases}
+                    as+bt&=\cfrac{a}{2} \\
+                    0s+t&=\cfrac{a(b-c)}{2(b^2-ac)} &&\cdots\times-b \\
+                \end{cases} \\
+                &\begin{cases}
+                    as+0t&=\cfrac{a}{2}-b\cfrac{a(b-c)}{2(b^2-ac)} \\
+                    0s+t&=\cfrac{a(b-c)}{2(b^2-ac)} \\
+                \end{cases} \\
+                t&=\cfrac{a(b-c)}{2(b^2-ac)} \\
+                s&=\cfrac{1}{2}-\cfrac{b}{a}\cfrac{a(b-c)}{2(b^2-ac)} \\
+                &=\cfrac{1}{2}-\cfrac{b^2-bc}{2(b^2-ac)} \\
+                &=\cfrac{b^2-ac}{2(b^2-ac)}-\cfrac{b^2-bc}{2(b^2-ac)} \\
+                &=\cfrac{bc-ac}{2(b^2-ac)} \\
+                &=\cfrac{c(b-a)}{2(b^2-ac)}
+            \end{align}
+        </span>
+    </td>
+    <td><canvas id="disp"></canvas></td>
+</tr>
+<tr>
+    <td>
         A(<span id="dispA"></span>)<br/>
         B(<span id="dispB"></span>)<br/>
         C(<span id="dispC"></span>)<br/>
     </td>
-    <td><canvas id="disp"></canvas></td>
 </tr>
 </table>
 </body>
