@@ -2,7 +2,7 @@
 /// <reference path="../drawer.js" />
 
 const UNIT = 200;
-let gDrawer = new Drawer("disp", 450, 400);
+let gDrawer = new Drawer("disp", 450, 800);
 
 let gA = new vec(UNIT * -0.8, UNIT * -0.2);
 let gB = new vec(UNIT * 0.6, UNIT * -0.4);
@@ -52,26 +52,33 @@ function main() {
         gB.sub(gA, ab);
         gC.sub(gA, ac);
 
-        // AO = sAB + tAC
+        // AO = sAB + tAC (ABとACによってAOを作るように設定)
 
-        // ①           AO・AB = AL・AB
-        //     (sAB + tAC)・AB = (AB/2)・AB
-        //   sAB・AB + tAB・AC = AB・AB/2
-        // ②           AO・AC = AM・AC
-        //     (sAB + tAC)・AC = (AC/2)・AC
-        //   sAB・AC + tAC・AC = AC・AC/2
+        // LO・AB = 0
+        // ∵LO⊥AB
+        //        (AO - AL)・AB = 0 (LOの原点をAにそろえる)
+        //               AO・AB = AL・AB
+        //      (sAB + tAC)・AB = (AB/2)・AB
+        // ① sAB・AB + tAB・AC = AB・AB/2
+
+        // MO・AC = 0
+        // ∵MO⊥AC
+        //        (AO - AM)・AC = 0 (MOの原点をAにそろえる)
+        //               AO・AC = AM・AC
+        //      (sAB + tAC)・AC = (AC/2)・AC
+        // ② sAB・AC + tAC・AC = AC・AC/2
 
         // a = AB・AB, b = AB・AC, c = AC・AC
-        // ① as + tb = a/2
-        // ② bs + tc = c/2
-        // s = -c(a - b) / 2(b^2 - ac)
+        // ① as + bt = a/2
+        // ② bs + ct = c/2
+        // s = c(b - a) / 2(b^2 - ac)
         // t = a(b - c) / 2(b^2 - ac)
 
         let a = ab.dot(ab);
         let b = ab.dot(ac);
         let c = ac.dot(ac);
-        let m = 2*(b*b - a*c);
-        let s = -c*(a - b) / m;
+        let m = (b*b - a*c)*2;
+        let s = c*(b - a) / m;
         let t = a*(b - c) / m;
 
         let s_ab = new vec();

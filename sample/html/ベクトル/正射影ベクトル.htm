@@ -10,20 +10,37 @@
 <body>
 <table>
 <tr>
-    <td style="width:150px;">
+    <td rowspan="2">
+        <span>[ 正射影ベクトルと垂線の足 ]</span><br>
         <span>
             \begin{align}
-            k &= \frac{\overrightarrow{\mathrm{AB}} \cdot \overrightarrow{\mathrm{AP}}}{\overrightarrow{\mathrm{AB}} \cdot \overrightarrow{\mathrm{AB}}} \\
-            \mathrm{H} &= \mathrm{A}+k\overrightarrow{\mathrm{AB}}
+                &{\small\overrightarrow{\mathrm{AB}}の長さに対する} \\
+                &{\small\overrightarrow{\mathrm{AH}}の長さの割合{\large k}を\overrightarrow{\mathrm{AB}}に掛ける}
             \end{align}
-        </span><br>
+            \begin{align}
+                k &= \frac
+                    {\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AP}}}
+                    {\overrightarrow{\mathrm{AB}}\cdot\overrightarrow{\mathrm{AB}}} \\
+                \overrightarrow{\mathrm{AH}} &= k\overrightarrow{\mathrm{AB}} && \cdots{\small正射影ベクトル} \\
+                \mathrm{H} &= k\overrightarrow{\mathrm{AB}}+\mathrm{A} && \cdots{\small垂線の足}
+            \end{align}
+        </span>
+    </td>
+    <td style="width:200px;">
         A(<span id="dispA"></span>)<br/>
         B(<span id="dispB"></span>)<br/>
-        P(<span id="dispP"></span>)<br/>
+        P(<span id="dispP"></span>)
+    </td>
+    <td>
         k = <span id="dispK"></span><br/>
         H(<span id="dispH"></span>)
     </td>
-    <td><canvas id="disp"></canvas></td>
+</tr>
+    <td colspan="2">
+        <canvas id="disp"></canvas>
+    </td>
+<tr>
+
 </tr>
 </table>
 </body>
