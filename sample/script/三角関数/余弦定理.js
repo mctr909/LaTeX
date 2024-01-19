@@ -67,11 +67,11 @@ function main() {
     let c = new vec(ob.X * k + gO.X, ob.Y * k + gO.Y);
 
     gDrawer.drawArc(gO, 20, ob.arg, dangle + ob.arg, Color.BLACK, 3);
-    gDrawer.drawLine(gO, gA);
-    gDrawer.drawLine(gO, gB);
-    gDrawer.drawLine(gB, gA);
-    gDrawer.drawLineD(gA, c);
-    gDrawer.drawLine(gO, c, AUX_COLOR, 5);
+    gDrawer.drawLine(gO, gA, Color.BLACK, 3);
+    gDrawer.drawLine(gO, gB, Color.BLACK, 3);
+    gDrawer.drawLine(gB, gA, Color.BLACK, 3);
+    gDrawer.drawLine(gA, c);
+    gDrawer.drawLine(gO, c, AUX_COLOR, 7);
     gDrawer.fillCircle(gA, 5);
     gDrawer.fillCircle(gB, 5);
     gDrawer.fillCircle(gO, 5);

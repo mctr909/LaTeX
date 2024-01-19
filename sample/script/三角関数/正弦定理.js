@@ -7,7 +7,7 @@ const AUX_COLOR = Color.GREEN;
 
 let gDrawer = new Drawer("disp", 400, 400);
 
-let gA = new vec(UNIT * -0.9, UNIT * -0.6);
+let gA = new vec(UNIT * -0.6, UNIT * -0.6);
 let gB = new vec(UNIT * 0.0, UNIT * 0.7);
 let gG = new vec(UNIT * 0.8, UNIT * -0.3);
 let gPaDrag = false;
@@ -49,33 +49,76 @@ function main() {
     }
 
     let ag = new vec();
+    let ab = new vec();
     let ba = new vec();
     let gb = new vec();
     gG.sub(gA, ag);
+    gB.sub(gA, ab);
     gA.sub(gB, ba);
     gB.sub(gG, gb);
-    let abH = new vec((gA.X + gB.X)*0.5, (gA.Y + gB.Y)*0.5);
-    let agH = new vec((gA.X + gG.X)*0.5, (gA.Y + gG.Y)*0.5);
-    let abC = new vec(abH.X - ba.Y, abH.Y + ba.X);
-    let agC = new vec(agH.X - ag.Y, agH.Y + ag.X);
-    gDrawer.drawLine(abH, abC, Color.GRAY75);
-    gDrawer.drawLine(agH, agC, Color.GRAY75);
+
+    let ag_h = new vec();
+    let ba_h = new vec();
+    let gb_h = new vec();
+    ag.scale(ag_h, 0.5);
+    ba.scale(ba_h, 0.5);
+    gb.scale(gb_h, 0.5);
+
+    let gAG_h = new vec();
+    let gBA_h = new vec();
+    let gGB_h = new vec();
+    ag_h.add(gA, gAG_h);
+    ba_h.add(gB, gBA_h);
+    gb_h.add(gG, gGB_h);
+
+    let ao = new vec();
+    let gO = new vec();
+    {
+        let a = ag.dot(ag);
+        let b = ag.dot(ab);
+        let c = ab.dot(ab);
+        let m = (b*b - a*c)*2;
+        let s = c*(b - a) / m;
+        let t = a*(b - c) / m;
+
+        let s_ag = new vec();
+        let t_ag = new vec();
+        ag.scale(s_ag, s);
+        ab.scale(t_ag, t);
+        s_ag.add(t_ag, ao);
+        gO.add(ao, gO);
+        gO.add(gA, gO);
+    }
 
     let angleA = angleLimit(ba.arg - ag.arg - Math.PI);
     let angleB = angleLimit(gb.arg - ba.arg - Math.PI);
     let angleG = angleLimit(ag.arg - gb.arg + Math.PI);
 
-    let agL2 = ag.X*ag.X + ag.Y*ag.Y;
-    let k = (ag.X * ba.X + ag.Y*ba.Y) / agL2;
-    let c = new vec(ag.X * k + gA.X, ag.Y * k + gA.Y);
+    let s = Math.abs(Math.sin(ag.arg - ab.arg));
+    let radius = s < 0.001 ? 0 : (0.5 * gb.abs / s);
+    if (gDrawer.Width < radius) {
+        radius = 0;
+    }
+
+    gDrawer.drawCircle(gO, radius);
+    gDrawer.drawLine(gA, gO);
+    gDrawer.drawLine(gB, gO);
+    gDrawer.drawLine(gG, gO);
+    gDrawer.drawLineD(gAG_h, gO, Color.GRAY66);
+    gDrawer.drawLineD(gBA_h, gO, Color.GRAY66);
+    gDrawer.drawLineD(gGB_h, gO, Color.GRAY66);
+    gDrawer.fillCircle(gAG_h, 5);
+    gDrawer.fillCircle(gBA_h, 5);
+    gDrawer.fillCircle(gGB_h, 5);
+    gDrawer.fillCircle(gO, 3);
 
     gDrawer.drawArc(gA, 20, ag.arg, ag.arg + angleA, Color.BLACK, 3);
     gDrawer.drawArc(gB, 20, ba.arg, ba.arg + angleB, Color.BLACK, 3);
     gDrawer.drawArc(gG, 20, ag.arg - angleG - Math.PI, ag.arg - Math.PI, Color.BLACK, 3);
 
-    gDrawer.drawLine(gA, gB);
-    gDrawer.drawLine(gA, gG);
-    gDrawer.drawLine(gG, gB);
+    gDrawer.drawLine(gA, gB, Color.BLACK, 3);
+    gDrawer.drawLine(gA, gG, Color.BLACK, 3);
+    gDrawer.drawLine(gG, gB, Color.BLACK, 3);
     gDrawer.fillCircle(gA, 5);
     gDrawer.fillCircle(gB, 5);
     gDrawer.fillCircle(gG, 5);
@@ -83,12 +126,13 @@ function main() {
     gDrawer.drawStringH(gA, gG, "α", 24, TEXT_COLOR, new vec(28,2,0));
     gDrawer.drawStringH(gB, gA, "β", 24, TEXT_COLOR, new vec(27,4,0));
     gDrawer.drawStringH(gG, gB, "γ", 24, TEXT_COLOR, new vec(27,4,0));
-    gDrawer.drawStringH(gA, gG, "A", 24, TEXT_COLOR, new vec(-13,-8,0));
-    gDrawer.drawStringV(c, gB, "B", 24, TEXT_COLOR, new vec(0,12,1));
-    gDrawer.drawStringH(gA, gG, "G", 24, TEXT_COLOR, new vec(12,-8,1));
-    gDrawer.drawStringV(gG, gB, "a", 24, TEXT_COLOR, new vec(8,0,0.5));
-    gDrawer.drawStringH(gA, gG, "b", 24, TEXT_COLOR, new vec(0,-15,0.5));
-    gDrawer.drawStringH(gA, gB, "g", 24, TEXT_COLOR, new vec(0,4,0.5));
+    gDrawer.drawStringH(gA, gO, "A", 24, TEXT_COLOR, new vec(-13,-8,0));
+    gDrawer.drawStringV(gO, gB, "B", 24, TEXT_COLOR, new vec(0,12,1));
+    gDrawer.drawStringH(gO, gG, "G", 24, TEXT_COLOR, new vec(15,-8,1));
+    gDrawer.drawStringH(gA, gO, "O", 24, TEXT_COLOR, new vec(15,-8,1));
+    gDrawer.drawStringV(gBA_h, gO, "L", 24, TEXT_COLOR, new vec(0,-18,0));
+    gDrawer.drawStringV(gGB_h, gO, "M", 24, TEXT_COLOR, new vec(0,-16,0));
+    gDrawer.drawStringV(gAG_h, gO, "N", 24, TEXT_COLOR, new vec(0,-16,0));
 
     let ta = gb.abs / UNIT;
     let tb = ag.abs / UNIT;
