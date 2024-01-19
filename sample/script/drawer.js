@@ -100,7 +100,7 @@ class TextInfo {
 }
 
 class Drawer {
-	static #FONT_NAME = "Cambria Math";
+	static #FONT_NAME = "メイリオ";
 	static FRAME_RATE = 60;
 
 	/** @type {number} */
