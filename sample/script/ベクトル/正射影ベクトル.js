@@ -54,7 +54,7 @@ function main() {
     let h = new vec(ab.X * k + gA.X, ab.Y * k + gA.Y);
 
     gDrawer.drawArrow(gA, gB, Color.BLACK, 3);
-    gDrawer.drawLineD(gP, h, Color.BLACK);
+    gDrawer.drawLine(gP, h, Color.BLACK);
     gDrawer.drawArrow(gA, gP, Color.BLACK, 3);
     gDrawer.drawArrow(gA, h, Color.GREEN, 5);
     gDrawer.fillCircle(gA, 4);
