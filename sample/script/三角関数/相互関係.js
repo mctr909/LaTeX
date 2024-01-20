@@ -89,7 +89,7 @@ function main() {
         gDrawerP90F.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerP90F.fillCircle(vp90, 4, CIRCLE_COLOR);
         gDrawerP90F.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerP90F.drawArc(vo, 34, Math.PI/2, vp90.arg, CIRCLE_COLOR, 3);
+        gDrawerP90F.drawArc(vo, 34, Math.PI/2, vp90.arg, CIRCLE_COLOR, 2);
 
         let fA, fB;
         let rA, rB;
@@ -143,7 +143,7 @@ function main() {
         gDrawerN90F.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerN90F.fillCircle(vp90, 4, CIRCLE_COLOR);
         gDrawerN90F.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerN90F.drawArc(vo, 34, -Math.PI/2, vp90.arg, CIRCLE_COLOR, 3);
+        gDrawerN90F.drawArc(vo, 34, -Math.PI/2, vp90.arg, CIRCLE_COLOR, 2);
 
         let fA, fB;
         let rA, rB;
@@ -197,7 +197,7 @@ function main() {
         gDrawerP90R.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerP90R.fillCircle(vpm90, 4, CIRCLE_COLOR);
         gDrawerP90R.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerP90R.drawArc(vo, 34, vpm90.arg, Math.PI/2, CIRCLE_COLOR, 3);
+        gDrawerP90R.drawArc(vo, 34, vpm90.arg, Math.PI/2, CIRCLE_COLOR, 2);
 
         let fA, fB;
         let rA, rB;
@@ -216,7 +216,7 @@ function main() {
             rB = vec.unitY;
         }
         gDrawerP90R.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
-        gDrawerP90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, -45));
+        gDrawerP90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, 45));
     }
     gDrawerN90R.clear(); {
         gDrawerN90R.drawStringXY(-UNIT_RADIUS-7, UNIT_RADIUS+5, "－π/2－θ", 18);
@@ -251,7 +251,7 @@ function main() {
         gDrawerN90R.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerN90R.fillCircle(vpm90, 4, CIRCLE_COLOR);
         gDrawerN90R.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
-        gDrawerN90R.drawArc(vo, 34, vpm90.arg, -Math.PI/2, CIRCLE_COLOR, 3);
+        gDrawerN90R.drawArc(vo, 34, vpm90.arg, -Math.PI/2, CIRCLE_COLOR, 2);
 
         let fA, fB;
         let rA, rB;
@@ -270,7 +270,7 @@ function main() {
             rB = vec.unitY;
         }
         gDrawerN90R.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
-        gDrawerN90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, -45));
+        gDrawerN90R.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, 45));
     }
     requestNextAnimationFrame(main);
 }

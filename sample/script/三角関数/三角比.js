@@ -234,8 +234,9 @@ function main() {
     gDrawer.drawStringXY(wave_c.X + 2, wave_c.Y - 11, "r cosθ", 16);
     gDrawer.drawStringXY(wave_s.X + 2, wave_s.Y + 3, "r sinθ", 16);
 
-    var tan = round1d(Math.sin(gTheta) / Math.cos(gTheta), 1, 3);
-    document.getElementById("lblTheta").innerHTML = toFrac(gTheta / Math.PI, "π") + ("(" + parseInt(gTheta*180/Math.PI+0.5) + "°)");
+    let tan = round1d(Math.sin(gTheta) / Math.cos(gTheta), 1, 3);
+    let deg = parseInt(gTheta*180/Math.PI+0.5);
+    document.getElementById("lblTheta").innerHTML = toFrac(deg / 180, "π") + ("(" + deg + "°)");
     document.getElementById("lblR").innerHTML = gRadius;
     document.getElementById("lblX").innerHTML = round1d(Math.cos(gTheta) * gRadius, 1, 3);
     document.getElementById("lblY").innerHTML = round1d(Math.sin(gTheta) * gRadius, 1, 3);

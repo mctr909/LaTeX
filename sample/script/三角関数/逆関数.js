@@ -3,7 +3,7 @@
 
 const AXIZ_COLOR = Color.GRAY66;
 const TEXT_COLOR = Color.BLACK;
-const LINE_COLOR = Color.GRAY33;
+const LINE_COLOR = Color.GRAY;
 const RULER_COLOR = Color.BLACK;
 const CIRCLE_COLOR = Color.BLACK;
 const KNOB_COLOR = Color.GREEN;

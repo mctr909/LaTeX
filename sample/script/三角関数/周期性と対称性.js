@@ -10,7 +10,7 @@ const SIN_COLOR = Color.RED;
 const COS_COLOR = Color.BLUE;
 
 const WAVE_WIDTH = 220;
-const WAVE_HEIGHT = 50;
+const WAVE_HEIGHT = 40;
 const UNIT_RADIUS = 80;
 const GAP = 30;
 
@@ -300,8 +300,8 @@ function main() {
         gDrawerSymmetry.fillCircle(vpm, 4, CIRCLE_COLOR);
         gDrawerSymmetry.fillCircle(vp_t, 4);
         gDrawerSymmetry.fillCircle(vpm_t, 4);
-        gDrawerSymmetry.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
-        gDrawerSymmetry.drawArc(vo, 34, vpm.arg, 0, CIRCLE_COLOR, 3);
+        gDrawerSymmetry.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
+        gDrawerSymmetry.drawArc(vo, 34, vpm.arg, 0, CIRCLE_COLOR, 2);
 
         let fA, fB;
         let rA, rB;
@@ -320,7 +320,7 @@ function main() {
             rB = vec.unitXr;
         }
         gDrawerSymmetry.drawStringA(fA, vo, fB, "θ", 18, TEXT_COLOR, new vec(0, -7, 25));
-        gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(0, -7, 45));
+        gDrawerSymmetry.drawStringA(rA, vo, rB, "-θ", 18, TEXT_COLOR, new vec(1, -7, 45));
     }
     gDrawerPhase180.clear(); {
         gDrawerPhase180.drawStringList();
@@ -359,18 +359,18 @@ function main() {
         gDrawerPhase180.fillCircle(vp, 7, RADIUS_COLOR);
         gDrawerPhase180.fillCircle(vp180, 4, CIRCLE_COLOR);
         gDrawerPhase180.fillCircle(vp180_t, 4);
-        gDrawerPhase180.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
-        gDrawerPhase180.drawArc(vo, 36, Math.PI, vp180.arg, CIRCLE_COLOR, 3);
+        gDrawerPhase180.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
+        gDrawerPhase180.drawArc(vo, 36, Math.PI, vp180.arg, CIRCLE_COLOR, 2);
 
         if (vp.arg < 0) {
-            gDrawerPhase180.drawStringV(vp180, vp, "θ", 18, TEXT_COLOR, new vec(25, -4, 0.5));
+            gDrawerPhase180.drawStringV(vp180, vp, "θ", 18, TEXT_COLOR, new vec(25, -3, 0.5));
         } else {
-            gDrawerPhase180.drawStringA(vp, vo, vec.unitX, "θ", 18, TEXT_COLOR, new vec(-15, -8, 40));
+            gDrawerPhase180.drawStringA(vp, vo, vec.unitX, "θ", 18, TEXT_COLOR, new vec(-15, -7, 40));
         }
         if (vp180.arg < 0) {
-            gDrawerPhase180.drawStringA(vp180, vo, vec.unitXr, "θ", 18, TEXT_COLOR, new vec(-15, -8, 60));
+            gDrawerPhase180.drawStringA(vp180, vo, vec.unitXr, "θ", 18, TEXT_COLOR, new vec(-17, -7, 60));
         } else {
-            gDrawerPhase180.drawStringV(vp, vp180, "θ", 18, TEXT_COLOR, new vec(45, -4, 0.5));
+            gDrawerPhase180.drawStringV(vp, vp180, "θ", 18, TEXT_COLOR, new vec(43, -3, 0.5));
         }
     }
     gDrawerSymmetry180.clear(); {
@@ -411,8 +411,8 @@ function main() {
         gDrawerSymmetry180.fillCircle(vpm180, 4, CIRCLE_COLOR);
         gDrawerSymmetry180.fillCircle(vp_t, 4);
         gDrawerSymmetry180.fillCircle(vpm180_t, 4);
-        gDrawerSymmetry180.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 3);
-        gDrawerSymmetry180.drawArc(vo, 34, vpm180.arg, Math.PI, CIRCLE_COLOR, 3);
+        gDrawerSymmetry180.drawArc(vo, 18, 0, vp.arg, RADIUS_COLOR, 2);
+        gDrawerSymmetry180.drawArc(vo, 34, vpm180.arg, Math.PI, CIRCLE_COLOR, 2);
 
         let fA, fB;
         let rA, rB;

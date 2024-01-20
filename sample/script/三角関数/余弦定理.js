@@ -81,7 +81,7 @@ function main() {
     gDrawer.drawStringH(gO, gB, "O", 24, TEXT_COLOR, new vec(-13,-8,0));
     gDrawer.drawStringH(gO, gB, "B", 24, TEXT_COLOR, new vec(12,-8,1));
     gDrawer.drawStringV(c, gA, "A", 24, TEXT_COLOR, new vec(0,12,1));
-    gDrawer.drawStringV(c, gA, "H", 24, AUX_COLOR, new vec(0,12,0));
+    gDrawer.drawStringV(c, gA, "H", 24, TEXT_COLOR, new vec(10,12,0));
     gDrawer.drawStringH(gO, gA, "a", 24, TEXT_COLOR, new vec(0,4,0.5));
     gDrawer.drawStringH(gO, gB, "b", 24, TEXT_COLOR, new vec(0,-20,0.5));
     gDrawer.drawStringV(gB, gA, "o", 24, TEXT_COLOR, new vec(8,0,0.5));
