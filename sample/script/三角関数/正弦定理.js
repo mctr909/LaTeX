@@ -60,9 +60,9 @@ function main() {
     let ag_h = new vec();
     let ba_h = new vec();
     let gb_h = new vec();
-    ag.scale(ag_h, 0.5);
-    ba.scale(ba_h, 0.5);
-    gb.scale(gb_h, 0.5);
+    ag.scale(0.5, ag_h);
+    ba.scale(0.5, ba_h);
+    gb.scale(0.5, gb_h);
 
     let gAG_h = new vec();
     let gBA_h = new vec();
@@ -83,8 +83,8 @@ function main() {
 
         let s_ag = new vec();
         let t_ag = new vec();
-        ag.scale(s_ag, s);
-        ab.scale(t_ag, t);
+        ag.scale(s, s_ag);
+        ab.scale(t, t_ag);
         s_ag.add(t_ag, ao);
         gO.add(ao, gO);
         gO.add(gA, gO);

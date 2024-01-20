@@ -288,8 +288,9 @@ class Drawer {
 	 * @param {vec} by
 	 * @param {Color} color
 	 * @param {number} width
+	 * @param {number} length
 	 */
-	drawArrowXY(ax, ay, bx, by, color = Color.BLACK, width = 1) {
+	drawArrowXY(ax, ay, bx, by, color = Color.BLACK, width = 1, length = 13) {
 		var sx = bx - ax;
 		var sy = by - ay;
 		var th = Math.atan2(sy, sx);
@@ -297,7 +298,7 @@ class Drawer {
 		var px = ax + r * Math.cos(th);
 		var py = ay + r * Math.sin(th);
 		this.drawLineXY(ax, ay, px, py, color, width);
-		this.#fillArrow(ax, ay, bx, by, color, width);
+		this.#fillArrow(ax, ay, bx, by, color, width, length);
 	}
 
 	/**
@@ -305,9 +306,10 @@ class Drawer {
 	 * @param {vec} b
 	 * @param {Color} color
 	 * @param {number} width
+	 * @param {number} length
 	 */
-	drawArrow(a, b, color = Color.BLACK, width = 1) {
-		this.drawArrowXY(a.X, a.Y, b.X, b.Y, color, width);
+	drawArrow(a, b, color = Color.BLACK, width = 1, length = 13) {
+		this.drawArrowXY(a.X, a.Y, b.X, b.Y, color, width, length);
 	}
 
 	/**
@@ -461,6 +463,58 @@ class Drawer {
 		this.#ctx.lineWidth = width;
 		this.#ctx.setLineDash([]);
 		this.#ctx.stroke();
+	}
+
+	/**
+	 * @param {vec} center
+	 * @param {number} radius
+	 * @param {number} begin
+	 * @param {number} elapse
+	 * @param {Color} color
+	 * @param {number} width
+	 * @param {number} length
+	 */
+	drawArcArrow(center, radius, begin = 0, elapse = 2 * Math.PI, color = Color.BLACK, width = 1, length = 13) {
+		let ctxBegin;
+		let ctxEnd;
+		if (elapse < 0) {
+			ctxBegin = -elapse + Math.PI * 4;
+			ctxEnd = -begin + Math.PI * 4;
+		} else {
+			ctxBegin = -begin + Math.PI * 4;
+			ctxEnd = -elapse + Math.PI * 4;
+		}
+		let nb = parseInt(0.5 * ctxBegin / Math.PI);
+		let ne = parseInt(0.5 * ctxEnd / Math.PI);
+		ctxBegin = ctxBegin - 2*Math.PI*nb;
+		ctxEnd = ctxEnd - 2*Math.PI*ne;
+		this.#ctx.beginPath();
+		this.#ctx.arc(
+			this.#offset.X + center.X,
+			this.#offset.Y - center.Y,
+			radius,
+			ctxBegin,
+			ctxEnd,
+			true
+		);
+		this.#ctx.strokeStyle = "rgba("
+			+ color.R + ","
+			+ color.G + ","
+			+ color.B + ","
+			+ color.A + ")";
+		this.#ctx.lineWidth = width;
+		this.#ctx.setLineDash([]);
+		this.#ctx.stroke();
+		let arrow = new vec(
+			Math.cos(elapse) * radius,
+			Math.sin(elapse) * radius
+		);
+		let dtheta = elapse * 0.95;
+		let arrowD = new vec(
+			Math.cos(dtheta) * radius,
+			Math.sin(dtheta) * radius
+		);
+		this.drawArrow(arrowD, arrow, color, width, length);
 	}
 
 	/**
@@ -771,21 +825,20 @@ class Drawer {
 	 * @param {Color} color
 	 * @param {number} width
 	 */
-	#fillArrow(ax, ay, bx, by, color, width = 1) {
-		const SIZE = 13;
+	#fillArrow(ax, ay, bx, by, color, width = 1, length = 13) {
 		let w = Math.sqrt(width) * 0.22;
 		let polygon = [
 			new vec(0, 0),
-			new vec(-1, w),
-			new vec(-1, -w),
+			new vec(-length/13, w),
+			new vec(-length/13, -w),
 			new vec(0, 0)
 		];
 		let th = Math.atan2(by - ay, bx - ax);
 		for (let i=0; i<polygon.length; i++) {
 			let x = polygon[i].X;
 			let y = polygon[i].Y;
-			polygon[i].X = SIZE * (x*Math.cos(th) - y*Math.sin(th)) + bx;
-			polygon[i].Y = SIZE * (x*Math.sin(th) + y*Math.cos(th)) + by;
+			polygon[i].X = length * (x*Math.cos(th) - y*Math.sin(th)) + bx;
+			polygon[i].Y = length * (x*Math.sin(th) + y*Math.cos(th)) + by;
 		}
 		this.fillPolygon(polygon, this.#offset, color, color.A);
 	}

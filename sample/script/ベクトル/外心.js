@@ -76,8 +76,8 @@ function main() {
 
         let s_ab = new vec();
         let t_ac = new vec();
-        ab.scale(s_ab, s);
-        ac.scale(t_ac, t);
+        ab.scale(s, s_ab);
+        ac.scale(t, t_ac);
         s_ab.add(t_ac, ao);
     }
 

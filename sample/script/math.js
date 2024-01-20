@@ -55,13 +55,21 @@ class vec {
 	}
 
 	/**
-	 * @param {vec} returnValue
 	 * @param {number} scale
+	 * @param {vec} returnValue
 	 */
-	scale(returnValue, scale) {
-		returnValue.X = scale * this.X;
-		returnValue.Y = scale * this.Y;
-		returnValue.Z = scale * this.Z;
+	scale(scale, returnValue) {
+		if (undefined == returnValue) {
+			return new vec(
+				scale * this.X,
+				scale * this.Y,
+				scale * this.Z
+			);
+		} else {
+			returnValue.X = scale * this.X;
+			returnValue.Y = scale * this.Y;
+			returnValue.Z = scale * this.Z;
+		}
 	}
 
 	/**

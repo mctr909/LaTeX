@@ -11,49 +11,15 @@
 <table>
 <tr>
     <td colspan="2" style="font-size:14pt;">
-        [ 余角の公式 ]
-    </td>
-    <td rowspan="3">
-        <span style="font-size:14pt;">[ 平方関係 ]</span><br>
-        <span>
-            \begin{align}
-                {\small三平方の定理の両辺を斜辺で割ると} \\
-                {\small三角関数の平方関係が得られる。}
-            \end{align}
-        </span>
-        <span>
-            \begin{align}
-                r^2 &= x^2 + y^2 \\
-                    &= \left(r\cos{\theta}\right)^2 + \left(r\sin{\theta}\right)^2 \\
-                \therefore 1 &= \cos^2{\theta}+\sin^2{\theta}
-            \end{align}
-        </span>
-        <span>
-            \begin{align}
-                {\small変形して}\cos^2,\sin^2,\tan^2,\frac{1}{\cos^2},\frac{1}{\tan^2}{\smallを得る}
-            \end{align}
-        </span>
-        <span>
-            \begin{align}
-                \cos^2{\theta} &= 1 - \sin^2{\theta} \\
-                \sin^2{\theta} &= 1 - \cos^2{\theta} \\
-                \tan^2{\theta} &= \frac{\sin^2{\theta}}{\cos^2{\theta}} \\
-                    &= \frac{1-\cos^2{\theta}}{\cos^2{\theta}} \\
-                    &= \frac{1}{\cos^2{\theta}} - 1 \\
-                \frac{1}{\cos^2{\theta}} &= \tan^2{\theta} + 1 \\
-                \frac{1}{\tan^2{\theta}} &= \frac{\cos^2{\theta}}{\sin^2{\theta}} \\
-                    &= \frac{1-\sin^2{\theta}}{\sin^2{\theta}} \\
-                    &= \frac{1}{\sin^2{\theta}} - 1
-            \end{align}
-        </span>
+        [ 相互関係 ]
     </td>
 </tr>
 <tr>
     <td>
         <table>
             <tr>
+                <td><canvas id="dispP90F"></canvas></td>
                 <td><canvas id="dispP90R"></canvas></td>
-                <td><canvas id="dispN90R"></canvas></td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -62,8 +28,8 @@
                             {\small複号同順でまとめると}
                         \end{align}
                         \begin{align}
-                            \cos\left(\pm\frac{\pi}{2}-\theta\right)&=\pm\sin\theta \\
-                            \sin\left(\pm\frac{\pi}{2}-\theta\right)&=\pm\cos\theta
+                            \cos\left(\pm\theta+\frac{\pi}{2}\right)&=\mp\sin\theta \\
+                            \sin\left(\pm\theta+\frac{\pi}{2}\right)&=\cos\theta
                         \end{align}
                     </span>
                 </td>
@@ -73,8 +39,8 @@
     <td>
         <table>
             <tr>
-                <td><canvas id="dispP90F"></canvas></td>
                 <td><canvas id="dispN90F"></canvas></td>
+                <td><canvas id="dispN90R"></canvas></td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -83,8 +49,8 @@
                             {\small複号同順でまとめると}
                         \end{align}
                         \begin{align}
-                            \cos\left(\theta\pm\frac{\pi}{2}\right)&=\mp\sin\theta \\
-                            \sin\left(\theta\pm\frac{\pi}{2}\right)&=\pm\cos\theta
+                            \cos\left(\pm\theta-\frac{\pi}{2}\right)&=\pm\sin\theta \\
+                            \sin\left(\pm\theta-\frac{\pi}{2}\right)&=-\cos\theta
                         \end{align}
                     </span>
                 </td>
@@ -96,8 +62,8 @@
     <td colspan="2">
         <span>
             \begin{align}
-                &\left(\pm\frac{\pi}{2}-\theta\right){\smallと}\left(\theta\pm\frac{\pi}{2}\right){\smallについて} \\
-                &\theta{\smallの複号を}{\large\pm_t}\ \ \pm\frac{\pi}{2}{\smallの複号を}{\large\pm_\phi}{\smallとして複号同順でまとめると}
+                &\left(\pm\theta+\frac{\pi}{2}\right){\smallと}\left(\pm\theta-\frac{\pi}{2}\right){\smallについて} \\
+                &\theta{\smallの複号を}{\large\pm_t}\ \ \frac{\pi}{2}{\smallの複号を}{\large\pm_\phi}{\smallとして複号同順でまとめると}
             \end{align}
             \begin{align}
                 \cos\left({\large\pm_t}\theta{\large\pm_\phi}\frac{\pi}{2}\right)&=\begin{cases}

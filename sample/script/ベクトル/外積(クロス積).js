@@ -140,7 +140,7 @@ function main() {
     oa.add(ob, ab);
     ab.add(gO, ab);
     oa.cross(ob, axb);
-    axb.scale(axb, 1/UNIT);
+    axb.scale(1/UNIT, axb);
     axb.add(gO, oaxb);
 
     /* XY */

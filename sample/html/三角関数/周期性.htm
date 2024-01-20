@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//JP">
+<html lang="ja">
+<meta charset="utf-8">
+<head>
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script type="text/javascript" src="../../script/math.js"></script>
+    <script type="text/javascript" src="../../script/drawer.js"></script>
+</head>
+<body>
+<table>
+<tr>
+    <td>
+        [ 周期性 ]<br>
+        <table>
+            <tr>
+                <td>
+                    <canvas id="dispC"></canvas>
+                </td>
+                <td rowspan="2">
+                    <canvas id="dispT"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td colsspan="2">
+                    <canvas id="dispS"></canvas>
+                </td>
+            </tr>
+            <re>
+                <td>
+                    <span>
+                        \begin{align}
+                            \cos{\smallと}\sin{\smallの周期は}2\pi
+                        \end{align}
+                        \begin{align}
+                            &{\small角度の差が}2n\pi{\smallなら同じ角度として扱える} \\
+                            &1{\small周期の間に同じ値が存在する}
+                        \end{align}
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        \begin{align}
+                            \tan{\smallの周期は}\pi
+                        \end{align}
+                        \begin{align}
+                            {\small角度の差が}n\pi{\smallなら同じ値になる}
+                        \end{align}
+                    </span>
+                </td>
+            </re>
+            <tr>
+                <td style="border-right-width: 0px;">
+                    <span>
+                        \begin{align}
+                            \theta{\smallを}0\le\phi\lt2\pi{\smallの範囲に収める場合}
+                        \end{align}
+                        \begin{align}
+                            n &= \frac{\theta}{2\pi}\cdots{\small整数部分を得る} \\
+                            \phi &= \theta - 2n\pi
+                        \end{align}
+                    </span>
+                </td>
+                <td style="border-left-width: 0px;">
+                    <span>
+                        \begin{align}
+                            \theta{\smallを}-\pi\le\phi\lt\pi{\smallの範囲に収める場合}
+                        \end{align}
+                        \begin{align}
+                            n &= \frac{\theta}{\pi}\cdots{\small整数部分を得る} \\
+                            \phi &= \begin{cases}
+                                \theta - n\pi & (n\cdots{\small偶数}) \\
+                                \theta - (n+1)\pi & (n\cdots{\small奇数})
+                            \end{cases}
+                        \end{align}
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+</body>
+<script type="text/javascript" src="../../script/三角関数/周期性.js"></script>

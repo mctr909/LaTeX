@@ -42,7 +42,7 @@ function main() {
     let ona = new vec();
     gA.sub(gO, ona);
     let r = ona.abs / UNIT;
-    ona.scale(ona, 1/r);
+    ona.scale(1/r, ona);
     ona.add(gO, ona);
 
     gDrawer.drawGrid(UNIT);
